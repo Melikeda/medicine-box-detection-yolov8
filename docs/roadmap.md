@@ -1,8 +1,8 @@
 # 🗺️ Project Roadmap
 
-This document describes the development plan of the **Medicine Box Detection System with YOLOv8**.
+This document describes the complete development roadmap of the **AI-Powered Medicine Box Detection System**.
 
-The project is developed incrementally using Git feature branches. Each completed feature branch represents a completed milestone in the roadmap.
+The project is developed incrementally using a **Git Feature Branch Workflow**. Each feature branch represents a development milestone and is merged into the **main** branch after completion and review.
 
 ---
 
@@ -16,26 +16,42 @@ The project is developed incrementally using Git feature branches. Each complete
 - [x] Initialize Git repository
 - [x] Create project folder structure
 - [x] Prepare README.md
-- [x] Add project roadmap
-- [ ] Prepare development environment
+- [x] Create project roadmap
+- [x] Create documentation structure
 
 ---
 
-# Phase 2 — Development Environment
+# Phase 2 — Project Documentation
+
+**Branch:** `feature/project-documentation`
+
+## Objectives
+
+- [x] Improve README.md
+- [x] Define project goals
+- [x] Document technologies
+- [x] Create project architecture
+- [x] Improve project roadmap
+- [x] Define Git branching strategy
+
+---
+
+# Phase 3 — Development Environment
 
 **Branch:** `feature/development-environment`
 
 ## Objectives
 
-- [ ] Install Python environment
+- [ ] Install Python
 - [ ] Create virtual environment
 - [ ] Install required libraries
 - [ ] Configure VS Code
-- [ ] Create requirements.txt
+- [ ] Update requirements.txt
+- [ ] Verify development environment
 
 ---
 
-# Phase 3 — Dataset Preparation
+# Phase 4 — Dataset Preparation
 
 **Branch:** `feature/roboflow-dataset`
 
@@ -45,11 +61,12 @@ The project is developed incrementally using Git feature branches. Each complete
 - [ ] Organize dataset
 - [ ] Upload images to Roboflow
 - [ ] Annotate medicine boxes
-- [ ] Export YOLO format dataset
+- [ ] Export YOLOv8 dataset
+- [ ] Prepare data.yaml
 
 ---
 
-# Phase 4 — Object Detection
+# Phase 5 — YOLOv8 Object Detection
 
 **Branch:** `feature/yolov8-detection`
 
@@ -57,37 +74,39 @@ The project is developed incrementally using Git feature branches. Each complete
 
 - [ ] Install YOLOv8
 - [ ] Train YOLOv8n model
-- [ ] Validate model
-- [ ] Improve detection accuracy
+- [ ] Evaluate training results
+- [ ] Analyze model performance
+- [ ] Perform prediction on test images
 
 ---
 
-# Phase 5 — Image Processing
+# Phase 6 — Image Preprocessing
 
 **Branch:** `feature/opencv-preprocessing`
 
 ## Objectives
 
+- [ ] Crop detected medicine boxes
 - [ ] Resize images
-- [ ] Image preprocessing
 - [ ] Improve image quality
 - [ ] Prepare images for OCR
 
 ---
 
-# Phase 6 — OCR Integration
+# Phase 7 — OCR Integration
 
 **Branch:** `feature/ocr-integration`
 
 ## Objectives
 
 - [ ] Integrate EasyOCR
-- [ ] Read medicine names
-- [ ] Evaluate OCR performance
+- [ ] Extract medicine names
+- [ ] Evaluate OCR accuracy
+- [ ] Improve OCR performance
 
 ---
 
-# Phase 7 — Medicine Name Matching
+# Phase 8 — Medicine Name Matching
 
 **Branch:** `feature/medicine-matching`
 
@@ -95,25 +114,26 @@ The project is developed incrementally using Git feature branches. Each complete
 
 - [ ] Create medicine database
 - [ ] Integrate RapidFuzz
-- [ ] Correct OCR errors
+- [ ] Correct OCR mistakes
 - [ ] Match medicine names
 
 ---
 
-# Phase 8 — User Interface
+# Phase 9 — User Interface
 
 **Branch:** `feature/streamlit-interface`
 
 ## Objectives
 
 - [ ] Develop Streamlit interface
-- [ ] Upload image
+- [ ] Upload images
 - [ ] Display detection results
-- [ ] Show OCR output
+- [ ] Display OCR output
+- [ ] Display medicine information
 
 ---
 
-# Phase 9 — LLM Integration
+# Phase 10 — LLM Integration
 
 **Branch:** `feature/llm-integration`
 
@@ -122,34 +142,69 @@ The project is developed incrementally using Git feature branches. Each complete
 - [ ] Integrate LLM
 - [ ] Generate medicine explanations
 - [ ] Improve prompts
+- [ ] Produce user-friendly responses
 
 ---
 
-# Phase 10 — Testing & Documentation
+# Phase 11 — Testing & Documentation
 
-**Branch:** `feature/testing-and-documentation`
+**Branch:** `feature/final-testing`
 
 ## Objectives
 
-- [ ] Test complete system
-- [ ] Measure performance
-- [ ] Final documentation
+- [ ] Test the complete system
+- [ ] Evaluate system performance
+- [ ] Optimize the project
 - [ ] Prepare Medium articles
 - [ ] Complete internship report
+- [ ] Finalize GitHub documentation
 
 ---
 
-# Project Status
+# 📊 Project Status
 
 | Phase | Status |
 |--------|--------|
-| Project Setup | 🟡 In Progress |
+| Project Setup | ✅ Completed |
+| Project Documentation | 🟡 In Progress |
 | Development Environment | ⏳ Planned |
 | Dataset Preparation | ⏳ Planned |
-| Object Detection | ⏳ Planned |
-| Image Processing | ⏳ Planned |
+| YOLOv8 Object Detection | ⏳ Planned |
+| Image Preprocessing | ⏳ Planned |
 | OCR Integration | ⏳ Planned |
 | Medicine Name Matching | ⏳ Planned |
-| Streamlit Interface | ⏳ Planned |
+| User Interface | ⏳ Planned |
 | LLM Integration | ⏳ Planned |
 | Testing & Documentation | ⏳ Planned |
+
+---
+
+# 🎯 Final Project Goal
+
+```text
+Image
+   │
+   ▼
+YOLOv8 Detection
+   │
+   ▼
+Bounding Box
+   │
+   ▼
+OpenCV Preprocessing
+   │
+   ▼
+EasyOCR
+   │
+   ▼
+RapidFuzz Matching
+   │
+   ▼
+LLM Processing
+   │
+   ▼
+Medicine Information
+   │
+   ▼
+Streamlit Interface
+```
