@@ -1,16 +1,16 @@
-# System Architecture
+# 🏗️ AI-Powered Medicine Box Detection System Architecture
 
-## Overview
+## 📌 Overview
 
-The **Medicine Box Detection System** is designed as a modular Computer Vision application.
+The **AI-Powered Medicine Box Detection System** is designed as a modular Computer Vision application that combines Object Detection, Image Processing, Optical Character Recognition (OCR), Fuzzy String Matching, and Large Language Models (LLMs).
 
-The system detects medicine boxes from an uploaded image, extracts the medicine name using OCR, corrects OCR errors using fuzzy matching, and finally provides medicine-related information through a Large Language Model (LLM).
+The primary objective of the system is to automatically detect medicine boxes from images, extract medicine names, correct possible OCR errors, and provide meaningful medicine-related information through an intelligent pipeline.
 
-The architecture is modular, allowing each component to be developed, tested, and improved independently.
+The project follows a **modular architecture**, allowing each component to be developed, tested, maintained, and improved independently while ensuring scalability and code readability.
 
 ---
 
-## High-Level Workflow
+# 🔄 High-Level Workflow
 
 ```text
 User
@@ -37,7 +37,10 @@ RapidFuzz
 Medicine Database (CSV)
  │
  ▼
-LLM
+Medicine Information
+ │
+ ▼
+Large Language Model (LLM)
  │
  ▼
 Streamlit Interface
@@ -48,13 +51,13 @@ Result to User
 
 ---
 
-## Component Descriptions
+# 🧩 System Components
 
 ## 1. Image Input
 
 The user uploads an image containing one or more medicine boxes through the Streamlit interface.
 
-Output:
+### Output
 
 - Input image
 
@@ -62,20 +65,20 @@ Output:
 
 ## 2. Object Detection (YOLOv8)
 
-YOLOv8 detects the location of medicine boxes.
+YOLOv8 detects medicine boxes within the uploaded image.
 
-Output:
+### Output
 
-- Bounding Box
+- Bounding Box coordinates
 - Confidence Score
 
 ---
 
 ## 3. Image Cropping
 
-The detected medicine box is cropped from the original image.
+The detected medicine box is cropped from the original image to isolate the region of interest.
 
-Output:
+### Output
 
 - Cropped medicine box image
 
@@ -83,30 +86,30 @@ Output:
 
 ## 4. Image Preprocessing (OpenCV)
 
-The cropped image is prepared for OCR.
+The cropped image is enhanced before OCR.
 
-Possible operations include:
+Possible preprocessing operations include:
 
 - Resize
-- Contrast adjustment
+- Contrast enhancement
 - Noise reduction
 - Sharpening
 
-Output:
+### Output
 
-- Enhanced image
+- Enhanced image for OCR
 
 ---
 
 ## 5. OCR (EasyOCR)
 
-The enhanced image is processed using EasyOCR.
+EasyOCR extracts text from the processed medicine box image.
 
-Output:
+### Output
 
 - Raw medicine name
 
-Example:
+### Example
 
 ```text
 Paroi
@@ -116,9 +119,9 @@ Paroi
 
 ## 6. Medicine Name Matching (RapidFuzz)
 
-OCR output is compared with the medicine database.
+The OCR output is compared with the medicine database to correct recognition errors.
 
-Example:
+### Example
 
 ```text
 OCR Output
@@ -133,7 +136,7 @@ RapidFuzz
 Parol
 ```
 
-Output:
+### Output
 
 - Correct medicine name
 
@@ -141,49 +144,65 @@ Output:
 
 ## 7. Medicine Database
 
-Medicine information is stored in a CSV file.
+Medicine information is stored in a structured CSV file.
 
-Example fields:
+Example fields include:
 
 - Medicine Name
 - Active Ingredient
 - Category
 - Description
 
+### Output
+
+- Structured medicine information
+
 ---
 
 ## 8. Large Language Model (LLM)
 
-The detected medicine information is passed to an LLM.
+The retrieved medicine information is passed to an LLM.
 
-The LLM generates a natural language explanation.
+The LLM generates natural-language explanations for the detected medicine.
 
-Example:
+Example questions:
 
 - What is this medicine?
 - What is it generally used for?
+- What precautions should be considered?
+
+### Output
+
+- Human-readable medicine explanation
 
 ---
 
 ## 9. User Interface (Streamlit)
 
-The interface presents:
+The final results are presented through a simple Streamlit interface.
+
+The interface displays:
 
 - Uploaded image
 - Detected medicine boxes
+- Confidence score
 - OCR result
 - Corrected medicine name
-- LLM explanation
+- Medicine information
+- LLM-generated explanation
 
 ---
 
-## Data Flow
+# 🔁 Data Flow
 
 ```text
 Image
    │
    ▼
 YOLOv8
+   │
+   ▼
+Bounding Box
    │
    ▼
 Crop
@@ -198,33 +217,41 @@ EasyOCR
 RapidFuzz
    │
    ▼
-CSV Database
+Medicine Database
+   │
+   ▼
+Medicine Information
    │
    ▼
 LLM
    │
    ▼
 Streamlit
+   │
+   ▼
+User
 ```
 
 ---
 
-## Design Principles
+# 🎯 Design Principles
 
-The project is designed according to the following principles:
+The project follows several software engineering principles:
 
 - Modular architecture
-- Easy maintenance
 - Independent components
-- Scalable design
+- Scalability
+- Maintainability
 - Readable code structure
+- Easy testing and debugging
 
 ---
 
-## Future Improvements
+# 🚀 Future Improvements
 
-Future versions may include:
+Future versions of the project may include:
 
+- Real-time webcam detection
 - Medicine bottle detection
 - Blister package detection
 - Barcode recognition
@@ -232,3 +259,5 @@ Future versions may include:
 - Mobile application
 - Cloud deployment
 - Multi-language support
+- API integration
+- Model performance optimization
