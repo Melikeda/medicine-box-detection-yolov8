@@ -1,0 +1,10 @@
+path: data/dataset
+
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+
+names:
+  0: medicine-box
