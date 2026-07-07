@@ -58,12 +58,14 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-- [ ] Collect medicine box images
-- [ ] Organize dataset
-- [ ] Upload images to Roboflow
-- [ ] Annotate medicine boxes
-- [ ] Export YOLOv8 dataset
-- [ ] Prepare data.yaml
+- [x] Collect medicine box images
+- [x] Organize dataset
+- [x] Upload images to Roboflow
+- [x] Annotate medicine boxes
+- [x] Export YOLOv8 dataset
+- [x] Prepare data.yaml
+- [x] Verify dataset structure
+- [x] Verify YOLO label annotations
 
 ---
 
@@ -169,8 +171,8 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 | Project Setup | ✅ Completed |
 | Project Documentation | ✅ Completed |
 | Development Environment | ✅ Completed |
-| Dataset Preparation | 🔄 In Progress |
-| YOLOv8 Object Detection | ⏳ Planned |
+| Dataset Preparation | ✅ Completed |
+| YOLOv8 Object Detection | 🔄 In Progress |
 | Image Preprocessing | ⏳ Planned |
 | OCR Integration | ⏳ Planned |
 | Medicine Name Matching | ⏳ Planned |
