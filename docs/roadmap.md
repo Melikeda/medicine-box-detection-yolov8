@@ -2,7 +2,7 @@
 
 This document describes the complete development roadmap of the **AI-Powered Medicine Box Detection System**.
 
-The project is developed incrementally using a **Git Feature Branch Workflow**. Each feature branch represents a development milestone and is merged into the **main** branch after completion and review.
+The project follows a **Git Feature Branch Workflow**, where each major development stage is implemented in its own feature branch, reviewed through a Pull Request, and merged into the **main** branch after completion.
 
 ---
 
@@ -42,12 +42,13 @@ The project is developed incrementally using a **Git Feature Branch Workflow**. 
 
 ## Objectives
 
-- [ ] Install Python
-- [ ] Create virtual environment
-- [ ] Install required libraries
-- [ ] Configure VS Code
-- [ ] Update requirements.txt
-- [ ] Verify development environment
+- [x] Install Python
+- [x] Create virtual environment
+- [x] Install required libraries
+- [x] Configure Visual Studio Code
+- [x] Update requirements.txt
+- [x] Create setup guide
+- [x] Verify development environment
 
 ---
 
@@ -146,7 +147,7 @@ The project is developed incrementally using a **Git Feature Branch Workflow**. 
 
 ---
 
-# Phase 11 — Testing & Documentation
+# Phase 11 — Final Testing & Documentation
 
 **Branch:** `feature/final-testing`
 
@@ -166,16 +167,16 @@ The project is developed incrementally using a **Git Feature Branch Workflow**. 
 | Phase | Status |
 |--------|--------|
 | Project Setup | ✅ Completed |
-| Project Documentation | 🟡 In Progress |
-| Development Environment | ⏳ Planned |
-| Dataset Preparation | ⏳ Planned |
+| Project Documentation | ✅ Completed |
+| Development Environment | ✅ Completed |
+| Dataset Preparation | 🔄 In Progress |
 | YOLOv8 Object Detection | ⏳ Planned |
 | Image Preprocessing | ⏳ Planned |
 | OCR Integration | ⏳ Planned |
 | Medicine Name Matching | ⏳ Planned |
 | User Interface | ⏳ Planned |
 | LLM Integration | ⏳ Planned |
-| Testing & Documentation | ⏳ Planned |
+| Final Testing & Documentation | ⏳ Planned |
 
 ---
 
@@ -188,7 +189,7 @@ Image
 YOLOv8 Detection
    │
    ▼
-Bounding Box
+Bounding Box Detection
    │
    ▼
 OpenCV Preprocessing
@@ -200,11 +201,51 @@ EasyOCR
 RapidFuzz Matching
    │
    ▼
-LLM Processing
+Medicine Database
    │
    ▼
 Medicine Information
    │
    ▼
+Large Language Model (LLM)
+   │
+   ▼
 Streamlit Interface
+   │
+   ▼
+Final Result
+```
+
+---
+
+# 📌 Development Workflow
+
+Each development phase follows the same workflow:
+
+```text
+Issue
+   │
+   ▼
+Feature Branch
+   │
+   ▼
+Development
+   │
+   ▼
+Commit
+   │
+   ▼
+Push
+   │
+   ▼
+Pull Request
+   │
+   ▼
+Code Review
+   │
+   ▼
+Merge
+   │
+   ▼
+Done
 ```
