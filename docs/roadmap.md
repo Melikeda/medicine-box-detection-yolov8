@@ -164,6 +164,35 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
+# Phase 12 — Dataset Publishing
+
+**Branch:** `feature/dataset-publishing`
+
+## Objectives
+
+- [ ] Review dataset image sources
+- [ ] Remove images with unclear copyright status
+- [ ] Prepare the final dataset
+- [ ] Write dataset documentation
+- [ ] Publish the dataset on Kaggle
+- [ ] Add the Kaggle dataset link to README.md
+
+---
+
+# Phase 13 — Project Release
+
+**Branch:** `feature/project-release`
+
+## Objectives
+
+- [ ] Perform final project review
+- [ ] Prepare Release v1.0.0
+- [ ] Update repository badges and documentation
+- [ ] Publish the final GitHub release
+- [ ] Archive project deliverables
+
+---
+
 # 📊 Project Status
 
 | Phase | Status |
@@ -179,6 +208,8 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 | User Interface | ⏳ Planned |
 | LLM Integration | ⏳ Planned |
 | Final Testing & Documentation | ⏳ Planned |
+| Dataset Publishing | ⏳ Planned |
+| Project Release | ⏳ Planned |
 
 ---
 
