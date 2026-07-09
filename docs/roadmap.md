@@ -69,7 +69,7 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
-# Phase 5 — YOLOv8 Object Detection
+# Phase 5 — YOLOv8 Model Training
 
 **Branch:** `feature/yolov8-detection`
 
@@ -82,11 +82,29 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 - [x] Generate best.pt model
 - [x] Perform prediction on test images
 - [x] Evaluate prediction results
-- [x] Develop prediction pipeline
 
 ---
 
-# Phase 6 — Image Preprocessing
+# Phase 6 — Model Comparison
+
+**Branch:** `feature/model-comparison`
+
+## Objectives
+
+- [ ] Train YOLOv8s model
+- [ ] Compare YOLOv8n and YOLOv8s
+- [ ] Compare Precision
+- [ ] Compare Recall
+- [ ] Compare mAP50
+- [ ] Compare mAP50-95
+- [ ] Compare training time
+- [ ] Compare model size
+- [ ] Select the best-performing model
+- [ ] Document comparison results
+
+---
+
+# Phase 7 — Image Preprocessing
 
 **Branch:** `feature/opencv-preprocessing`
 
@@ -100,7 +118,7 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
-# Phase 7 — OCR Integration
+# Phase 8 — OCR Integration
 
 **Branch:** `feature/ocr-integration`
 
@@ -113,7 +131,7 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
-# Phase 8 — Medicine Name Matching
+# Phase 9 — Medicine Name Matching
 
 **Branch:** `feature/medicine-matching`
 
@@ -126,7 +144,7 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
-# Phase 9 — User Interface
+# Phase 10 — User Interface
 
 **Branch:** `feature/streamlit-interface`
 
@@ -140,7 +158,7 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
-# Phase 10 — LLM Integration
+# Phase 11 — LLM Integration
 
 **Branch:** `feature/llm-integration`
 
@@ -153,7 +171,7 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
-# Phase 11 — Final Testing & Documentation
+# Phase 12 — Final Testing & Documentation
 
 **Branch:** `feature/final-testing`
 
@@ -168,30 +186,32 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
-# Phase 12 — Dataset Publishing
+# Phase 13 — Dataset Publishing
 
 **Branch:** `feature/dataset-publishing`
 
 ## Objectives
 
-- [ ] Prepare dataset metadata
-- [ ] Upload dataset to Kaggle
-- [ ] Write dataset description
-- [ ] Publish dataset
+- [ ] Review dataset image sources
+- [ ] Remove images with unclear copyright status
+- [ ] Prepare the final dataset
+- [ ] Write dataset documentation
+- [ ] Publish the dataset on Kaggle
+- [ ] Add the Kaggle dataset link to README.md
 
 ---
 
-# Phase 13 — Project Release
+# Phase 14 — Project Release
 
 **Branch:** `feature/project-release`
 
 ## Objectives
 
-- [ ] Final project review
-- [ ] Clean repository
-- [ ] Final README update
-- [ ] Create release version
-- [ ] Publish project
+- [ ] Perform final project review
+- [ ] Prepare Release v1.0.0
+- [ ] Update repository badges and documentation
+- [ ] Publish the final GitHub release
+- [ ] Archive project deliverables
 
 ---
 
@@ -203,8 +223,9 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 | Project Documentation | ✅ Completed |
 | Development Environment | ✅ Completed |
 | Dataset Preparation | ✅ Completed |
-| YOLOv8 Object Detection | ✅ Completed |
-| Image Preprocessing | 🔄 In Progress |
+| YOLOv8 Model Training | ✅ Completed |
+| Model Comparison | 🔄 In Progress |
+| Image Preprocessing | ⏳ Planned |
 | OCR Integration | ⏳ Planned |
 | Medicine Name Matching | ⏳ Planned |
 | User Interface | ⏳ Planned |
@@ -254,8 +275,6 @@ Final Result
 ---
 
 # 📌 Development Workflow
-
-Each development phase follows the same workflow:
 
 ```text
 Issue
