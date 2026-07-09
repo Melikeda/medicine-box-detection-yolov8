@@ -75,11 +75,14 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-- [ ] Install YOLOv8
-- [ ] Train YOLOv8n model
-- [ ] Evaluate training results
-- [ ] Analyze model performance
-- [ ] Perform prediction on test images
+- [x] Install YOLOv8
+- [x] Train YOLOv8n model
+- [x] Evaluate training results
+- [x] Analyze model performance
+- [x] Generate best.pt model
+- [x] Perform prediction on test images
+- [x] Evaluate prediction results
+- [x] Develop prediction pipeline
 
 ---
 
@@ -92,6 +95,7 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 - [ ] Crop detected medicine boxes
 - [ ] Resize images
 - [ ] Improve image quality
+- [ ] Remove unnecessary background
 - [ ] Prepare images for OCR
 
 ---
@@ -164,6 +168,33 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ---
 
+# Phase 12 — Dataset Publishing
+
+**Branch:** `feature/dataset-publishing`
+
+## Objectives
+
+- [ ] Prepare dataset metadata
+- [ ] Upload dataset to Kaggle
+- [ ] Write dataset description
+- [ ] Publish dataset
+
+---
+
+# Phase 13 — Project Release
+
+**Branch:** `feature/project-release`
+
+## Objectives
+
+- [ ] Final project review
+- [ ] Clean repository
+- [ ] Final README update
+- [ ] Create release version
+- [ ] Publish project
+
+---
+
 # 📊 Project Status
 
 | Phase | Status |
@@ -172,13 +203,15 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 | Project Documentation | ✅ Completed |
 | Development Environment | ✅ Completed |
 | Dataset Preparation | ✅ Completed |
-| YOLOv8 Object Detection | 🔄 In Progress |
-| Image Preprocessing | ⏳ Planned |
+| YOLOv8 Object Detection | ✅ Completed |
+| Image Preprocessing | 🔄 In Progress |
 | OCR Integration | ⏳ Planned |
 | Medicine Name Matching | ⏳ Planned |
 | User Interface | ⏳ Planned |
 | LLM Integration | ⏳ Planned |
 | Final Testing & Documentation | ⏳ Planned |
+| Dataset Publishing | ⏳ Planned |
+| Project Release | ⏳ Planned |
 
 ---
 
