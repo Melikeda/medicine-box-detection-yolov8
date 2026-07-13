@@ -12,12 +12,12 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-- [x] Create GitHub repository
-- [x] Initialize Git repository
-- [x] Create project folder structure
-- [x] Prepare README.md
-- [x] Create project roadmap
-- [x] Create documentation structure
+* [x] Create GitHub repository
+* [x] Initialize Git repository
+* [x] Create project folder structure
+* [x] Prepare README.md
+* [x] Create project roadmap
+* [x] Create documentation structure
 
 ---
 
@@ -27,12 +27,12 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-- [x] Improve README.md
-- [x] Define project goals
-- [x] Document technologies
-- [x] Create project architecture
-- [x] Improve project roadmap
-- [x] Define Git branching strategy
+* [x] Improve README.md
+* [x] Define project goals
+* [x] Document technologies
+* [x] Create project architecture
+* [x] Improve project roadmap
+* [x] Define Git branching strategy
 
 ---
 
@@ -42,13 +42,13 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-- [x] Install Python
-- [x] Create virtual environment
-- [x] Install required libraries
-- [x] Configure Visual Studio Code
-- [x] Update requirements.txt
-- [x] Create setup guide
-- [x] Verify development environment
+* [x] Install Python
+* [x] Create virtual environment
+* [x] Install required libraries
+* [x] Configure Visual Studio Code
+* [x] Update requirements.txt
+* [x] Create setup guide
+* [x] Verify development environment
 
 ---
 
@@ -58,14 +58,14 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-- [x] Collect medicine box images
-- [x] Organize dataset
-- [x] Upload images to Roboflow
-- [x] Annotate medicine boxes
-- [x] Export YOLOv8 dataset
-- [x] Prepare data.yaml
-- [x] Verify dataset structure
-- [x] Verify YOLO label annotations
+* [x] Collect medicine box images
+* [x] Organize dataset
+* [x] Upload images to Roboflow
+* [x] Annotate medicine boxes
+* [x] Export YOLOv8 dataset
+* [x] Prepare data.yaml
+* [x] Verify dataset structure
+* [x] Verify YOLO label annotations
 
 ---
 
@@ -75,164 +75,144 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-- [x] Install YOLOv8
-- [x] Train YOLOv8n model
-- [x] Evaluate training results
-- [x] Analyze model performance
-- [x] Generate best.pt model
-- [x] Perform prediction on test images
-- [x] Evaluate prediction results
+* [x] Install YOLOv8
+* [x] Train YOLOv8n model
+* [x] Evaluate training results
+* [x] Analyze model performance
+* [x] Generate best.pt model
+* [x] Perform prediction on test images
+* [x] Evaluate prediction results
 
 ---
 
-# Phase 6 — Model Comparison
-
-**Branch:** `feature/model-comparison`
-
-## Objectives
-
-- [ ] Train YOLOv8s model
-- [ ] Compare YOLOv8n and YOLOv8s
-- [ ] Compare Precision
-- [ ] Compare Recall
-- [ ] Compare mAP50
-- [ ] Compare mAP50-95
-- [ ] Compare training time
-- [ ] Compare model size
-- [ ] Select the best-performing model
-- [ ] Document comparison results
-
----
-
-# Phase 7 — Image Preprocessing
+# Phase 6 — Image Preprocessing
 
 **Branch:** `feature/opencv-preprocessing`
 
 ## Objectives
 
-- [ ] Crop detected medicine boxes
-- [ ] Resize images
-- [ ] Improve image quality
-- [ ] Remove unnecessary background
-- [ ] Prepare images for OCR
+* [ ] Crop detected medicine boxes
+* [ ] Resize images
+* [ ] Improve image quality
+* [ ] Remove unnecessary background
+* [ ] Prepare images for OCR
 
 ---
 
-# Phase 8 — OCR Integration
+# Phase 7 — OCR Integration
 
 **Branch:** `feature/ocr-integration`
 
 ## Objectives
 
-- [ ] Integrate EasyOCR
-- [ ] Extract medicine names
-- [ ] Evaluate OCR accuracy
-- [ ] Improve OCR performance
+* [ ] Integrate EasyOCR
+* [ ] Extract medicine names
+* [ ] Evaluate OCR accuracy
+* [ ] Improve OCR performance
 
 ---
 
-# Phase 9 — Medicine Name Matching
+# Phase 8 — Medicine Name Matching
 
 **Branch:** `feature/medicine-matching`
 
 ## Objectives
 
-- [ ] Create medicine database
-- [ ] Integrate RapidFuzz
-- [ ] Correct OCR mistakes
-- [ ] Match medicine names
+* [ ] Create medicine database
+* [ ] Integrate RapidFuzz
+* [ ] Correct OCR mistakes
+* [ ] Match medicine names
 
 ---
 
-# Phase 10 — User Interface
+# Phase 9 — User Interface
 
 **Branch:** `feature/streamlit-interface`
 
 ## Objectives
 
-- [ ] Develop Streamlit interface
-- [ ] Upload images
-- [ ] Display detection results
-- [ ] Display OCR output
-- [ ] Display medicine information
+* [ ] Develop Streamlit interface
+* [ ] Upload images
+* [ ] Display detection results
+* [ ] Display OCR output
+* [ ] Display medicine information
 
 ---
 
-# Phase 11 — LLM Integration
+# Phase 10 — LLM Integration
 
 **Branch:** `feature/llm-integration`
 
 ## Objectives
 
-- [ ] Integrate LLM
-- [ ] Generate medicine explanations
-- [ ] Improve prompts
-- [ ] Produce user-friendly responses
+* [ ] Integrate LLM
+* [ ] Generate medicine explanations
+* [ ] Improve prompts
+* [ ] Produce user-friendly responses
 
 ---
 
-# Phase 12 — Final Testing & Documentation
+# Phase 11 — Final Testing & Documentation
 
 **Branch:** `feature/final-testing`
 
 ## Objectives
 
-- [ ] Test the complete system
-- [ ] Evaluate system performance
-- [ ] Optimize the project
-- [ ] Prepare Medium articles
-- [ ] Complete internship report
-- [ ] Finalize GitHub documentation
+* [ ] Test the complete system
+* [ ] Evaluate system performance
+* [ ] Optimize the project
+* [ ] Prepare Medium articles
+* [ ] Complete internship report
+* [ ] Finalize GitHub documentation
 
 ---
 
-# Phase 13 — Dataset Publishing
+# Phase 12 — Dataset Publishing
 
 **Branch:** `feature/dataset-publishing`
 
 ## Objectives
 
-- [ ] Review dataset image sources
-- [ ] Remove images with unclear copyright status
-- [ ] Prepare the final dataset
-- [ ] Write dataset documentation
-- [ ] Publish the dataset on Kaggle
-- [ ] Add the Kaggle dataset link to README.md
+* [ ] Review dataset image sources
+* [ ] Remove images with unclear copyright status
+* [ ] Prepare the final dataset
+* [ ] Write dataset documentation
+* [ ] Publish the dataset on Kaggle
+* [ ] Add the Kaggle dataset link to README.md
 
 ---
 
-# Phase 14 — Project Release
+# Phase 13 — Project Release
 
 **Branch:** `feature/project-release`
 
 ## Objectives
 
-- [ ] Perform final project review
-- [ ] Prepare Release v1.0.0
-- [ ] Update repository badges and documentation
-- [ ] Publish the final GitHub release
-- [ ] Archive project deliverables
+* [ ] Perform final project review
+* [ ] Prepare Release v1.0.0
+* [ ] Update repository badges and documentation
+* [ ] Publish the final GitHub release
+* [ ] Archive project deliverables
 
 ---
 
 # 📊 Project Status
 
-| Phase | Status |
-|--------|--------|
-| Project Setup | ✅ Completed |
-| Project Documentation | ✅ Completed |
-| Development Environment | ✅ Completed |
-| Dataset Preparation | ✅ Completed |
-| YOLOv8 Model Training | ✅ Completed |
-| Model Comparison | 🔄 In Progress |
-| Image Preprocessing | ⏳ Planned |
-| OCR Integration | ⏳ Planned |
-| Medicine Name Matching | ⏳ Planned |
-| User Interface | ⏳ Planned |
-| LLM Integration | ⏳ Planned |
-| Final Testing & Documentation | ⏳ Planned |
-| Dataset Publishing | ⏳ Planned |
-| Project Release | ⏳ Planned |
+| Phase                         | Status      |
+| ----------------------------- | ----------- |
+| Project Setup                 | ✅ Completed |
+| Project Documentation         | ✅ Completed |
+| Development Environment       | ✅ Completed |
+| Dataset Preparation           | ✅ Completed |
+| YOLOv8 Model Training         | ✅ Completed |
+| Image Preprocessing           | ⏳ Planned   |
+| OCR Integration               | ⏳ Planned   |
+| Medicine Name Matching        | ⏳ Planned   |
+| User Interface                | ⏳ Planned   |
+| LLM Integration               | ⏳ Planned   |
+| Final Testing & Documentation | ⏳ Planned   |
+| Dataset Publishing            | ⏳ Planned   |
+| Project Release               | ⏳ Planned   |
 
 ---
 
