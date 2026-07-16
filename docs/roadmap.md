@@ -2,7 +2,7 @@
 
 This document describes the complete development roadmap of the **AI-Powered Medicine Box Detection System**.
 
-The project follows a **Git Feature Branch Workflow**, where each major development stage is implemented in its own feature branch, reviewed through a Pull Request, and merged into the **main** branch after completion.
+The project follows a **Git Feature Branch Workflow**, where each major development stage is implemented in its own feature branch, reviewed through a Pull Request, and merged into the **main** branch after successful validation.
 
 ---
 
@@ -12,12 +12,12 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [x] Create GitHub repository
-* [x] Initialize Git repository
-* [x] Create project folder structure
-* [x] Prepare README.md
-* [x] Create project roadmap
-* [x] Create documentation structure
+- [x] Create GitHub repository
+- [x] Initialize Git repository
+- [x] Create project folder structure
+- [x] Prepare README.md
+- [x] Create project roadmap
+- [x] Create documentation structure
 
 ---
 
@@ -27,12 +27,12 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [x] Improve README.md
-* [x] Define project goals
-* [x] Document technologies
-* [x] Create project architecture
-* [x] Improve project roadmap
-* [x] Define Git branching strategy
+- [x] Improve README.md
+- [x] Define project goals
+- [x] Document technologies
+- [x] Create project architecture
+- [x] Improve project roadmap
+- [x] Define Git branching strategy
 
 ---
 
@@ -42,13 +42,13 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [x] Install Python
-* [x] Create virtual environment
-* [x] Install required libraries
-* [x] Configure Visual Studio Code
-* [x] Update requirements.txt
-* [x] Create setup guide
-* [x] Verify development environment
+- [x] Install Python
+- [x] Create virtual environment
+- [x] Install required libraries
+- [x] Configure Visual Studio Code
+- [x] Update requirements.txt
+- [x] Create setup guide
+- [x] Verify development environment
 
 ---
 
@@ -58,14 +58,14 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [x] Collect medicine box images
-* [x] Organize dataset
-* [x] Upload images to Roboflow
-* [x] Annotate medicine boxes
-* [x] Export YOLOv8 dataset
-* [x] Prepare data.yaml
-* [x] Verify dataset structure
-* [x] Verify YOLO label annotations
+- [x] Collect medicine box images
+- [x] Organize dataset
+- [x] Upload images to Roboflow
+- [x] Annotate medicine boxes
+- [x] Export YOLOv8 dataset
+- [x] Prepare data.yaml
+- [x] Verify dataset structure
+- [x] Verify YOLO label annotations
 
 ---
 
@@ -75,27 +75,50 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [x] Install YOLOv8
-* [x] Train YOLOv8n model
-* [x] Evaluate training results
-* [x] Analyze model performance
-* [x] Generate best.pt model
-* [x] Perform prediction on test images
-* [x] Evaluate prediction results
+- [x] Install YOLOv8
+- [x] Train YOLOv8n model
+- [x] Evaluate training results
+- [x] Analyze model performance
+- [x] Generate best.pt model
+- [x] Perform prediction on test images
+- [x] Evaluate prediction results
 
 ---
 
-# Phase 6 — Image Preprocessing
+# Phase 6 — OpenCV Image Preprocessing
 
 **Branch:** `feature/opencv-preprocessing`
 
 ## Objectives
 
-* [ ] Crop detected medicine boxes
-* [ ] Resize images
-* [ ] Improve image quality
-* [ ] Remove unnecessary background
-* [ ] Prepare images for OCR
+- [x] Build modular preprocessing package
+- [x] Implement image reading and saving
+- [x] Implement image visualization
+- [x] Analyze image shape and pixel information
+- [x] Implement BGR ↔ RGB conversion
+- [x] Implement image resizing
+- [x] Implement image cropping
+- [x] Implement grayscale conversion
+- [x] Implement binary thresholding
+- [x] Implement adaptive thresholding
+- [x] Implement Gaussian Blur
+- [x] Implement Median Blur
+- [x] Implement Bilateral Filter
+- [x] Compare filtering techniques
+- [x] Implement Histogram Equalization
+- [x] Implement CLAHE
+- [x] Implement Erosion
+- [x] Implement Dilation
+- [x] Implement Opening
+- [x] Implement Closing
+- [x] Implement Canny Edge Detection
+- [x] Implement Perspective Transform
+- [x] Build reusable OCR preprocessing pipeline
+- [x] Create step-by-step OpenCV examples
+
+### Output
+
+A reusable preprocessing module capable of preparing medicine-box images for OCR.
 
 ---
 
@@ -105,10 +128,14 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [ ] Integrate EasyOCR
-* [ ] Extract medicine names
-* [ ] Evaluate OCR accuracy
-* [ ] Improve OCR performance
+- [ ] Install EasyOCR
+- [ ] Create reusable OCR reader module
+- [ ] Run OCR on original medicine-box images
+- [ ] Run OCR on OpenCV-preprocessed images
+- [ ] Compare OCR performance
+- [ ] Optimize OCR preprocessing parameters
+- [ ] Extract medicine names
+- [ ] Save OCR outputs
 
 ---
 
@@ -118,10 +145,11 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [ ] Create medicine database
-* [ ] Integrate RapidFuzz
-* [ ] Correct OCR mistakes
-* [ ] Match medicine names
+- [ ] Create medicine database
+- [ ] Integrate RapidFuzz
+- [ ] Correct OCR spelling errors
+- [ ] Match OCR output with medicine database
+- [ ] Evaluate matching accuracy
 
 ---
 
@@ -131,11 +159,12 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [ ] Develop Streamlit interface
-* [ ] Upload images
-* [ ] Display detection results
-* [ ] Display OCR output
-* [ ] Display medicine information
+- [ ] Develop Streamlit interface
+- [ ] Upload medicine images
+- [ ] Display YOLO detection results
+- [ ] Display OCR results
+- [ ] Display matched medicine information
+- [ ] Improve user experience
 
 ---
 
@@ -145,10 +174,11 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [ ] Integrate LLM
-* [ ] Generate medicine explanations
-* [ ] Improve prompts
-* [ ] Produce user-friendly responses
+- [ ] Integrate LLM
+- [ ] Generate medicine explanations
+- [ ] Improve prompts
+- [ ] Produce user-friendly responses
+- [ ] Explain detected medicines
 
 ---
 
@@ -158,12 +188,12 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [ ] Test the complete system
-* [ ] Evaluate system performance
-* [ ] Optimize the project
-* [ ] Prepare Medium articles
-* [ ] Complete internship report
-* [ ] Finalize GitHub documentation
+- [ ] Test complete pipeline
+- [ ] Evaluate end-to-end performance
+- [ ] Optimize preprocessing and OCR
+- [ ] Complete Medium article series
+- [ ] Complete internship report
+- [ ] Finalize GitHub documentation
 
 ---
 
@@ -173,12 +203,12 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [ ] Review dataset image sources
-* [ ] Remove images with unclear copyright status
-* [ ] Prepare the final dataset
-* [ ] Write dataset documentation
-* [ ] Publish the dataset on Kaggle
-* [ ] Add the Kaggle dataset link to README.md
+- [ ] Review dataset image sources
+- [ ] Remove images with unclear copyright status
+- [ ] Prepare final dataset
+- [ ] Write dataset documentation
+- [ ] Publish dataset on Kaggle
+- [ ] Add Kaggle dataset link to README
 
 ---
 
@@ -188,35 +218,36 @@ The project follows a **Git Feature Branch Workflow**, where each major developm
 
 ## Objectives
 
-* [ ] Perform final project review
-* [ ] Prepare Release v1.0.0
-* [ ] Update repository badges and documentation
-* [ ] Publish the final GitHub release
-* [ ] Archive project deliverables
+- [ ] Final project review
+- [ ] Prepare Release v1.0.0
+- [ ] Update documentation
+- [ ] Update repository badges
+- [ ] Publish GitHub Release
+- [ ] Archive final deliverables
 
 ---
 
 # 📊 Project Status
 
-| Phase                         | Status      |
-| ----------------------------- | ----------- |
-| Project Setup                 | ✅ Completed |
-| Project Documentation         | ✅ Completed |
-| Development Environment       | ✅ Completed |
-| Dataset Preparation           | ✅ Completed |
-| YOLOv8 Model Training         | ✅ Completed |
-| Image Preprocessing           | ⏳ Planned   |
-| OCR Integration               | ⏳ Planned   |
-| Medicine Name Matching        | ⏳ Planned   |
-| User Interface                | ⏳ Planned   |
-| LLM Integration               | ⏳ Planned   |
-| Final Testing & Documentation | ⏳ Planned   |
-| Dataset Publishing            | ⏳ Planned   |
-| Project Release               | ⏳ Planned   |
+| Phase | Status |
+|--------|--------|
+| ✅ Project Setup | Completed |
+| ✅ Project Documentation | Completed |
+| ✅ Development Environment | Completed |
+| ✅ Dataset Preparation | Completed |
+| ✅ YOLOv8 Model Training | Completed |
+| ✅ OpenCV Image Preprocessing | Completed |
+| ⏳ OCR Integration | Planned |
+| ⏳ Medicine Name Matching | Planned |
+| ⏳ User Interface | Planned |
+| ⏳ LLM Integration | Planned |
+| ⏳ Final Testing & Documentation | Planned |
+| ⏳ Dataset Publishing | Planned |
+| ⏳ Project Release | Planned |
 
 ---
 
-# 🎯 Final Project Goal
+# 🎯 Final Project Pipeline
 
 ```text
 Image
@@ -228,7 +259,10 @@ YOLOv8 Detection
 Bounding Box Detection
    │
    ▼
-OpenCV Preprocessing
+Crop Detected Medicine Box
+   │
+   ▼
+OpenCV Preprocessing Pipeline
    │
    ▼
 EasyOCR
@@ -238,9 +272,6 @@ RapidFuzz Matching
    │
    ▼
 Medicine Database
-   │
-   ▼
-Medicine Information
    │
    ▼
 Large Language Model (LLM)
@@ -254,7 +285,7 @@ Final Result
 
 ---
 
-# 📌 Development Workflow
+# 📌 Git Development Workflow
 
 ```text
 Issue
@@ -264,6 +295,9 @@ Feature Branch
    │
    ▼
 Development
+   │
+   ▼
+Testing
    │
    ▼
 Commit
@@ -278,8 +312,7 @@ Pull Request
 Code Review
    │
    ▼
-Merge
+Merge into Main
    │
    ▼
-Done
-```
+Next Feature Branch
