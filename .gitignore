@@ -36,6 +36,12 @@ results/predict/
 results/train/
 
 # ==========================
+# OpenCV Generated Results
+# ==========================
+
+results/preprocessing/
+
+# ==========================
 # Dataset
 # ==========================
 
@@ -97,6 +103,7 @@ Thumbs.db
 build/
 dist/
 *.egg-info/
+.eggs/
 
 # ==========================
 # Testing
