@@ -1,3 +1,4 @@
+#Bunlar harfleri düzeltmek için kullanılıyor.
 import cv2
 import numpy as np
 

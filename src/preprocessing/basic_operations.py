@@ -1,3 +1,4 @@
+#Bunlar resmi okumayı, kaydetmeyi ve göstermeyi sağlar.
 from pathlib import Path
 
 import cv2

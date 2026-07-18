@@ -1,3 +1,4 @@
+#Resimdeki gürültüyü temizlemek.
 import cv2
 
 

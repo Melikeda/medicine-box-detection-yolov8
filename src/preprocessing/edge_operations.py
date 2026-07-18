@@ -1,3 +1,4 @@
+#Yani modüler olsun diye ekledik. Yani OCR pipeline da kullanmıyoruz.
 import cv2
 
 

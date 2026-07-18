@@ -1,3 +1,4 @@
+#Burada görüntünün geometrisiyle oynuyoruz.
 import cv2
 
 

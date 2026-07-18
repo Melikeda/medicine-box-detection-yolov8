@@ -1,3 +1,4 @@
+#Tonlarla çeviri yapılıyor.
 import cv2
 
 

@@ -1,3 +1,4 @@
+#Bu yüzden resmi griye çeviriyoruz.
 import cv2
 
 
