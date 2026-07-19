@@ -128,14 +128,23 @@ A reusable preprocessing module capable of preparing medicine-box images for OCR
 
 ## Objectives
 
-- [ ] Install EasyOCR
-- [ ] Create reusable OCR reader module
-- [ ] Run OCR on original medicine-box images
-- [ ] Run OCR on OpenCV-preprocessed images
-- [ ] Compare OCR performance
-- [ ] Optimize OCR preprocessing parameters
-- [ ] Extract medicine names
-- [ ] Save OCR outputs
+- [x] Install EasyOCR
+- [x] Create reusable OCR reader module
+- [x] Build reusable OCR pipeline
+- [x] Implement OCR preprocessing integration
+- [x] Run OCR on original medicine-box images
+- [x] Run OCR on preprocessed images
+- [x] Compare OCR performance
+- [x] Apply confidence filtering
+- [x] Implement text cleaning
+- [x] Generate combined OCR text
+- [x] Build YOLO + OCR integration pipeline
+- [x] Save OCR outputs
+- [x] Create OCR example scripts
+
+### Output
+
+A reusable OCR package integrated with the YOLO detection pipeline and capable of extracting cleaned medicine text from detected medicine boxes.
 
 ---
 
@@ -149,6 +158,7 @@ A reusable preprocessing module capable of preparing medicine-box images for OCR
 - [ ] Integrate RapidFuzz
 - [ ] Correct OCR spelling errors
 - [ ] Match OCR output with medicine database
+- [ ] Rank matching candidates
 - [ ] Evaluate matching accuracy
 
 ---
@@ -161,9 +171,10 @@ A reusable preprocessing module capable of preparing medicine-box images for OCR
 
 - [ ] Develop Streamlit interface
 - [ ] Upload medicine images
-- [ ] Display YOLO detection results
+- [ ] Display detected medicine boxes
 - [ ] Display OCR results
 - [ ] Display matched medicine information
+- [ ] Display confidence scores
 - [ ] Improve user experience
 
 ---
@@ -176,9 +187,10 @@ A reusable preprocessing module capable of preparing medicine-box images for OCR
 
 - [ ] Integrate LLM
 - [ ] Generate medicine explanations
+- [ ] Explain medicine usage
+- [ ] Explain side effects
 - [ ] Improve prompts
 - [ ] Produce user-friendly responses
-- [ ] Explain detected medicines
 
 ---
 
@@ -188,9 +200,10 @@ A reusable preprocessing module capable of preparing medicine-box images for OCR
 
 ## Objectives
 
-- [ ] Test complete pipeline
+- [ ] Test complete AI pipeline
 - [ ] Evaluate end-to-end performance
-- [ ] Optimize preprocessing and OCR
+- [ ] Optimize OCR and preprocessing
+- [ ] Optimize RapidFuzz matching
 - [ ] Complete Medium article series
 - [ ] Complete internship report
 - [ ] Finalize GitHub documentation
@@ -237,8 +250,8 @@ A reusable preprocessing module capable of preparing medicine-box images for OCR
 | ✅ Dataset Preparation | Completed |
 | ✅ YOLOv8 Model Training | Completed |
 | ✅ OpenCV Image Preprocessing | Completed |
-| ⏳ OCR Integration | Planned |
-| ⏳ Medicine Name Matching | Planned |
+| ✅ OCR Integration | Completed |
+| ⏳ Medicine Name Matching | In Progress |
 | ⏳ User Interface | Planned |
 | ⏳ LLM Integration | Planned |
 | ⏳ Final Testing & Documentation | Planned |
@@ -262,10 +275,16 @@ Bounding Box Detection
 Crop Detected Medicine Box
    │
    ▼
-OpenCV Preprocessing Pipeline
+OpenCV Preprocessing
    │
    ▼
 EasyOCR
+   │
+   ▼
+Confidence Filtering
+   │
+   ▼
+Text Cleaning
    │
    ▼
 RapidFuzz Matching
@@ -300,6 +319,9 @@ Development
 Testing
    │
    ▼
+Documentation
+   │
+   ▼
 Commit
    │
    ▼
@@ -316,3 +338,4 @@ Merge into Main
    │
    ▼
 Next Feature Branch
+```

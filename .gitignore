@@ -42,6 +42,12 @@ results/train/
 results/preprocessing/
 
 # ==========================
+# OCR Generated Results
+# ==========================
+
+results/ocr/
+
+# ==========================
 # Dataset
 # ==========================
 
