@@ -1,0 +1,31 @@
+medicine_id,medicine_name,brand_name,active_ingredient,dosage,form,category
+MED001,Parol,Parol,Paracetamol,500 mg,Tablet,Ağrı Kesici
+MED002,Parol Plus,Parol,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Ağrı Kesici
+MED003,Minoset,Minoset,Paracetamol,500 mg,Tablet,Ağrı Kesici
+MED004,Panadol,Panadol,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Ağrı Kesici
+MED005,Panadol Extra,Panadol,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Ağrı Kesici
+MED006,Majezik,Majezik,Flurbiprofen,100 mg,Film Coated Tablet,Ağrı Kesici
+MED007,Dolorex,Dolorex,Diclofenac Potassium,50 mg,Coated Tablet,Ağrı Kesici
+MED008,Arveles,Arveles,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Ağrı Kesici
+MED009,Apranax,Apranax,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Ağrı Kesici
+MED010,Vermidon,Vermidon,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Ağrı Kesici
+MED011,Nurofen,Nurofen,Ibuprofen,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Ağrı Kesici
+MED012,Nurofen Cold & Flu,Nurofen,"Ibuprofen / Pseudoephedrine Hydrochloride","200 mg / 30 mg",Film Coated Tablet,Soğuk Algınlığı
+MED013,Coldaway C,Coldaway,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Soğuk Algınlığı
+MED014,A-Ferin,A-Ferin,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Soğuk Algınlığı
+MED015,A-Ferin Forte,A-Ferin,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Soğuk Algınlığı
+MED016,Theraflu Forte,Theraflu,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Soğuk Algınlığı
+MED017,Gripin,Gripin,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Soğuk Algınlığı
+MED018,Iburamin Cold,Iburamin,"Ibuprofen / Pseudoephedrine Hydrochloride / Chlorpheniramine Maleate","200 mg / 30 mg / 2 mg",Liquid Capsule,Soğuk Algınlığı
+MED019,Voltaren,Voltaren,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Kas ve Eklem
+MED020,Etol Fort,Etol,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Kas ve Eklem
+MED021,Muscoflex,Muscoflex,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Capsule,Kas Gevşetici
+MED022,Diclomec,Diclomec,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Kas ve Eklem
+MED023,Rennie,Rennie,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Chewable Tablet,Mide
+MED024,Gaviscon,Gaviscon,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Oral Suspension,Mide
+MED025,Talcid,Talcid,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Chewable Tablet,Mide
+MED026,Lansor,Lansor,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Capsule,Mide
+MED027,Augmentin,Augmentin,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Antibiyotik
+MED028,Amoklavin,Amoklavin,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Antibiyotik
+MED029,Klamoks,Klamoks,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Antibiyotik
+MED030,Supradyn,Supradyn,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Vitamin ve Mineral
