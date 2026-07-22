@@ -29,3 +29,9 @@ MED027,Augmentin,Augmentin,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEA
 MED028,Amoklavin,Amoklavin,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Antibiyotik
 MED029,Klamoks,Klamoks,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Antibiyotik
 MED030,Supradyn,Supradyn,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Vitamin ve Mineral
+MED031,Imunol Defence,Orzax,Vitamin C / Zinc / Vitamin D3,VERIFY_FROM_OFFICIAL_PRODUCT,Sachet,Food Supplement
+MED032,Biteral,Biteral,Metronidazole / Ornidazole,VERIFY_FROM_OFFICIAL_LEAFLET,Film Coated Tablet,Antibiyotik
+MED033,Ibucold C,Ibucold C,Ibuprofen + Pseudoephedrine Hydrochloride + Ascorbic Acid,200 mg / 30 mg / 300 mg,Film Coated Tablet,Soğuk Algınlığı
+MED034,Ibucold,Ibucold,Ibuprofen + Pseudoephedrine Hydrochloride,200 mg / 30 mg,Film Coated Tablet,Soğuk Algınlığı
+MED035,Omesek,Omesek,Omeprazole,20 mg,Micropellet Capsule,Mide İlacı
+MED036,Levopront,Levopront,Levodropropizine,60 mg,Tablet,Öksürük İlacı
