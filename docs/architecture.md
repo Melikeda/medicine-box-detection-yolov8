@@ -2,21 +2,24 @@
 
 ## 📌 Overview
 
-The **AI-Powered Medicine Box Detection System** is designed as a modular Computer Vision application that combines Object Detection, Image Processing, Optical Character Recognition (OCR), Fuzzy String Matching, and Large Language Models (LLMs).
+The **AI-Powered Medicine Box Detection System** is a modular Computer Vision application that combines Object Detection, Image Processing, Optical Character Recognition (OCR), Fuzzy String Matching, a REST API backend, and a mobile client.
 
-The primary objective of the system is to automatically detect medicine boxes from images, extract medicine names, correct possible OCR errors, and provide meaningful medicine-related information through an intelligent pipeline.
+The primary objective is to let a user photograph a medicine box with their phone, identify the drug through an AI pipeline, and receive structured medicine information on the result screen.
 
-The project follows a **modular architecture**, allowing each component to be developed, tested, maintained, and improved independently while ensuring scalability and code readability.
+The project follows a **modular architecture**, allowing each component to be developed, tested, maintained, and improved independently.
 
 ---
 
 # 🔄 High-Level Workflow
 
 ```text
-User
+User (Flutter Mobile App)
  │
  ▼
-Upload Image
+Select / Capture Image
+ │
+ ▼
+POST /api/v1/analyze (FastAPI)
  │
  ▼
 YOLOv8 Detection
@@ -31,233 +34,172 @@ OpenCV Preprocessing
 EasyOCR
  │
  ▼
-RapidFuzz
+RapidFuzz Matching
  │
  ▼
-Medicine Database (CSV)
+Medicine Database (CSV → SQLite)
  │
  ▼
-Medicine Information
+JSON Response
  │
  ▼
-Large Language Model (LLM)
+Mobile Result Screen
  │
  ▼
-Streamlit Interface
- │
- ▼
-Result to User
+(Optional) LLM Explanation
 ```
 
 ---
 
 # 🧩 System Components
 
-## 1. Image Input
+## 1. Mobile Client (Flutter)
 
-The user uploads an image containing one or more medicine boxes through the Streamlit interface.
+The user selects a medicine box photo from the gallery (MVP) or captures one with the camera (later version).
+
+### Responsibilities
+
+- Image selection and preview
+- API communication
+- Loading and error states
+- Display medicine name, match score, and basic drug info
 
 ### Output
 
-- Input image
+- User-facing scan result
 
 ---
 
-## 2. Object Detection (YOLOv8)
+## 2. Backend API (FastAPI)
+
+Receives uploaded images and orchestrates the AI pipeline.
+
+### Responsibilities
+
+- Image validation (type, size)
+- Temporary file handling
+- Pipeline orchestration
+- Structured JSON responses
+- Health checks and logging
+
+### Key Endpoint
+
+- `POST /api/v1/analyze`
+
+---
+
+## 3. Object Detection (YOLOv8)
 
 YOLOv8 detects medicine boxes within the uploaded image.
 
 ### Output
 
-- Bounding Box coordinates
-- Confidence Score
-
----
-
-## 3. Image Cropping
-
-The detected medicine box is cropped from the original image to isolate the region of interest.
-
-### Output
-
+- Bounding box coordinates
+- Detection confidence score
 - Cropped medicine box image
 
 ---
 
 ## 4. Image Preprocessing (OpenCV)
 
-The cropped image is enhanced before OCR.
-
-Possible preprocessing operations include:
-
-- Resize
-- Contrast enhancement
-- Noise reduction
-- Sharpening
+The cropped image is enhanced before OCR using multi-variant preprocessing.
 
 ### Output
 
-- Enhanced image for OCR
+- Enhanced images optimized for OCR accuracy
 
 ---
 
 ## 5. OCR (EasyOCR)
 
-EasyOCR extracts text from the processed medicine box image.
+EasyOCR extracts text from processed medicine box images.
 
 ### Output
 
-- Raw medicine name
-
-### Example
-
-```text
-Paroi
-```
+- OCR text candidates with confidence scores
 
 ---
 
 ## 6. Medicine Name Matching (RapidFuzz)
 
-The OCR output is compared with the medicine database to correct recognition errors.
+OCR output is compared with the medicine database to correct recognition errors.
 
 ### Example
 
 ```text
-OCR Output
-Paroi
-
-↓
-
+OCR Output: afern frte
+      ↓
 RapidFuzz
-
-↓
-
-Parol
+      ↓
+Matched: A-Ferin Forte
 ```
 
 ### Output
 
-- Correct medicine name
+- Best matching medicine record and match score
 
 ---
 
 ## 7. Medicine Database
 
-Medicine information is stored in a structured CSV file.
+Medicine information is stored in a structured database.
 
-Example fields include:
+| Stage | Technology |
+|-------|------------|
+| Current | CSV file |
+| MVP target | SQLite + SQLAlchemy |
+| Production | PostgreSQL |
 
-- Medicine Name
-- Active Ingredient
-- Category
-- Description
+Example fields:
 
-### Output
-
-- Structured medicine information
-
----
-
-## 8. Large Language Model (LLM)
-
-The retrieved medicine information is passed to an LLM.
-
-The LLM generates natural-language explanations for the detected medicine.
-
-Example questions:
-
-- What is this medicine?
-- What is it generally used for?
-- What precautions should be considered?
-
-### Output
-
-- Human-readable medicine explanation
+- medicine_id, medicine_name, brand_name
+- active_ingredient, dosage, form, category
 
 ---
 
-## 9. User Interface (Streamlit)
+## 8. Large Language Model (LLM) — Post-MVP
 
-The final results are presented through a simple Streamlit interface.
+The matched medicine information can be passed to an LLM for natural-language explanations.
 
-The interface displays:
+### Output
 
-- Uploaded image
-- Detected medicine boxes
-- Confidence score
-- OCR result
-- Corrected medicine name
-- Medicine information
-- LLM-generated explanation
+- Usage information, warnings, and general description
 
 ---
 
 # 🔁 Data Flow
 
 ```text
-Image
+Flutter App
    │
    ▼
-YOLOv8
+FastAPI
    │
    ▼
-Bounding Box
+YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → Database
    │
    ▼
-Crop
-   │
-   ▼
-OpenCV
-   │
-   ▼
-EasyOCR
-   │
-   ▼
-RapidFuzz
-   │
-   ▼
-Medicine Database
-   │
-   ▼
-Medicine Information
-   │
-   ▼
-LLM
-   │
-   ▼
-Streamlit
-   │
-   ▼
-User
+JSON Response → Flutter Result Screen
 ```
 
 ---
 
 # 🎯 Design Principles
 
-The project follows several software engineering principles:
-
-- Modular architecture
-- Independent components
-- Scalability
-- Maintainability
-- Readable code structure
-- Easy testing and debugging
+- Modular architecture with single-responsibility services
+- AI models loaded once at backend startup
+- REST + JSON for mobile communication
+- Git Feature Branch Workflow with GitHub Issues
+- Incremental delivery: AI pipeline → API → mobile MVP → advanced features
 
 ---
 
 # 🚀 Future Improvements
 
-Future versions of the project may include:
-
-- Real-time webcam detection
-- Medicine bottle detection
-- Blister package detection
-- Barcode recognition
-- QR code support
-- Mobile application
-- Cloud deployment
-- Multi-language support
-- API integration
-- Model performance optimization
+- Fast and accurate OCR modes for CPU performance
+- Multiple medicine boxes per image
+- Barcode / QR code support
+- User scan history and authentication
+- Cloud deployment with Docker
+- iOS support
+- Multilingual OCR
