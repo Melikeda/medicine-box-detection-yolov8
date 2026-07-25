@@ -150,67 +150,168 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 
 # Phase 8 — Medicine Name Matching
 
-**Branch:** `feature/medicine-matching`
+**Branch:** `feature/medicine-matching` ✅  
+**GitHub Issue:** #6 (closed)
 
 ## Objectives
 
-- [ ] Create medicine database
-- [ ] Integrate RapidFuzz
-- [ ] Correct OCR spelling errors
-- [ ] Match OCR output with medicine database
-- [ ] Rank matching candidates
-- [ ] Evaluate matching accuracy
+- [x] Create medicine database (CSV)
+- [x] Integrate RapidFuzz
+- [x] Correct OCR spelling errors
+- [x] Match OCR output with medicine database
+- [x] Rank matching candidates
+- [x] Evaluate matching accuracy
 
 ---
 
-# Phase 9 — User Interface
+# Phase 9 — Pipeline Unification
 
-**Branch:** `feature/streamlit-interface`
+**Branch:** `refactor/unify-pipeline`  
+**GitHub Issue:** #23
 
 ## Objectives
 
-- [ ] Develop Streamlit interface
-- [ ] Upload medicine images
-- [ ] Display detected medicine boxes
-- [ ] Display OCR results
-- [ ] Display matched medicine information
-- [ ] Display confidence scores
-- [ ] Improve user experience
+- [ ] Fix API mismatch between integration and OCR modules
+- [ ] Extract end-to-end logic from examples into `src/services/`
+- [ ] Create `analyze_medicine_box()` orchestration function
+- [ ] Centralize model paths and configuration
 
 ---
 
-# Phase 10 — LLM Integration
+# Phase 10 — Pipeline Servicification
 
-**Branch:** `feature/llm-integration`
+**Branch:** `feature/pipeline-services`  
+**GitHub Issue:** #24
 
 ## Objectives
 
-- [ ] Integrate LLM
-- [ ] Generate medicine explanations
-- [ ] Explain medicine usage
-- [ ] Explain side effects
-- [ ] Improve prompts
-- [ ] Produce user-friendly responses
+- [ ] Split YOLO, OCR, and matching into dedicated services
+- [ ] Load models once at startup (singleton pattern)
+- [ ] Add `fast` and `accurate` OCR modes for CPU performance
 
 ---
 
-# Phase 11 — Final Testing & Documentation
+# Phase 11 — FastAPI Backend Foundation
 
-**Branch:** `feature/final-testing`
+**Branch:** `feature/fastapi-foundation`  
+**GitHub Issue:** #25
 
 ## Objectives
 
-- [ ] Test complete AI pipeline
+- [ ] Set up FastAPI project structure
+- [ ] Add config, logging, and exception handling
+- [ ] Implement `GET /health` endpoint
+
+---
+
+# Phase 12 — Image Upload & Analyze API
+
+**Branch:** `feature/analyze-endpoint`  
+**GitHub Issue:** #26
+
+## Objectives
+
+- [ ] Implement `POST /api/v1/analyze` with multipart upload
+- [ ] Validate image type and file size
+- [ ] Return structured JSON response for mobile app
+
+---
+
+# Phase 13 — SQLite Database Migration
+
+**Branch:** `feature/sqlite-database`  
+**GitHub Issue:** #27
+
+## Objectives
+
+- [ ] Define SQLAlchemy Medicine model
+- [ ] Seed database from CSV
+- [ ] Add medicine query endpoints
+
+---
+
+# Phase 14 — Automated Testing
+
+**Branch:** `feature/tests`  
+**GitHub Issue:** #28
+
+## Objectives
+
+- [ ] Set up pytest
+- [ ] Add unit, integration, and API tests
+
+---
+
+# Phase 15 — Docker Containerization
+
+**Branch:** `feature/docker`  
+**GitHub Issue:** #29
+
+## Objectives
+
+- [ ] Create Dockerfile and docker-compose
+- [ ] Document local deployment
+
+---
+
+# Phase 16 — Flutter Mobile App Foundation
+
+**Branch:** `feature/flutter-foundation`  
+**GitHub Issue:** #30
+
+## Objectives
+
+- [ ] Initialize Flutter project
+- [ ] Build splash, home, and image preview screens
+- [ ] Integrate gallery image picker
+
+---
+
+# Phase 17 — Mobile & Backend Integration (MVP)
+
+**Branch:** `feature/mobile-integration`  
+**GitHub Issue:** #31
+
+## Objectives
+
+- [ ] Connect mobile app to analyze API
+- [ ] Display medicine name, match score, and basic info
+- [ ] Handle loading states and errors
+- [ ] Test on Android
+
+---
+
+# Phase 18 — Advanced Features
+
+**Branch:** `feature/advanced-features`  
+**GitHub Issue:** #32
+
+## Objectives
+
+- [ ] LLM integration for medicine explanations (#8)
+- [ ] PostgreSQL migration
+- [ ] User scan history
+- [ ] Barcode/QR reading
+- [ ] Cloud deployment
+- [ ] iOS support
+
+---
+
+# Phase 19 — Final Testing & Documentation
+
+**Branch:** `feature/final-testing`  
+**GitHub Issue:** #9
+
+## Objectives
+
+- [ ] Test complete mobile + backend system
 - [ ] Evaluate end-to-end performance
-- [ ] Optimize OCR and preprocessing
-- [ ] Optimize RapidFuzz matching
-- [ ] Complete Medium article series
 - [ ] Complete internship report
 - [ ] Finalize GitHub documentation
 
 ---
 
-# Phase 12 — Dataset Publishing
+# Phase 20 — Dataset Publishing
 
 **Branch:** `feature/dataset-publishing`
 
@@ -225,7 +326,7 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 
 ---
 
-# Phase 13 — Project Release
+# Phase 21 — Project Release
 
 **Branch:** `feature/project-release`
 
@@ -242,37 +343,45 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 
 # 📊 Project Status
 
-| Phase | Status |
-|--------|--------|
-| ✅ Project Setup | Completed |
-| ✅ Project Documentation | Completed |
-| ✅ Development Environment | Completed |
-| ✅ Dataset Preparation | Completed |
-| ✅ YOLOv8 Model Training | Completed |
-| ✅ OpenCV Image Preprocessing | Completed |
-| ✅ OCR Integration | Completed |
-| ⏳ Medicine Name Matching | In Progress |
-| ⏳ User Interface | Planned |
-| ⏳ LLM Integration | Planned |
-| ⏳ Final Testing & Documentation | Planned |
-| ⏳ Dataset Publishing | Planned |
-| ⏳ Project Release | Planned |
+| Phase | Status | GitHub Issue |
+|--------|--------|--------------|
+| ✅ Project Setup | Completed | — |
+| ✅ Project Documentation | Completed | — |
+| ✅ Development Environment | Completed | — |
+| ✅ Dataset Preparation | Completed | — |
+| ✅ YOLOv8 Model Training | Completed | — |
+| ✅ OpenCV Image Preprocessing | Completed | — |
+| ✅ OCR Integration | Completed | — |
+| ✅ Medicine Name Matching | Completed | #6 |
+| ⏳ Pipeline Unification | Next | #23 |
+| ⏳ Pipeline Servicification | Planned | #24 |
+| ⏳ FastAPI Backend | Planned | #25 |
+| ⏳ Analyze API | Planned | #26 |
+| ⏳ SQLite Database | Planned | #27 |
+| ⏳ Automated Testing | Planned | #28 |
+| ⏳ Docker | Planned | #29 |
+| ⏳ Flutter Mobile App | Planned | #30 |
+| ⏳ Mobile MVP Integration | Planned | #31 |
+| ⏳ Advanced Features (LLM, etc.) | Planned | #32, #8 |
+| ⏳ Final Testing & Documentation | Planned | #9 |
+| ⏳ Dataset Publishing | Planned | — |
+| ⏳ Project Release | Planned | — |
 
 ---
 
-# 🎯 Final Project Pipeline
+# 🎯 Target System Architecture
 
 ```text
-Image
+Flutter Mobile App
+   │
+   ▼
+POST /api/v1/analyze (FastAPI)
    │
    ▼
 YOLOv8 Detection
    │
    ▼
-Bounding Box Detection
-   │
-   ▼
-Crop Detected Medicine Box
+Crop Medicine Box
    │
    ▼
 OpenCV Preprocessing
@@ -281,25 +390,16 @@ OpenCV Preprocessing
 EasyOCR
    │
    ▼
-Confidence Filtering
-   │
-   ▼
-Text Cleaning
-   │
-   ▼
 RapidFuzz Matching
    │
    ▼
-Medicine Database
+Medicine Database (SQLite)
    │
    ▼
-Large Language Model (LLM)
+JSON Response → Mobile Result Screen
    │
    ▼
-Streamlit Interface
-   │
-   ▼
-Final Result
+(Optional) LLM Explanation
 ```
 
 ---
