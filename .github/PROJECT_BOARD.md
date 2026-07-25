@@ -1,64 +1,64 @@
-# GitHub Project Board — Issue Mapping
+# GitHub Project Board — Column Mapping
 
-This file maps GitHub Issues to recommended Project board columns.
+Use this file when organizing issues on the GitHub Project board.
 
-## Column: Done
+## Done
 
 | Issue | Title |
 |-------|-------|
-| #6 | Implement medicine name matching |
+| [#6](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/6) | Medicine name matching (RapidFuzz + CSV) |
 
-## Column: In Progress
-
-| Issue | Title | Branch |
-|-------|-------|--------|
-| #23 | Unify AI pipeline under src/services | `refactor/unify-pipeline` |
-
-## Column: Todo — AI Pipeline
+## In Progress
 
 | Issue | Title | Branch |
 |-------|-------|--------|
-| #24 | Service-layer pipeline architecture | `feature/pipeline-services` |
+| [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23) | Unify AI pipeline under `src/services/` | `refactor/unify-pipeline` |
 
-## Column: Todo — Backend
+## Todo — AI Pipeline
 
-| Issue | Title | Branch |
-|-------|-------|--------|
-| #25 | FastAPI backend foundation | `feature/fastapi-foundation` |
-| #26 | Image upload and analyze API endpoint | `feature/analyze-endpoint` |
-| #27 | SQLite database migration | `feature/sqlite-database` |
-| #28 | Automated test system (pytest) | `feature/tests` |
-| #29 | Docker containerization for backend | `feature/docker` |
+| Issue | Branch |
+|-------|--------|
+| [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) | `feature/pipeline-services` |
 
-## Column: Todo — Mobile
+## Todo — Backend
 
-| Issue | Title | Branch |
-|-------|-------|--------|
-| #30 | Flutter mobile app foundation | `feature/flutter-foundation` |
-| #31 | Mobile and backend integration (MVP) | `feature/mobile-integration` |
+| Issue | Branch |
+|-------|--------|
+| [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) | `feature/fastapi-foundation` |
+| [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) | `feature/analyze-endpoint` |
+| [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) | `feature/sqlite-database` |
+| [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | `feature/tests` |
+| [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | `feature/docker` |
 
-## Column: Todo — Post-MVP
+## Todo — Mobile
 
-| Issue | Title | Branch |
-|-------|-------|--------|
-| #8 | Integrate LLM support | `feature/llm-integration` |
-| #32 | Advanced features | `feature/advanced-features` |
-| #9 | Test and document final system | `feature/final-testing` |
+| Issue | Branch |
+|-------|--------|
+| [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) | `feature/flutter-foundation` |
+| [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | `feature/mobile-integration` |
+
+## Post-MVP
+
+| Issue | Branch |
+|-------|--------|
+| [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) | `feature/llm-integration` |
+| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | `feature/advanced-features` |
+| [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | `feature/final-testing` |
 
 ## Closed / Superseded
 
-| Issue | Title | Reason |
-|-------|-------|--------|
-| #7 | Build Streamlit interface | Replaced by Flutter (#30, #31) |
+| Issue | Reason |
+|-------|--------|
+| [#7](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/7) | Streamlit replaced by Flutter ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30), [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 
 ## Labels
 
-| Label | Purpose |
-|-------|---------|
-| `ai-pipeline` | YOLO, OCR, matching work |
+| Label | Use |
+|-------|-----|
+| `ai-pipeline` | YOLO, OCR, matching |
 | `backend` | FastAPI |
 | `mobile` | Flutter |
 | `database` | SQLite / PostgreSQL |
 | `testing` | pytest |
-| `infrastructure` | Docker, deployment |
+| `infrastructure` | Docker |
 | `mvp` | Minimum viable product scope |

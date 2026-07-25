@@ -1,105 +1,125 @@
-# 🛠️ Setup Guide
+# Setup Guide
 
-This guide explains how to set up the development environment for the **AI-Powered Medicine Box Detection System**.
-
----
-
-# Prerequisites
-
-Before running the project, make sure the following software is installed:
-
-- Python 3.12 or later
-- Git
-- Visual Studio Code
+Environment setup for the **Medicine Box Detection System**.
 
 ---
 
-# Clone the Repository
+## Prerequisites
 
-Clone the project from GitHub:
+| Software | Purpose |
+|----------|---------|
+| Python 3.12+ | AI pipeline and backend |
+| Git | Version control |
+| VS Code (recommended) | Development IDE |
+
+Future phases will also require Flutter SDK and Docker (not needed for the current AI pipeline work).
+
+---
+
+## 1. Clone the Repository
 
 ```bash
 git clone https://github.com/Melikeda/medicine-box-detection-yolov8.git
-```
-
-Navigate into the project directory:
-
-```bash
 cd medicine-box-detection-yolov8
 ```
 
 ---
 
-# Create a Virtual Environment
-
-Create a Python virtual environment:
+## 2. Create a Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
----
-
-# Activate the Virtual Environment
-
-### Windows (PowerShell)
+### Activate — Windows (PowerShell)
 
 ```powershell
 venv\Scripts\Activate.ps1
 ```
 
-### Windows (CMD)
+### Activate — Windows (CMD)
 
 ```cmd
 venv\Scripts\activate
 ```
 
+### Activate — Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
 ---
 
-# Install Required Libraries
-
-Install all project dependencies:
+## 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
+First run downloads PyTorch and EasyOCR models — this may take several minutes.
+
 ---
 
-# Verify Installation
-
-Check that Python is installed correctly:
+## 4. Verify Installation
 
 ```bash
 python --version
-```
-
-Check installed packages:
-
-```bash
 pip list
 ```
 
 ---
 
-# Project Structure
+## 5. YOLO Model
 
-```text
-medicine-box-detection-yolov8/
-│
-├── docs/
-├── src/
-├── data/
-├── models/
-├── README.md
-├── requirements.txt
-└── LICENSE
+Training produces weights under `runs/detect/`. For inference scripts, point to your trained `best.pt` file. Model files (`.pt`) are excluded from Git.
+
+Train from scratch:
+
+```bash
+python src/train.py
+```
+
+Run detection on a sample image:
+
+```bash
+python src/predict.py
 ```
 
 ---
 
-# Ready to Start
+## 6. Run Pipeline Demos
 
-The development environment is now ready.
+OpenCV tutorial:
 
-You can proceed with dataset preparation and YOLOv8 model training.
+```bash
+python -m examples.opencv.step_22_preprocessing_pipeline
+```
+
+Full YOLO + OCR + RapidFuzz demo:
+
+```bash
+python -m examples.rapidfuzz.step_10_multi_ocr_medicine_matching
+```
+
+---
+
+## Project Layout (summary)
+
+```text
+medicine-box-detection-yolov8/
+├── data/          samples, database, dataset config
+├── docs/          architecture, roadmap, reports
+├── examples/      learning scripts
+├── src/           production AI modules
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Next Steps
+
+1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
+2. Pick a GitHub Issue (start with [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23))
+3. Create the corresponding feature branch

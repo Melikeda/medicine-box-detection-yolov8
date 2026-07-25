@@ -1,24 +1,30 @@
-# Dataset
+# Data Directory
 
-This directory contains the dataset configuration and related documentation for the project.
+This folder contains dataset configuration, sample images, and the medicine database.
 
-The complete image dataset is **not included** in this repository to keep the repository lightweight.
+## Contents
 
-Included files:
+| Path | Description |
+|------|-------------|
+| `database/medicines.csv` | Medicine records (name, brand, ingredient, dosage, form, category) |
+| `dataset/data.yaml` | YOLOv8 training configuration |
+| `dataset/README.*.txt` | Roboflow export metadata |
+| `samples/` | Test images for detection, OCR, and matching demos |
 
-- `data.yaml` — YOLOv8 dataset configuration
-- `README.dataset.txt` — Roboflow dataset information
-- `README.roboflow.txt` — Roboflow export details
+## Dataset images (not in repo)
 
-The dataset images and labels can be downloaded from the corresponding Roboflow project and placed in the following structure:
+Training images and YOLO labels are excluded from Git to keep the repository lightweight. Download from Roboflow and place them here:
 
 ```text
 dataset/
-│
 ├── train/
 ├── valid/
 ├── test/
 └── data.yaml
 ```
 
-After downloading the dataset, the project will be ready for YOLOv8 training.
+See [docs/reports/03-dataset-preparation.md](../docs/reports/03-dataset-preparation.md) for details.
+
+## Medicine database
+
+`database/medicines.csv` is the current source of truth for RapidFuzz matching. A SQLite migration is planned in issue [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27).

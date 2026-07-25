@@ -1,133 +1,99 @@
 # Technology Selection
 
-This document describes the technologies used in the project and explains why each technology was selected.
+This document explains which technologies are used in the project and why they were chosen.
 
 ---
 
-# Python
+## Python
 
-**Purpose**
+**Role:** Main programming language for the AI pipeline and backend.
 
-Main programming language of the project.
-
-**Reason for Selection**
-
-- Easy to learn and maintain
-- Rich AI and Computer Vision ecosystem
-- Excellent library support
+**Why:** Strong ecosystem for computer vision (OpenCV, PyTorch, Ultralytics), rapid prototyping, and easy integration with FastAPI.
 
 ---
 
-# YOLOv8n
+## YOLOv8n
 
-**Purpose**
+**Role:** Detect medicine boxes in photos.
 
-Detect medicine boxes in images.
-
-**Reason for Selection**
-
-- Fast object detection
-- Lightweight model
-- Suitable for real-time applications
-- Good performance on mid-range computers
+**Why:** Lightweight enough for CPU inference on a development machine; good accuracy for a single-class detection task; well documented via Ultralytics.
 
 ---
 
-# OpenCV
+## OpenCV
 
-**Purpose**
+**Role:** Image preprocessing before OCR (resize, CLAHE, thresholding, sharpening, rotation).
 
-Image preprocessing before OCR.
-
-**Reason for Selection**
-
-- Image processing
-- Cropping detected medicine boxes
-- Preparing images for OCR
+**Why:** Industry standard for image processing; modular functions reusable across the project.
 
 ---
 
-# Roboflow
+## EasyOCR
 
-**Purpose**
+**Role:** Read medicine names from cropped box images.
 
-Dataset management and annotation.
-
-**Reason for Selection**
-
-- Easy image annotation
-- Dataset versioning
-- Preprocessing
-- Data augmentation
-- Direct YOLO export
+**Why:** Supports Turkish and English; simple API; works well with our preprocessing pipeline.
 
 ---
 
-# EasyOCR
+## RapidFuzz
 
-**Purpose**
+**Role:** Match noisy OCR output to medicine names in the database.
 
-Read medicine names from detected medicine boxes.
-
-**Reason for Selection**
-
-- Supports Turkish language
-- Easy integration
-- Suitable for printed text recognition
-
-> **Note:** PaddleOCR may also be evaluated during development if it provides better performance.
+**Why:** Fast fuzzy string matching; handles OCR typos (e.g. `afern` → `A-Ferin`); no heavy ML dependency.
 
 ---
 
-# RapidFuzz
+## CSV / SQLite / PostgreSQL
 
-**Purpose**
-
-Correct OCR recognition errors.
-
-**Reason for Selection**
-
-- Fast fuzzy matching
-- High accuracy
-- Lightweight
+| Stage | Technology | Why |
+|-------|------------|-----|
+| Current | CSV | Zero setup; ideal for prototyping (~35 medicines) |
+| MVP target | SQLite | File-based SQL; works with SQLAlchemy; no server needed |
+| Production | PostgreSQL | Scalable; supports concurrent users and history |
 
 ---
 
-# Streamlit
+## FastAPI (planned)
 
-**Purpose**
+**Role:** REST API backend for the mobile app.
 
-Build the user interface.
-
-**Reason for Selection**
-
-- Rapid development
-- Interactive web interface
-- Easy deployment
+**Why:** Native async support, automatic OpenAPI docs, Pydantic validation, straightforward file upload handling, excellent Python AI ecosystem fit.
 
 ---
 
-# Pandas
+## Flutter (planned)
 
-**Purpose**
+**Role:** Cross-platform mobile app (Android MVP first).
 
-Manage medicine information stored in CSV files.
-
-**Reason for Selection**
-
-- Easy data manipulation
-- Simple CSV integration
+**Why:** Single codebase for Android and future iOS; mature camera/gallery packages (`image_picker`); good UI tooling for internship-level development.
 
 ---
 
-# Large Language Model (LLM)
+## Docker (planned)
 
-**Purpose**
+**Role:** Package backend, models, and dependencies for consistent deployment.
 
-Provide explanations about detected medicines.
+**Why:** Eliminates "works on my machine" issues; simplifies sharing the backend across Windows/Linux.
 
-**Reason for Selection**
+---
 
-- Generate natural language responses
-- Improve user experience
-- Support future intelligent features
+## Large Language Model — Post-MVP
+
+**Role:** Generate natural-language medicine explanations (usage, warnings).
+
+**Why:** Adds user-friendly information beyond raw database fields. Planned after the mobile MVP is stable ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8), [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).
+
+---
+
+## Deprecated Direction: Streamlit
+
+Streamlit was considered for a web UI early in the project. The direction changed to **Flutter + FastAPI** for a real mobile product. Issue [#7](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/7) was closed accordingly.
+
+---
+
+## Roboflow
+
+**Role:** Dataset annotation, augmentation, and YOLO export.
+
+**Why:** Simplified labeling workflow and reproducible dataset versioning for training.
