@@ -32,20 +32,12 @@ env/
 # ==========================
 
 runs/
-results/predict/
-results/train/
 
 # ==========================
-# OpenCV Generated Results
+# Generated Results (local only)
 # ==========================
 
-results/preprocessing/
-
-# ==========================
-# OCR Generated Results
-# ==========================
-
-results/ocr/
+results/
 
 # ==========================
 # Dataset
