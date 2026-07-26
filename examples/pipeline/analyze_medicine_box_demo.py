@@ -31,6 +31,11 @@ def main() -> None:
     print(f"Model: {config.model_path}")
     print(f"Database: {config.medicines_csv_path}")
     print()
+    print(
+        "Not: CPU uzerinde OCR uzun surebilir (bulanik goruntulerde "
+        "50+ varyant). pin_memory uyarisi hatadir, islem devam eder."
+    )
+    print("Lutfen bekleyin...\n")
 
     result = analyze_medicine_box(
         image_path=image_path,

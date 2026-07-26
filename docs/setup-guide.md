@@ -101,6 +101,12 @@ python -m examples.preprocessing.step_22_preprocessing_pipeline
 Unified pipeline demo (recommended):
 
 ```bash
+python run_analyze.py
+```
+
+Or the examples wrapper:
+
+```bash
 python -m examples.pipeline.analyze_medicine_box_demo
 ```
 
@@ -151,5 +157,5 @@ print(result.success, result.medicine, result.match_score)
 Or use the demo script:
 
 ```bash
-python -m examples.pipeline.analyze_medicine_box_demo
+python run_analyze.py
 ```

@@ -992,9 +992,18 @@ def run_ocr_pipeline(
         f"OCR varyant sayısı: {len(variants)}"
     )
 
-    for variant_name, variant_image in (
-        variants.items()
+    total_variants = len(variants)
+
+    for index, (variant_name, variant_image) in enumerate(
+        variants.items(),
+        start=1,
     ):
+        print(
+            f"OCR isleniyor [{index}/{total_variants}]: "
+            f"{variant_name}",
+            flush=True,
+        )
+
         ocr_results = run_ocr_on_variant(
             reader=reader,
             image=variant_image,

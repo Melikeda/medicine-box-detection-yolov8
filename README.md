@@ -103,6 +103,7 @@ medicine-box-detection-yolov8/
 │   └── integration/       # YOLO + OCR glue code
 ├── src/train.py           # YOLO training script
 ├── src/predict.py         # YOLO inference script
+├── run_analyze.py         # Main pipeline runner (analyze_medicine_box)
 └── requirements.txt
 ```
 
@@ -152,7 +153,15 @@ python src/train.py
 python src/predict.py
 ```
 
-### Run full pipeline demo (recommended)
+### Run main pipeline (production entry point)
+
+```bash
+python run_analyze.py
+```
+
+Edit `IMAGE_PATH` in `run_analyze.py` to use your own sample image.
+
+### Run pipeline demo (examples wrapper)
 
 ```bash
 python -m examples.pipeline.analyze_medicine_box_demo
