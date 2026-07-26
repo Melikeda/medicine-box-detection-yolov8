@@ -121,5 +121,20 @@ medicine-box-detection-yolov8/
 ## Next Steps
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
-2. Pick a GitHub Issue (start with [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23))
+2. Pick a GitHub Issue (start with [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24))
 3. Create the corresponding feature branch
+
+### Run the unified pipeline
+
+```python
+from src.services import analyze_medicine_box
+
+result = analyze_medicine_box("data/samples/samples3.jpg")
+print(result.success, result.medicine, result.match_score)
+```
+
+Or use the demo script:
+
+```bash
+python -m examples.rapidfuzz.step_10_multi_ocr_medicine_matching
+```

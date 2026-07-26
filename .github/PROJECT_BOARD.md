@@ -7,18 +7,17 @@ Use this file when organizing issues on the GitHub Project board.
 | Issue | Title |
 |-------|-------|
 | [#6](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/6) | Medicine name matching (RapidFuzz + CSV) |
+| [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23) | Unify AI pipeline under `src/services/` |
 
 ## In Progress
 
 | Issue | Title | Branch |
 |-------|-------|--------|
-| [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23) | Unify AI pipeline under `src/services/` | `refactor/unify-pipeline` |
+| [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) | Service-layer pipeline architecture | `feature/pipeline-services` |
 
 ## Todo — AI Pipeline
 
-| Issue | Branch |
-|-------|--------|
-| [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) | `feature/pipeline-services` |
+_No open AI pipeline issues — next work is backend (#25) or servicification (#24)._
 
 ## Todo — Backend
 

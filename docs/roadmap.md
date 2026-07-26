@@ -171,10 +171,10 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 
 ## Objectives
 
-- [ ] Fix API mismatch between integration and OCR modules
-- [ ] Extract end-to-end logic from examples into `src/services/`
-- [ ] Create `analyze_medicine_box()` orchestration function
-- [ ] Centralize model paths and configuration
+- [x] Fix API mismatch between integration and OCR modules
+- [x] Extract end-to-end logic from examples into `src/services/`
+- [x] Create `analyze_medicine_box()` orchestration function
+- [x] Centralize model paths and configuration
 
 ---
 
@@ -353,8 +353,8 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 | ✅ OpenCV Image Preprocessing | Completed | — |
 | ✅ OCR Integration | Completed | — |
 | ✅ Medicine Name Matching | Completed | #6 |
-| ⏳ Pipeline Unification | Next | #23 |
-| ⏳ Pipeline Servicification | Planned | #24 |
+| ✅ Pipeline Unification | Completed | #23 |
+| ⏳ Pipeline Servicification | Next | #24 |
 | ⏳ FastAPI Backend | Planned | #25 |
 | ⏳ Analyze API | Planned | #26 |
 | ⏳ SQLite Database | Planned | #27 |

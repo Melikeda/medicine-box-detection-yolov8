@@ -6,19 +6,16 @@ import easyocr
 import numpy as np
 from ultralytics import YOLO
 
-from src.ocr.ocr_pipeline import run_ocr_pipeline
-from src.ocr.text_cleaner import (
-    combine_texts,
-    extract_texts,
+from src.ocr.ocr_pipeline import (
+    get_candidate_texts,
+    run_ocr_pipeline,
 )
 
 
 def load_yolo_model(
     model_path: str | Path,
 ) -> YOLO:
-    """
-    Eğitilmiş YOLO modelini yükler.
-    """
+    """Eğitilmiş YOLO modelini yükler."""
     model_path = Path(model_path)
 
     if not model_path.exists():
@@ -75,16 +72,10 @@ def crop_detected_box(
     image: np.ndarray,
     box: Any,
 ) -> np.ndarray:
-    """
-    YOLO bounding box koordinatlarına göre
-    ilaç kutusunu görüntüden kırpar.
-    """
+    """YOLO bounding box koordinatlarına göre ilaç kutusunu kırpar."""
     coordinates = box.xyxy[0].cpu().numpy()
 
-    x1, y1, x2, y2 = map(
-        int,
-        coordinates,
-    )
+    x1, y1, x2, y2 = map(int, coordinates)
 
     image_height, image_width = image.shape[:2]
 
@@ -99,12 +90,7 @@ def crop_detected_box(
             f"({x1}, {y1}, {x2}, {y2})"
         )
 
-    cropped_image = image[
-        y1:y2,
-        x1:x2,
-    ]
-
-    return cropped_image
+    return image[y1:y2, x1:x2]
 
 
 def run_yolo_ocr_pipeline(
@@ -114,33 +100,21 @@ def run_yolo_ocr_pipeline(
     output_directory: str | Path,
     detection_confidence: float = 0.25,
     ocr_confidence: float = 0.70,
+    ocr_scale_factor: float = 2.0,
 ) -> list[dict[str, Any]]:
     """
-    Tam YOLO + OCR entegrasyonunu çalıştırır.
+    YOLO + OCR entegrasyonunu çalıştırır.
 
-    İşlem sırası:
-    1. İlaç kutularını tespit eder.
-    2. Her kutuyu crop eder.
-    3. Crop görüntüsünü kaydeder.
-    4. OCR pipeline çalıştırır.
-    5. Metinleri güven skoruna göre filtreler.
-    6. Metinleri temizler ve birleştirir.
-    7. Sonuçları liste olarak döndürür.
+    Not: Tam ilaç eşleştirmesi için
+    src.services.analyze_medicine_box kullanın.
     """
     output_directory = Path(output_directory)
 
     crop_directory = output_directory / "crops"
     preprocessed_directory = output_directory / "preprocessed"
 
-    crop_directory.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    preprocessed_directory.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+    crop_directory.mkdir(parents=True, exist_ok=True)
+    preprocessed_directory.mkdir(parents=True, exist_ok=True)
 
     image, detected_boxes = detect_medicine_boxes(
         model=model,
@@ -150,65 +124,40 @@ def run_yolo_ocr_pipeline(
 
     pipeline_results: list[dict[str, Any]] = []
 
-    for index, box in enumerate(
-        detected_boxes,
-        start=1,
-    ):
+    for index, box in enumerate(detected_boxes, start=1):
         cropped_image = crop_detected_box(
             image=image,
             box=box,
         )
 
-        crop_path = (
-            crop_directory
-            / f"medicine_box_{index}.jpg"
-        )
+        crop_path = crop_directory / f"medicine_box_{index}.jpg"
 
-        save_success = cv2.imwrite(
-            str(crop_path),
-            cropped_image,
-        )
+        save_success = cv2.imwrite(str(crop_path), cropped_image)
 
         if not save_success:
             raise IOError(
                 f"Crop görüntüsü kaydedilemedi: {crop_path}"
             )
 
-        preprocessed_path = (
-            preprocessed_directory
-            / f"medicine_box_{index}_preprocessed.jpg"
-        )
-
-        ocr_results = run_ocr_pipeline(
+        pipeline_result = run_ocr_pipeline(
             reader=reader,
-            image_path=crop_path,
-            save_preprocessed_image=True,
-            output_path=preprocessed_path,
-        )
-
-        cleaned_texts = extract_texts(
-            ocr_results=ocr_results,
+            image_input=crop_path,
+            scale_factor=ocr_scale_factor,
             minimum_confidence=ocr_confidence,
+            save_preprocessed_images=True,
+            output_directory=preprocessed_directory,
         )
 
-        combined_text = combine_texts(
-            cleaned_texts,
+        cleaned_texts = get_candidate_texts(
+            pipeline_result=pipeline_result,
         )
 
-        detection_score = float(
-            box.conf[0].cpu().item()
-        )
+        combined_text = " ".join(cleaned_texts)
 
-        class_id = int(
-            box.cls[0].cpu().item()
-        )
-
+        detection_score = float(box.conf[0].cpu().item())
+        class_id = int(box.cls[0].cpu().item())
         coordinates = (
-            box.xyxy[0]
-            .cpu()
-            .numpy()
-            .astype(int)
-            .tolist()
+            box.xyxy[0].cpu().numpy().astype(int).tolist()
         )
 
         pipeline_results.append(
@@ -218,9 +167,6 @@ def run_yolo_ocr_pipeline(
                 "detection_confidence": detection_score,
                 "bounding_box": coordinates,
                 "crop_path": str(crop_path),
-                "preprocessed_path": str(
-                    preprocessed_path
-                ),
                 "texts": cleaned_texts,
                 "combined_text": combined_text,
             }

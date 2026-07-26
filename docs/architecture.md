@@ -86,6 +86,40 @@ Receives uploaded images and orchestrates the AI pipeline.
 
 - `POST /api/v1/analyze`
 
+The analyze endpoint will call `src/services/medicine_analyzer.analyze_medicine_box()` to run the full AI pipeline.
+
+---
+
+## 2.1 Pipeline Service Layer (`src/services/`)
+
+Unified orchestration for the AI pipeline. Implemented in Phase 9 (Issue #23).
+
+### Responsibilities
+
+- Load configuration (model paths, thresholds)
+- Run YOLO detection and crop
+- Execute multi-variant OCR
+- Process and filter OCR candidates
+- Match against the medicine database with RapidFuzz
+- Return structured `MedicineAnalysisResult`
+
+### Key Entry Point
+
+```python
+from src.services import analyze_medicine_box
+
+result = analyze_medicine_box(image_path)
+```
+
+### Modules
+
+| Module | Role |
+|--------|------|
+| `config.py` | `PipelineConfig` — central settings |
+| `detection.py` | YOLO crop helpers |
+| `candidate_processor.py` | OCR candidate logic and ranking |
+| `medicine_analyzer.py` | End-to-end orchestration |
+
 ---
 
 ## 3. Object Detection (YOLOv8)

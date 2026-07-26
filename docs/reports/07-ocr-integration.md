@@ -251,3 +251,5 @@ The OCR Integration phase successfully introduced a reusable and modular OCR sys
 The system is capable of extracting medicine-related text from YOLO-detected medicine boxes while improving recognition quality through OpenCV preprocessing and confidence filtering.
 
 The next phase of the project will focus on RapidFuzz-based medicine name matching to correct OCR spelling errors and improve overall recognition accuracy.
+
+> **Update (Phase 9):** Medicine matching and pipeline unification are now complete. See [08-pipeline-unification.md](08-pipeline-unification.md).
