@@ -60,7 +60,20 @@ YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → Medicine DB
 JSON response → Mobile result screen
 ```
 
-The AI pipeline itself is implemented in Python under `src/`. The backend and mobile layers are the current development focus.
+The AI pipeline itself is implemented in Python under `src/`. Learning scripts and demos live under `examples/`. The backend and mobile layers are the current development focus.
+
+---
+
+## Code layout
+
+| Directory | Purpose |
+|-----------|---------|
+| `src/` | Reusable, production-ready application logic |
+| `examples/` | Step-by-step learning scripts and usage demos |
+| `docs/` | Architecture, roadmap, setup guide, technical reports |
+| `tests/` | Automated tests (planned — Issue #28) |
+
+See [examples/README.md](examples/README.md) for the full learning path.
 
 ---
 
@@ -73,11 +86,14 @@ medicine-box-detection-yolov8/
 │   ├── dataset/           # YOLO training config (images not in repo)
 │   └── samples/           # Test images
 ├── docs/                  # Architecture, roadmap, setup, reports
-├── examples/
-│   ├── opencv/            # Step-by-step OpenCV tutorials (22 scripts)
+├── examples/              # Learning scripts (not production code)
+│   ├── preprocessing/     # OpenCV tutorials (22 steps)
 │   ├── ocr/               # OCR learning scripts
-│   └── rapidfuzz/         # Matching + full pipeline demos
-├── models/                # YOLO weights (not in repo — see runs/ locally)
+│   ├── database/          # CSV database examples
+│   ├── matching/          # RapidFuzz examples
+│   ├── integration/       # Legacy step-by-step integration demos
+│   ├── pipeline/          # Current analyze_medicine_box demo
+│   └── README.md
 ├── src/
 │   ├── preprocessing/     # OpenCV modules
 │   ├── ocr/               # EasyOCR pipeline
@@ -136,10 +152,16 @@ python src/train.py
 python src/predict.py
 ```
 
-### Run full pipeline demo (YOLO + OCR + matching)
+### Run full pipeline demo (recommended)
 
 ```bash
-python -m examples.rapidfuzz.step_10_multi_ocr_medicine_matching
+python -m examples.pipeline.analyze_medicine_box_demo
+```
+
+### Run legacy integration demo (verbose output)
+
+```bash
+python -m examples.integration.legacy_multi_ocr_medicine_matching
 ```
 
 ### Run pipeline from Python

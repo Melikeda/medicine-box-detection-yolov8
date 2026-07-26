@@ -1,3 +1,10 @@
+"""
+Early YOLO + OCR integration using src.integration.
+
+Run:
+    python -m examples.ocr.step_05_yolo_ocr_integration
+"""
+
 from pathlib import Path
 
 from src.integration.yolo_ocr_pipeline import (

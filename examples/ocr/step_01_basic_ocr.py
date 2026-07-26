@@ -1,3 +1,10 @@
+"""
+Basic EasyOCR text extraction from a medicine box image.
+
+Run:
+    python -m examples.ocr.step_01_basic_ocr
+"""
+
 from pathlib import Path
 
 from src.ocr.ocr_reader import (

@@ -1,3 +1,10 @@
+"""
+Clean and combine raw OCR text outputs.
+
+Run:
+    python -m examples.ocr.step_04_text_cleaning
+"""
+
 from pathlib import Path
 
 from src.ocr.ocr_pipeline import run_ocr_pipeline

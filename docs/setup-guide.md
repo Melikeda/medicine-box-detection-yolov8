@@ -90,16 +90,24 @@ python src/predict.py
 
 ## 6. Run Pipeline Demos
 
-OpenCV tutorial:
+See [examples/README.md](../examples/README.md) for the full learning path.
+
+Preprocessing tutorial (final step):
 
 ```bash
-python -m examples.opencv.step_22_preprocessing_pipeline
+python -m examples.preprocessing.step_22_preprocessing_pipeline
 ```
 
-Full YOLO + OCR + RapidFuzz demo:
+Unified pipeline demo (recommended):
 
 ```bash
-python -m examples.rapidfuzz.step_10_multi_ocr_medicine_matching
+python -m examples.pipeline.analyze_medicine_box_demo
+```
+
+Legacy integration demo (verbose step-by-step output):
+
+```bash
+python -m examples.integration.legacy_multi_ocr_medicine_matching
 ```
 
 ---
@@ -110,11 +118,18 @@ python -m examples.rapidfuzz.step_10_multi_ocr_medicine_matching
 medicine-box-detection-yolov8/
 ├── data/          samples, database, dataset config
 ├── docs/          architecture, roadmap, reports
-├── examples/      learning scripts
-├── src/           production AI modules
+├── examples/      learning scripts and usage demos
+├── src/           reusable production AI modules
+├── tests/         automated tests (planned)
 ├── requirements.txt
 └── README.md
 ```
+
+| Directory | Role |
+|-----------|------|
+| `src/` | Production-ready application logic |
+| `examples/` | Step-by-step learning demonstrations |
+| `docs/` | Documentation and technical reports |
 
 ---
 
@@ -136,5 +151,5 @@ print(result.success, result.medicine, result.match_score)
 Or use the demo script:
 
 ```bash
-python -m examples.rapidfuzz.step_10_multi_ocr_medicine_matching
+python -m examples.pipeline.analyze_medicine_box_demo
 ```

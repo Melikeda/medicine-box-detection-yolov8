@@ -221,6 +221,7 @@ JSON Response → Flutter Result Screen
 # 🎯 Design Principles
 
 - Modular architecture with single-responsibility services
+- Clear separation: `src/` (production logic) vs `examples/` (learning demos)
 - AI models loaded once at backend startup
 - REST + JSON for mobile communication
 - Git Feature Branch Workflow with GitHub Issues

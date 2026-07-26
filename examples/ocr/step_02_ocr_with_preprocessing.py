@@ -1,3 +1,10 @@
+"""
+Improve OCR accuracy using OpenCV preprocessing.
+
+Run:
+    python -m examples.ocr.step_02_ocr_with_preprocessing
+"""
+
 from pathlib import Path
 
 import cv2

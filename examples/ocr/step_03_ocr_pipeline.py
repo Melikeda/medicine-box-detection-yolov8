@@ -1,3 +1,10 @@
+"""
+Use the reusable OCR pipeline from src.ocr.
+
+Run:
+    python -m examples.ocr.step_03_ocr_pipeline
+"""
+
 from pathlib import Path
 
 from src.ocr.ocr_pipeline import run_ocr_pipeline

@@ -4,6 +4,8 @@
 
 This report documents Phase 9 of the AI-Powered Medicine Box Detection System: unifying the end-to-end AI pipeline under a single service layer in `src/services/`.
 
+> **Note:** After Phase 9, example scripts were reorganized under topic-based folders. See [examples/README.md](../../examples/README.md). Historical paths such as `examples/rapidfuzz/` refer to the pre-refactor layout.
+
 Before this phase, the full YOLO → OCR → RapidFuzz workflow lived inside `examples/rapidfuzz/step_10_multi_ocr_medicine_matching.py` (~900 lines). The integration module in `src/integration/yolo_ocr_pipeline.py` was outdated and incompatible with the current OCR API. There was no single function that FastAPI or other callers could invoke.
 
 The objective of this phase was to extract production-ready orchestration logic into `src/services/` and expose one entry point: `analyze_medicine_box()`.
