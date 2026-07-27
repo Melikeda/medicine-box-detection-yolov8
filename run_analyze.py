@@ -1,20 +1,63 @@
-"""Run the main production pipeline once from the project root."""
+"""Run the main production pipeline from the project root."""
 
-from src.services import PipelineConfig, analyze_medicine_box
+import argparse
 
-IMAGE_PATH = "data/samples/samples3.jpg"
+from src.services import PipelineConfig, PipelineManager, analyze_medicine_box
+
+DEFAULT_IMAGE = "data/samples/samples3.jpg"
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Analyze a medicine box image against the CSV database.",
+    )
+    parser.add_argument(
+        "image",
+        nargs="?",
+        default=DEFAULT_IMAGE,
+        help=f"Path to the medicine box image (default: {DEFAULT_IMAGE})",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["fast", "accurate"],
+        default="fast",
+        help="OCR mode: fast (~6 variants) or accurate (~52 variants)",
+    )
+    parser.add_argument(
+        "--preload",
+        action="store_true",
+        help="Load models explicitly before analysis (shows load progress)",
+    )
+    return parser.parse_args()
 
 
 def main() -> None:
-    print("Ana pipeline: analyze_medicine_box()")
-    print(f"Gorsel: {IMAGE_PATH}")
-    print("CSV: data/database/medicines.csv")
-    print("CPU OCR uzun surebilir, lutfen bekleyin...\n")
+    args = parse_args()
+    config = PipelineConfig(ocr_mode=args.mode)
 
-    result = analyze_medicine_box(
-        IMAGE_PATH,
-        config=PipelineConfig(),
-    )
+    print("Ana pipeline: analyze_medicine_box()")
+    print(f"Gorsel: {args.image}")
+    print(f"OCR modu: {config.ocr_mode}")
+    print("CSV: data/database/medicines.csv")
+
+    if config.ocr_mode == "accurate":
+        print(
+            "Not: accurate mod CPU'da cok uzun surebilir (50+ OCR varyanti)."
+        )
+    else:
+        print("Not: fast mod ~6 OCR varyanti kullanir.")
+
+    print()
+
+    if args.preload:
+        manager = PipelineManager.get_instance(config)
+        manager.load()
+        result = manager.analyze(args.image)
+    else:
+        result = analyze_medicine_box(
+            args.image,
+            config=config,
+        )
 
     print("\n" + "=" * 50)
     print("SONUC")

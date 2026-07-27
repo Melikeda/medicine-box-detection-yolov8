@@ -28,15 +28,15 @@ This repository contains an intelligent **medicine box recognition system**. It 
 | Text recognition | EasyOCR | Done |
 | Name matching | RapidFuzz | Done |
 | Medicine database | CSV (~35 records) | Done |
-| End-to-end pipeline | `src/services/` + examples | Done |
-| Unified orchestration | `analyze_medicine_box()` | Done |
+| End-to-end pipeline | `src/services/` + `PipelineManager` | Done |
+| OCR modes (fast/accurate) | `PipelineConfig.ocr_mode` | Done |
 
 ### What we are building next
 
 | Stage | Technology | GitHub Issue |
 |-------|------------|--------------|
-| Pipeline servicification | Model singleton, OCR modes | [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) |
-| REST backend | FastAPI | [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) |
+| Pipeline servicification | Done ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
+| REST backend | FastAPI ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
 | Analyze API | `POST /api/v1/analyze` | [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) |
 | Mobile app | Flutter (Android MVP) | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) |
 | Mobile integration | Gallery → API → result | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) |
@@ -156,10 +156,15 @@ python src/predict.py
 ### Run main pipeline (production entry point)
 
 ```bash
-python run_analyze.py
-```
+# Fast mode (~6 OCR variants, recommended)
+python run_analyze.py data/samples/samples3.jpg --mode fast
 
-Edit `IMAGE_PATH` in `run_analyze.py` to use your own sample image.
+# Accurate mode (~52 OCR variants, slow on CPU)
+python run_analyze.py data/samples/samples3.jpg --mode accurate
+
+# Preload models explicitly (shows load progress)
+python run_analyze.py --preload --mode fast
+```
 
 ### Run pipeline demo (examples wrapper)
 
@@ -197,7 +202,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | OCR integration | Done |
 | Medicine matching (RapidFuzz) | Done |
 | Pipeline unification | Done ([#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23)) |
-| Pipeline servicification | Planned ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
+| Pipeline servicification | Done ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
 | FastAPI backend | Planned ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
 | Flutter mobile MVP | Planned ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)-[#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |

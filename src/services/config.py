@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Literal
 
+from src.ocr.ocr_pipeline import DEFAULT_BLUR_THRESHOLD
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -17,6 +19,8 @@ DEFAULT_MEDICINES_CSV_PATH = (
 DEFAULT_OUTPUT_DIRECTORY = (
     PROJECT_ROOT / "results/integration/medicine_matching"
 )
+
+OCRMode = Literal["fast", "accurate"]
 
 IGNORED_OCR_PHRASES = frozenset(
     {
@@ -67,7 +71,27 @@ class PipelineConfig:
     top_match_count: int = 3
     ocr_languages: tuple[str, ...] = ("tr", "en")
     use_gpu: bool = False
+    ocr_mode: OCRMode = "fast"
 
     @property
     def ocr_variants_directory(self) -> Path:
         return self.output_directory / "ocr_variants"
+
+    @property
+    def ocr_rotation_angles(self) -> tuple[int, ...]:
+        """fast: tek açı | accurate: dört açı."""
+        if self.ocr_mode == "fast":
+            return (0,)
+        return (0, 90, 180, 270)
+
+    @property
+    def ocr_blur_threshold(self) -> float:
+        """
+        fast modda bulanık ek varyantları devre dışı bırakır.
+
+        blur_score >= threshold olduğunda yalnızca standart
+        preprocessing varyantları kullanılır.
+        """
+        if self.ocr_mode == "fast":
+            return 0.0
+        return DEFAULT_BLUR_THRESHOLD

@@ -8,22 +8,18 @@ Use this file when organizing issues on the GitHub Project board.
 |-------|-------|
 | [#6](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/6) | Medicine name matching (RapidFuzz + CSV) |
 | [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23) | Unify AI pipeline under `src/services/` |
+| [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) | Service-layer pipeline architecture |
 
 ## In Progress
 
 | Issue | Title | Branch |
 |-------|-------|--------|
-| [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) | Service-layer pipeline architecture | `feature/pipeline-services` |
-
-## Todo — AI Pipeline
-
-_No open AI pipeline issues — next work is backend (#25) or servicification (#24)._
+| [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) | FastAPI backend foundation | `feature/fastapi-foundation` |
 
 ## Todo — Backend
 
 | Issue | Branch |
 |-------|--------|
-| [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) | `feature/fastapi-foundation` |
 | [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) | `feature/analyze-endpoint` |
 | [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) | `feature/sqlite-database` |
 | [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | `feature/tests` |

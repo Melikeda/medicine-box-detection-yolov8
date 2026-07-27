@@ -98,16 +98,16 @@ Preprocessing tutorial (final step):
 python -m examples.preprocessing.step_22_preprocessing_pipeline
 ```
 
-Unified pipeline demo (recommended):
+Unified pipeline (fast mode, recommended):
 
 ```bash
-python run_analyze.py
+python run_analyze.py data/samples/samples3.jpg --mode fast
 ```
 
-Or the examples wrapper:
+Accurate mode (slow on CPU):
 
 ```bash
-python -m examples.pipeline.analyze_medicine_box_demo
+python run_analyze.py data/samples/samples3.jpg --mode accurate
 ```
 
 Legacy integration demo (verbose step-by-step output):
@@ -142,7 +142,7 @@ medicine-box-detection-yolov8/
 ## Next Steps
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
-2. Pick a GitHub Issue (start with [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24))
+2. Pick a GitHub Issue (start with [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25))
 3. Create the corresponding feature branch
 
 ### Run the unified pipeline

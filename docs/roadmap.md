@@ -185,9 +185,9 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 
 ## Objectives
 
-- [ ] Split YOLO, OCR, and matching into dedicated services
-- [ ] Load models once at startup (singleton pattern)
-- [ ] Add `fast` and `accurate` OCR modes for CPU performance
+- [x] Split YOLO, OCR, and matching into dedicated services
+- [x] Load models once at startup (singleton pattern)
+- [x] Add `fast` and `accurate` OCR modes for CPU performance
 
 ---
 
@@ -354,8 +354,8 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 | ✅ OCR Integration | Completed | — |
 | ✅ Medicine Name Matching | Completed | #6 |
 | ✅ Pipeline Unification | Completed | #23 |
-| ⏳ Pipeline Servicification | Next | #24 |
-| ⏳ FastAPI Backend | Planned | #25 |
+| ✅ Pipeline Servicification | Completed | #24 |
+| ⏳ FastAPI Backend | Next | #25 |
 | ⏳ Analyze API | Planned | #26 |
 | ⏳ SQLite Database | Planned | #27 |
 | ⏳ Automated Testing | Planned | #28 |

@@ -17,7 +17,7 @@ DEFAULT_IMAGE = Path("data/samples/samples3.jpg")
 
 def main() -> None:
     """Run the unified medicine box analysis pipeline."""
-    config = PipelineConfig()
+    config = PipelineConfig(ocr_mode="fast")
     image_path = DEFAULT_IMAGE
 
     if not image_path.exists():
@@ -31,9 +31,10 @@ def main() -> None:
     print(f"Model: {config.model_path}")
     print(f"Database: {config.medicines_csv_path}")
     print()
+    print(f"OCR modu: {config.ocr_mode}")
     print(
-        "Not: CPU uzerinde OCR uzun surebilir (bulanik goruntulerde "
-        "50+ varyant). pin_memory uyarisi hatadir, islem devam eder."
+        "Not: fast mod ~6 varyant kullanir. accurate mod icin "
+        "run_analyze.py --mode accurate kullanin."
     )
     print("Lutfen bekleyin...\n")
 

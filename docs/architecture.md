@@ -115,10 +115,13 @@ result = analyze_medicine_box(image_path)
 
 | Module | Role |
 |--------|------|
-| `config.py` | `PipelineConfig` — central settings |
-| `detection.py` | YOLO crop helpers |
+| `config.py` | `PipelineConfig` — central settings, OCR modes |
+| `pipeline_manager.py` | Singleton — load models once |
+| `detection_service.py` | YOLO detection and crop |
+| `ocr_service.py` | OCR with fast/accurate modes |
+| `matching_service.py` | CSV + RapidFuzz matching |
 | `candidate_processor.py` | OCR candidate logic and ranking |
-| `medicine_analyzer.py` | End-to-end orchestration |
+| `medicine_analyzer.py` | Public `analyze_medicine_box()` entry point |
 
 ---
 
