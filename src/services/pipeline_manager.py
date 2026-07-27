@@ -58,6 +58,12 @@ class PipelineManager:
     def is_loaded(self) -> bool:
         return self._yolo_model is not None
 
+    @property
+    def medicine_count(self) -> int | None:
+        if self._matching_service is None:
+            return None
+        return self._matching_service.medicine_count
+
     def load(self) -> None:
         """YOLO, EasyOCR ve CSV veritabanını belleğe yükler."""
         if self.is_loaded:

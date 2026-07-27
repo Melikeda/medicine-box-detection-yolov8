@@ -125,6 +125,20 @@ python run_analyze.py --image data/samples/samples3.jpg --mode accurate
 
 YOLO detects boxes; OCR reads text; RapidFuzz matches only drugs listed in the CSV.
 
+### Run FastAPI backend
+
+```bash
+pip install fastapi uvicorn[standard] python-multipart pydantic-settings
+python run_api.py
+```
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /health` | API and model readiness |
+| `POST /api/v1/analyze` | Upload image (multipart form field: `file`) |
+
+Docs: http://127.0.0.1:8000/docs
+
 Legacy integration demo (verbose step-by-step output):
 
 ```bash
