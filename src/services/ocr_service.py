@@ -20,20 +20,29 @@ class OCRService:
         self.config = config
         self.reader = reader
 
-    def extract_candidates(
+    def analyze_crop(
         self,
         cropped_image: np.ndarray,
         *,
+        box_index: int | None = None,
         save_debug_outputs: bool = False,
+        debug_subdirectory: str | None = None,
     ) -> tuple[list[str], OCRPipelineResult]:
         """
-        Kırpılmış görüntüden OCR aday metinlerini üretir.
+        Tek bir crop görüntüsünden OCR aday metinlerini üretir.
 
-        ocr_mode:
-            fast     — tek rotasyon, standart varyantlar (~6 OCR)
-            accurate — dört rotasyon + bulanık varyantlar (~52 OCR)
+        Her crop kendi blur skoruna göre ayrı değerlendirilir.
         """
-        print(f"OCR modu: {self.config.ocr_mode}")
+        if box_index is not None:
+            print(f"OCR modu: {self.config.ocr_mode} (kutu {box_index})")
+        else:
+            print(f"OCR modu: {self.config.ocr_mode}")
+
+        output_directory = None
+        if save_debug_outputs and debug_subdirectory:
+            output_directory = (
+                self.config.ocr_variants_directory / debug_subdirectory
+            )
 
         pipeline_result = run_ocr_pipeline(
             reader=self.reader,
@@ -42,12 +51,9 @@ class OCRService:
             minimum_confidence=self.config.minimum_ocr_confidence,
             rotation_angles=self.config.ocr_rotation_angles,
             blur_threshold=self.config.ocr_blur_threshold,
+            limited_variants=self.config.ocr_limited_variants,
             save_preprocessed_images=save_debug_outputs,
-            output_directory=(
-                self.config.ocr_variants_directory
-                if save_debug_outputs
-                else None
-            ),
+            output_directory=output_directory,
         )
 
         candidate_texts = get_candidate_texts(
@@ -55,3 +61,15 @@ class OCRService:
         )
 
         return candidate_texts, pipeline_result
+
+    def extract_candidates(
+        self,
+        cropped_image: np.ndarray,
+        *,
+        save_debug_outputs: bool = False,
+    ) -> tuple[list[str], OCRPipelineResult]:
+        """Geriye dönük uyumluluk alias'ı."""
+        return self.analyze_crop(
+            cropped_image=cropped_image,
+            save_debug_outputs=save_debug_outputs,
+        )

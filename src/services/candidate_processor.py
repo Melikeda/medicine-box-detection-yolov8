@@ -105,7 +105,16 @@ def create_medicine_name_candidates(
     return normalized_candidates + generated_candidates
 
 
-def is_valid_matching_candidate(text: str) -> bool:
+def count_alphabetic_characters(text: str) -> int:
+    """Metindeki alfabetik karakter sayısını döndürür."""
+    return sum(character.isalpha() for character in text)
+
+
+def is_valid_matching_candidate(
+    text: str,
+    *,
+    minimum_text_length: int = 3,
+) -> bool:
     """OCR adayının ilaç adı eşleştirmesinde kullanılmaya uygun olup olmadığını kontrol eder."""
     normalized_text = normalize_filter_text(text)
 
@@ -113,6 +122,9 @@ def is_valid_matching_candidate(text: str) -> bool:
         return False
 
     if not contains_letter(normalized_text):
+        return False
+
+    if count_alphabetic_characters(normalized_text) < minimum_text_length:
         return False
 
     if normalized_text in IGNORED_OCR_PHRASES:
@@ -142,6 +154,8 @@ def is_valid_matching_candidate(text: str) -> bool:
 
 def filter_candidate_texts(
     candidate_texts: list[str],
+    *,
+    minimum_text_length: int = 3,
 ) -> list[str]:
     """RapidFuzz eşleştirmesi öncesinde OCR adaylarını temizler."""
     filtered_texts: list[str] = []
@@ -150,7 +164,10 @@ def filter_candidate_texts(
     for text in candidate_texts:
         normalized_text = normalize_filter_text(text)
 
-        if not is_valid_matching_candidate(normalized_text):
+        if not is_valid_matching_candidate(
+            normalized_text,
+            minimum_text_length=minimum_text_length,
+        ):
             continue
 
         if normalized_text in seen_texts:

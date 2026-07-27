@@ -101,14 +101,29 @@ python -m examples.preprocessing.step_22_preprocessing_pipeline
 Unified pipeline (fast mode, recommended):
 
 ```bash
-python run_analyze.py data/samples/samples3.jpg --mode fast
+python run_analyze.py --image data/samples/samples3.jpg --mode fast
+```
+
+Multi-box sample:
+
+```bash
+python run_analyze.py --image data/samples/coklu_resim.jpg --mode fast
 ```
 
 Accurate mode (slow on CPU):
 
 ```bash
-python run_analyze.py data/samples/samples3.jpg --mode accurate
+python run_analyze.py --image data/samples/samples3.jpg --mode accurate
 ```
+
+**New photo vs new drug**
+
+| Goal | Action |
+|------|--------|
+| Try another photo | Pass `--image path/to/photo.jpg` — no code change |
+| Recognize a new drug | Add a row to `data/database/medicines.csv` |
+
+YOLO detects boxes; OCR reads text; RapidFuzz matches only drugs listed in the CSV.
 
 Legacy integration demo (verbose step-by-step output):
 
@@ -148,14 +163,17 @@ medicine-box-detection-yolov8/
 ### Run the unified pipeline
 
 ```python
-from src.services import analyze_medicine_box
+from src.services import analyze_medicine_boxes, PipelineConfig
 
-result = analyze_medicine_box("data/samples/samples3.jpg")
-print(result.success, result.medicine, result.match_score)
+result = analyze_medicine_boxes(
+    "data/samples/coklu_resim.jpg",
+    config=PipelineConfig(ocr_mode="fast"),
+)
+print(result.detection_count, [m.medicine_name for m in result.medicines])
 ```
 
 Or use the demo script:
 
 ```bash
-python run_analyze.py
+python run_analyze.py --image data/samples/samples3.jpg --mode fast
 ```

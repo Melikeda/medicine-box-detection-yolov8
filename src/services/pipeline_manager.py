@@ -10,10 +10,13 @@ from src.services.config import PipelineConfig
 from src.services.detection_service import DetectionService
 from src.services.matching_service import MatchingService
 from src.services.medicine_analyzer import (
+    BoxAnalysisResult,
     MedicineAnalysisResult,
-    build_analysis_result,
+    MultiMedicineAnalysisResult,
 )
 from src.services.ocr_service import OCRService
+
+BOX_ERROR_MESSAGE = "Bu ilaç kutusu analiz edilemedi."
 
 
 class PipelineManager:
@@ -100,13 +103,13 @@ class PipelineManager:
         self._ocr_service = None
         self._matching_service = None
 
-    def analyze(
+    def analyze_all(
         self,
         image_path: str | Path,
         *,
         save_debug_outputs: bool = False,
-    ) -> MedicineAnalysisResult:
-        """Yüklü servislerle tam pipeline analizini çalıştırır."""
+    ) -> MultiMedicineAnalysisResult:
+        """Fotoğraftaki tüm kutuları sırayla analiz eder."""
         if not self.is_loaded:
             self.load()
 
@@ -123,13 +126,18 @@ class PipelineManager:
                 exist_ok=True,
             )
 
-        crop_result = self._detection_service.detect_and_crop(
+        detected_boxes = self._detection_service.detect_all(
             image_path=image_path,
         )
 
-        if crop_result is None:
-            return MedicineAnalysisResult(
+        detection_count = len(detected_boxes)
+        print(f"YOLO tespit sayısı: {detection_count}")
+
+        if detection_count == 0:
+            return MultiMedicineAnalysisResult(
                 success=False,
+                image_path=str(image_path),
+                detection_count=0,
                 medicines_compared=medicines_compared,
                 error=(
                     "İlaç kutusu tespit edilemedi "
@@ -137,42 +145,131 @@ class PipelineManager:
                 ),
             )
 
-        cropped_image, yolo_confidence = crop_result
+        box_results: list[BoxAnalysisResult] = []
 
-        candidate_texts, _ = self._ocr_service.extract_candidates(
-            cropped_image=cropped_image,
+        for index, detected_box in enumerate(detected_boxes, start=1):
+            print(f"\nKutu {index}/{detection_count}")
+            print(
+                f"YOLO confidence: {detected_box.confidence:.2f}"
+            )
+
+            try:
+                candidate_texts, _ = self._ocr_service.analyze_crop(
+                    cropped_image=detected_box.cropped_image,
+                    box_index=index,
+                    save_debug_outputs=save_debug_outputs,
+                    debug_subdirectory=f"box_{index:02d}",
+                )
+
+                match_result = self._matching_service.match_text(
+                    candidate_texts=candidate_texts,
+                )
+
+                ocr_text = match_result.best_ocr_text
+                if ocr_text:
+                    print(f"OCR metni: {ocr_text}")
+
+                if match_result.status == "matched":
+                    print(f"Sonuç: {match_result.medicine_name}")
+                    print(
+                        f"Eşleşme skoru: {match_result.matching_score:.2f}"
+                    )
+                else:
+                    print("Sonuç: CSV veritabanında bulunamadı")
+                    if match_result.best_candidate:
+                        print(
+                            "En yakın aday: "
+                            f"{match_result.best_candidate} "
+                            f"({match_result.matching_score:.2f})"
+                        )
+
+                box_results.append(
+                    BoxAnalysisResult(
+                        box_index=index,
+                        bounding_box=detected_box.bounding_box,
+                        yolo_confidence=detected_box.confidence,
+                        ocr_text=ocr_text,
+                        medicine_name=match_result.medicine_name,
+                        matching_score=match_result.matching_score,
+                        status=match_result.status,
+                        display_message=match_result.display_message,
+                        best_candidate=match_result.best_candidate,
+                        medicine=match_result.medicine,
+                    )
+                )
+
+            except Exception as exc:
+                print(f"Hata: {exc}")
+                box_results.append(
+                    BoxAnalysisResult(
+                        box_index=index,
+                        bounding_box=detected_box.bounding_box,
+                        yolo_confidence=detected_box.confidence,
+                        status="error",
+                        display_message=BOX_ERROR_MESSAGE,
+                        error=str(exc),
+                    )
+                )
+
+        has_matched_box = any(
+            box.status == "matched" for box in box_results
+        )
+
+        return MultiMedicineAnalysisResult(
+            success=has_matched_box or detection_count > 0,
+            image_path=str(image_path),
+            detection_count=detection_count,
+            medicines=box_results,
+            medicines_compared=medicines_compared,
+        )
+
+    def analyze(
+        self,
+        image_path: str | Path,
+        *,
+        save_debug_outputs: bool = False,
+    ) -> MedicineAnalysisResult:
+        """Tek kutulu analiz (geriye dönük uyumluluk)."""
+        multi_result = self.analyze_all(
+            image_path=image_path,
             save_debug_outputs=save_debug_outputs,
         )
 
-        expanded_candidates, filtered_candidates = (
-            self._matching_service.process_candidates(
-                candidate_texts=candidate_texts,
-            )
-        )
-
-        if not filtered_candidates:
+        if multi_result.detection_count == 0:
             return MedicineAnalysisResult(
                 success=False,
-                yolo_confidence=yolo_confidence,
-                ocr_candidates=candidate_texts,
-                expanded_candidates=expanded_candidates,
-                filtered_candidates=filtered_candidates,
-                medicines_compared=medicines_compared,
-                error="Eşleştirmeye uygun OCR adayı bulunamadı.",
+                medicines_compared=multi_result.medicines_compared,
+                error=multi_result.error,
             )
 
-        ranked_matches = self._matching_service.rank_matches(
-            filtered_candidates=filtered_candidates,
-        )
+        first_box = multi_result.medicines[0]
 
-        return build_analysis_result(
-            config=self.config,
-            yolo_confidence=yolo_confidence,
-            candidate_texts=candidate_texts,
-            expanded_candidates=expanded_candidates,
-            filtered_candidates=filtered_candidates,
-            ranked_matches=ranked_matches,
-            medicines_compared=medicines_compared,
+        if first_box.status == "error":
+            return MedicineAnalysisResult(
+                success=False,
+                yolo_confidence=first_box.yolo_confidence,
+                medicines_compared=multi_result.medicines_compared,
+                error=first_box.error,
+            )
+
+        if first_box.status == "matched" and first_box.medicine:
+            return MedicineAnalysisResult(
+                success=True,
+                yolo_confidence=first_box.yolo_confidence,
+                medicine=first_box.medicine,
+                match_score=first_box.matching_score,
+                best_ocr_text=first_box.ocr_text,
+                ranked_matches=[],
+                medicines_compared=multi_result.medicines_compared,
+            )
+
+        return MedicineAnalysisResult(
+            success=False,
+            yolo_confidence=first_box.yolo_confidence,
+            match_score=first_box.matching_score,
+            best_ocr_text=first_box.ocr_text,
+            medicines_compared=multi_result.medicines_compared,
+            error=first_box.display_message,
         )
 
     def _validate_paths(self) -> None:

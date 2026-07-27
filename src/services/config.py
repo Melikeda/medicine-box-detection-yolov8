@@ -67,11 +67,18 @@ class PipelineConfig:
     confidence_threshold: float = 0.60
     ocr_scale_factor: float = 2.0
     minimum_ocr_confidence: float = 0.0
-    match_score_cutoff: float = 80.0
-    top_match_count: int = 3
+    minimum_matching_text_length: int = 3
+    minimum_name_coverage_ratio: float = 0.45
+    minimum_match_score: float = 80.0
+    top_match_count: int = 5
     ocr_languages: tuple[str, ...] = ("tr", "en")
     use_gpu: bool = False
     ocr_mode: OCRMode = "fast"
+
+    @property
+    def match_score_cutoff(self) -> float:
+        """Geriye dönük uyumluluk alias'ı."""
+        return self.minimum_match_score
 
     @property
     def ocr_variants_directory(self) -> Path:
@@ -79,10 +86,13 @@ class PipelineConfig:
 
     @property
     def ocr_rotation_angles(self) -> tuple[int, ...]:
-        """fast: tek açı | accurate: dört açı."""
-        if self.ocr_mode == "fast":
-            return (0,)
+        """Tüm modlarda dört açı; fast modda varyant sayısı sınırlıdır."""
         return (0, 90, 180, 270)
+
+    @property
+    def ocr_limited_variants(self) -> bool:
+        """fast: açı başına 2 varyant | accurate: tam varyant seti."""
+        return self.ocr_mode == "fast"
 
     @property
     def ocr_blur_threshold(self) -> float:

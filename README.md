@@ -103,7 +103,7 @@ medicine-box-detection-yolov8/
 │   └── integration/       # YOLO + OCR glue code
 ├── src/train.py           # YOLO training script
 ├── src/predict.py         # YOLO inference script
-├── run_analyze.py         # Main pipeline runner (analyze_medicine_box)
+├── run_analyze.py         # Main pipeline runner (analyze_medicine_boxes)
 └── requirements.txt
 ```
 
@@ -156,15 +156,29 @@ python src/predict.py
 ### Run main pipeline (production entry point)
 
 ```bash
-# Fast mode (~6 OCR variants, recommended)
-python run_analyze.py data/samples/samples3.jpg --mode fast
+# Single or multi-box photo (fast mode, recommended)
+python run_analyze.py --image data/samples/samples3.jpg --mode fast
 
-# Accurate mode (~52 OCR variants, slow on CPU)
-python run_analyze.py data/samples/samples3.jpg --mode accurate
+# Multi-box sample
+python run_analyze.py --image data/samples/coklu_resim.jpg --mode fast
 
-# Preload models explicitly (shows load progress)
-python run_analyze.py --preload --mode fast
+# Accurate mode (slow on CPU)
+python run_analyze.py --image data/samples/aferin_forte.jpg --mode accurate
+
+# JSON output
+python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
 ```
+
+### Image vs CSV — important
+
+| Action | What to do |
+|--------|------------|
+| Test a **new photo** | Use `--image path/to/photo.jpg` — no code change needed |
+| Support a **new drug** | Add a row to `data/database/medicines.csv` |
+| Photo has a box detected | Does **not** mean the drug is in CSV |
+| Pipeline stages | YOLO detects box → OCR reads text → RapidFuzz matches **CSV only** |
+
+YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (~36 records today).
 
 ### Run pipeline demo (examples wrapper)
 

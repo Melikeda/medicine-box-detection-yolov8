@@ -428,6 +428,18 @@ def create_rotated_images(
     return rotated_images
 
 
+def add_minimal_variants(
+    variants: dict[str, np.ndarray],
+    prefix: str,
+    image: np.ndarray,
+) -> None:
+    """Fast OCR modu için hafif varyant seti (2 adet/açı)."""
+    variants[f"{prefix}_original_color"] = image
+    variants[f"{prefix}_sharpened_color"] = apply_sharpening(
+        image
+    )
+
+
 def add_standard_variants(
     variants: dict[str, np.ndarray],
     prefix: str,
@@ -517,6 +529,7 @@ def create_ocr_variants(
     blurry_scale_factor: float = (
         BLURRY_IMAGE_SCALE_FACTOR
     ),
+    limited_variants: bool = False,
 ) -> dict[str, np.ndarray]:
     """
     Döndürme, büyütme ve görüntü iyileştirme
@@ -590,6 +603,14 @@ def create_ocr_variants(
         standard_prefix = (
             f"{angle_name}_scale_{scale_factor:g}x"
         )
+
+        if limited_variants:
+            add_minimal_variants(
+                variants=variants,
+                prefix=standard_prefix,
+                image=upscaled_image,
+            )
+            continue
 
         add_standard_variants(
             variants=variants,
@@ -943,6 +964,7 @@ def run_ocr_pipeline(
     blurry_scale_factor: float = (
         BLURRY_IMAGE_SCALE_FACTOR
     ),
+    limited_variants: bool = False,
 ) -> OCRPipelineResult:
     """
     Çoklu preprocessing ve OCR pipeline'ını çalıştırır.
@@ -960,6 +982,7 @@ def run_ocr_pipeline(
         blurry_scale_factor=(
             blurry_scale_factor
         ),
+        limited_variants=limited_variants,
     )
 
     saved_variant_paths: dict[
