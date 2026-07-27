@@ -69,6 +69,10 @@ def print_box_results(result) -> None:
         if box.medicine_name:
             print(f"Ilac: {box.medicine_name}")
             print(f"Skor: {box.matching_score:.2f}")
+        elif box.status == "not_medicine_box":
+            if box.ocr_text:
+                print(f"OCR metni: {box.ocr_text}")
+            print(f"Not: {box.display_message}")
         elif box.best_candidate:
             print(
                 f"En yakin aday: {box.best_candidate} "

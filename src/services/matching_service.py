@@ -9,14 +9,19 @@ from src.services.candidate_processor import (
     count_alphabetic_characters,
     create_medicine_name_candidates,
     filter_candidate_texts,
+    is_likely_active_ingredient,
     is_valid_base_name_candidate,
     normalize_filter_text,
     rank_medicine_matches,
+    select_brand_name_candidate,
 )
 from src.services.config import PipelineConfig
 
 MATCHED_MESSAGE = "İlaç eşleştirildi."
 NOT_FOUND_MESSAGE = "İlaç CSV veritabanında bulunamadı."
+NOT_MEDICINE_BOX_MESSAGE = (
+    "Tespit edilen kutu ilaç kutusu olarak doğrulanamadı."
+)
 
 
 def _select_display_ocr_text(
@@ -24,12 +29,33 @@ def _select_display_ocr_text(
     ranked_matches: list[MatchRecord],
 ) -> str | None:
     """Eşleşme olmasa bile kullanıcıya anlamlı OCR metnini gösterir."""
+    brand_candidate = select_brand_name_candidate(
+        filtered_candidates
+    )
+
+    if brand_candidate:
+        return brand_candidate
+
     for _, _, candidate_text in ranked_matches:
         if (
             is_valid_base_name_candidate(candidate_text)
             and count_alphabetic_characters(candidate_text) >= 5
+            and not is_likely_active_ingredient(candidate_text)
         ):
             return candidate_text
+
+    ingredient_candidates = [
+        text
+        for text in filtered_candidates
+        if is_valid_base_name_candidate(text)
+        and is_likely_active_ingredient(text)
+    ]
+
+    if ingredient_candidates:
+        return min(
+            ingredient_candidates,
+            key=lambda text: len(normalize_filter_text(text)),
+        )
 
     name_like_candidates = [
         text
@@ -38,7 +64,7 @@ def _select_display_ocr_text(
     ]
 
     if name_like_candidates:
-        return max(
+        return min(
             name_like_candidates,
             key=lambda text: len(normalize_filter_text(text)),
         )
@@ -71,6 +97,33 @@ def _select_display_ocr_text(
         return ranked_matches[0][2]
 
     return None
+
+
+def should_reject_as_non_medicine_box(
+    *,
+    display_match_score: float,
+    display_ocr_text: str | None,
+    minimum_plausible_match_score: float,
+) -> bool:
+    """
+    YOLO false positive'lerini (UNO kutusu vb.) ilaç sonucu olarak
+    göstermemek için düşük güvenilir OCR + düşük eşleşme skorunu reddeder.
+    """
+    if display_match_score < minimum_plausible_match_score:
+        return True
+
+    if not display_ocr_text:
+        return True
+
+    normalized_text = normalize_filter_text(display_ocr_text)
+
+    if not normalized_text:
+        return True
+
+    if not is_valid_base_name_candidate(normalized_text):
+        return True
+
+    return False
 
 
 def is_reliable_medicine_match(
@@ -193,8 +246,8 @@ class MatchingService:
                 matching_score=0.0,
                 best_ocr_text=None,
                 best_candidate=None,
-                status="not_found",
-                display_message=NOT_FOUND_MESSAGE,
+                status="not_medicine_box",
+                display_message=NOT_MEDICINE_BOX_MESSAGE,
             )
 
         ranked_matches = self.rank_matches(
@@ -219,6 +272,23 @@ class MatchingService:
             )
 
         if not ranked_matches:
+            if should_reject_as_non_medicine_box(
+                display_match_score=display_match_score,
+                display_ocr_text=display_ocr_text,
+                minimum_plausible_match_score=(
+                    self.config.minimum_plausible_match_score
+                ),
+            ):
+                return TextMatchResult(
+                    medicine_name=None,
+                    medicine=None,
+                    matching_score=display_match_score,
+                    best_ocr_text=display_ocr_text,
+                    best_candidate=None,
+                    status="not_medicine_box",
+                    display_message=NOT_MEDICINE_BOX_MESSAGE,
+                )
+
             return TextMatchResult(
                 medicine_name=None,
                 medicine=None,
@@ -262,12 +332,35 @@ class MatchingService:
                 ranked_matches=ranked_matches,
             )
 
+        if should_reject_as_non_medicine_box(
+            display_match_score=display_match_score,
+            display_ocr_text=display_ocr_text,
+            minimum_plausible_match_score=(
+                self.config.minimum_plausible_match_score
+            ),
+        ):
+            return TextMatchResult(
+                medicine_name=None,
+                medicine=None,
+                matching_score=display_match_score,
+                best_ocr_text=display_ocr_text,
+                best_candidate=None,
+                status="not_medicine_box",
+                display_message=NOT_MEDICINE_BOX_MESSAGE,
+                ranked_matches=ranked_matches,
+            )
+
         return TextMatchResult(
             medicine_name=None,
             medicine=None,
             matching_score=display_match_score,
             best_ocr_text=display_ocr_text,
-            best_candidate=display_best_candidate,
+            best_candidate=(
+                display_best_candidate
+                if display_match_score
+                >= self.config.minimum_best_candidate_score
+                else None
+            ),
             status="not_found",
             display_message=NOT_FOUND_MESSAGE,
             ranked_matches=ranked_matches,

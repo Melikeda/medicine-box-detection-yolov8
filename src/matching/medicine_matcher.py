@@ -120,28 +120,41 @@ def calculate_medicine_score(
     medicine: dict[str, str],
 ) -> tuple[float, str | None]:
     """
-    Tek bir OCR metnini ilacın medicine_name
-    alanıyla karşılaştırır.
+    OCR metnini ilacın medicine_name, brand_name ve
+    active_ingredient alanlarıyla karşılaştırır.
 
-    Returns:
-        (
-            eşleşme skoru,
-            karşılaştırılan ilaç adı
-        )
+    En yüksek skoru döndürür; eşleşen kayıt medicine_name
+    ile temsil edilir.
     """
-    medicine_name = get_medicine_name(
-        medicine
-    )
+    medicine_name = get_medicine_name(medicine)
 
     if medicine_name is None:
         return 0.0, None
 
-    score = calculate_text_similarity(
-        query_text=query_text,
-        medicine_name=medicine_name,
-    )
+    best_score = 0.0
 
-    return score, medicine_name
+    for field_name in (
+        "medicine_name",
+        "brand_name",
+        "active_ingredient",
+    ):
+        field_value = medicine.get(field_name, "").strip()
+
+        if not field_value:
+            continue
+
+        if field_value.upper().startswith("VERIFY_FROM_OFFICIAL"):
+            continue
+
+        score = calculate_text_similarity(
+            query_text=query_text,
+            medicine_name=field_value,
+        )
+
+        if score > best_score:
+            best_score = score
+
+    return best_score, medicine_name
 
 
 def find_best_medicine_match(

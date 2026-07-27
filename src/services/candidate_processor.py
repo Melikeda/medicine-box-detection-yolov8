@@ -52,6 +52,56 @@ def is_valid_base_name_candidate(text: str) -> bool:
     return True
 
 
+ACTIVE_INGREDIENT_SUFFIXES = frozenset(
+    {
+        "ol",
+        "hcl",
+        "maleat",
+        "sodyum",
+        "potasyum",
+        "hidroklorur",
+        "sulfat",
+        "fosfat",
+    }
+)
+
+
+def is_likely_active_ingredient(text: str) -> bool:
+    """Uzun kimyasal/etken madde metinlerini marka adından ayırır."""
+    normalized_text = normalize_filter_text(text)
+
+    if not is_single_alphabetic_word(normalized_text):
+        return False
+
+    if len(normalized_text) <= 8:
+        return False
+
+    return any(
+        normalized_text.endswith(suffix)
+        for suffix in ACTIVE_INGREDIENT_SUFFIXES
+    )
+
+
+def select_brand_name_candidate(
+    candidate_texts: list[str],
+) -> str | None:
+    """Marka adına benzeyen en kısa geçerli OCR adayını seçer."""
+    brand_like_candidates = [
+        text
+        for text in candidate_texts
+        if is_valid_base_name_candidate(text)
+        and not is_likely_active_ingredient(text)
+    ]
+
+    if not brand_like_candidates:
+        return None
+
+    return min(
+        brand_like_candidates,
+        key=lambda text: len(normalize_filter_text(text)),
+    )
+
+
 def create_medicine_name_candidates(
     candidate_texts: list[str],
 ) -> list[str]:

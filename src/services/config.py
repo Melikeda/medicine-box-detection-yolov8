@@ -70,6 +70,8 @@ class PipelineConfig:
     minimum_matching_text_length: int = 3
     minimum_name_coverage_ratio: float = 0.45
     minimum_match_score: float = 80.0
+    minimum_plausible_match_score: float = 55.0
+    minimum_best_candidate_score: float = 70.0
     top_match_count: int = 5
     ocr_languages: tuple[str, ...] = ("tr", "en")
     use_gpu: bool = False

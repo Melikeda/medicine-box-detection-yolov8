@@ -103,11 +103,18 @@ medicine-box-detection-yolov8/
 │   └── integration/       # YOLO + OCR glue code
 ├── src/train.py           # YOLO training script
 ├── src/predict.py         # YOLO inference script
-├── run_analyze.py         # Main pipeline runner (analyze_medicine_boxes)
+├── backend/               # FastAPI application
+│   └── app/
+│       ├── main.py        # App factory + lifespan
+│       ├── config.py      # API settings
+│       ├── routers/       # health, analyze
+│       └── schemas/       # Pydantic response models
+├── run_api.py             # FastAPI / Uvicorn entry point
+├── run_analyze.py         # CLI pipeline runner (analyze_medicine_boxes)
 └── requirements.txt
 ```
 
-Planned additions: `backend/` (FastAPI), `mobile/` (Flutter).
+Planned additions: `mobile/` (Flutter).
 
 ---
 
@@ -120,7 +127,7 @@ Planned additions: `backend/` (FastAPI), `mobile/` (Flutter).
 | OCR | EasyOCR |
 | Matching | RapidFuzz |
 | Data | CSV (current), SQLite (planned) |
-| Backend (planned) | FastAPI, Pydantic, Uvicorn |
+| Backend | FastAPI, Pydantic, Uvicorn |
 | Mobile (planned) | Flutter, Dart |
 | DevOps (planned) | Docker, pytest |
 
@@ -180,6 +187,32 @@ python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
 
 YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (~36 records today).
 
+### Run FastAPI backend
+
+```bash
+# Install new backend dependencies first
+pip install fastapi uvicorn[standard] python-multipart pydantic-settings
+
+# Start API (loads YOLO + EasyOCR + CSV once at startup)
+python run_api.py
+```
+
+Endpoints:
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | API and model readiness |
+| POST | `/api/v1/analyze` | Upload image, analyze all boxes |
+
+Example analyze request:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/api/v1/analyze" \
+  -F "file=@data/samples/samples3.jpg"
+```
+
+Interactive docs: http://127.0.0.1:8000/docs
+
 ### Run pipeline demo (examples wrapper)
 
 ```bash
@@ -217,7 +250,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | Medicine matching (RapidFuzz) | Done |
 | Pipeline unification | Done ([#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23)) |
 | Pipeline servicification | Done ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
-| FastAPI backend | Planned ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
+| FastAPI backend | In progress ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) — `feature/fastapi-foundation` |
 | Flutter mobile MVP | Planned ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)-[#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 

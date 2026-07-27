@@ -58,6 +58,12 @@ class PipelineManager:
     def is_loaded(self) -> bool:
         return self._yolo_model is not None
 
+    @property
+    def medicine_count(self) -> int | None:
+        if self._matching_service is None:
+            return None
+        return self._matching_service.medicine_count
+
     def load(self) -> None:
         """YOLO, EasyOCR ve CSV veritabanını belleğe yükler."""
         if self.is_loaded:
@@ -174,6 +180,8 @@ class PipelineManager:
                     print(
                         f"Eşleşme skoru: {match_result.matching_score:.2f}"
                     )
+                elif match_result.status == "not_medicine_box":
+                    print(f"Sonuç: {match_result.display_message}")
                 else:
                     print("Sonuç: CSV veritabanında bulunamadı")
                     if match_result.best_candidate:
@@ -214,9 +222,13 @@ class PipelineManager:
         has_matched_box = any(
             box.status == "matched" for box in box_results
         )
+        has_valid_detection = any(
+            box.status in {"matched", "not_found"}
+            for box in box_results
+        )
 
         return MultiMedicineAnalysisResult(
-            success=has_matched_box or detection_count > 0,
+            success=has_matched_box or has_valid_detection,
             image_path=str(image_path),
             detection_count=detection_count,
             medicines=box_results,
