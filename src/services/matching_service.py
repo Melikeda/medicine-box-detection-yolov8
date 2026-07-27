@@ -9,9 +9,11 @@ from src.services.candidate_processor import (
     count_alphabetic_characters,
     create_medicine_name_candidates,
     filter_candidate_texts,
+    is_likely_active_ingredient,
     is_valid_base_name_candidate,
     normalize_filter_text,
     rank_medicine_matches,
+    select_brand_name_candidate,
 )
 from src.services.config import PipelineConfig
 
@@ -27,12 +29,33 @@ def _select_display_ocr_text(
     ranked_matches: list[MatchRecord],
 ) -> str | None:
     """Eşleşme olmasa bile kullanıcıya anlamlı OCR metnini gösterir."""
+    brand_candidate = select_brand_name_candidate(
+        filtered_candidates
+    )
+
+    if brand_candidate:
+        return brand_candidate
+
     for _, _, candidate_text in ranked_matches:
         if (
             is_valid_base_name_candidate(candidate_text)
             and count_alphabetic_characters(candidate_text) >= 5
+            and not is_likely_active_ingredient(candidate_text)
         ):
             return candidate_text
+
+    ingredient_candidates = [
+        text
+        for text in filtered_candidates
+        if is_valid_base_name_candidate(text)
+        and is_likely_active_ingredient(text)
+    ]
+
+    if ingredient_candidates:
+        return min(
+            ingredient_candidates,
+            key=lambda text: len(normalize_filter_text(text)),
+        )
 
     name_like_candidates = [
         text
@@ -41,7 +64,7 @@ def _select_display_ocr_text(
     ]
 
     if name_like_candidates:
-        return max(
+        return min(
             name_like_candidates,
             key=lambda text: len(normalize_filter_text(text)),
         )
@@ -332,7 +355,12 @@ class MatchingService:
             medicine=None,
             matching_score=display_match_score,
             best_ocr_text=display_ocr_text,
-            best_candidate=display_best_candidate,
+            best_candidate=(
+                display_best_candidate
+                if display_match_score
+                >= self.config.minimum_best_candidate_score
+                else None
+            ),
             status="not_found",
             display_message=NOT_FOUND_MESSAGE,
             ranked_matches=ranked_matches,
