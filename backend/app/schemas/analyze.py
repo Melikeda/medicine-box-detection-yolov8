@@ -17,7 +17,7 @@ class MedicineBoxResultSchema(BaseModel):
     ocr_text: str | None = None
     medicine_name: str | None = None
     matching_score: float = 0.0
-    status: Literal["matched", "not_found", "error"]
+    status: Literal["matched", "not_found", "not_medicine_box", "error"]
     display_message: str
     best_candidate: str | None = None
     error: str | None = None
