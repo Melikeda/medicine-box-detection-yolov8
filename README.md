@@ -27,17 +27,21 @@ This repository contains an intelligent **medicine box recognition system**. It 
 | Image preprocessing | OpenCV | Done |
 | Text recognition | EasyOCR | Done |
 | Name matching | RapidFuzz | Done |
-| Medicine database | CSV (~35 records) | Done |
+| Medicine database | CSV (38 records) | Done |
 | End-to-end pipeline | `src/services/` + `PipelineManager` | Done |
 | OCR modes (fast/accurate) | `PipelineConfig.ocr_mode` | Done |
+| REST backend | FastAPI | Done |
+| Analyze API | `POST /api/v1/analyze` | Done |
+| Multi-box detection | `analyze_medicine_boxes()` | Done |
+| Real-world matching | Fallback YOLO, partial brand, dosage filter | Done |
 
 ### What we are building next
 
 | Stage | Technology | GitHub Issue |
 |-------|------------|--------------|
-| Pipeline servicification | Done ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
-| REST backend | FastAPI ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
-| Analyze API | `POST /api/v1/analyze` | [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) |
+| SQLite database | SQLAlchemy | [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) |
+| Automated tests | pytest | [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) |
+| Docker deployment | Docker Compose | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) |
 | Mobile app | Flutter (Android MVP) | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) |
 | Mobile integration | Gallery → API → result | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) |
 
@@ -51,7 +55,7 @@ Post-MVP: SQLite/PostgreSQL, automated tests, Docker, LLM explanations ([#32](ht
 Flutter Mobile App
         │
         ▼
-POST /api/v1/analyze  (FastAPI — planned)
+POST /api/v1/analyze  (FastAPI)
         │
         ▼
 YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → Medicine DB
@@ -97,7 +101,7 @@ medicine-box-detection-yolov8/
 ├── src/
 │   ├── preprocessing/     # OpenCV modules
 │   ├── ocr/               # EasyOCR pipeline
-│   ├── matching/          # RapidFuzz matcher
+│   ├── matching/          # RapidFuzz matcher + OCR text normalizer
 │   ├── database/          # CSV reader
 │   ├── services/          # Unified pipeline (analyze_medicine_box)
 │   └── integration/       # YOLO + OCR glue code
@@ -108,6 +112,7 @@ medicine-box-detection-yolov8/
 │       ├── main.py        # App factory + lifespan
 │       ├── config.py      # API settings
 │       ├── routers/       # health, analyze
+│       ├── services/      # analyze_service, upload_validator
 │       └── schemas/       # Pydantic response models
 ├── run_api.py             # FastAPI / Uvicorn entry point
 ├── run_analyze.py         # CLI pipeline runner (analyze_medicine_boxes)
@@ -143,7 +148,7 @@ cd medicine-box-detection-yolov8
 python -m venv venv
 
 # Windows
-venv\Scriptsctivate
+venv\Scripts\Activate.ps1
 
 pip install -r requirements.txt
 ```
@@ -185,7 +190,9 @@ python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
 | Photo has a box detected | Does **not** mean the drug is in CSV |
 | Pipeline stages | YOLO detects box → OCR reads text → RapidFuzz matches **CSV only** |
 
-YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (~36 records today).
+YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (38 records today).
+
+**Real-world tips:** Use steady, well-lit photos. Blurry images trigger YOLO fallback mode. Drugs not in CSV return `not_found`.
 
 ### Run FastAPI backend
 
@@ -262,7 +269,8 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | Medicine matching (RapidFuzz) | Done |
 | Pipeline unification | Done ([#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23)) |
 | Pipeline servicification | Done ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
-| FastAPI backend | In progress ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) — `feature/fastapi-foundation` |
+| FastAPI backend | Done ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
+| Analyze API + matching improvements | Done ([#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26)) |
 | Flutter mobile MVP | Planned ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)-[#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 
@@ -278,7 +286,7 @@ Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
 | [roadmap.md](docs/roadmap.md) | Development phases and GitHub issues |
 | [setup-guide.md](docs/setup-guide.md) | Environment setup |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool was chosen |
-| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–8) |
+| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–11) |
 
 ---
 

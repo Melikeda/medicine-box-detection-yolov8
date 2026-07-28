@@ -9,18 +9,19 @@ Use this file when organizing issues on the GitHub Project board.
 | [#6](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/6) | Medicine name matching (RapidFuzz + CSV) |
 | [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23) | Unify AI pipeline under `src/services/` |
 | [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) | Service-layer pipeline architecture |
+| [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) | FastAPI backend foundation |
+| [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) | Analyze API + real-world matching improvements |
 
 ## In Progress
 
 | Issue | Title | Branch |
 |-------|-------|--------|
-| [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) | FastAPI backend foundation | `feature/fastapi-foundation` |
+| — | — | — |
 
 ## Todo — Backend
 
 | Issue | Branch |
 |-------|--------|
-| [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) | `feature/analyze-endpoint` |
 | [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) | `feature/sqlite-database` |
 | [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | `feature/tests` |
 | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | `feature/docker` |
@@ -57,3 +58,11 @@ Use this file when organizing issues on the GitHub Project board.
 | `testing` | pytest |
 | `infrastructure` | Docker |
 | `mvp` | Minimum viable product scope |
+
+## Technical reports (docs/reports/)
+
+| Report | Phase |
+|--------|-------|
+| 01–09 | Setup through pipeline servicification |
+| [10-fastapi-analyze-api.md](../docs/reports/10-fastapi-analyze-api.md) | FastAPI + analyze endpoint |
+| [11-real-world-matching-improvements.md](../docs/reports/11-real-world-matching-improvements.md) | Detection fallback + matching fixes |

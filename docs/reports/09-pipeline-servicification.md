@@ -30,10 +30,10 @@ Phase 10 refactors the unified pipeline into dedicated services with singleton r
 
 ## OCR Modes
 
-| Mode | Rotations | Blurry extras | Typical variants |
-|------|-----------|---------------|------------------|
-| `fast` | 0° only | Disabled | ~6 |
-| `accurate` | 0°, 90°, 180°, 270° | Enabled | ~52 |
+| Mode | Rotations | Variants per box | Notes |
+|------|-----------|------------------|-------|
+| `fast` | 0°, 90°, 180°, 270° | ~8 (2 per angle) | API default |
+| `accurate` | 0°, 90°, 180°, 270° | ~52 | Full variant set |
 
 ---
 
@@ -58,4 +58,6 @@ python run_analyze.py data/samples/samples3.jpg --mode accurate --preload
 
 ## Next Phase
 
-Issue #25 — FastAPI backend foundation. The API will call `PipelineManager.load()` on startup and `manager.analyze()` per request.
+Issues #25–#26 — FastAPI backend and analyze API. See [Report 10](10-fastapi-analyze-api.md).
+
+Matching and detection improvements for real-world photos: [Report 11](11-real-world-matching-improvements.md).

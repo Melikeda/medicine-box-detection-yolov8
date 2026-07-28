@@ -19,28 +19,31 @@ User (Flutter Mobile App)
 Select / Capture Image
  │
  ▼
-POST /api/v1/analyze (FastAPI)
+POST /api/v1/analyze (FastAPI) ✅
  │
  ▼
-YOLOv8 Detection
+YOLOv8 Detection (+ confidence fallback)
  │
  ▼
-Crop Detected Medicine Box
+Crop Detected Medicine Box(es)
  │
  ▼
 OpenCV Preprocessing
  │
  ▼
-EasyOCR
+EasyOCR (fast / accurate mode)
+ │
+ ▼
+OCR Normalization + Candidate Processing
  │
  ▼
 RapidFuzz Matching
  │
  ▼
-Medicine Database (CSV → SQLite)
+Medicine Database (CSV → SQLite planned)
  │
  ▼
-JSON Response
+JSON Response (per-box status + summary)
  │
  ▼
 Mobile Result Screen
@@ -53,7 +56,7 @@ Mobile Result Screen
 
 # 🧩 System Components
 
-## 1. Mobile Client (Flutter)
+## 1. Mobile Client (Flutter) — Planned
 
 The user selects a medicine box photo from the gallery (MVP) or captures one with the camera (later version).
 
@@ -64,143 +67,140 @@ The user selects a medicine box photo from the gallery (MVP) or captures one wit
 - Loading and error states
 - Display medicine name, match score, and basic drug info
 
-### Output
-
-- User-facing scan result
-
 ---
 
-## 2. Backend API (FastAPI)
+## 2. Backend API (FastAPI) ✅
 
 Receives uploaded images and orchestrates the AI pipeline.
 
 ### Responsibilities
 
-- Image validation (type, size)
+- Image validation (magic bytes, type, size)
 - Temporary file handling
-- Pipeline orchestration
-- Structured JSON responses
+- Async pipeline orchestration (`asyncio.to_thread`)
+- Structured JSON responses with summary counts
 - Health checks and logging
 
-### Key Endpoint
+### Endpoints
 
-- `POST /api/v1/analyze`
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/health` | Model readiness |
+| GET | `/api/v1/analyze/info` | Upload limits and formats |
+| POST | `/api/v1/analyze` | Multi-box analyze |
 
-The analyze endpoint will call `src/services/medicine_analyzer.analyze_medicine_box()` to run the full AI pipeline.
+Entry point: `run_api.py`
 
 ---
 
-## 2.1 Pipeline Service Layer (`src/services/`)
+## 2.1 Pipeline Service Layer (`src/services/`) ✅
 
-Unified orchestration for the AI pipeline. Implemented in Phase 9 (Issue #23).
+Unified orchestration for the AI pipeline.
 
-### Responsibilities
-
-- Load configuration (model paths, thresholds)
-- Run YOLO detection and crop
-- Execute multi-variant OCR
-- Process and filter OCR candidates
-- Match against the medicine database with RapidFuzz
-- Return structured `MedicineAnalysisResult`
-
-### Key Entry Point
+### Key Entry Points
 
 ```python
-from src.services import analyze_medicine_box
+from src.services import analyze_medicine_boxes, PipelineManager
 
-result = analyze_medicine_box(image_path)
+# CLI / scripts
+result = analyze_medicine_boxes("data/samples/coklu_resim.jpg")
+
+# FastAPI startup
+manager = PipelineManager.get_instance()
+manager.load()
+result = manager.analyze_all(image_path)
 ```
 
 ### Modules
 
 | Module | Role |
 |--------|------|
-| `config.py` | `PipelineConfig` — central settings, OCR modes |
+| `config.py` | `PipelineConfig` — thresholds, OCR modes |
 | `pipeline_manager.py` | Singleton — load models once |
-| `detection_service.py` | YOLO detection and crop |
+| `detection_service.py` | YOLO + adaptive confidence fallback |
 | `ocr_service.py` | OCR with fast/accurate modes |
-| `matching_service.py` | CSV + RapidFuzz matching |
-| `candidate_processor.py` | OCR candidate logic and ranking |
-| `medicine_analyzer.py` | Public `analyze_medicine_box()` entry point |
+| `matching_service.py` | CSV + RapidFuzz + reliability checks |
+| `candidate_processor.py` | OCR candidate expansion and filtering |
+| `medicine_analyzer.py` | Public API and result dataclasses |
+
+### Matching layer (`src/matching/`)
+
+| Module | Role |
+|--------|------|
+| `medicine_matcher.py` | RapidFuzz scoring, dosage detection |
+| `text_normalizer.py` | OCR confusable fixes (`€` → `c`) |
 
 ---
 
-## 3. Object Detection (YOLOv8)
+## 3. Object Detection (YOLOv8) ✅
 
-YOLOv8 detects medicine boxes within the uploaded image.
+YOLOv8 detects all medicine boxes within the uploaded image.
+
+### Adaptive fallback
+
+| Threshold | Value | Purpose |
+|-----------|-------|---------|
+| Primary | 0.40 | Standard detection |
+| Fallback | 0.25 | Blurry / low-confidence photos |
+
+If primary finds zero boxes, or weak detections with fewer boxes than fallback, the lower threshold is used.
 
 ### Output
 
-- Bounding box coordinates
+- Bounding box coordinates per box
 - Detection confidence score
-- Cropped medicine box image
+- Cropped medicine box images
 
 ---
 
-## 4. Image Preprocessing (OpenCV)
+## 4. Image Preprocessing (OpenCV) ✅
 
-The cropped image is enhanced before OCR using multi-variant preprocessing.
-
-### Output
-
-- Enhanced images optimized for OCR accuracy
+The cropped image is enhanced before OCR using multi-variant preprocessing (scale, sharpen, rotation).
 
 ---
 
-## 5. OCR (EasyOCR)
+## 5. OCR (EasyOCR) ✅
 
-EasyOCR extracts text from processed medicine box images.
-
-### Output
-
-- OCR text candidates with confidence scores
-
----
-
-## 6. Medicine Name Matching (RapidFuzz)
-
-OCR output is compared with the medicine database to correct recognition errors.
-
-### Example
-
-```text
-OCR Output: afern frte
-      ↓
-RapidFuzz
-      ↓
-Matched: A-Ferin Forte
-```
-
-### Output
-
-- Best matching medicine record and match score
+| Mode | Variants per box | Use case |
+|------|------------------|----------|
+| `fast` | ~8 (4 angles × 2) | API default, CPU-friendly |
+| `accurate` | ~52 | Difficult / rotated text |
 
 ---
 
-## 7. Medicine Database
+## 6. Medicine Name Matching (RapidFuzz) ✅
 
-Medicine information is stored in a structured database.
+OCR output is compared with CSV fields: `medicine_name`, `brand_name`, `active_ingredient`.
 
-| Stage | Technology |
-|-------|------------|
-| Current | CSV file |
-| MVP target | SQLite + SQLAlchemy |
-| Production | PostgreSQL |
+### Reliability guards
 
-Example fields:
+- Minimum match score (80)
+- Name coverage ratio (prevents single-letter false positives)
+- Partial brand matching for blurry reads (`fen` → Nurofen)
+- Dosage-only text filtering (`250 mg / 300 mg tablet` patterns)
+- `not_medicine_box` status for YOLO false positives (UNO cards, etc.)
 
-- medicine_id, medicine_name, brand_name
-- active_ingredient, dosage, form, category
+### Per-box status
+
+`matched` | `not_found` | `not_medicine_box` | `error`
+
+---
+
+## 7. Medicine Database ✅
+
+| Stage | Technology | Records |
+|-------|------------|---------|
+| Current | CSV file | 38 drugs |
+| MVP target | SQLite + SQLAlchemy (#27) | — |
+| Production | PostgreSQL | — |
+
+Fields: `medicine_id`, `medicine_name`, `brand_name`, `active_ingredient`, `dosage`, `form`, `category`
 
 ---
 
 ## 8. Large Language Model (LLM) — Post-MVP
 
-The matched medicine information can be passed to an LLM for natural-language explanations.
-
-### Output
-
-- Usage information, warnings, and general description
+Issue #8 — natural-language explanations after a successful match.
 
 ---
 
@@ -210,10 +210,13 @@ The matched medicine information can be passed to an LLM for natural-language ex
 Flutter App
    │
    ▼
-FastAPI
+FastAPI (analyze_service)
    │
    ▼
-YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → Database
+PipelineManager.analyze_all()
+   │
+   ▼
+YOLOv8 → Crop → OpenCV → EasyOCR → Normalize → RapidFuzz → CSV
    │
    ▼
 JSON Response → Flutter Result Screen
@@ -224,7 +227,7 @@ JSON Response → Flutter Result Screen
 # 🎯 Design Principles
 
 - Modular architecture with single-responsibility services
-- Clear separation: `src/` (production logic) vs `examples/` (learning demos)
+- Clear separation: `src/` (production) vs `examples/` (learning)
 - AI models loaded once at backend startup
 - REST + JSON for mobile communication
 - Git Feature Branch Workflow with GitHub Issues
@@ -234,10 +237,11 @@ JSON Response → Flutter Result Screen
 
 # 🚀 Future Improvements
 
-- Fast and accurate OCR modes for CPU performance
-- Multiple medicine boxes per image
+- SQLite migration (#27)
+- Automated tests (#28)
+- Docker deployment (#29)
+- Flutter mobile MVP (#30–#31)
 - Barcode / QR code support
-- User scan history and authentication
-- Cloud deployment with Docker
-- iOS support
+- User scan history
+- YOLO retrain with blurry and negative samples
 - Multilingual OCR

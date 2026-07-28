@@ -198,9 +198,10 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 
 ## Objectives
 
-- [ ] Set up FastAPI project structure
-- [ ] Add config, logging, and exception handling
-- [ ] Implement `GET /health` endpoint
+- [x] Set up FastAPI project structure
+- [x] Add config, logging, and exception handling
+- [x] Implement `GET /health` endpoint
+- [x] Load pipeline via `PipelineManager` at startup
 
 ---
 
@@ -215,6 +216,16 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 - [x] Validate image type and file size
 - [x] Return structured JSON response for mobile app
 - [x] Add `GET /api/v1/analyze/info` and `mode` query parameter
+
+### Real-world improvements (same release)
+
+- [x] YOLO confidence fallback for blurry photos
+- [x] Partial brand matching (e.g. `fen` → Nurofen)
+- [x] Dosage-only OCR filtering
+- [x] OCR confusable normalization (`€` → `c` for Ibucold C)
+- [x] Add Parafon to CSV (38 drugs total)
+
+See [Report 10](reports/10-fastapi-analyze-api.md) and [Report 11](reports/11-real-world-matching-improvements.md).
 
 ---
 
@@ -356,9 +367,9 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 | ✅ Medicine Name Matching | Completed | #6 |
 | ✅ Pipeline Unification | Completed | #23 |
 | ✅ Pipeline Servicification | Completed | #24 |
-| ⏳ FastAPI Backend | Next | #25 |
-| ⏳ Analyze API | Planned | #26 |
-| ⏳ SQLite Database | Planned | #27 |
+| ✅ FastAPI Backend | Completed | #25 |
+| ✅ Analyze API | Completed | #26 |
+| ⏳ SQLite Database | Next | #27 |
 | ⏳ Automated Testing | Planned | #28 |
 | ⏳ Docker | Planned | #29 |
 | ⏳ Flutter Mobile App | Planned | #30 |

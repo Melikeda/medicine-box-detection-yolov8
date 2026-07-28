@@ -48,15 +48,17 @@ This document explains which technologies are used in the project and why they w
 
 | Stage | Technology | Why |
 |-------|------------|-----|
-| Current | CSV | Zero setup; ideal for prototyping (~35 medicines) |
+| Current | CSV | Zero setup; 38 medicines in `medicines.csv` |
 | MVP target | SQLite | File-based SQL; works with SQLAlchemy; no server needed |
 | Production | PostgreSQL | Scalable; supports concurrent users and history |
 
 ---
 
-## FastAPI (planned)
+## FastAPI ✅
 
 **Role:** REST API backend for the mobile app.
+
+**Status:** Implemented — `GET /health`, `GET/POST /api/v1/analyze`, upload validation, async pipeline.
 
 **Why:** Native async support, automatic OpenAPI docs, Pydantic validation, straightforward file upload handling, excellent Python AI ecosystem fit.
 

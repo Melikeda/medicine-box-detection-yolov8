@@ -208,8 +208,8 @@ FastAPI (Phase 11+) will call `analyze_medicine_box()` from `POST /api/v1/analyz
 from src.services import analyze_medicine_box, PipelineConfig
 
 config = PipelineConfig(
-    confidence_threshold=0.60,
-    match_score_cutoff=80.0,
+    confidence_threshold=0.40,
+    minimum_match_score=80.0,
 )
 
 result = analyze_medicine_box(
@@ -247,10 +247,11 @@ This phase successfully:
 
 ## Current Limitations
 
-- Models are loaded on each call (singleton loading planned in Phase 10, Issue #24)
-- No REST API yet — service is Python-only
+- REST API available via FastAPI; mobile client not yet built (Flutter #30)
 - Debug output saving is optional via `save_debug_outputs`
-- `src/integration/yolo_ocr_pipeline.py` handles YOLO + OCR only; full matching requires `analyze_medicine_box()`
+- `src/integration/yolo_ocr_pipeline.py` handles YOLO + OCR only; full matching requires `analyze_medicine_boxes()`
+
+See [Report 10](10-fastapi-analyze-api.md) and [Report 11](11-real-world-matching-improvements.md) for latest capabilities.
 
 ---
 
