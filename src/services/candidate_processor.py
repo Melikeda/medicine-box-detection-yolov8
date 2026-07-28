@@ -1,7 +1,9 @@
 from src.matching.medicine_matcher import (
     calculate_medicine_score,
+    is_dosage_or_form_only_text,
     is_generic_single_word,
 )
+from src.matching.text_normalizer import normalize_ocr_text
 from src.services.config import (
     IGNORED_OCR_PHRASES,
     MEDICINE_NAME_SUFFIXES,
@@ -10,7 +12,7 @@ from src.services.config import (
 
 def normalize_filter_text(text: str) -> str:
     """OCR adayını filtreleme için standart biçime dönüştürür."""
-    return " ".join(text.strip().casefold().split())
+    return normalize_ocr_text(text)
 
 
 def contains_letter(text: str) -> bool:
@@ -131,6 +133,12 @@ def create_medicine_name_candidates(
         if text in MEDICINE_NAME_SUFFIXES
     ]
 
+    single_letter_suffixes = [
+        text
+        for text in normalized_candidates
+        if len(text) == 1 and text.isalpha()
+    ]
+
     base_candidates = [
         text
         for text in normalized_candidates
@@ -144,6 +152,17 @@ def create_medicine_name_candidates(
         for suffix_candidate in suffix_candidates:
             combined_candidate = (
                 f"{base_candidate} {suffix_candidate}"
+            )
+
+            if combined_candidate in seen_all_candidates:
+                continue
+
+            seen_all_candidates.add(combined_candidate)
+            generated_candidates.append(combined_candidate)
+
+        for letter_suffix in single_letter_suffixes:
+            combined_candidate = (
+                f"{base_candidate} {letter_suffix}"
             )
 
             if combined_candidate in seen_all_candidates:
@@ -181,6 +200,9 @@ def is_valid_matching_candidate(
         return False
 
     if is_generic_single_word(normalized_text):
+        return False
+
+    if is_dosage_or_form_only_text(normalized_text):
         return False
 
     dosage_markers = {"mg", "ml", "mcg", "gr"}

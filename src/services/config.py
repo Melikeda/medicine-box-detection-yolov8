@@ -45,6 +45,28 @@ MEDICINE_NAME_SUFFIXES = frozenset(
     }
 )
 
+DOSAGE_FORM_MARKERS = frozenset(
+    {
+        "mg",
+        "mo",
+        "ml",
+        "mcg",
+        "gr",
+        "g",
+        "tablet",
+        "tablot",
+        "tabl",
+        "kapli",
+        "kaplı",
+        "kapli",
+        "film",
+        "kapsul",
+        "kapsül",
+        "mikropellet",
+        "kaps",
+    }
+)
+
 
 @dataclass
 class PipelineConfig:
@@ -64,11 +86,14 @@ class PipelineConfig:
     output_directory: Path = field(
         default_factory=lambda: DEFAULT_OUTPUT_DIRECTORY
     )
-    confidence_threshold: float = 0.60
+    confidence_threshold: float = 0.40
+    fallback_confidence_threshold: float = 0.25
     ocr_scale_factor: float = 2.0
     minimum_ocr_confidence: float = 0.0
     minimum_matching_text_length: int = 3
     minimum_name_coverage_ratio: float = 0.45
+    minimum_brand_coverage_ratio: float = 0.40
+    minimum_partial_brand_match_score: float = 85.0
     minimum_match_score: float = 80.0
     minimum_plausible_match_score: float = 55.0
     minimum_best_candidate_score: float = 70.0

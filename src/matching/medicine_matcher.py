@@ -1,5 +1,7 @@
 from rapidfuzz import fuzz
 
+from src.matching.text_normalizer import normalize_ocr_text
+
 
 DEFAULT_SCORE_CUTOFF = 80.0
 
@@ -33,7 +35,7 @@ def normalize_text(
     Büyük-küçük harf farkını ortadan kaldırır
     ve baştaki/sondaki boşlukları temizler.
     """
-    return text.strip().casefold()
+    return normalize_ocr_text(text)
 
 
 def is_generic_single_word(
@@ -61,6 +63,69 @@ def is_generic_single_word(
         return False
 
     return normalized_text in GENERIC_SINGLE_WORDS
+
+
+def _looks_like_brand_word(word: str) -> bool:
+    """OCR parçasının marka adı parçası olup olmadığını kontrol eder."""
+    normalized_word = normalize_text(word)
+
+    if not normalized_word or " " in normalized_word:
+        return False
+
+    if not normalized_word.isalpha():
+        return False
+
+    if not 3 <= len(normalized_word) <= 20:
+        return False
+
+    if is_generic_single_word(normalized_word):
+        return False
+
+    return True
+
+
+def is_dosage_or_form_only_text(text: str) -> bool:
+    """
+    OCR çıktısı yalnızca doz/form bilgisi içeriyorsa True döner.
+
+    Örnek: "250 mo / j0o mo tablot" → marka adı yok, eşleştirmeden çıkar.
+    """
+    from src.services.config import DOSAGE_FORM_MARKERS
+
+    normalized_text = normalize_text(text)
+
+    if not any(character.isdigit() for character in normalized_text):
+        return False
+
+    tokenized_text = normalized_text.replace("/", " ")
+    words = tokenized_text.split()
+
+    has_dosage_marker = any(
+        word in DOSAGE_FORM_MARKERS
+        or any(
+            marker in word
+            for marker in DOSAGE_FORM_MARKERS
+        )
+        for word in words
+    )
+
+    if not has_dosage_marker:
+        return False
+
+    def _is_brand_token(word: str) -> bool:
+        if word in DOSAGE_FORM_MARKERS:
+            return False
+
+        if any(marker in word for marker in DOSAGE_FORM_MARKERS):
+            return False
+
+        return _looks_like_brand_word(word)
+
+    has_brand_word = any(
+        _is_brand_token(word) for word in words
+    )
+
+    return not has_brand_word
 
 
 def get_medicine_name(
@@ -132,12 +197,16 @@ def calculate_medicine_score(
         return 0.0, None
 
     best_score = 0.0
+    skip_active_ingredient = is_dosage_or_form_only_text(
+        query_text
+    )
 
-    for field_name in (
-        "medicine_name",
-        "brand_name",
-        "active_ingredient",
-    ):
+    fields_to_compare = ["medicine_name", "brand_name"]
+
+    if not skip_active_ingredient:
+        fields_to_compare.append("active_ingredient")
+
+    for field_name in fields_to_compare:
         field_value = medicine.get(field_name, "").strip()
 
         if not field_value:

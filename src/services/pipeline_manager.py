@@ -146,8 +146,9 @@ class PipelineManager:
                 detection_count=0,
                 medicines_compared=medicines_compared,
                 error=(
-                    "İlaç kutusu tespit edilemedi "
-                    "veya crop oluşturulamadı."
+                    "İlaç kutusu tespit edilemedi. "
+                    "Fotoğrafın net olduğundan, kutuların kadrajda "
+                    "ve yeterince büyük göründüğünden emin olun."
                 ),
             )
 

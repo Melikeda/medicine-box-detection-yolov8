@@ -126,18 +126,65 @@ def should_reject_as_non_medicine_box(
     return False
 
 
+def _is_partial_brand_match(
+    query_text: str,
+    medicine: dict[str, str],
+    *,
+    minimum_text_length: int,
+    minimum_brand_coverage_ratio: float,
+) -> bool:
+    """
+    Bulanık OCR'da marka adının yalnızca bir parçası okunabilir.
+
+    Örnek: "fen" → brand_name "Nurofen"
+    """
+    normalized_query = normalize_filter_text(query_text)
+    query_alpha_length = count_alphabetic_characters(
+        normalized_query
+    )
+
+    if query_alpha_length < minimum_text_length:
+        return False
+
+    brand_name = medicine.get("brand_name", "").strip()
+
+    if not brand_name:
+        return False
+
+    normalized_brand = normalize_filter_text(brand_name)
+    brand_alpha_length = count_alphabetic_characters(
+        normalized_brand
+    )
+
+    if brand_alpha_length == 0:
+        return False
+
+    if normalized_query not in normalized_brand:
+        return False
+
+    coverage_ratio = query_alpha_length / brand_alpha_length
+    return coverage_ratio >= minimum_brand_coverage_ratio
+
+
 def is_reliable_medicine_match(
     query_text: str,
     medicine_name: str,
     *,
+    medicine: dict[str, str] | None = None,
+    match_score: float = 0.0,
     minimum_text_length: int,
     minimum_name_coverage_ratio: float,
+    minimum_brand_coverage_ratio: float = 0.40,
+    minimum_partial_brand_match_score: float = 85.0,
 ) -> bool:
     """
     Kısa veya parçalı OCR metinlerinin yanlış eşleşmesini engeller.
 
     Tek harfli OCR çıktıları (ör. "s", "u") RapidFuzz'ta yüksek skor
     alabilir; bu kontrol güvenilir eşleşmeyi doğrular.
+
+    Yüksek skorlu marka parçası eşleşmelerine (ör. "fen" → Nurofen)
+    bulanık fotoğraflar için izin verilir.
     """
     normalized_query = normalize_filter_text(query_text)
     normalized_name = normalize_filter_text(medicine_name)
@@ -156,7 +203,25 @@ def is_reliable_medicine_match(
         return False
 
     coverage_ratio = query_alpha_length / name_alpha_length
-    return coverage_ratio >= minimum_name_coverage_ratio
+
+    if coverage_ratio >= minimum_name_coverage_ratio:
+        return True
+
+    if (
+        medicine is not None
+        and match_score >= minimum_partial_brand_match_score
+        and _is_partial_brand_match(
+            query_text=query_text,
+            medicine=medicine,
+            minimum_text_length=minimum_text_length,
+            minimum_brand_coverage_ratio=(
+                minimum_brand_coverage_ratio
+            ),
+        )
+    ):
+        return True
+
+    return False
 
 
 @dataclass
@@ -240,14 +305,30 @@ class MatchingService:
         )
 
         if not filtered:
+            has_raw_text = any(
+                text.strip() for text in candidate_texts
+            )
+            empty_status = (
+                "not_found" if has_raw_text else "not_medicine_box"
+            )
+            empty_message = (
+                NOT_FOUND_MESSAGE
+                if has_raw_text
+                else NOT_MEDICINE_BOX_MESSAGE
+            )
+
             return TextMatchResult(
                 medicine_name=None,
                 medicine=None,
                 matching_score=0.0,
-                best_ocr_text=None,
+                best_ocr_text=(
+                    candidate_texts[0].strip()
+                    if has_raw_text and candidate_texts
+                    else None
+                ),
                 best_candidate=None,
-                status="not_medicine_box",
-                display_message=NOT_MEDICINE_BOX_MESSAGE,
+                status=empty_status,
+                display_message=empty_message,
             )
 
         ranked_matches = self.rank_matches(
@@ -311,11 +392,19 @@ class MatchingService:
                 or not is_reliable_medicine_match(
                     query_text=ocr_text,
                     medicine_name=candidate_name,
+                    medicine=medicine,
+                    match_score=score,
                     minimum_text_length=(
                         self.config.minimum_matching_text_length
                     ),
                     minimum_name_coverage_ratio=(
                         self.config.minimum_name_coverage_ratio
+                    ),
+                    minimum_brand_coverage_ratio=(
+                        self.config.minimum_brand_coverage_ratio
+                    ),
+                    minimum_partial_brand_match_score=(
+                        self.config.minimum_partial_brand_match_score
                     ),
                 )
             ):
