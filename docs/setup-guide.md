@@ -135,7 +135,8 @@ python run_api.py
 | Endpoint | Description |
 |----------|-------------|
 | `GET /health` | API and model readiness |
-| `POST /api/v1/analyze` | Upload image (multipart form field: `file`) |
+| `GET /api/v1/analyze/info` | Upload limits, formats, OCR modes |
+| `POST /api/v1/analyze?mode=fast` | Upload image (`file` field) |
 
 Docs: http://127.0.0.1:8000/docs
 

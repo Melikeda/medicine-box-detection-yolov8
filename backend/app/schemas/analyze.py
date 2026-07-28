@@ -24,13 +24,40 @@ class MedicineBoxResultSchema(BaseModel):
     medicine: dict[str, str] | None = None
 
 
+class AnalyzeSummarySchema(BaseModel):
+    """Mobil uygulama icin ozet sayaclar."""
+
+    matched_count: int = 0
+    not_found_count: int = 0
+    not_medicine_box_count: int = 0
+    error_count: int = 0
+
+
 class AnalyzeResponseSchema(BaseModel):
     success: bool
-    image_path: str
+    filename: str | None = None
     detection_count: int
     medicines: list[MedicineBoxResultSchema] = Field(default_factory=list)
     medicines_compared: int = 0
     error: str | None = None
+    summary: AnalyzeSummarySchema = Field(
+        default_factory=AnalyzeSummarySchema
+    )
+    ocr_mode: str = "fast"
+    processing_time_ms: float = 0.0
+
+
+class AnalyzeInfoSchema(BaseModel):
+    """Analyze endpoint limitleri ve desteklenen formatlar."""
+
+    endpoint: str
+    method: str = "POST"
+    content_type: str = "multipart/form-data"
+    file_field: str = "file"
+    max_upload_size_mb: float
+    allowed_extensions: list[str]
+    ocr_modes: list[str]
+    response_statuses: list[str]
 
 
 class HealthResponseSchema(BaseModel):

@@ -211,9 +211,10 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 
 ## Objectives
 
-- [ ] Implement `POST /api/v1/analyze` with multipart upload
-- [ ] Validate image type and file size
-- [ ] Return structured JSON response for mobile app
+- [x] Implement `POST /api/v1/analyze` with multipart upload
+- [x] Validate image type and file size
+- [x] Return structured JSON response for mobile app
+- [x] Add `GET /api/v1/analyze/info` and `mode` query parameter
 
 ---
 

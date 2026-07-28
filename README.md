@@ -202,13 +202,25 @@ Endpoints:
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/health` | API and model readiness |
+| GET | `/api/v1/analyze/info` | Upload limits and supported formats |
 | POST | `/api/v1/analyze` | Upload image, analyze all boxes |
+
+Query parameter for analyze:
+
+- `mode=fast` (default) — ~8 OCR variants per box
+- `mode=accurate` — ~52 OCR variants per box (slow on CPU)
 
 Example analyze request:
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/api/v1/analyze" \
+curl -X POST "http://127.0.0.1:8000/api/v1/analyze?mode=fast" \
   -F "file=@data/samples/samples3.jpg"
+```
+
+Example info request:
+
+```bash
+curl http://127.0.0.1:8000/api/v1/analyze/info
 ```
 
 Interactive docs: http://127.0.0.1:8000/docs
