@@ -12,6 +12,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) | FastAPI backend foundation |
 | [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) | Analyze API + real-world matching improvements |
 | [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) | SQLite database + medicine query endpoints |
+| [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | Automated testing (pytest) |
 
 ## In Progress
 
@@ -23,7 +24,6 @@ Use this file when organizing issues on the GitHub Project board.
 
 | Issue | Branch |
 |-------|--------|
-| [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | `feature/tests` |
 | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | `feature/docker` |
 
 ## Todo — Mobile
@@ -67,3 +67,4 @@ Use this file when organizing issues on the GitHub Project board.
 | [10-fastapi-analyze-api.md](../docs/reports/10-fastapi-analyze-api.md) | FastAPI + analyze endpoint |
 | [11-real-world-matching-improvements.md](../docs/reports/11-real-world-matching-improvements.md) | Detection fallback + matching fixes |
 | [12-sqlite-database.md](../docs/reports/12-sqlite-database.md) | SQLite + medicine query API |
+| [13-automated-testing.md](../docs/reports/13-automated-testing.md) | pytest suite |

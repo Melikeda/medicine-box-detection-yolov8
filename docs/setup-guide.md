@@ -154,6 +154,12 @@ curl -X POST "http://127.0.0.1:8000/api/v1/analyze?mode=fast" \
 
 Interactive docs: http://127.0.0.1:8000/docs
 
+### Run tests
+
+```bash
+pytest
+```
+
 Restart the server after pulling code changes.
 
 Seed SQLite (optional — also runs automatically on pipeline load):
