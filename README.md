@@ -40,7 +40,7 @@ This repository contains an intelligent **medicine box recognition system**. It 
 
 | Stage | Technology | GitHub Issue |
 |-------|------------|--------------|
-| Automated tests | pytest | [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) |
+| Automated tests | pytest | Done |
 | Docker deployment | Docker Compose | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) |
 | Mobile app | Flutter (Android MVP) | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) |
 | Mobile integration | Gallery → API → result | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) |
@@ -75,7 +75,7 @@ The AI pipeline itself is implemented in Python under `src/`. Learning scripts a
 | `src/` | Reusable, production-ready application logic |
 | `examples/` | Step-by-step learning scripts and usage demos |
 | `docs/` | Architecture, roadmap, setup guide, technical reports |
-| `tests/` | Automated tests (planned — Issue #28) |
+| `tests/` | Automated tests (`pytest`) |
 
 See [examples/README.md](examples/README.md) for the full learning path.
 
@@ -134,7 +134,7 @@ Planned additions: `mobile/` (Flutter).
 | Data | CSV (seed) + SQLite (runtime) |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Mobile (planned) | Flutter, Dart |
-| DevOps (planned) | Docker, pytest |
+| DevOps | pytest (Done), Docker (planned) |
 
 See [docs/technology-selection.md](docs/technology-selection.md) for rationale.
 
@@ -275,6 +275,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | FastAPI backend | Done ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
 | Analyze API + matching improvements | Done ([#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26)) |
 | SQLite database | Done ([#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27)) |
+| Automated tests | Done ([#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28)) |
 | Flutter mobile MVP | Planned ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)-[#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 
@@ -290,7 +291,7 @@ Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
 | [roadmap.md](docs/roadmap.md) | Development phases and GitHub issues |
 | [setup-guide.md](docs/setup-guide.md) | Environment setup |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool was chosen |
-| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–11) |
+| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–13) |
 
 ---
 

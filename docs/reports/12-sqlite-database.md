@@ -111,4 +111,5 @@ RapidFuzz still runs in-memory for speed; SQLite is the durable store.
 
 ## Next Phase
 
-Issue #28 — Automated tests (include SQLite seed + medicine endpoints).
+Issue #28 — Automated tests (include SQLite seed + medicine endpoints) — see [Report 13](13-automated-testing.md).
+Next: Issue #29 — Docker.

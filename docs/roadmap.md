@@ -252,8 +252,10 @@ See [Report 12](reports/12-sqlite-database.md).
 
 ## Objectives
 
-- [ ] Set up pytest
-- [ ] Add unit, integration, and API tests
+- [x] Set up pytest
+- [x] Add unit, integration, and API tests
+
+See [Report 13](reports/13-automated-testing.md).
 
 ---
 
@@ -373,8 +375,8 @@ See [Report 12](reports/12-sqlite-database.md).
 | ✅ FastAPI Backend | Completed | #25 |
 | ✅ Analyze API | Completed | #26 |
 | ✅ SQLite Database | Completed | #27 |
-| ⏳ Automated Testing | Next | #28 |
-| ⏳ Docker | Planned | #29 |
+| ✅ Automated Testing | Completed | #28 |
+| ⏳ Docker | Next | #29 |
 | ⏳ Flutter Mobile App | Planned | #30 |
 | ⏳ Mobile MVP Integration | Planned | #31 |
 | ⏳ Advanced Features (LLM, etc.) | Planned | #32, #8 |
