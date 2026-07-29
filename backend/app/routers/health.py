@@ -19,11 +19,13 @@ async def health_check(
     manager = getattr(request.app.state, "pipeline_manager", None)
     models_loaded = manager is not None and manager.is_loaded
     medicine_count = manager.medicine_count if manager else None
+    database_source = manager.database_source if manager else None
 
     logger.debug(
-        "Health check: models_loaded=%s medicine_count=%s",
+        "Health check: models_loaded=%s medicine_count=%s source=%s",
         models_loaded,
         medicine_count,
+        database_source,
     )
 
     return HealthResponseSchema(
@@ -33,4 +35,5 @@ async def health_check(
         models_loaded=models_loaded,
         ocr_mode=settings.ocr_mode,
         medicine_count=medicine_count,
+        database_source=database_source,
     )

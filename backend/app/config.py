@@ -48,11 +48,17 @@ class ApiSettings(BaseSettings):
     def create_pipeline_config(self) -> PipelineConfig:
         from pathlib import Path
 
+        from src.services.config import PROJECT_ROOT
+
+        sqlite_path = Path(self.sqlite_path)
+        if not sqlite_path.is_absolute():
+            sqlite_path = PROJECT_ROOT / sqlite_path
+
         return PipelineConfig(
             ocr_mode=self.ocr_mode,
             use_gpu=self.use_gpu,
             use_sqlite=self.use_sqlite,
-            sqlite_path=Path(self.sqlite_path),
+            sqlite_path=sqlite_path,
         )
 
 

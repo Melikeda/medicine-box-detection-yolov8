@@ -159,6 +159,17 @@ def get_medicine_by_id(
     return session.get(Medicine, medicine_id.strip())
 
 
+def list_categories(session: Session) -> list[str]:
+    """Benzersiz kategori listesini alfabetik döndürür."""
+    rows = session.scalars(
+        select(Medicine.category)
+        .where(Medicine.category != "")
+        .distinct()
+        .order_by(Medicine.category)
+    ).all()
+    return [str(category) for category in rows]
+
+
 def load_medicines_from_sqlite(
     database_path: Path,
 ) -> list[dict[str, str]]:

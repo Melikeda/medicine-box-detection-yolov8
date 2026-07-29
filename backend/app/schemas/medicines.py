@@ -31,3 +31,12 @@ class MedicineDetailResponseSchema(BaseModel):
     success: bool = True
     source: str = "sqlite"
     medicine: MedicineSchema
+
+
+class MedicineCategoriesResponseSchema(BaseModel):
+    """Kategori listesi yanıtı."""
+
+    success: bool = True
+    count: int
+    source: str = "sqlite"
+    categories: list[str] = Field(default_factory=list)

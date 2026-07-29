@@ -68,6 +68,7 @@ Generated `.db` files are gitignored.
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/v1/medicines` | List / search medicines |
+| GET | `/api/v1/medicines/categories` | Distinct categories |
 | GET | `/api/v1/medicines/{medicine_id}` | Single medicine detail |
 
 Query parameters for list:

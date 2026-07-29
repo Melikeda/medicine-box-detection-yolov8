@@ -141,6 +141,7 @@ Server starts at http://127.0.0.1:8000
 | `GET /api/v1/analyze/info` | Upload limits, formats, OCR modes |
 | `POST /api/v1/analyze?mode=fast` | Upload image (`file` field) |
 | `GET /api/v1/medicines` | List / search medicines (SQLite) |
+| `GET /api/v1/medicines/categories` | Distinct categories |
 | `GET /api/v1/medicines/{id}` | Medicine detail |
 
 Example:

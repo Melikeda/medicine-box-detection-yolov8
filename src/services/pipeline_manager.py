@@ -64,8 +64,14 @@ class PipelineManager:
             return None
         return self._matching_service.medicine_count
 
+    @property
+    def database_source(self) -> str | None:
+        if self._matching_service is None:
+            return None
+        return self._matching_service.source
+
     def load(self) -> None:
-        """YOLO, EasyOCR ve CSV veritabanını belleğe yükler."""
+        """YOLO, EasyOCR ve ilaç veritabanını belleğe yükler."""
         if self.is_loaded:
             print("PipelineManager: kaynaklar zaten yüklü.")
             return

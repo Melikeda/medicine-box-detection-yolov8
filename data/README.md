@@ -56,6 +56,7 @@ SQLite migration: Issue [#27](https://github.com/Melikeda/medicine-box-detection
 | Method | Path |
 |--------|------|
 | GET | `/api/v1/medicines` |
+| GET | `/api/v1/medicines/categories` |
 | GET | `/api/v1/medicines/{medicine_id}` |
 
 ## Sample images

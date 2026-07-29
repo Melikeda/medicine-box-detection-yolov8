@@ -3,6 +3,7 @@ from src.database.models import Medicine
 from src.database.repository import (
     ensure_database_seeded,
     get_medicine_by_id,
+    list_categories,
     list_medicines,
     load_medicines_from_sqlite,
     seed_medicines_from_csv,
@@ -20,6 +21,7 @@ __all__ = [
     "ensure_database_seeded",
     "get_medicine_by_id",
     "init_engine",
+    "list_categories",
     "list_medicines",
     "load_medicines",
     "load_medicines_from_sqlite",

@@ -32,7 +32,7 @@ This repository contains an intelligent **medicine box recognition system**. It 
 | OCR modes (fast/accurate) | `PipelineConfig.ocr_mode` | Done |
 | REST backend | FastAPI | Done |
 | Analyze API | `POST /api/v1/analyze` | Done |
-| Medicine DB | SQLite + SQLAlchemy | Done (`feature/sqlite-database`) |
+| Medicine DB | SQLite + SQLAlchemy | Done |
 | Multi-box detection | `analyze_medicine_boxes()` | Done |
 | Real-world matching | Fallback YOLO, partial brand, dosage filter | Done |
 
@@ -212,6 +212,7 @@ Endpoints:
 | GET | `/api/v1/analyze/info` | Upload limits and supported formats |
 | POST | `/api/v1/analyze` | Upload image, analyze all boxes |
 | GET | `/api/v1/medicines` | List / search medicines (SQLite) |
+| GET | `/api/v1/medicines/categories` | Medicine categories |
 | GET | `/api/v1/medicines/{id}` | Medicine detail |
 
 Query parameter for analyze:
@@ -273,6 +274,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | Pipeline servicification | Done ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
 | FastAPI backend | Done ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
 | Analyze API + matching improvements | Done ([#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26)) |
+| SQLite database | Done ([#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27)) |
 | Flutter mobile MVP | Planned ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)-[#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 

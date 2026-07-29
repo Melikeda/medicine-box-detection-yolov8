@@ -5,6 +5,7 @@ from pathlib import Path
 from src.database.repository import (
     count_medicines,
     get_medicine_by_id,
+    list_categories,
     list_medicines,
 )
 from src.database.session import (
@@ -74,3 +75,7 @@ class MedicineQueryService:
             if medicine is None:
                 return None
             return medicine.to_dict()
+
+    def list_categories(self) -> list[str]:
+        with session_scope() as session:
+            return list_categories(session)

@@ -106,4 +106,5 @@ Interactive docs: http://127.0.0.1:8000/docs
 
 ## Next Phase
 
-Issue #27 — SQLite database migration and medicine query endpoints.
+Issue #27 — SQLite migration — completed; see [Report 12](12-sqlite-database.md).  
+Next: Issue #28 — Automated tests.

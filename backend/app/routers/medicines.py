@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.schemas.medicines import (
+    MedicineCategoriesResponseSchema,
     MedicineDetailResponseSchema,
     MedicineListResponseSchema,
     MedicineSchema,
@@ -50,6 +51,22 @@ async def list_medicines(
         medicines=[
             MedicineSchema(**medicine) for medicine in medicines
         ],
+    )
+
+
+@router.get(
+    "/categories",
+    response_model=MedicineCategoriesResponseSchema,
+)
+async def get_medicine_categories(
+    service: MedicineQueryService = Depends(get_medicine_service),
+) -> MedicineCategoriesResponseSchema:
+    """Benzersiz ilaç kategorilerini döndürür."""
+    categories = service.list_categories()
+    return MedicineCategoriesResponseSchema(
+        count=len(categories),
+        source=service.source,
+        categories=categories,
     )
 
 

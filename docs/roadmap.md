@@ -372,7 +372,7 @@ See [Report 12](reports/12-sqlite-database.md).
 | ✅ Pipeline Servicification | Completed | #24 |
 | ✅ FastAPI Backend | Completed | #25 |
 | ✅ Analyze API | Completed | #26 |
-| ✅ SQLite Database | Completed (branch open) | #27 |
+| ✅ SQLite Database | Completed | #27 |
 | ⏳ Automated Testing | Next | #28 |
 | ⏳ Docker | Planned | #29 |
 | ⏳ Flutter Mobile App | Planned | #30 |
