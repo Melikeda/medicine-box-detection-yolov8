@@ -27,11 +27,12 @@ This repository contains an intelligent **medicine box recognition system**. It 
 | Image preprocessing | OpenCV | Done |
 | Text recognition | EasyOCR | Done |
 | Name matching | RapidFuzz | Done |
-| Medicine database | CSV (38 records) | Done |
+| Medicine database | CSV seed + SQLite (38 records) | Done |
 | End-to-end pipeline | `src/services/` + `PipelineManager` | Done |
 | OCR modes (fast/accurate) | `PipelineConfig.ocr_mode` | Done |
 | REST backend | FastAPI | Done |
 | Analyze API | `POST /api/v1/analyze` | Done |
+| Medicine DB | SQLite + SQLAlchemy | Done (`feature/sqlite-database`) |
 | Multi-box detection | `analyze_medicine_boxes()` | Done |
 | Real-world matching | Fallback YOLO, partial brand, dosage filter | Done |
 
@@ -39,13 +40,12 @@ This repository contains an intelligent **medicine box recognition system**. It 
 
 | Stage | Technology | GitHub Issue |
 |-------|------------|--------------|
-| SQLite database | SQLAlchemy | [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) |
 | Automated tests | pytest | [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) |
 | Docker deployment | Docker Compose | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) |
 | Mobile app | Flutter (Android MVP) | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) |
 | Mobile integration | Gallery → API → result | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) |
 
-Post-MVP: SQLite/PostgreSQL, automated tests, Docker, LLM explanations ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).
+Post-MVP: PostgreSQL, LLM explanations ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).
 
 ---
 
@@ -131,7 +131,7 @@ Planned additions: `mobile/` (Flutter).
 | Preprocessing | OpenCV |
 | OCR | EasyOCR |
 | Matching | RapidFuzz |
-| Data | CSV (current), SQLite (planned) |
+| Data | CSV (seed) + SQLite (runtime) |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Mobile (planned) | Flutter, Dart |
 | DevOps (planned) | Docker, pytest |
@@ -211,6 +211,8 @@ Endpoints:
 | GET | `/health` | API and model readiness |
 | GET | `/api/v1/analyze/info` | Upload limits and supported formats |
 | POST | `/api/v1/analyze` | Upload image, analyze all boxes |
+| GET | `/api/v1/medicines` | List / search medicines (SQLite) |
+| GET | `/api/v1/medicines/{id}` | Medicine detail |
 
 Query parameter for analyze:
 

@@ -236,9 +236,12 @@ See [Report 10](reports/10-fastapi-analyze-api.md) and [Report 11](reports/11-re
 
 ## Objectives
 
-- [ ] Define SQLAlchemy Medicine model
-- [ ] Seed database from CSV
-- [ ] Add medicine query endpoints
+- [x] Define SQLAlchemy Medicine model
+- [x] Seed database from CSV
+- [x] Add medicine query endpoints
+- [x] Wire MatchingService to SQLite (CSV remains seed source)
+
+See [Report 12](reports/12-sqlite-database.md).
 
 ---
 
@@ -369,8 +372,8 @@ See [Report 10](reports/10-fastapi-analyze-api.md) and [Report 11](reports/11-re
 | ✅ Pipeline Servicification | Completed | #24 |
 | ✅ FastAPI Backend | Completed | #25 |
 | ✅ Analyze API | Completed | #26 |
-| ⏳ SQLite Database | Next | #27 |
-| ⏳ Automated Testing | Planned | #28 |
+| ✅ SQLite Database | Completed (branch open) | #27 |
+| ⏳ Automated Testing | Next | #28 |
 | ⏳ Docker | Planned | #29 |
 | ⏳ Flutter Mobile App | Planned | #30 |
 | ⏳ Mobile MVP Integration | Planned | #31 |

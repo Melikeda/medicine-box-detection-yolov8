@@ -40,7 +40,7 @@ OCR Normalization + Candidate Processing
 RapidFuzz Matching
  │
  ▼
-Medicine Database (CSV → SQLite planned)
+Medicine Database (CSV seed → SQLite)
  │
  ▼
 JSON Response (per-box status + summary)
@@ -190,9 +190,8 @@ OCR output is compared with CSV fields: `medicine_name`, `brand_name`, `active_i
 
 | Stage | Technology | Records |
 |-------|------------|---------|
-| Current | CSV file | 38 drugs |
-| MVP target | SQLite + SQLAlchemy (#27) | — |
-| Production | PostgreSQL | — |
+| Current | CSV (seed) + SQLite (runtime) | 38 drugs |
+| Production (later) | PostgreSQL | — |
 
 Fields: `medicine_id`, `medicine_name`, `brand_name`, `active_ingredient`, `dosage`, `form`, `category`
 

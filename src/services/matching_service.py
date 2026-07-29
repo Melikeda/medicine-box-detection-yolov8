@@ -3,6 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from src.database.csv_reader import load_medicines
+from src.database.repository import (
+    ensure_database_seeded,
+    load_medicines_from_sqlite,
+)
 from src.matching.medicine_matcher import find_best_medicine_match
 from src.services.candidate_processor import (
     MatchRecord,
@@ -239,15 +243,18 @@ class TextMatchResult:
 
 
 class MatchingService:
-    """CSV veritabanı yükleme ve RapidFuzz eşleştirme servisi."""
+    """İlaç veritabanı yükleme ve RapidFuzz eşleştirme servisi."""
 
     def __init__(
         self,
         config: PipelineConfig,
         medicines: list[dict[str, str]],
+        *,
+        source: str = "csv",
     ) -> None:
         self.config = config
         self.medicines = medicines
+        self.source = source
 
     @classmethod
     def from_csv(
@@ -258,7 +265,55 @@ class MatchingService:
         medicines = load_medicines(
             csv_path=config.medicines_csv_path,
         )
-        return cls(config=config, medicines=medicines)
+        return cls(
+            config=config,
+            medicines=medicines,
+            source="csv",
+        )
+
+    @classmethod
+    def from_sqlite(
+        cls,
+        config: PipelineConfig,
+        *,
+        seed_from_csv: bool = True,
+    ) -> MatchingService:
+        """
+        SQLite veritabanından ilaç kayıtlarını yükler.
+
+        seed_from_csv=True ise önce CSV ile upsert yapılır.
+        """
+        if seed_from_csv:
+            ensure_database_seeded(
+                csv_path=config.medicines_csv_path,
+                database_path=config.sqlite_path,
+            )
+
+        medicines = load_medicines_from_sqlite(
+            database_path=config.sqlite_path,
+        )
+
+        if not medicines:
+            raise ValueError(
+                "SQLite veritabanında ilaç kaydı bulunamadı: "
+                f"{config.sqlite_path}"
+            )
+
+        return cls(
+            config=config,
+            medicines=medicines,
+            source="sqlite",
+        )
+
+    @classmethod
+    def from_config(
+        cls,
+        config: PipelineConfig,
+    ) -> MatchingService:
+        """Config.use_sqlite'a göre SQLite veya CSV yükler."""
+        if config.use_sqlite:
+            return cls.from_sqlite(config=config)
+        return cls.from_csv(config=config)
 
     @property
     def medicine_count(self) -> int:

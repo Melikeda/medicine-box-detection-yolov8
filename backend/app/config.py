@@ -38,14 +38,21 @@ class ApiSettings(BaseSettings):
 
     cors_origins: tuple[str, ...] = ("*",)
 
+    use_sqlite: bool = True
+    sqlite_path: str = "data/database/medicines.db"
+
     @property
     def max_upload_size_bytes(self) -> int:
         return int(self.max_upload_size_mb * 1024 * 1024)
 
     def create_pipeline_config(self) -> PipelineConfig:
+        from pathlib import Path
+
         return PipelineConfig(
             ocr_mode=self.ocr_mode,
             use_gpu=self.use_gpu,
+            use_sqlite=self.use_sqlite,
+            sqlite_path=Path(self.sqlite_path),
         )
 
 

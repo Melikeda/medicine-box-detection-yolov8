@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import get_api_settings
 from backend.app.exceptions import register_exception_handlers
 from backend.app.logging_config import configure_logging
-from backend.app.routers import analyze, health
+from backend.app.routers import analyze, health, medicines
 from src.services.pipeline_manager import PipelineManager
 
 logger = logging.getLogger(__name__)
@@ -65,6 +65,10 @@ def create_app() -> FastAPI:
     app.include_router(health.router)
     app.include_router(
         analyze.router,
+        prefix=settings.api_prefix,
+    )
+    app.include_router(
+        medicines.router,
         prefix=settings.api_prefix,
     )
 

@@ -82,7 +82,7 @@ class PipelineManager:
         )
 
         print("PipelineManager: ilaç veritabanı yükleniyor...")
-        self._matching_service = MatchingService.from_csv(
+        self._matching_service = MatchingService.from_config(
             config=self.config,
         )
 
@@ -98,6 +98,7 @@ class PipelineManager:
         print(
             f"PipelineManager: hazır "
             f"({self._matching_service.medicine_count} ilaç, "
+            f"kaynak: {self._matching_service.source}, "
             f"OCR modu: {self.config.ocr_mode})"
         )
 

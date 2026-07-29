@@ -27,7 +27,8 @@ See [docs/reports/03-dataset-preparation.md](../docs/reports/03-dataset-preparat
 
 ## Medicine database
 
-`database/medicines.csv` is the current source of truth for RapidFuzz matching (**38 records**).
+`database/medicines.csv` is the **seed source of truth** (editable).  
+`database/medicines.db` is the **runtime SQLite database** (generated locally, gitignored).
 
 | Field | Description |
 |-------|-------------|
@@ -42,12 +43,20 @@ See [docs/reports/03-dataset-preparation.md](../docs/reports/03-dataset-preparat
 ### Adding a new drug
 
 1. Add a row to `medicines.csv` with the next `medicine_id`
-2. Restart the API (`python run_api.py`) to reload the database
+2. Restart the API (`python run_api.py`) — CSV is upserted into SQLite on startup  
+   Or run: `python scripts/seed_sqlite.py`
 3. Test with `python run_analyze.py --image your_photo.jpg --mode fast`
 
 Recent additions: **Draxol** (MED037), **Parafon** (MED038).
 
-A SQLite migration is planned in issue [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27).
+SQLite migration: Issue [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) / [Report 12](../docs/reports/12-sqlite-database.md).
+
+### Query API
+
+| Method | Path |
+|--------|------|
+| GET | `/api/v1/medicines` |
+| GET | `/api/v1/medicines/{medicine_id}` |
 
 ## Sample images
 
