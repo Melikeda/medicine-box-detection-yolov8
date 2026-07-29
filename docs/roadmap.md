@@ -375,7 +375,7 @@ See [Report 13](reports/13-automated-testing.md).
 | ✅ FastAPI Backend | Completed | #25 |
 | ✅ Analyze API | Completed | #26 |
 | ✅ SQLite Database | Completed | #27 |
-| ✅ Automated Testing | Completed (branch open) | #28 |
+| ✅ Automated Testing | Completed | #28 |
 | ⏳ Docker | Next | #29 |
 | ⏳ Flutter Mobile App | Planned | #30 |
 | ⏳ Mobile MVP Integration | Planned | #31 |

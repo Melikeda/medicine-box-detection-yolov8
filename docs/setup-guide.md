@@ -211,7 +211,8 @@ medicine-box-detection-yolov8/
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
 2. Read [Report 10](reports/10-fastapi-analyze-api.md) and [Report 11](reports/11-real-world-matching-improvements.md)
-3. Pick the next GitHub Issue — start with [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) (SQLite)
+3. Pick the next GitHub Issue — start with [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) (Docker)
+
 
 ### Run the unified pipeline from Python
 

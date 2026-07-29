@@ -237,7 +237,7 @@ JSON Response → Flutter Result Screen
 # 🚀 Future Improvements
 
 - SQLite migration (#27)
-- Automated tests (#28)
+- Automated tests (#28) ✅
 - Docker deployment (#29)
 - Flutter mobile MVP (#30–#31)
 - Barcode / QR code support
