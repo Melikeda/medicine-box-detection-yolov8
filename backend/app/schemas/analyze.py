@@ -67,6 +67,7 @@ class HealthResponseSchema(BaseModel):
     models_loaded: bool
     ocr_mode: str
     medicine_count: int | None = None
+    database_source: str | None = None
 
 
 class ErrorResponseSchema(BaseModel):

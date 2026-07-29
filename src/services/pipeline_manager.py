@@ -64,8 +64,14 @@ class PipelineManager:
             return None
         return self._matching_service.medicine_count
 
+    @property
+    def database_source(self) -> str | None:
+        if self._matching_service is None:
+            return None
+        return self._matching_service.source
+
     def load(self) -> None:
-        """YOLO, EasyOCR ve CSV veritabanını belleğe yükler."""
+        """YOLO, EasyOCR ve ilaç veritabanını belleğe yükler."""
         if self.is_loaded:
             print("PipelineManager: kaynaklar zaten yüklü.")
             return
@@ -82,7 +88,7 @@ class PipelineManager:
         )
 
         print("PipelineManager: ilaç veritabanı yükleniyor...")
-        self._matching_service = MatchingService.from_csv(
+        self._matching_service = MatchingService.from_config(
             config=self.config,
         )
 
@@ -98,6 +104,7 @@ class PipelineManager:
         print(
             f"PipelineManager: hazır "
             f"({self._matching_service.medicine_count} ilaç, "
+            f"kaynak: {self._matching_service.source}, "
             f"OCR modu: {self.config.ocr_mode})"
         )
 

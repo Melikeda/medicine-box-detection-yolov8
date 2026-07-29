@@ -48,9 +48,8 @@ This document explains which technologies are used in the project and why they w
 
 | Stage | Technology | Why |
 |-------|------------|-----|
-| Current | CSV | Zero setup; 38 medicines in `medicines.csv` |
-| MVP target | SQLite | File-based SQL; works with SQLAlchemy; no server needed |
-| Production | PostgreSQL | Scalable; supports concurrent users and history |
+| Current | CSV + SQLite | CSV seeds SQLite; matching/API use SQLite |
+| Production (later) | PostgreSQL | Scalable; supports concurrent users and history |
 
 ---
 

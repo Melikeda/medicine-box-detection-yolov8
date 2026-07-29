@@ -140,6 +140,9 @@ Server starts at http://127.0.0.1:8000
 | `GET /health` | API and model readiness |
 | `GET /api/v1/analyze/info` | Upload limits, formats, OCR modes |
 | `POST /api/v1/analyze?mode=fast` | Upload image (`file` field) |
+| `GET /api/v1/medicines` | List / search medicines (SQLite) |
+| `GET /api/v1/medicines/categories` | Distinct categories |
+| `GET /api/v1/medicines/{id}` | Medicine detail |
 
 Example:
 
@@ -152,6 +155,12 @@ curl -X POST "http://127.0.0.1:8000/api/v1/analyze?mode=fast" \
 Interactive docs: http://127.0.0.1:8000/docs
 
 Restart the server after pulling code changes.
+
+Seed SQLite (optional — also runs automatically on pipeline load):
+
+```bash
+python scripts/seed_sqlite.py
+```
 
 ---
 
