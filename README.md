@@ -40,7 +40,7 @@ This repository contains an intelligent **medicine box recognition system**. It 
 
 | Stage | Technology | GitHub Issue |
 |-------|------------|--------------|
-| Docker deployment | Docker Compose | In progress ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
+| Docker deployment | Docker Compose | Done ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
 | Mobile app foundation | Flutter (`mobile/`) | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)) |
 | Mobile integration | Gallery → API → result | Next ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 
@@ -115,6 +115,8 @@ medicine-box-detection-yolov8/
 │       └── schemas/       # Pydantic response models
 ├── run_api.py             # FastAPI / Uvicorn entry point
 ├── run_analyze.py         # CLI pipeline runner (analyze_medicine_boxes)
+├── Dockerfile             # API container image
+├── docker-compose.yml     # Local deployment stack
 ├── mobile/                # Flutter Android MVP client
 │   └── lib/               # Splash, home, preview screens
 └── requirements.txt
@@ -135,7 +137,7 @@ Planned additions: API integration in `mobile/` (Phase 17).
 | Data | CSV (seed) + SQLite (runtime) |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Mobile | Flutter, Dart (`mobile/`) |
-| DevOps | pytest (Done), Docker (planned) |
+| DevOps | pytest (Done), Docker (Done) |
 
 See [docs/technology-selection.md](docs/technology-selection.md) for rationale.
 
@@ -236,6 +238,19 @@ curl http://127.0.0.1:8000/api/v1/analyze/info
 
 Interactive docs: http://127.0.0.1:8000/docs
 
+### Run with Docker
+
+Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) and trained YOLO weights at  
+`runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt`.
+
+```bash
+docker compose up --build
+```
+
+API: http://127.0.0.1:8000/docs
+
+Full Docker guide: [docs/reports/14-docker-containerization.md](docs/reports/14-docker-containerization.md)
+
 ### Run pipeline demo (examples wrapper)
 
 ```bash
@@ -277,6 +292,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | Analyze API + matching improvements | Done ([#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26)) |
 | SQLite database | Done ([#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27)) |
 | Automated tests | Done ([#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28)) |
+| Docker deployment | Done ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
 | Flutter mobile MVP | Foundation done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)); integration next ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 
