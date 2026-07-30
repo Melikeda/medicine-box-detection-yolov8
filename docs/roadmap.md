@@ -280,9 +280,11 @@ See [Report 14](reports/14-docker-containerization.md).
 
 ## Objectives
 
-- [ ] Initialize Flutter project
-- [ ] Build splash, home, and image preview screens
-- [ ] Integrate gallery image picker
+- [x] Initialize Flutter project
+- [x] Build splash, home, and image preview screens
+- [x] Integrate gallery image picker
+
+See [Report 15](reports/15-flutter-foundation.md).
 
 ---
 
@@ -379,7 +381,7 @@ See [Report 14](reports/14-docker-containerization.md).
 | ✅ SQLite Database | Completed | #27 |
 | ✅ Automated Testing | Completed | #28 |
 | ✅ Docker | Done | #29 |
-| ⏳ Flutter Mobile App | Planned | #30 |
+| ✅ Flutter Mobile App Foundation | Done | #30 |
 | ⏳ Mobile MVP Integration | Planned | #31 |
 | ⏳ Advanced Features (LLM, etc.) | Planned | #32, #8 |
 | ⏳ Final Testing & Documentation | Planned | #9 |

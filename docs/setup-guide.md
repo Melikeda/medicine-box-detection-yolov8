@@ -12,7 +12,8 @@ Environment setup for the **Medicine Box Detection System**.
 | Git | Version control |
 | VS Code (recommended) | Development IDE |
 | Docker Desktop | Container deployment (API) |
-| Flutter SDK | Mobile app (planned) |
+| Flutter SDK | Mobile app (`mobile/`) |
+| Android Studio | Android emulator / device testing |
 
 ---
 
@@ -182,6 +183,100 @@ python scripts/seed_sqlite.py
 
 ---
 
+## 9. Flutter Mobile App
+
+Phase 16 adds the Android MVP client under `mobile/`.
+
+### Install Flutter
+
+Follow the official guide: https://docs.flutter.dev/get-started/install/windows
+
+Verify:
+
+```powershell
+flutter doctor
+```
+
+### Setup and run
+
+```powershell
+cd mobile
+flutter pub get
+flutter run
+```
+
+Or use the helper script from the repo root:
+
+```powershell
+.\scripts\setup-mobile.ps1
+```
+
+If Android launcher icons are missing, regenerate platform files:
+
+```powershell
+.\scripts\setup-mobile.ps1 -RegeneratePlatforms
+```
+
+See [mobile/README.md](../mobile/README.md) and [Report 15](reports/15-flutter-foundation.md).
+
+Emulator sample photos:
+
+```powershell
+.\scripts\push-samples-to-emulator.ps1
+```
+
+---
+
+## 10. Docker Deployment
+
+Requires Docker Desktop and trained YOLO weights at  
+`runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt`.
+
+```bash
+docker compose up --build
+```
+
+Verify:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Details: [Report 14 — Docker Containerization](reports/14-docker-containerization.md)
+
+### Windows: WSL2 + Docker Desktop setup
+
+On Windows, Docker Desktop needs WSL2. Use the helper scripts (run **elevated PowerShell**):
+
+| Script | When to use |
+|--------|-------------|
+| `scripts/install-wsl-docker.ps1` | First-time WSL2 + Docker install |
+| `scripts/post-reboot-docker.ps1` | After reboot — finish WSL, start Docker, optional `docker compose up` |
+| `scripts/diagnose-wsl.ps1` | Troubleshoot WSL features and services |
+| `scripts/fix-docker-wsl.ps1` | Repair WSL features and restart Docker |
+| `scripts/fix-wsl-winget.ps1` | Reinstall WSL via winget if DISM enable reverts |
+| `scripts/fix-wsl-final.ps1` | Last-resort DISM + OptionalFeatures enable |
+| `scripts/fix-vmp.ps1` | Enable Virtual Machine Platform only |
+| `scripts/uninstall-docker.ps1` | Complete Docker Desktop removal |
+
+Typical flow:
+
+```powershell
+# 1) Admin PowerShell — first install
+.\scripts\install-wsl-docker.ps1
+
+# 2) Reboot if prompted, then:
+.\scripts\post-reboot-docker.ps1
+
+# 3) If WSL still fails:
+.\scripts\diagnose-wsl.ps1
+# read scripts\diagnose-wsl.log
+```
+
+See [scripts/README-docker-wsl.md](../scripts/README-docker-wsl.md) for full details.
+
+---
+
 ## Project Layout (summary)
 
 ```text
@@ -191,7 +286,8 @@ medicine-box-detection-yolov8/
 ├── docs/          architecture, roadmap, reports
 ├── examples/      learning scripts and usage demos
 ├── src/           reusable production AI modules
-├── tests/         automated tests (planned)
+├── tests/         automated tests
+├── mobile/        Flutter Android MVP client
 ├── run_api.py     FastAPI entry point
 ├── run_analyze.py CLI pipeline runner
 ├── Dockerfile     API container image
@@ -212,27 +308,8 @@ medicine-box-detection-yolov8/
 ## Next Steps
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
-2. Read [Report 14](reports/14-docker-containerization.md) for Docker deployment
-3. Pick the next GitHub Issue — start with [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) (Flutter foundation)
-
----
-
-## Docker Deployment
-
-Requires Docker Desktop and trained YOLO weights at  
-`runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt`.
-
-```bash
-docker compose up --build
-```
-
-Verify:
-
-```bash
-curl http://127.0.0.1:8000/health
-```
-
-Details: [Report 14 — Docker Containerization](reports/14-docker-containerization.md)
+2. Read [Report 14](reports/14-docker-containerization.md) and [Report 15](reports/15-flutter-foundation.md)
+3. Pick the next GitHub Issue — [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) (mobile API integration on `feature/mobile-integration`)
 
 
 ### Run the unified pipeline from Python

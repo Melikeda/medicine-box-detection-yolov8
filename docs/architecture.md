@@ -56,9 +56,13 @@ Mobile Result Screen
 
 # 🧩 System Components
 
-## 1. Mobile Client (Flutter) — Planned
+## 1. Mobile Client (Flutter) — Foundation ✅
 
-The user selects a medicine box photo from the gallery (MVP) or captures one with the camera (later version).
+The user selects a medicine box photo from the gallery (MVP). Camera capture is planned for a later version.
+
+**Phase 16 (Issue #30):** Splash, home, gallery picker, and image preview screens under `mobile/`.
+
+**Phase 17 (Issue #31):** Connect to `POST /api/v1/analyze` and display results.
 
 ### Responsibilities
 

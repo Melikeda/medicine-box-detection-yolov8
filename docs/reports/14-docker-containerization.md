@@ -47,6 +47,11 @@ Host machine
 | `docker-compose.yml` | One-service stack with volume mounts |
 | `.dockerignore` | Exclude dataset, tests, venv, weights from build context |
 | `scripts/docker-entrypoint.sh` | Verify model exists, seed DB, start API |
+| `scripts/install-wsl-docker.ps1` | Windows: first-time WSL2 + Docker Desktop install |
+| `scripts/post-reboot-docker.ps1` | Windows: post-reboot WSL/Docker finish + optional compose |
+| `scripts/diagnose-wsl.ps1` | Windows: WSL diagnostic log |
+| `scripts/fix-docker-wsl.ps1` | Windows: repair WSL features and restart Docker |
+| `scripts/README-docker-wsl.md` | Windows WSL/Docker script guide |
 
 ---
 
@@ -118,7 +123,27 @@ Expected health response: `"status": "ok"`, `"models_loaded": true`.
 
 ---
 
-## Limitations
+## Windows: WSL2 + Docker Desktop
+
+Docker Desktop on Windows requires WSL2. Helper PowerShell scripts under `scripts/` automate install and repair:
+
+```powershell
+# Admin PowerShell
+.\scripts\install-wsl-docker.ps1
+# reboot if needed
+.\scripts\post-reboot-docker.ps1
+```
+
+Troubleshooting: `.\scripts\diagnose-wsl.ps1` → read `scripts\diagnose-wsl.log`
+
+Full guide: [scripts/README-docker-wsl.md](../../scripts/README-docker-wsl.md)
+
+Common blockers:
+- Virtual Machine Platform not enabled → reboot required
+- BIOS virtualization disabled
+- Low C: drive space for WSL/Docker images
+
+---
 
 - First startup is slow (EasyOCR model download + YOLO load)
 - Image size is large due to PyTorch + OpenCV
@@ -128,4 +153,4 @@ Expected health response: `"status": "ok"`, `"models_loaded": true`.
 
 ## Next Phase
 
-Issue #30 — Flutter mobile app foundation.
+Issue #31 — Mobile & Backend Integration (MVP) on branch `feature/mobile-integration`.
