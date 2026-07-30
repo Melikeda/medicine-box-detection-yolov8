@@ -50,13 +50,33 @@ Permanent PATH (run once after SDK install):
 .\scripts\install-flutter-path.ps1
 ```
 
+### Dev tools on D: drive (recommended if C: is low on space)
+
+Default layout:
+
+```text
+D:\dev\
+├── flutter\
+├── android-sdk\
+├── android-avd\
+├── gradle\
+└── pub-cache\
+```
+
+One-time migration from C::
+
+```powershell
+# Close emulator and flutter run first
+.\scripts\migrate-dev-to-d.ps1
+```
+
+Paths: `scripts/dev-paths.ps1` (loaded by `env-flutter.ps1`).
+
 Regenerate Android scaffolding if needed:
 
 ```powershell
 .\scripts\setup-mobile.ps1 -RegeneratePlatforms
 ```
-
-Open a **new terminal** after `install-flutter-path.ps1`.
 
 ### Emulator test photos
 

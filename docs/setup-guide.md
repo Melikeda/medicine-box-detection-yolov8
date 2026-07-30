@@ -246,7 +246,7 @@ Details: [Report 14 — Docker Containerization](reports/14-docker-containerizat
 
 ### Windows: WSL2 + Docker Desktop setup
 
-On Windows, Docker Desktop needs WSL2. Use the helper scripts (run **elevated PowerShell**):
+On Windows, Docker Desktop needs WSL2. Helper scripts (elevated PowerShell):
 
 | Script | When to use |
 |--------|-------------|
@@ -259,7 +259,19 @@ On Windows, Docker Desktop needs WSL2. Use the helper scripts (run **elevated Po
 | `scripts/fix-vmp.ps1` | Enable Virtual Machine Platform only |
 | `scripts/uninstall-docker.ps1` | Complete Docker Desktop removal |
 
-Typical flow:
+See [scripts/README-docker-wsl.md](../scripts/README-docker-wsl.md).
+
+### Flutter/Android on D: drive
+
+If C: is low on space, migrate dev tools to `D:\dev\`:
+
+```powershell
+.\scripts\migrate-dev-to-d.ps1
+```
+
+See [mobile/README.md](../mobile/README.md) for layout details.
+
+Typical WSL flow:
 
 ```powershell
 # 1) Admin PowerShell — first install

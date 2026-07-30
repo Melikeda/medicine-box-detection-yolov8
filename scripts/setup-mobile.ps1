@@ -31,6 +31,15 @@ try {
     Write-Host "Bagimliliklar indiriliyor..."
     flutter pub get
 
+    $localProps = Join-Path $MobileDir "android\local.properties"
+    $sdkDir = ($AndroidHome -replace '\\', '\\')
+    $flutterSdk = ($FlutterHome -replace '\\', '\\')
+    @(
+        "sdk.dir=$sdkDir"
+        "flutter.sdk=$flutterSdk"
+    ) | Set-Content -Path $localProps -Encoding utf8
+    Write-Host "local.properties guncellendi ($localProps)"
+
     Write-Host "Analiz calistiriliyor..."
     flutter analyze
 
