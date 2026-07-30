@@ -11,8 +11,8 @@ Environment setup for the **Medicine Box Detection System**.
 | Python 3.12+ | AI pipeline and backend |
 | Git | Version control |
 | VS Code (recommended) | Development IDE |
-
-Future phases will also require Flutter SDK and Docker (not needed for the current AI pipeline work).
+| Docker Desktop | Container deployment (API) |
+| Flutter SDK | Mobile app (planned) |
 
 ---
 
@@ -194,6 +194,8 @@ medicine-box-detection-yolov8/
 ├── tests/         automated tests (planned)
 ├── run_api.py     FastAPI entry point
 ├── run_analyze.py CLI pipeline runner
+├── Dockerfile     API container image
+├── docker-compose.yml  Docker stack
 ├── requirements.txt
 └── README.md
 ```
@@ -210,8 +212,27 @@ medicine-box-detection-yolov8/
 ## Next Steps
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
-2. Read [Report 10](reports/10-fastapi-analyze-api.md) and [Report 11](reports/11-real-world-matching-improvements.md)
-3. Pick the next GitHub Issue — start with [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) (Docker)
+2. Read [Report 14](reports/14-docker-containerization.md) for Docker deployment
+3. Pick the next GitHub Issue — start with [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) (Flutter foundation)
+
+---
+
+## Docker Deployment
+
+Requires Docker Desktop and trained YOLO weights at  
+`runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt`.
+
+```bash
+docker compose up --build
+```
+
+Verify:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Details: [Report 14 — Docker Containerization](reports/14-docker-containerization.md)
 
 
 ### Run the unified pipeline from Python

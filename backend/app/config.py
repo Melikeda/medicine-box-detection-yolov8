@@ -40,6 +40,7 @@ class ApiSettings(BaseSettings):
 
     use_sqlite: bool = True
     sqlite_path: str = "data/database/medicines.db"
+    yolo_model_path: str | None = None
 
     @property
     def max_upload_size_bytes(self) -> int:
@@ -54,12 +55,22 @@ class ApiSettings(BaseSettings):
         if not sqlite_path.is_absolute():
             sqlite_path = PROJECT_ROOT / sqlite_path
 
-        return PipelineConfig(
-            ocr_mode=self.ocr_mode,
-            use_gpu=self.use_gpu,
-            use_sqlite=self.use_sqlite,
-            sqlite_path=sqlite_path,
-        )
+        model_path = None
+        if self.yolo_model_path:
+            model_path = Path(self.yolo_model_path)
+            if not model_path.is_absolute():
+                model_path = PROJECT_ROOT / model_path
+
+        pipeline_kwargs: dict = {
+            "ocr_mode": self.ocr_mode,
+            "use_gpu": self.use_gpu,
+            "use_sqlite": self.use_sqlite,
+            "sqlite_path": sqlite_path,
+        }
+        if model_path is not None:
+            pipeline_kwargs["model_path"] = model_path
+
+        return PipelineConfig(**pipeline_kwargs)
 
 
 @lru_cache

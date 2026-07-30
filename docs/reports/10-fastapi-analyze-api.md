@@ -108,4 +108,4 @@ Interactive docs: http://127.0.0.1:8000/docs
 
 Issue #27 — SQLite migration — completed; see [Report 12](12-sqlite-database.md).  
 Issue #28 — Automated tests — completed; see [Report 13](13-automated-testing.md).  
-Next: Issue #29 — Docker containerization.
+Next: Issue #30 — Flutter mobile app foundation.

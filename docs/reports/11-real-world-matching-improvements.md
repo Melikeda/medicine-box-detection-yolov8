@@ -133,5 +133,5 @@ minimum_plausible_match_score: float = 55.0
 ## Next Steps
 
 - Issue #28 — Automated tests for matching edge cases — see [Report 13](13-automated-testing.md)
-- Issue #29 — Docker
+- Issue #30 — Flutter mobile app foundation
 - Long-term — YOLO retrain with blurry and negative samples

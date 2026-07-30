@@ -47,4 +47,4 @@ pytest
 
 ## Next Phase
 
-Issue #29 — Docker containerization.
+Issue #30 — Flutter mobile app foundation.

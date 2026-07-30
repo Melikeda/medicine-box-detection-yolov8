@@ -1,0 +1,52 @@
+# Git and IDE
+.git
+.gitignore
+.github
+.vscode
+.idea
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+venv
+.venv
+env
+.pytest_cache
+.coverage
+htmlcov
+*.egg-info
+build
+dist
+
+# Environment and secrets
+.env
+
+# Large / local-only assets
+data/dataset/train
+data/dataset/valid
+data/dataset/test
+data/raw
+data/samples
+runs
+results
+*.pt
+*.onnx
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Docs and examples (not needed at runtime)
+docs
+examples
+tests
+
+# Misc
+*.log
+*.tmp
+*.bak
+*.zip
+*.rar
+Thumbs.db
+.DS_Store

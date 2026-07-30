@@ -71,11 +71,13 @@ This document explains which technologies are used in the project and why they w
 
 ---
 
-## Docker (planned)
+## Docker
 
 **Role:** Package backend, models, and dependencies for consistent deployment.
 
 **Why:** Eliminates "works on my machine" issues; simplifies sharing the backend across Windows/Linux.
+
+**Status:** Implemented in Phase 15 ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) — see [Report 14](reports/14-docker-containerization.md).
 
 ---
 
