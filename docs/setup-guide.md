@@ -11,8 +11,9 @@ Environment setup for the **Medicine Box Detection System**.
 | Python 3.12+ | AI pipeline and backend |
 | Git | Version control |
 | VS Code (recommended) | Development IDE |
-
-Future phases will also require Flutter SDK and Docker (not needed for the current AI pipeline work).
+| Flutter SDK | Mobile app (`mobile/`) |
+| Android Studio | Android emulator / device testing |
+| Docker Desktop | Container deployment (optional, in progress) |
 
 ---
 
@@ -182,6 +183,44 @@ python scripts/seed_sqlite.py
 
 ---
 
+## 9. Flutter Mobile App
+
+Phase 16 adds the Android MVP client under `mobile/`.
+
+### Install Flutter
+
+Follow the official guide: https://docs.flutter.dev/get-started/install/windows
+
+Verify:
+
+```powershell
+flutter doctor
+```
+
+### Setup and run
+
+```powershell
+cd mobile
+flutter pub get
+flutter run
+```
+
+Or use the helper script from the repo root:
+
+```powershell
+.\scripts\setup-mobile.ps1
+```
+
+If Android launcher icons are missing, regenerate platform files:
+
+```powershell
+.\scripts\setup-mobile.ps1 -RegeneratePlatforms
+```
+
+See [mobile/README.md](../mobile/README.md) and [Report 15](reports/15-flutter-foundation.md).
+
+---
+
 ## Project Layout (summary)
 
 ```text
@@ -191,7 +230,8 @@ medicine-box-detection-yolov8/
 ├── docs/          architecture, roadmap, reports
 ├── examples/      learning scripts and usage demos
 ├── src/           reusable production AI modules
-├── tests/         automated tests (planned)
+├── tests/         automated tests
+├── mobile/        Flutter Android MVP client
 ├── run_api.py     FastAPI entry point
 ├── run_analyze.py CLI pipeline runner
 ├── requirements.txt
@@ -211,7 +251,13 @@ medicine-box-detection-yolov8/
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
 2. Read [Report 10](reports/10-fastapi-analyze-api.md) and [Report 11](reports/11-real-world-matching-improvements.md)
-3. Pick the next GitHub Issue — start with [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) (Docker)
+3. Pick the next GitHub Issue — [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) (mobile API integration on `feature/mobile-integration`)
+
+Emulator sample photos:
+
+```powershell
+.\scripts\push-samples-to-emulator.ps1
+```
 
 
 ### Run the unified pipeline from Python

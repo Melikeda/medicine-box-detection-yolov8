@@ -40,10 +40,9 @@ This repository contains an intelligent **medicine box recognition system**. It 
 
 | Stage | Technology | GitHub Issue |
 |-------|------------|--------------|
-| Automated tests | pytest | Done |
-| Docker deployment | Docker Compose | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) |
-| Mobile app | Flutter (Android MVP) | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) |
-| Mobile integration | Gallery → API → result | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) |
+| Docker deployment | Docker Compose | In progress ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
+| Mobile app foundation | Flutter (`mobile/`) | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)) |
+| Mobile integration | Gallery → API → result | Next ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 
 Post-MVP: PostgreSQL, LLM explanations ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).
 
@@ -116,10 +115,12 @@ medicine-box-detection-yolov8/
 │       └── schemas/       # Pydantic response models
 ├── run_api.py             # FastAPI / Uvicorn entry point
 ├── run_analyze.py         # CLI pipeline runner (analyze_medicine_boxes)
+├── mobile/                # Flutter Android MVP client
+│   └── lib/               # Splash, home, preview screens
 └── requirements.txt
 ```
 
-Planned additions: `mobile/` (Flutter).
+Planned additions: API integration in `mobile/` (Phase 17).
 
 ---
 
@@ -133,7 +134,7 @@ Planned additions: `mobile/` (Flutter).
 | Matching | RapidFuzz |
 | Data | CSV (seed) + SQLite (runtime) |
 | Backend | FastAPI, Pydantic, Uvicorn |
-| Mobile (planned) | Flutter, Dart |
+| Mobile | Flutter, Dart (`mobile/`) |
 | DevOps | pytest (Done), Docker (planned) |
 
 See [docs/technology-selection.md](docs/technology-selection.md) for rationale.
@@ -276,7 +277,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | Analyze API + matching improvements | Done ([#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26)) |
 | SQLite database | Done ([#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27)) |
 | Automated tests | Done ([#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28)) |
-| Flutter mobile MVP | Planned ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)-[#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
+| Flutter mobile MVP | Foundation done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)); integration next ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 
 Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
@@ -291,7 +292,7 @@ Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
 | [roadmap.md](docs/roadmap.md) | Development phases and GitHub issues |
 | [setup-guide.md](docs/setup-guide.md) | Environment setup |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool was chosen |
-| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–13) |
+| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–15) |
 
 ---
 
