@@ -13,24 +13,18 @@ Use this file when organizing issues on the GitHub Project board.
 | [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) | Analyze API + real-world matching improvements |
 | [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) | SQLite database + medicine query endpoints |
 | [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | Automated testing (pytest) |
+| [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) | Flutter mobile app foundation |
 
 ## In Progress
 
 | Issue | Title | Branch |
 |-------|-------|--------|
-| — | — | — |
-
-## Todo — Backend
-
-| Issue | Branch |
-|-------|--------|
-| [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | `feature/docker` |
+| [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | Docker containerization | `feature/docker` |
 
 ## Todo — Mobile
 
 | Issue | Branch |
 |-------|--------|
-| [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) | `feature/flutter-foundation` |
 | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | `feature/mobile-integration` |
 
 ## Post-MVP
@@ -68,3 +62,5 @@ Use this file when organizing issues on the GitHub Project board.
 | [11-real-world-matching-improvements.md](../docs/reports/11-real-world-matching-improvements.md) | Detection fallback + matching fixes |
 | [12-sqlite-database.md](../docs/reports/12-sqlite-database.md) | SQLite + medicine query API |
 | [13-automated-testing.md](../docs/reports/13-automated-testing.md) | pytest suite |
+| [14-docker-containerization.md](../docs/reports/14-docker-containerization.md) | Docker (in progress) |
+| [15-flutter-foundation.md](../docs/reports/15-flutter-foundation.md) | Flutter foundation |
