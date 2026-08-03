@@ -9,7 +9,9 @@ class ImagePickerService {
   Future<String?> pickFromGallery() async {
     final file = await _picker.pickImage(
       source: ImageSource.gallery,
-      imageQuality: 85,
+      imageQuality: 65,
+      maxWidth: 1280,
+      maxHeight: 1280,
     );
     return file?.path;
   }

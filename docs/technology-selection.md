@@ -69,7 +69,7 @@ This document explains which technologies are used in the project and why they w
 
 **Why:** Single codebase for Android and future iOS; mature camera/gallery packages (`image_picker`); good UI tooling for internship-level development.
 
-**Status:** Foundation implemented in Phase 16 ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)) — see [Report 15](reports/15-flutter-foundation.md). API integration in Phase 17 ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)).
+**Status:** Foundation (Phase 16) and API integration (Phase 17) implemented — see [Report 15](reports/15-flutter-foundation.md) and [Report 16](reports/16-mobile-integration.md).
 
 ---
 

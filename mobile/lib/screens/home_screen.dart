@@ -89,8 +89,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Galeriden bir fotograf secerek onizleme ekranina gecin. '
-                        'API analizi bir sonraki asamada eklenecek.',
+                        'Galeriden bir fotograf secin, onizleyin ve '
+                        'FastAPI backend uzerinde analiz ettirin.',
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(

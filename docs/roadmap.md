@@ -295,10 +295,12 @@ See [Report 15](reports/15-flutter-foundation.md).
 
 ## Objectives
 
-- [ ] Connect mobile app to analyze API
-- [ ] Display medicine name, match score, and basic info
-- [ ] Handle loading states and errors
-- [ ] Test on Android
+- [x] Connect mobile app to analyze API
+- [x] Display medicine name, match score, and basic info
+- [x] Handle loading states and errors
+- [x] Test on Android
+
+See [Report 16](reports/16-mobile-integration.md).
 
 ---
 
@@ -382,7 +384,7 @@ See [Report 15](reports/15-flutter-foundation.md).
 | ✅ Automated Testing | Completed | #28 |
 | ✅ Docker | Done | #29 |
 | ✅ Flutter Mobile App Foundation | Done | #30 |
-| ⏳ Mobile MVP Integration | Planned | #31 |
+| ✅ Mobile MVP Integration | Done | #31 |
 | ⏳ Advanced Features (LLM, etc.) | Planned | #32, #8 |
 | ⏳ Final Testing & Documentation | Planned | #9 |
 | ⏳ Dataset Publishing | Planned | — |

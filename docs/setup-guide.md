@@ -32,11 +32,13 @@ cd medicine-box-detection-yolov8
 python -m venv venv
 ```
 
-### Activate — Windows (PowerShell)
+### Activate — Windows (PowerShell), from the **repository root**:
 
 ```powershell
 venv\Scripts\Activate.ps1
 ```
+
+> Note: the virtual environment folder is `venv`, not `.venv`.
 
 ### Activate — Windows (CMD)
 
@@ -185,7 +187,7 @@ python scripts/seed_sqlite.py
 
 ## 9. Flutter Mobile App
 
-Phase 16 adds the Android MVP client under `mobile/`.
+Phases 16–17 deliver the Android MVP client under `mobile/` (gallery picker, API integration, result screen).
 
 ### Install Flutter
 
@@ -198,6 +200,14 @@ flutter doctor
 ```
 
 ### Setup and run
+
+Start the backend first (required for analyze):
+
+```powershell
+python run_api.py
+```
+
+Then run the app:
 
 ```powershell
 cd mobile
@@ -217,7 +227,7 @@ If Android launcher icons are missing, regenerate platform files:
 .\scripts\setup-mobile.ps1 -RegeneratePlatforms
 ```
 
-See [mobile/README.md](../mobile/README.md) and [Report 15](reports/15-flutter-foundation.md).
+See [mobile/README.md](../mobile/README.md), [Report 15](reports/15-flutter-foundation.md), and [Report 16](reports/16-mobile-integration.md).
 
 Emulator sample photos:
 
@@ -320,8 +330,8 @@ medicine-box-detection-yolov8/
 ## Next Steps
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
-2. Read [Report 14](reports/14-docker-containerization.md) and [Report 15](reports/15-flutter-foundation.md)
-3. Pick the next GitHub Issue — [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) (mobile API integration on `feature/mobile-integration`)
+2. Read [Report 15](reports/15-flutter-foundation.md) and [Report 16](reports/16-mobile-integration.md)
+3. Pick the next GitHub Issue — [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) (advanced features on `feature/advanced-features`)
 
 
 ### Run the unified pipeline from Python

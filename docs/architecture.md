@@ -56,22 +56,32 @@ Mobile Result Screen
 
 # 🧩 System Components
 
-## 1. Mobile Client (Flutter) — Foundation ✅
+## 1. Mobile Client (Flutter) — MVP ✅
 
 The user selects a medicine box photo from the gallery (MVP). Camera capture is planned for a later version.
 
 **Phase 16 (Issue #30):** Splash, home, gallery picker, and image preview screens under `mobile/`.
 
-**Phase 17 (Issue #31):** Connect to `POST /api/v1/analyze` and display results.
+**Phase 17 (Issue #31):** Connected to `POST /api/v1/analyze` with result screen, loading overlay, and error handling.
 
 ### Responsibilities
 
 - Image selection and preview
-- API communication
+- Multipart upload to FastAPI (`AnalyzeApiService`)
 - Loading and error states
 - Display medicine name, match score, and basic drug info
 
----
+### Key modules
+
+| Module | Role |
+|--------|------|
+| `config/app_config.dart` | API base URL, timeouts |
+| `services/analyze_api_service.dart` | HTTP client |
+| `models/analyze_response.dart` | Response parsing |
+| `utils/medicine_display.dart` | Placeholder + box label formatting |
+| `screens/result_screen.dart` | Result UI |
+
+See [Report 16](reports/16-mobile-integration.md).
 
 ## 2. Backend API (FastAPI) ✅
 

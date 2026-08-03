@@ -153,4 +153,5 @@ Common blockers:
 
 ## Next Phase
 
-Issue #31 — Mobile & Backend Integration (MVP) on branch `feature/mobile-integration`.
+Issue #32 — Advanced Features on branch `feature/advanced-features`.  
+(Mobile integration completed in Phase 17 — [Report 16](16-mobile-integration.md).)

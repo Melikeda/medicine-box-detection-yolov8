@@ -1,4 +1,4 @@
-/// Uygulama sabitleri. API entegrasyonu Phase 17'de kullanilacak.
+/// Uygulama sabitleri ve FastAPI baglanti ayarlari.
 class AppConfig {
   AppConfig._();
 
@@ -12,6 +12,17 @@ class AppConfig {
   );
 
   static const String analyzeEndpoint = '/api/v1/analyze';
+
+  static const String healthEndpoint = '/health';
+
+  /// CPU uzerinde OCR (8 varyant) dakikalarca surebilir.
+  static const Duration analyzeTimeout = Duration(seconds: 300);
+
+  static const Duration healthTimeout = Duration(seconds: 10);
+
+  static String get analyzeUrl => '$apiBaseUrl$analyzeEndpoint';
+
+  static String get healthUrl => '$apiBaseUrl$healthEndpoint';
 
   static const Duration splashDuration = Duration(seconds: 2);
 }

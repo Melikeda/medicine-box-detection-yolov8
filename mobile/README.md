@@ -2,21 +2,20 @@
 
 Android MVP client for the Medicine Box Detection System.
 
-**Branch:** `feature/flutter-foundation`  
-**GitHub Issue:** [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)
+**Branch:** `feature/mobile-integration`  
+**GitHub Issue:** [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)
 
 ---
 
-## Scope (Phase 16)
+## Scope
 
-This phase delivers the mobile **foundation** only:
+- Splash, home, image preview, and **result** screens
+- Gallery image picker
+- FastAPI integration (`POST /api/v1/analyze`)
+- Loading overlay, error SnackBars, summary + per-box result cards
 
-- Splash screen
-- Home screen with gallery picker
-- Image preview screen
-- App theme and routing scaffold
-
-API integration (`POST /api/v1/analyze`) is planned in Phase 17 ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)).
+Phase 16 foundation: [Report 15](../docs/reports/15-flutter-foundation.md)  
+Phase 17 integration: [Report 16](../docs/reports/16-mobile-integration.md)
 
 ---
 
@@ -26,7 +25,7 @@ API integration (`POST /api/v1/analyze`) is planned in Phase 17 ([#31](https://g
 |------|---------|
 | Flutter SDK | 3.19+ |
 | Android Studio | Latest (SDK + emulator) |
-| Running API | `python run_api.py` (for Phase 17) |
+| Running API | `python run_api.py` |
 
 Install Flutter: https://docs.flutter.dev/get-started/install
 
@@ -92,24 +91,34 @@ Photos appear under **Pictures → medicine-samples**.
 
 ## Run on Android
 
-1. Start the emulator or connect a device:
+1. Start the FastAPI backend (separate terminal):
+
+```powershell
+cd c:\Projects\medicine-box-detection-yolov8
+.\.venv\Scripts\Activate.ps1
+python run_api.py
+```
+
+2. Start the emulator or connect a device:
 
 ```powershell
 . .\scripts\env-flutter.ps1
 flutter emulators --launch medicine_box_emulator
 ```
 
-2. From `mobile/`:
+3. From `mobile/`:
 
 ```powershell
 flutter run
 ```
 
-### API base URL (Phase 17)
+4. Gallery → pick sample → **Analiz Et** → view results.
 
-Default for Android emulator: `http://10.0.2.2:8000`
+### API base URL
 
-Override at build/run time:
+Default for Android emulator: `http://10.0.2.2:8000` (maps to host `localhost:8000`).
+
+Override at build/run time (physical device on same LAN):
 
 ```powershell
 flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8000
@@ -122,14 +131,18 @@ flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8000
 ```text
 mobile/
 ├── lib/
-│   ├── main.dart              # Entry point
-│   ├── app.dart               # MaterialApp + theme + routes
-│   ├── config/app_config.dart # App name, API URL placeholder
-│   ├── routes/app_router.dart # Named routes
-│   ├── screens/               # Splash, home, preview
-│   ├── services/              # Image picker wrapper
-│   └── theme/app_theme.dart   # Material 3 theme
-├── android/                   # Android MVP target
+│   ├── main.dart
+│   ├── app.dart
+│   ├── config/app_config.dart
+│   ├── routes/app_router.dart
+│   ├── models/                # API response models
+│   ├── screens/               # Splash, home, preview, result
+│   ├── services/              # Image picker + analyze API
+│   ├── utils/                 # Medicine field display helpers
+│   ├── widgets/               # Medicine result card
+│   └── theme/app_theme.dart
+├── test/                      # Model + widget tests
+├── android/
 └── pubspec.yaml
 ```
 
@@ -141,9 +154,10 @@ mobile/
 Splash (2s)
     │
     ▼
-Home ── "Galeriden Sec" ──► Image Preview
-    │                              │
-    └──────── "Geri Don" ◄─────────┘
+Home ── "Galeriden Sec" ──► Image Preview ── "Analiz Et" ──► Result
+    │                              │                            │
+    └──────── "Geri Don" ◄─────────┘                            │
+    └──────── "Ana Sayfaya Don" ◄───────────────────────────────┘
 ```
 
 ---
@@ -153,9 +167,20 @@ Home ── "Galeriden Sec" ──► Image Preview
 | Package | Purpose |
 |---------|---------|
 | `image_picker` | Gallery image selection |
+| `http` | Multipart analyze upload |
+
+---
+
+## Tests
+
+```powershell
+cd mobile
+flutter analyze
+flutter test
+```
 
 ---
 
 ## Next phase
 
-Issue #31 — connect preview screen to FastAPI, show medicine name, match score, and loading/error states.
+Issue #32 — advanced features (LLM, scan history, iOS) on branch `feature/advanced-features`.

@@ -114,6 +114,15 @@ def test_upload_validator_rejects_bad_extension() -> None:
     assert "Desteklenmeyen" in str(exc_info.value)
 
 
+def test_upload_validator_accepts_octet_stream_with_jpg_suffix() -> None:
+    suffix = validate_upload_metadata(
+        filename="photo.jpg",
+        content_type="application/octet-stream",
+        allowed_extensions=(".jpg", ".jpeg", ".png"),
+    )
+    assert suffix == ".jpg"
+
+
 def test_upload_validator_accepts_png_bytes() -> None:
     # Minimal valid 1x1 PNG
     png_bytes = (

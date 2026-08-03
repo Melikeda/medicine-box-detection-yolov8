@@ -1,0 +1,53 @@
+import 'analyze_summary.dart';
+import 'medicine_box_result.dart';
+
+class AnalyzeResponse {
+  const AnalyzeResponse({
+    required this.success,
+    required this.detectionCount,
+    required this.medicines,
+    required this.summary,
+    required this.ocrMode,
+    required this.processingTimeMs,
+    this.filename,
+    this.medicinesCompared = 0,
+    this.error,
+  });
+
+  final bool success;
+  final String? filename;
+  final int detectionCount;
+  final List<MedicineBoxResult> medicines;
+  final int medicinesCompared;
+  final String? error;
+  final AnalyzeSummary summary;
+  final String ocrMode;
+  final double processingTimeMs;
+
+  factory AnalyzeResponse.fromJson(Map<String, dynamic> json) {
+    final medicinesJson = json['medicines'];
+    final medicines = medicinesJson is List
+        ? medicinesJson
+            .whereType<Map<String, dynamic>>()
+            .map(MedicineBoxResult.fromJson)
+            .toList()
+        : <MedicineBoxResult>[];
+
+    final summaryJson = json['summary'];
+    final summary = summaryJson is Map<String, dynamic>
+        ? AnalyzeSummary.fromJson(summaryJson)
+        : const AnalyzeSummary();
+
+    return AnalyzeResponse(
+      success: json['success'] as bool? ?? false,
+      filename: json['filename'] as String?,
+      detectionCount: json['detection_count'] as int? ?? 0,
+      medicines: medicines,
+      medicinesCompared: json['medicines_compared'] as int? ?? 0,
+      error: json['error'] as String?,
+      summary: summary,
+      ocrMode: json['ocr_mode'] as String? ?? 'fast',
+      processingTimeMs: (json['processing_time_ms'] as num?)?.toDouble() ?? 0,
+    );
+  }
+}
