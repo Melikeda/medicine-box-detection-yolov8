@@ -56,6 +56,7 @@ class AnalyzeResponseSchema(BaseModel):
     processing_time_ms: float = 0.0
     timing: AnalyzeTimingSchema | None = None
     image_resized: bool = False
+    disclaimer: str | None = None
 
 
 class AnalyzeInfoSchema(BaseModel):
@@ -69,6 +70,7 @@ class AnalyzeInfoSchema(BaseModel):
     allowed_extensions: list[str]
     ocr_modes: list[str]
     response_statuses: list[str]
+    rate_limit_analyze_per_minute: int | None = None
 
 
 class HealthResponseSchema(BaseModel):

@@ -1,10 +1,12 @@
 from functools import lru_cache
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from src.services.config import OCRMode, PipelineConfig
+
+EnvironmentMode = Literal["development", "production"]
 
 
 class ApiSettings(BaseSettings):
@@ -23,6 +25,7 @@ class ApiSettings(BaseSettings):
     port: int = 8000
     reload: bool = False
     log_level: str = "INFO"
+    environment: EnvironmentMode = "development"
 
     ocr_mode: OCRMode = "fast"
     use_gpu: bool = False
@@ -37,10 +40,33 @@ class ApiSettings(BaseSettings):
     )
 
     cors_origins: tuple[str, ...] = ("*",)
+    rate_limit_enabled: bool = True
+    rate_limit_analyze_per_minute: int = Field(default=20, ge=1, le=1000)
 
     use_sqlite: bool = True
     sqlite_path: str = "data/database/medicines.db"
     yolo_model_path: str | None = None
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, value: object) -> tuple[str, ...]:
+        if isinstance(value, str):
+            stripped = value.strip()
+            if not stripped or stripped == "*":
+                return ("*",)
+            parts = tuple(
+                part.strip()
+                for part in stripped.split(",")
+                if part.strip()
+            )
+            return parts or ("*",)
+        if isinstance(value, (list, tuple)):
+            return tuple(str(item).strip() for item in value if str(item).strip())
+        return ("*",)
+
+    @property
+    def expose_error_details(self) -> bool:
+        return self.environment != "production"
 
     @property
     def max_upload_size_bytes(self) -> int:

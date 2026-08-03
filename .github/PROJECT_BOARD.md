@@ -19,6 +19,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39) | CI/CD pipeline (GitHub Actions) |
 | [#41](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/41) | Medicine database expansion (TİTCK SKRS) |
 | [#43](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/43) | Pipeline performance optimization |
+| [#45](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/45) | Production hardening & security |
 
 ## In Progress
 
@@ -73,6 +74,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [17-ci-cd-github-actions.md](../docs/reports/17-ci-cd-github-actions.md) | GitHub Actions CI |
 | [18-medicine-database-expansion.md](../docs/reports/18-medicine-database-expansion.md) | TİTCK SKRS database expansion |
 | [19-performance-optimization.md](../docs/reports/19-performance-optimization.md) | Fast-mode latency optimization |
+| [20-production-hardening.md](../docs/reports/20-production-hardening.md) | Security & production settings |
 
 ## CI status checks (required for merge — recommended)
 

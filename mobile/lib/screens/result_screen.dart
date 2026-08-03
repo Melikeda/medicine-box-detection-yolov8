@@ -106,6 +106,32 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 8),
+            if (response.disclaimer != null && response.disclaimer!.isNotEmpty)
+              Card(
+                color: theme.colorScheme.surfaceContainerHighest,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        size: 20,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          response.disclaimer!,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            if (response.disclaimer != null && response.disclaimer!.isNotEmpty)
+              const SizedBox(height: 8),
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.of(context).popUntil(
