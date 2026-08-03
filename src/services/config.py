@@ -96,7 +96,9 @@ class PipelineConfig:
     )
     confidence_threshold: float = 0.40
     fallback_confidence_threshold: float = 0.25
-    ocr_scale_factor: float = 2.0
+    ocr_scale_factor_accurate: float = 2.0
+    ocr_scale_factor_fast: float = 1.5
+    max_image_dimension: int = 1280
     minimum_ocr_confidence: float = 0.0
     minimum_matching_text_length: int = 3
     minimum_name_coverage_ratio: float = 0.45
@@ -120,9 +122,23 @@ class PipelineConfig:
         return self.output_directory / "ocr_variants"
 
     @property
+    def ocr_scale_factor(self) -> float:
+        """fast: daha düşük upscale | accurate: tam çözünürlük."""
+        if self.ocr_mode == "fast":
+            return self.ocr_scale_factor_fast
+        return self.ocr_scale_factor_accurate
+
+    @property
     def ocr_rotation_angles(self) -> tuple[int, ...]:
-        """Tüm modlarda dört açı; fast modda varyant sayısı sınırlıdır."""
+        """fast: 0° ve 90° | accurate: dört açı."""
+        if self.ocr_mode == "fast":
+            return (0, 90)
         return (0, 90, 180, 270)
+
+    @property
+    def ocr_early_exit(self) -> bool:
+        """fast modda güvenilir eşleşme bulununca OCR durdurulur."""
+        return self.ocr_mode == "fast"
 
     @property
     def ocr_limited_variants(self) -> bool:

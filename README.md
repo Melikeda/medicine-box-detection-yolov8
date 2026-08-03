@@ -201,7 +201,7 @@ python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
 
 YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (**107** records; TİTCK SKRS–enriched seed catalog).
 
-**Real-world tips:** Use steady, well-lit photos. Blurry images trigger YOLO fallback mode. Drugs not in CSV return `not_found`.
+**Real-world tips:** Use steady, well-lit photos. Blurry images trigger YOLO fallback mode. Drugs not in CSV return `not_found`. Fast mode now uses fewer OCR variants, early exit on match, and server-side resize (1280 px) — see [Report 19](docs/reports/19-performance-optimization.md).
 
 ### Run FastAPI backend
 

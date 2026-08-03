@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -34,6 +35,9 @@ class OCRPipelineResult:
     candidates: list[OCRCandidate]
     variant_results: dict[str, list[Any]]
     saved_variant_paths: dict[str, Path]
+    variants_processed: int = 0
+    variants_total: int = 0
+    early_exit: bool = False
 
 
 def load_ocr_image(
@@ -965,6 +969,9 @@ def run_ocr_pipeline(
         BLURRY_IMAGE_SCALE_FACTOR
     ),
     limited_variants: bool = False,
+    should_stop_after_variant: (
+        Callable[[list[str]], bool] | None
+    ) = None,
 ) -> OCRPipelineResult:
     """
     Çoklu preprocessing ve OCR pipeline'ını çalıştırır.
@@ -1016,6 +1023,8 @@ def run_ocr_pipeline(
     )
 
     total_variants = len(variants)
+    variants_processed = 0
+    early_exit = False
 
     for index, (variant_name, variant_image) in enumerate(
         variants.items(),
@@ -1060,6 +1069,24 @@ def run_ocr_pipeline(
             combined_candidates
         )
 
+        variants_processed = index
+
+        if should_stop_after_variant is not None:
+            unique_so_far = deduplicate_candidates(
+                candidates=all_candidates,
+            )
+            candidate_texts = [
+                candidate.text for candidate in unique_so_far
+            ]
+            if should_stop_after_variant(candidate_texts):
+                print(
+                    f"OCR erken cikis: {index}/{total_variants} "
+                    "varyant sonrasi guvenilir eslesme",
+                    flush=True,
+                )
+                early_exit = True
+                break
+
     unique_candidates = deduplicate_candidates(
         candidates=all_candidates,
     )
@@ -1068,6 +1095,9 @@ def run_ocr_pipeline(
         candidates=unique_candidates,
         variant_results=variant_results,
         saved_variant_paths=saved_variant_paths,
+        variants_processed=variants_processed,
+        variants_total=total_variants,
+        early_exit=early_exit,
     )
 
 

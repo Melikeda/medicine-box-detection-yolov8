@@ -18,6 +18,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | Mobile & backend integration (MVP) |
 | [#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39) | CI/CD pipeline (GitHub Actions) |
 | [#41](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/41) | Medicine database expansion (TİTCK SKRS) |
+| [#43](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/43) | Pipeline performance optimization |
 
 ## In Progress
 
@@ -71,6 +72,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [16-mobile-integration.md](../docs/reports/16-mobile-integration.md) | Mobile API integration |
 | [17-ci-cd-github-actions.md](../docs/reports/17-ci-cd-github-actions.md) | GitHub Actions CI |
 | [18-medicine-database-expansion.md](../docs/reports/18-medicine-database-expansion.md) | TİTCK SKRS database expansion |
+| [19-performance-optimization.md](../docs/reports/19-performance-optimization.md) | Fast-mode latency optimization |
 
 ## CI status checks (required for merge — recommended)
 
