@@ -244,6 +244,17 @@ curl http://127.0.0.1:8000/api/v1/analyze/info
 
 Interactive docs: http://127.0.0.1:8000/docs
 
+### Production & security
+
+Copy `.env.example` to `.env` for local overrides. For deployment:
+
+- Set `ENVIRONMENT=production` (hides internal 500 error details)
+- Set `CORS_ORIGINS` to your app domain(s) — avoid `*` in production
+- `RATE_LIMIT_ANALYZE_PER_MINUTE` limits heavy OCR abuse (default 20/min/IP)
+- Android **release** builds require HTTPS; **debug** allows HTTP for emulator (`10.0.2.2`)
+
+See [Report 20](docs/reports/20-production-hardening.md).
+
 ### Run with Docker
 
 Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) and trained YOLO weights at  

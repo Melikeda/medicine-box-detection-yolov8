@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
+from backend.app.config import get_api_settings
+
 
 class ApiError(Exception):
     """Base API exception with HTTP status code and message."""
@@ -62,11 +64,16 @@ def register_exception_handlers(app: FastAPI) -> None:
         _request: Request,
         exc: Exception,
     ) -> JSONResponse:
+        settings = get_api_settings()
+        details: dict = {}
+        if settings.expose_error_details:
+            details["reason"] = str(exc)
+
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
                 "success": False,
                 "error": "Internal server error.",
-                "details": {"reason": str(exc)},
+                "details": details,
             },
         )

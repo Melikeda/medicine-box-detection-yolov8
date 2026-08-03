@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 from backend.app.config import ApiSettings
+from backend.app.constants import MEDICAL_DISCLAIMER
 from backend.app.exceptions import PayloadTooLargeError
 from backend.app.schemas.analyze import (
     AnalyzeResponseSchema,
@@ -74,6 +75,7 @@ def _run_analysis(
             if pipeline_result.timing
             else None
         ),
+        disclaimer=MEDICAL_DISCLAIMER,
     )
 
 

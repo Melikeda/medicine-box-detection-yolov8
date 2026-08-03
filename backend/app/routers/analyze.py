@@ -40,6 +40,11 @@ async def analyze_info(
             "not_medicine_box",
             "error",
         ],
+        rate_limit_analyze_per_minute=(
+            settings.rate_limit_analyze_per_minute
+            if settings.rate_limit_enabled
+            else None
+        ),
     )
 
 

@@ -353,6 +353,22 @@ See [Report 19](reports/19-performance-optimization.md).
 
 ---
 
+# Phase 17.8 — Production Hardening & Security
+
+**Branch:** `feature/production-hardening`  
+**GitHub Issue:** #45
+
+## Objectives
+
+- [x] Android debug vs release HTTP/HTTPS policy
+- [x] CORS, rate limit, security headers
+- [x] Production error masking + medical disclaimer
+- [x] `.env.example` + Report 20
+
+See [Report 20](reports/20-production-hardening.md).
+
+---
+
 # Phase 18 — Advanced Features
 
 **Branch:** `feature/advanced-features`  

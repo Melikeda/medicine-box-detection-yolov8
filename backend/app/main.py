@@ -7,6 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.app.config import get_api_settings
 from backend.app.exceptions import register_exception_handlers
 from backend.app.logging_config import configure_logging
+from backend.app.middleware.rate_limit import (
+    AnalyzeRateLimitMiddleware,
+    AnalyzeRateLimiter,
+)
+from backend.app.middleware.security_headers import SecurityHeadersMiddleware
 from backend.app.routers import analyze, health, medicines
 from src.services.pipeline_manager import PipelineManager
 
@@ -53,6 +58,17 @@ def create_app() -> FastAPI:
     )
 
     register_exception_handlers(app)
+
+    app.add_middleware(SecurityHeadersMiddleware)
+
+    if settings.rate_limit_enabled:
+        limiter = AnalyzeRateLimiter(
+            max_requests=settings.rate_limit_analyze_per_minute,
+        )
+        app.add_middleware(
+            AnalyzeRateLimitMiddleware,
+            limiter=limiter,
+        )
 
     app.add_middleware(
         CORSMiddleware,

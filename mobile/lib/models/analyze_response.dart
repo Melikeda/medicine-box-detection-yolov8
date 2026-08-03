@@ -12,6 +12,7 @@ class AnalyzeResponse {
     this.filename,
     this.medicinesCompared = 0,
     this.error,
+    this.disclaimer,
   });
 
   final bool success;
@@ -23,6 +24,7 @@ class AnalyzeResponse {
   final AnalyzeSummary summary;
   final String ocrMode;
   final double processingTimeMs;
+  final String? disclaimer;
 
   factory AnalyzeResponse.fromJson(Map<String, dynamic> json) {
     final medicinesJson = json['medicines'];
@@ -48,6 +50,7 @@ class AnalyzeResponse {
       summary: summary,
       ocrMode: json['ocr_mode'] as String? ?? 'fast',
       processingTimeMs: (json['processing_time_ms'] as num?)?.toDouble() ?? 0,
+      disclaimer: json['disclaimer'] as String?,
     );
   }
 }

@@ -98,6 +98,18 @@ void main() {
       expect(response.medicines.first.medicineName, 'Parol 500 mg');
     });
 
+    test('fromJson parses disclaimer field', () {
+      final response = AnalyzeResponse.fromJson({
+        'success': true,
+        'detection_count': 1,
+        'disclaimer': 'Bu uygulama tibbi tavsiye vermez.',
+        'medicines': [],
+        'summary': {},
+      });
+
+      expect(response.disclaimer, 'Bu uygulama tibbi tavsiye vermez.');
+    });
+
     test('fromJson tolerates missing optional fields', () {
       final response = AnalyzeResponse.fromJson({
         'success': false,
