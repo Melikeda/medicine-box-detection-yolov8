@@ -327,10 +327,26 @@ medicine-box-detection-yolov8/
 
 ---
 
+## 10. Continuous Integration (GitHub Actions)
+
+Every push and pull request to `main` runs automated checks:
+
+| Workflow | Command (local equivalent) |
+|----------|----------------------------|
+| Backend Tests | `pytest` |
+| Mobile Tests | `cd mobile && flutter analyze && flutter test` |
+| Docker Build | `docker compose build` (on `main`, Docker path changes) |
+
+See [CONTRIBUTING.md](../CONTRIBUTING.md) and [Report 17](reports/17-ci-cd-github-actions.md).
+
+Workflow files: `.github/workflows/`
+
+---
+
 ## Next Steps
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
-2. Read [Report 15](reports/15-flutter-foundation.md) and [Report 16](reports/16-mobile-integration.md)
+2. Read [Report 16](reports/16-mobile-integration.md) and [Report 17](reports/17-ci-cd-github-actions.md)
 3. Pick the next GitHub Issue — [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) (advanced features on `feature/advanced-features`)
 
 

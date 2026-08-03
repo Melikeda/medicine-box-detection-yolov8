@@ -47,4 +47,4 @@ pytest
 
 ## Next Phase
 
-Issue #30 — Flutter mobile app foundation.
+Issue #39 — CI/CD pipeline (GitHub Actions). Completed in [Report 17](17-ci-cd-github-actions.md).

@@ -13,6 +13,11 @@
   Computer Engineering internship project · Modular Python architecture · Git Feature Branch Workflow
 </p>
 
+<p align="center">
+  <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml/badge.svg" alt="Backend Tests"></a>
+  <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml/badge.svg" alt="Mobile Tests"></a>
+</p>
+
 ---
 
 ## About
@@ -44,7 +49,8 @@ This repository contains an intelligent **medicine box recognition system**. It 
 | Mobile app foundation | Flutter (`mobile/`) | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)) |
 | Mobile integration | Gallery → API → result | Done ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 
-Post-MVP: PostgreSQL, LLM explanations ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).
+Post-MVP: PostgreSQL, LLM explanations ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).  
+CI/CD: GitHub Actions ([#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39)) — see [Report 17](docs/reports/17-ci-cd-github-actions.md).
 
 ---
 
@@ -137,7 +143,7 @@ Mobile app connects to `POST /api/v1/analyze` (Phase 17). See [mobile/README.md]
 | Data | CSV (seed) + SQLite (runtime) |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Mobile | Flutter, Dart (`mobile/`) |
-| DevOps | pytest (Done), Docker (Done) |
+| DevOps | pytest, Docker, GitHub Actions CI |
 
 See [docs/technology-selection.md](docs/technology-selection.md) for rationale.
 
@@ -310,6 +316,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | Automated tests | Done ([#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28)) |
 | Docker deployment | Done ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
 | Flutter mobile MVP | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30), [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
+| CI/CD (GitHub Actions) | Done ([#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39)) |
 | LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 
 Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
@@ -324,7 +331,8 @@ Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
 | [roadmap.md](docs/roadmap.md) | Development phases and GitHub issues |
 | [setup-guide.md](docs/setup-guide.md) | Environment setup |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool was chosen |
-| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–16) |
+| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–17) |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branch workflow, local tests, CI checks |
 
 ---
 

@@ -304,6 +304,22 @@ See [Report 16](reports/16-mobile-integration.md).
 
 ---
 
+# Phase 17.5 — CI/CD (GitHub Actions)
+
+**Branch:** `feature/ci-cd`  
+**GitHub Issue:** #39
+
+## Objectives
+
+- [x] Backend pytest workflow
+- [x] Flutter analyze + test workflow
+- [x] Docker build verification workflow
+- [x] CONTRIBUTING.md, PR template, README badges
+
+See [Report 17](reports/17-ci-cd-github-actions.md).
+
+---
+
 # Phase 18 — Advanced Features
 
 **Branch:** `feature/advanced-features`  
@@ -385,6 +401,7 @@ See [Report 16](reports/16-mobile-integration.md).
 | ✅ Docker | Done | #29 |
 | ✅ Flutter Mobile App Foundation | Done | #30 |
 | ✅ Mobile MVP Integration | Done | #31 |
+| ✅ CI/CD (GitHub Actions) | Done | #39 |
 | ⏳ Advanced Features (LLM, etc.) | Planned | #32, #8 |
 | ⏳ Final Testing & Documentation | Planned | #9 |
 | ⏳ Dataset Publishing | Planned | — |
