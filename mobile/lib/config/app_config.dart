@@ -15,7 +15,7 @@ class AppConfig {
 
   static const String healthEndpoint = '/health';
 
-  /// CPU uzerinde OCR (8 varyant) dakikalarca surebilir.
+  /// CPU uzerinde OCR (fast mod, ~4 varyant + erken cikis) dakikalarca surebilir.
   static const Duration analyzeTimeout = Duration(seconds: 300);
 
   static const Duration healthTimeout = Duration(seconds: 10);

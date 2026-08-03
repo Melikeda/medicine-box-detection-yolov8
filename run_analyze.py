@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
         "--mode",
         choices=["fast", "accurate"],
         default="fast",
-        help="OCR mode: fast (~8 variants/box) or accurate (~52 variants/box)",
+        help="OCR mode: fast (~4 variants/box, early exit) or accurate (~52 variants/box)",
     )
     parser.add_argument(
         "--preload",
@@ -55,6 +55,14 @@ def print_box_results(result) -> None:
     if result.error and result.detection_count == 0:
         print(f"Hata: {result.error}")
         return
+
+    if result.timing:
+        print(
+            f"\nSure (ms): YOLO={result.timing.yolo_ms:.0f}, "
+            f"OCR={result.timing.ocr_ms:.0f}, "
+            f"Matching={result.timing.matching_ms:.0f}, "
+            f"Toplam={result.timing.total_ms:.0f}"
+        )
 
     for box in result.medicines:
         print(f"\n--- Kutu {box.box_index}/{result.detection_count} ---")
@@ -98,7 +106,10 @@ def main() -> None:
             "(kutu basina 50+ OCR varyanti)."
         )
     else:
-        print("Not: fast mod kutu basina ~8 OCR varyanti kullanir (4 aci x 2).")
+        print(
+            "Not: fast mod kutu basina ~4 OCR varyanti kullanir "
+            "(2 aci x 2; erken eslesmede daha az)."
+        )
 
     print()
 

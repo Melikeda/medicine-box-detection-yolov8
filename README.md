@@ -226,7 +226,7 @@ Endpoints:
 
 Query parameter for analyze:
 
-- `mode=fast` (default) — ~8 OCR variants per box
+- `mode=fast` (default) — ~4 OCR variants per box (early exit when matched)
 - `mode=accurate` — ~52 OCR variants per box (slow on CPU)
 
 Example analyze request:
@@ -269,7 +269,7 @@ cd mobile
 flutter run
 ```
 
-Gallery → **Analiz Et** → result screen. CPU OCR may take 1–5 minutes per photo.
+Gallery → **Analiz Et** → result screen. CPU OCR may take 1–3 minutes per photo (fast mode; see [Report 19](docs/reports/19-performance-optimization.md)).
 
 Details: [mobile/README.md](mobile/README.md) · [Report 16](docs/reports/16-mobile-integration.md)
 

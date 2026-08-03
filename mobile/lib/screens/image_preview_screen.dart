@@ -190,7 +190,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                           Text('Ilac kutusu analiz ediliyor...'),
                           SizedBox(height: 4),
                           Text(
-                            'CPU uzerinde OCR 1-3 dakika surebilir.',
+                            'CPU uzerinde OCR 1-3 dakika surebilir (fast mod).',
                             style: TextStyle(fontSize: 12),
                             textAlign: TextAlign.center,
                           ),
