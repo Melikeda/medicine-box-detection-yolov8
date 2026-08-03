@@ -177,7 +177,7 @@ The cropped image is enhanced before OCR using multi-variant preprocessing (scal
 
 | Mode | Variants per box | Use case |
 |------|------------------|----------|
-| `fast` | ~8 (4 angles × 2) | API default, CPU-friendly |
+| `fast` | ~4 (2 angles × 2; early exit) | API default, CPU-friendly |
 | `accurate` | ~52 | Difficult / rotated text |
 
 ---
@@ -204,7 +204,7 @@ OCR output is compared with CSV fields: `medicine_name`, `brand_name`, `active_i
 
 | Stage | Technology | Records |
 |-------|------------|---------|
-| Current | CSV (seed) + SQLite (runtime) | 38 drugs |
+| Current | CSV (seed) + SQLite (runtime) | 107 drugs |
 | Production (later) | PostgreSQL | — |
 
 Fields: `medicine_id`, `medicine_name`, `brand_name`, `active_ingredient`, `dosage`, `form`, `category`
