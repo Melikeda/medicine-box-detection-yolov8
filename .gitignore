@@ -127,6 +127,13 @@ htmlcov/
 scripts/*.log
 
 # ==========================
+# TİTCK downloads (regenerate via scripts/fetch_titck_skrs.py)
+# ==========================
+
+data/database/titck/*.xlsx
+data/database/_titck_page.html
+
+# ==========================
 # macOS
 # ==========================
 

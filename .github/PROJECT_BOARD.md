@@ -17,6 +17,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) | Flutter mobile app foundation |
 | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | Mobile & backend integration (MVP) |
 | [#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39) | CI/CD pipeline (GitHub Actions) |
+| [#41](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/41) | Medicine database expansion (TİTCK SKRS) |
 
 ## In Progress
 
@@ -69,6 +70,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [15-flutter-foundation.md](../docs/reports/15-flutter-foundation.md) | Flutter foundation |
 | [16-mobile-integration.md](../docs/reports/16-mobile-integration.md) | Mobile API integration |
 | [17-ci-cd-github-actions.md](../docs/reports/17-ci-cd-github-actions.md) | GitHub Actions CI |
+| [18-medicine-database-expansion.md](../docs/reports/18-medicine-database-expansion.md) | TİTCK SKRS database expansion |
 
 ## CI status checks (required for merge — recommended)
 

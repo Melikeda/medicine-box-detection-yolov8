@@ -6,7 +6,7 @@ This folder contains dataset configuration, sample images, and the medicine data
 
 | Path | Description |
 |------|-------------|
-| `database/medicines.csv` | Medicine records (38 drugs) |
+| `database/medicines.csv` | Medicine records (107 drugs, TİTCK-enriched) |
 | `dataset/data.yaml` | YOLOv8 training configuration |
 | `dataset/README.*.txt` | Roboflow export metadata |
 | `samples/` | Test images for detection, OCR, and matching demos |
@@ -47,7 +47,7 @@ See [docs/reports/03-dataset-preparation.md](../docs/reports/03-dataset-preparat
    Or run: `python scripts/seed_sqlite.py`
 3. Test with `python run_analyze.py --image your_photo.jpg --mode fast`
 
-Recent additions: **Draxol** (MED037), **Parafon** (MED038).
+Recent expansion: **107** seed records enriched from [TİTCK SKRS](https://www.titck.gov.tr/dinamikmodul/43) — see [Report 18](../docs/reports/18-medicine-database-expansion.md) and [database/README.md](database/README.md).
 
 SQLite migration: Issue [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) / [Report 12](../docs/reports/12-sqlite-database.md).
 

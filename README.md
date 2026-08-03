@@ -199,7 +199,7 @@ python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
 | Photo has a box detected | Does **not** mean the drug is in CSV |
 | Pipeline stages | YOLO detects box → OCR reads text → RapidFuzz matches **CSV only** |
 
-YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (38 records today).
+YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (**107** records; TİTCK SKRS–enriched seed catalog).
 
 **Real-world tips:** Use steady, well-lit photos. Blurry images trigger YOLO fallback mode. Drugs not in CSV return `not_found`.
 

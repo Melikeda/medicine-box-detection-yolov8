@@ -320,6 +320,22 @@ See [Report 17](reports/17-ci-cd-github-actions.md).
 
 ---
 
+# Phase 17.6 — Medicine Database Expansion (TİTCK SKRS)
+
+**Branch:** `feature/medicine-database-expansion`  
+**GitHub Issue:** #41
+
+## Objectives
+
+- [x] Download and parse TİTCK SKRS E-Reçete XLSX
+- [x] Enrich CSV placeholder fields (active ingredient, dosage, form)
+- [x] Expand OTC catalog to 100+ records
+- [x] Validation script, pytest, and data documentation
+
+See [Report 18](reports/18-medicine-database-expansion.md).
+
+---
+
 # Phase 18 — Advanced Features
 
 **Branch:** `feature/advanced-features`  

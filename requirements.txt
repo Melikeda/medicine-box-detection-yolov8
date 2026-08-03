@@ -51,3 +51,4 @@ pydantic-settings==2.14.2
 SQLAlchemy==2.0.46
 pytest==8.4.2
 httpx==0.28.1
+openpyxl==3.1.5
