@@ -16,6 +16,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | Docker containerization |
 | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) | Flutter mobile app foundation |
 | [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | Mobile & backend integration (MVP) |
+| [#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39) | CI/CD pipeline (GitHub Actions) |
 
 ## In Progress
 
@@ -52,7 +53,7 @@ Use this file when organizing issues on the GitHub Project board.
 | `mobile` | Flutter |
 | `database` | SQLite / PostgreSQL |
 | `testing` | pytest |
-| `infrastructure` | Docker |
+| `infrastructure` | Docker, CI/CD |
 | `mvp` | Minimum viable product scope |
 
 ## Technical reports (docs/reports/)
@@ -67,3 +68,13 @@ Use this file when organizing issues on the GitHub Project board.
 | [14-docker-containerization.md](../docs/reports/14-docker-containerization.md) | Docker deployment |
 | [15-flutter-foundation.md](../docs/reports/15-flutter-foundation.md) | Flutter foundation |
 | [16-mobile-integration.md](../docs/reports/16-mobile-integration.md) | Mobile API integration |
+| [17-ci-cd-github-actions.md](../docs/reports/17-ci-cd-github-actions.md) | GitHub Actions CI |
+
+## CI status checks (required for merge — recommended)
+
+| Check name | Workflow |
+|------------|----------|
+| `pytest (Python 3.11)` | Backend Tests |
+| `flutter analyze & test` | Mobile Tests |
+
+Enable in **Settings → Branches → Branch protection** after first green run on `main`.
