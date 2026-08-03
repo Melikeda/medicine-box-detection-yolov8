@@ -15,6 +15,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | Automated testing (pytest) |
 | [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | Docker containerization |
 | [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) | Flutter mobile app foundation |
+| [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | Mobile & backend integration (MVP) |
 
 ## In Progress
 
@@ -26,7 +27,7 @@ Use this file when organizing issues on the GitHub Project board.
 
 | Issue | Branch |
 |-------|--------|
-| [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | `feature/mobile-integration` |
+| — | — |
 
 ## Post-MVP
 
@@ -65,3 +66,4 @@ Use this file when organizing issues on the GitHub Project board.
 | [13-automated-testing.md](../docs/reports/13-automated-testing.md) | pytest suite |
 | [14-docker-containerization.md](../docs/reports/14-docker-containerization.md) | Docker deployment |
 | [15-flutter-foundation.md](../docs/reports/15-flutter-foundation.md) | Flutter foundation |
+| [16-mobile-integration.md](../docs/reports/16-mobile-integration.md) | Mobile API integration |

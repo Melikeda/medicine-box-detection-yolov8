@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.2.2
+  http_parser: ^4.0.2
   image_picker: ^1.1.2
 
 dev_dependencies:

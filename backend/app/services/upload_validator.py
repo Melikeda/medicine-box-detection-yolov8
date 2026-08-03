@@ -53,6 +53,9 @@ def validate_upload_metadata(
             f"Desteklenmeyen dosya uzantisi: {suffix}"
         )
 
+    if content_type == "application/octet-stream":
+        content_type = CONTENT_TYPE_BY_SUFFIX.get(suffix)
+
     if (
         content_type is not None
         and content_type not in ALLOWED_CONTENT_TYPES
