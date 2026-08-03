@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 import easyocr
@@ -13,6 +14,7 @@ from src.services.medicine_analyzer import (
     BoxAnalysisResult,
     MedicineAnalysisResult,
     MultiMedicineAnalysisResult,
+    PipelineTiming,
 )
 from src.services.ocr_service import OCRService
 
@@ -132,6 +134,8 @@ class PipelineManager:
 
         image_path = Path(image_path)
         medicines_compared = self._matching_service.medicine_count
+        timing = PipelineTiming()
+        pipeline_started = time.perf_counter()
 
         if save_debug_outputs:
             self.config.output_directory.mkdir(
@@ -139,9 +143,11 @@ class PipelineManager:
                 exist_ok=True,
             )
 
+        yolo_started = time.perf_counter()
         detected_boxes = self._detection_service.detect_all(
             image_path=image_path,
         )
+        timing.yolo_ms = (time.perf_counter() - yolo_started) * 1000
 
         detection_count = len(detected_boxes)
         print(f"YOLO tespit sayısı: {detection_count}")
@@ -168,16 +174,32 @@ class PipelineManager:
             )
 
             try:
-                candidate_texts, _ = self._ocr_service.analyze_crop(
-                    cropped_image=detected_box.cropped_image,
-                    box_index=index,
-                    save_debug_outputs=save_debug_outputs,
-                    debug_subdirectory=f"box_{index:02d}",
+                ocr_started = time.perf_counter()
+                early_stop = (
+                    self._build_early_stop_checker()
+                    if self.config.ocr_early_exit
+                    else None
                 )
+                candidate_texts, pipeline_result = (
+                    self._ocr_service.analyze_crop(
+                        cropped_image=detected_box.cropped_image,
+                        box_index=index,
+                        save_debug_outputs=save_debug_outputs,
+                        debug_subdirectory=f"box_{index:02d}",
+                        should_stop_after_variant=early_stop,
+                    )
+                )
+                timing.ocr_ms += (
+                    time.perf_counter() - ocr_started
+                ) * 1000
 
+                match_started = time.perf_counter()
                 match_result = self._matching_service.match_text(
                     candidate_texts=candidate_texts,
                 )
+                timing.matching_ms += (
+                    time.perf_counter() - match_started
+                ) * 1000
 
                 ocr_text = match_result.best_ocr_text
                 if ocr_text:
@@ -235,12 +257,17 @@ class PipelineManager:
             for box in box_results
         )
 
+        timing.total_ms = (
+            time.perf_counter() - pipeline_started
+        ) * 1000
+
         return MultiMedicineAnalysisResult(
             success=has_matched_box or has_valid_detection,
             image_path=str(image_path),
             detection_count=detection_count,
             medicines=box_results,
             medicines_compared=medicines_compared,
+            timing=timing,
         )
 
     def analyze(
@@ -291,6 +318,24 @@ class PipelineManager:
             medicines_compared=multi_result.medicines_compared,
             error=first_box.display_message,
         )
+
+    def _build_early_stop_checker(self):
+        """Güvenilir eşleşme bulunduğunda OCR varyant döngüsünü durdurur."""
+        assert self._matching_service is not None
+        minimum_score = self.config.minimum_match_score
+
+        def should_stop(candidate_texts: list[str]) -> bool:
+            if not candidate_texts:
+                return False
+            match_result = self._matching_service.match_text(
+                candidate_texts=candidate_texts,
+            )
+            return (
+                match_result.status == "matched"
+                and match_result.matching_score >= minimum_score
+            )
+
+        return should_stop
 
     def _validate_paths(self) -> None:
         required_paths = {

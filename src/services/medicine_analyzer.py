@@ -42,6 +42,19 @@ class MedicineAnalysisResult:
 
 
 @dataclass
+class PipelineTiming:
+    """Analyze pipeline aşama süreleri (ms)."""
+
+    yolo_ms: float = 0.0
+    ocr_ms: float = 0.0
+    matching_ms: float = 0.0
+    total_ms: float = 0.0
+
+    def to_dict(self) -> dict[str, float]:
+        return asdict(self)
+
+
+@dataclass
 class BoxAnalysisResult:
     """Tek bir ilaç kutusu için analiz sonucu."""
 
@@ -73,6 +86,7 @@ class MultiMedicineAnalysisResult:
     medicines: list[BoxAnalysisResult] = field(default_factory=list)
     medicines_compared: int = 0
     error: str | None = None
+    timing: PipelineTiming | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -85,6 +99,7 @@ class MultiMedicineAnalysisResult:
             ],
             "medicines_compared": self.medicines_compared,
             "error": self.error,
+            "timing": self.timing.to_dict() if self.timing else None,
         }
 
 

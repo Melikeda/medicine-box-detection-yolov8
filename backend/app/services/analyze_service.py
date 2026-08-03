@@ -9,7 +9,9 @@ from backend.app.exceptions import PayloadTooLargeError
 from backend.app.schemas.analyze import (
     AnalyzeResponseSchema,
     AnalyzeSummarySchema,
+    AnalyzeTimingSchema,
 )
+from backend.app.services.image_optimizer import resize_image_bytes_if_large
 from backend.app.services.upload_validator import (
     validate_image_bytes,
     validate_upload_metadata,
@@ -67,6 +69,11 @@ def _run_analysis(
         summary=_build_summary(pipeline_result.medicines),
         ocr_mode=ocr_mode,
         processing_time_ms=0.0,
+        timing=(
+            AnalyzeTimingSchema(**pipeline_result.timing.to_dict())
+            if pipeline_result.timing
+            else None
+        ),
     )
 
 
@@ -104,6 +111,14 @@ class AnalyzeService:
         )
         validate_image_bytes(file_bytes, suffix=suffix)
 
+        resized = False
+        max_dimension = self.manager.config.max_image_dimension
+        file_bytes, resized = resize_image_bytes_if_large(
+            file_bytes,
+            max_dimension=max_dimension,
+            suffix=suffix,
+        )
+
         temp_path: Path | None = None
         started_at = time.perf_counter()
 
@@ -130,6 +145,7 @@ class AnalyzeService:
             )
 
             result.filename = filename
+            result.image_resized = resized
             result.processing_time_ms = (
                 time.perf_counter() - started_at
             ) * 1000

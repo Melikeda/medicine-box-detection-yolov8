@@ -336,6 +336,23 @@ See [Report 18](reports/18-medicine-database-expansion.md).
 
 ---
 
+# Phase 17.7 — Performance Optimization
+
+**Branch:** `feature/performance-improvement`  
+**GitHub Issue:** #43
+
+## Objectives
+
+- [x] Reduce fast-mode OCR variant count (rotations + scale)
+- [x] Early-exit OCR on confident CSV match
+- [x] Server-side image resize before pipeline
+- [x] Per-stage timing in analyze API response
+- [x] Benchmark script + Report 19
+
+See [Report 19](reports/19-performance-optimization.md).
+
+---
+
 # Phase 18 — Advanced Features
 
 **Branch:** `feature/advanced-features`  

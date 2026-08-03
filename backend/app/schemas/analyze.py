@@ -33,6 +33,15 @@ class AnalyzeSummarySchema(BaseModel):
     error_count: int = 0
 
 
+class AnalyzeTimingSchema(BaseModel):
+    """Pipeline aşama süreleri (ms)."""
+
+    yolo_ms: float = 0.0
+    ocr_ms: float = 0.0
+    matching_ms: float = 0.0
+    total_ms: float = 0.0
+
+
 class AnalyzeResponseSchema(BaseModel):
     success: bool
     filename: str | None = None
@@ -45,6 +54,8 @@ class AnalyzeResponseSchema(BaseModel):
     )
     ocr_mode: str = "fast"
     processing_time_ms: float = 0.0
+    timing: AnalyzeTimingSchema | None = None
+    image_resized: bool = False
 
 
 class AnalyzeInfoSchema(BaseModel):

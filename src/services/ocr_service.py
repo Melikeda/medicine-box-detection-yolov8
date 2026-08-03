@@ -1,3 +1,5 @@
+from collections.abc import Callable
+
 import easyocr
 import numpy as np
 
@@ -27,6 +29,9 @@ class OCRService:
         box_index: int | None = None,
         save_debug_outputs: bool = False,
         debug_subdirectory: str | None = None,
+        should_stop_after_variant: (
+            Callable[[list[str]], bool] | None
+        ) = None,
     ) -> tuple[list[str], OCRPipelineResult]:
         """
         Tek bir crop görüntüsünden OCR aday metinlerini üretir.
@@ -54,6 +59,7 @@ class OCRService:
             limited_variants=self.config.ocr_limited_variants,
             save_preprocessed_images=save_debug_outputs,
             output_directory=output_directory,
+            should_stop_after_variant=should_stop_after_variant,
         )
 
         candidate_texts = get_candidate_texts(
