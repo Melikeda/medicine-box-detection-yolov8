@@ -211,9 +211,19 @@ Fields: `medicine_id`, `medicine_name`, `brand_name`, `active_ingredient`, `dosa
 
 ---
 
-## 8. Large Language Model (LLM) — Post-MVP
+## 8. Large Language Model (LLM) ✅
 
-Issue #8 — natural-language explanations after a successful match.
+Issue [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) — natural-language explanations after a successful match.
+
+| Component | Technology |
+|-----------|------------|
+| Provider | Google Gemini API (free tier) |
+| Primary model | `gemini-flash-latest` |
+| Fallback | `gemini-flash-lite-latest` |
+| Endpoint | `POST /api/v1/explain` |
+| Mobile UI | Expandable “İlaç hakkında” card |
+
+See [Report 21](reports/21-llm-integration.md).
 
 ---
 
@@ -233,6 +243,9 @@ YOLOv8 → Crop → OpenCV → EasyOCR → Normalize → RapidFuzz → CSV
    │
    ▼
 JSON Response → Flutter Result Screen
+   │
+   ▼ (optional, on demand)
+POST /api/v1/explain → Gemini → "İlaç hakkında" card
 ```
 
 ---

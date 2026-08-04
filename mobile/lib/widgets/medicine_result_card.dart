@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/medicine_box_result.dart';
 import '../utils/medicine_display.dart';
+import 'medicine_explanation_section.dart';
 
 class MedicineResultCard extends StatelessWidget {
   const MedicineResultCard({
@@ -77,6 +78,16 @@ class MedicineResultCard extends StatelessWidget {
                   label: 'Kategori',
                   value: MedicineDisplay.formatField(result.category)!,
                 ),
+              if (result.medicineId != null &&
+                  result.medicineId!.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                const Divider(height: 1),
+                const SizedBox(height: 4),
+                MedicineExplanationSection(
+                  medicineId: result.medicineId!,
+                  medicineName: result.medicineName ?? 'Ilac',
+                ),
+              ],
             ] else if (result.bestCandidate != null &&
                 result.bestCandidate!.isNotEmpty) ...[
               const SizedBox(height: 8),
