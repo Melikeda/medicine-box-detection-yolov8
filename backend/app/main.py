@@ -12,7 +12,7 @@ from backend.app.middleware.rate_limit import (
     AnalyzeRateLimiter,
 )
 from backend.app.middleware.security_headers import SecurityHeadersMiddleware
-from backend.app.routers import analyze, health, medicines
+from backend.app.routers import analyze, explain, health, medicines
 from src.services.pipeline_manager import PipelineManager
 
 logger = logging.getLogger(__name__)
@@ -85,6 +85,10 @@ def create_app() -> FastAPI:
     )
     app.include_router(
         medicines.router,
+        prefix=settings.api_prefix,
+    )
+    app.include_router(
+        explain.router,
         prefix=settings.api_prefix,
     )
 

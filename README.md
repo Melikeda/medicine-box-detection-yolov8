@@ -49,8 +49,9 @@ This repository contains an intelligent **medicine box recognition system**. It 
 | Mobile app foundation | Flutter (`mobile/`) | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)) |
 | Mobile integration | Gallery → API → result | Done ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 
-Post-MVP: PostgreSQL, LLM explanations ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).  
-CI/CD: GitHub Actions ([#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39)) — see [Report 17](docs/reports/17-ci-cd-github-actions.md).
+Post-MVP: LLM explanations done ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)); PostgreSQL & more ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).  
+CI/CD: GitHub Actions ([#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39)) — see [Report 17](docs/reports/17-ci-cd-github-actions.md).  
+LLM: Gemini explain endpoint — see [Report 21](docs/reports/21-llm-integration.md).
 
 ---
 
@@ -328,7 +329,7 @@ Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
 | Docker deployment | Done ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
 | Flutter mobile MVP | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30), [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
 | CI/CD (GitHub Actions) | Done ([#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39)) |
-| LLM integration | Post-MVP ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
+| LLM integration (Gemini) | Done ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
 
 Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
 
@@ -342,7 +343,7 @@ Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
 | [roadmap.md](docs/roadmap.md) | Development phases and GitHub issues |
 | [setup-guide.md](docs/setup-guide.md) | Environment setup |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool was chosen |
-| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–17) |
+| [reports/](docs/reports/) | Step-by-step technical reports (phases 1–21) |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branch workflow, local tests, CI checks |
 
 ---

@@ -23,7 +23,6 @@ def test_parse_cors_origins_from_comma_separated_string() -> None:
 
 
 def test_production_hides_internal_error_details() -> None:
-    get_api_settings.cache_clear()
     app = FastAPI()
     register_exception_handlers(app)
 
@@ -31,14 +30,12 @@ def test_production_hides_internal_error_details() -> None:
     def boom() -> None:
         raise RuntimeError("secret-db-password")
 
-    app.state.api_settings = ApiSettings(environment="production")
+    import backend.app.exceptions as exceptions_module
 
     original_get = get_api_settings
 
     def production_settings() -> ApiSettings:
         return ApiSettings(environment="production")
-
-    import backend.app.exceptions as exceptions_module
 
     exceptions_module.get_api_settings = production_settings
     try:
@@ -46,7 +43,6 @@ def test_production_hides_internal_error_details() -> None:
         response = client.get("/boom")
     finally:
         exceptions_module.get_api_settings = original_get
-        get_api_settings.cache_clear()
 
     assert response.status_code == 500
     payload = response.json()

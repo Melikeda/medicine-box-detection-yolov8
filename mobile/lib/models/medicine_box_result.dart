@@ -55,4 +55,6 @@ class MedicineBoxResult {
   String? get form => medicine?['form'];
 
   String? get category => medicine?['category'];
+
+  String? get medicineId => medicine?['medicine_id'];
 }

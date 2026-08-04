@@ -75,4 +75,4 @@ Hardens the FastAPI backend and Android client for production-adjacent deploymen
 
 - JWT / user authentication
 - WAF / DDoS protection
-- LLM API key vault (Phase 18)
+- LLM API key vault (Secret Manager) — future production

@@ -83,11 +83,13 @@ This document explains which technologies are used in the project and why they w
 
 ---
 
-## Large Language Model — Post-MVP
+## Large Language Model — Post-MVP ✅
 
-**Role:** Generate natural-language medicine explanations (usage, warnings).
+**Role:** Generate natural-language medicine explanations after a successful match.
 
-**Why:** Adds user-friendly information beyond raw database fields. Planned after the mobile MVP is stable ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8), [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).
+**Why:** Adds user-friendly information beyond raw database fields; strengthens the AI-powered product story.
+
+**Status:** Implemented in Phase 18 ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) — Gemini free tier via `POST /api/v1/explain`. See [Report 21](reports/21-llm-integration.md).
 
 ---
 

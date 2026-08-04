@@ -20,6 +20,7 @@ Use this file when organizing issues on the GitHub Project board.
 | [#41](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/41) | Medicine database expansion (TİTCK SKRS) |
 | [#43](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/43) | Pipeline performance optimization |
 | [#45](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/45) | Production hardening & security |
+| [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) | LLM medicine explanations (Gemini) |
 
 ## In Progress
 
@@ -37,7 +38,6 @@ Use this file when organizing issues on the GitHub Project board.
 
 | Issue | Branch |
 |-------|--------|
-| [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) | `feature/llm-integration` |
 | [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | `feature/advanced-features` |
 | [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | `feature/final-testing` |
 

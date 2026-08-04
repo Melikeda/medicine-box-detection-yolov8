@@ -13,10 +13,14 @@ class AppConfig {
 
   static const String analyzeEndpoint = '/api/v1/analyze';
 
+  static const String explainEndpoint = '/api/v1/explain';
+
   static const String healthEndpoint = '/health';
 
   /// CPU uzerinde OCR (fast mod, ~4 varyant + erken cikis) dakikalarca surebilir.
   static const Duration analyzeTimeout = Duration(seconds: 300);
+
+  static const Duration explainTimeout = Duration(seconds: 30);
 
   static const Duration healthTimeout = Duration(seconds: 10);
 

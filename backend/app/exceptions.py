@@ -44,6 +44,28 @@ class PipelineNotReadyError(ApiError):
         )
 
 
+class LlmNotConfiguredError(ApiError):
+    def __init__(
+        self,
+        message: str = "LLM servisi yapılandırılmamış.",
+    ) -> None:
+        super().__init__(
+            message,
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
+
+class LlmUnavailableError(ApiError):
+    def __init__(
+        self,
+        message: str = "LLM servisi şu anda kullanılamıyor.",
+    ) -> None:
+        super().__init__(
+            message,
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiError)
     async def handle_api_error(

@@ -376,7 +376,7 @@ See [Report 20](reports/20-production-hardening.md).
 
 ## Objectives
 
-- [ ] LLM integration for medicine explanations (#8)
+- [x] LLM integration for medicine explanations (#8)
 - [ ] PostgreSQL migration
 - [ ] User scan history
 - [ ] Barcode/QR reading
@@ -451,7 +451,8 @@ See [Report 20](reports/20-production-hardening.md).
 | ✅ Flutter Mobile App Foundation | Done | #30 |
 | ✅ Mobile MVP Integration | Done | #31 |
 | ✅ CI/CD (GitHub Actions) | Done | #39 |
-| ⏳ Advanced Features (LLM, etc.) | Planned | #32, #8 |
+| ✅ LLM explanations (Gemini) | Done | #8 |
+| ⏳ Advanced Features (remaining) | Planned | #32 |
 | ⏳ Final Testing & Documentation | Planned | #9 |
 | ⏳ Dataset Publishing | Planned | — |
 | ⏳ Project Release | Planned | — |
