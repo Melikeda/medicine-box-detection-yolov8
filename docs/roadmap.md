@@ -377,6 +377,7 @@ See [Report 20](reports/20-production-hardening.md).
 ## Objectives
 
 - [x] LLM integration for medicine explanations (#8)
+- [x] Mobile camera capture (Report 22, `feature/camera-capture`)
 - [ ] PostgreSQL migration
 - [ ] User scan history
 - [ ] Barcode/QR reading

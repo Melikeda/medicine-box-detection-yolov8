@@ -10,12 +10,13 @@ Android MVP client for the Medicine Box Detection System.
 ## Scope
 
 - Splash, home, image preview, and **result** screens
-- Gallery image picker
+- Gallery and **camera** image picker
 - FastAPI integration (`POST /api/v1/analyze`)
 - Loading overlay, error SnackBars, summary + per-box result cards
 
 Phase 16 foundation: [Report 15](../docs/reports/15-flutter-foundation.md)  
-Phase 17 integration: [Report 16](../docs/reports/16-mobile-integration.md)
+Phase 17 integration: [Report 16](../docs/reports/16-mobile-integration.md)  
+Camera capture: [Report 22](../docs/reports/22-camera-capture.md)
 
 ---
 
@@ -112,7 +113,7 @@ flutter emulators --launch medicine_box_emulator
 flutter run
 ```
 
-4. Gallery → pick sample → **Analiz Et** → view results.
+4. **Fotoğraf Çek** or gallery → pick sample → **Analiz Et** → view results.
 
 ### API base URL
 
@@ -154,7 +155,7 @@ mobile/
 Splash (2s)
     │
     ▼
-Home ── "Galeriden Sec" ──► Image Preview ── "Analiz Et" ──► Result
+Home ── "Fotograf Cek" / "Galeriden Sec" ──► Image Preview ── "Analiz Et" ──► Result
     │                              │                            │
     └──────── "Geri Don" ◄─────────┘                            │
     └──────── "Ana Sayfaya Don" ◄───────────────────────────────┘
@@ -166,7 +167,7 @@ Home ── "Galeriden Sec" ──► Image Preview ── "Analiz Et" ──►
 
 | Package | Purpose |
 |---------|---------|
-| `image_picker` | Gallery image selection |
+| `image_picker` | Gallery + camera image selection |
 | `http` | Multipart analyze upload |
 
 ---
