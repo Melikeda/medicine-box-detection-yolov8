@@ -58,7 +58,7 @@ Mobile Result Screen
 
 ## 1. Mobile Client (Flutter) — MVP ✅
 
-The user selects a medicine box photo from the gallery (MVP). Camera capture is planned for a later version.
+The user captures a medicine box photo with the device camera or selects one from the gallery.
 
 **Phase 16 (Issue #30):** Splash, home, gallery picker, and image preview screens under `mobile/`.
 

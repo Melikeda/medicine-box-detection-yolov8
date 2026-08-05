@@ -184,17 +184,15 @@ pytest tests/test_api.py::test_upload_validator_accepts_octet_stream_with_jpg_su
 - **CPU latency:** first analyze can take several minutes (EasyOCR + 8 variants per box)
 - **Seed database:** many drugs use `VERIFY_FROM_OFFICIAL_LEAFLET` for active ingredient / dosage
 - **OCR mode:** UI always uses `fast`; no toggle yet
-- **No camera capture** in MVP (gallery only)
+- ~~**No camera capture** in MVP (gallery only)~~ → Done (Report 22, `feature/camera-capture`)
 
 ---
 
 ## Out of Scope (Phase 18+)
 
-- Camera capture
 - OCR mode toggle in UI
 - Scan history / offline cache
 - iOS build
-- Rich medicine database / LLM explanations
 
 ---
 
