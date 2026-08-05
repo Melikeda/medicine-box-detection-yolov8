@@ -268,6 +268,26 @@ def filter_candidate_texts(
     return filtered_texts
 
 
+def max_candidate_alpha_length(candidate_texts: list[str]) -> int:
+    """OCR adaylari arasindaki en uzun alfabetik uzunluk."""
+    if not candidate_texts:
+        return 0
+
+    return max(
+        count_alphabetic_characters(normalize_filter_text(text))
+        for text in candidate_texts
+    )
+
+
+def has_weak_ocr_candidates(
+    candidate_texts: list[str],
+    *,
+    minimum_alpha_length: int = 6,
+) -> bool:
+    """Marka adi okunamamis kisa/gurultulu OCR (or. lie) icin True."""
+    return max_candidate_alpha_length(candidate_texts) < minimum_alpha_length
+
+
 MatchRecord = tuple[dict[str, str], float, str]
 
 

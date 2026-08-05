@@ -6,6 +6,10 @@ from src.matching.medicine_matcher import (
 )
 from src.matching.text_normalizer import is_garbage_ocr_text
 from src.matching.text_normalizer import normalize_ocr_text
+from src.services.candidate_processor import (
+    has_weak_ocr_candidates,
+    max_candidate_alpha_length,
+)
 from src.services.config import PipelineConfig
 from src.services.matching_service import (
     MatchingService,
@@ -193,3 +197,10 @@ def test_ornldarol_garbage_does_not_false_match_parol(
     assert result.status != "matched"
     assert result.medicine_name != "Parol Plus"
     assert result.medicine_name != "Parol"
+
+
+def test_has_weak_ocr_candidates_detects_short_reads() -> None:
+    assert has_weak_ocr_candidates(["lie"])
+    assert has_weak_ocr_candidates(["lie", "mg"])
+    assert not has_weak_ocr_candidates(["levopront"])
+    assert max_candidate_alpha_length(["lie", "levopront"]) == 9

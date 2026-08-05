@@ -7,6 +7,8 @@ import easyocr
 from ultralytics import YOLO
 
 from src.ocr.ocr_reader import create_ocr_reader
+from src.ocr.ocr_pipeline import DEFAULT_BLUR_THRESHOLD
+from src.services.candidate_processor import has_weak_ocr_candidates
 from src.services.config import PipelineConfig
 from src.services.detection_service import DetectionService
 from src.services.matching_service import MatchingService, TextMatchResult
@@ -335,32 +337,76 @@ class PipelineManager:
 
         if self._should_retry_ocr(match_result):
             retry_angles = self.config.ocr_retry_rotation_angles
+            if retry_angles:
+                print(
+                    f"OCR tekrar deneniyor "
+                    f"(kutu {box_index}, acilar: {retry_angles})"
+                )
+                retry_texts, retry_pipeline_result = (
+                    self._ocr_service.analyze_crop(
+                        cropped_image=detected_box.cropped_image,
+                        box_index=box_index,
+                        save_debug_outputs=save_debug_outputs,
+                        debug_subdirectory=(
+                            f"box_{box_index:02d}_retry"
+                        ),
+                        should_stop_after_variant=None,
+                        rotation_angles=retry_angles,
+                    )
+                )
+                candidate_texts = list(
+                    dict.fromkeys(candidate_texts + retry_texts)
+                )
+                match_result = self._matching_service.match_text(
+                    candidate_texts=candidate_texts,
+                )
+                pipeline_result = retry_pipeline_result
+
+        if self._should_supplemental_ocr(match_result, candidate_texts):
             print(
-                f"OCR tekrar deneniyor "
-                f"(kutu {box_index}, acilar: {retry_angles})"
+                f"OCR derin tekrar (kutu {box_index}): "
+                "2x olcek, gelismis preprocessing"
             )
-            retry_texts, retry_pipeline_result = (
+            supplemental_texts, supplemental_pipeline_result = (
                 self._ocr_service.analyze_crop(
                     cropped_image=detected_box.cropped_image,
                     box_index=box_index,
                     save_debug_outputs=save_debug_outputs,
                     debug_subdirectory=(
-                        f"box_{box_index:02d}_retry"
+                        f"box_{box_index:02d}_deep"
                     ),
                     should_stop_after_variant=None,
-                    rotation_angles=retry_angles,
+                    rotation_angles=(0, 90, 180, 270),
+                    scale_factor=self.config.ocr_scale_factor_accurate,
+                    limited_variants=False,
+                    blur_threshold=DEFAULT_BLUR_THRESHOLD,
                 )
             )
-            merged_candidates = list(
-                dict.fromkeys(candidate_texts + retry_texts)
+            candidate_texts = list(
+                dict.fromkeys(candidate_texts + supplemental_texts)
             )
             match_result = self._matching_service.match_text(
-                candidate_texts=merged_candidates,
+                candidate_texts=candidate_texts,
             )
-            candidate_texts = merged_candidates
-            pipeline_result = retry_pipeline_result
+            pipeline_result = supplemental_pipeline_result
 
         return candidate_texts, match_result, pipeline_result
+
+    def _should_supplemental_ocr(
+        self,
+        match_result: TextMatchResult,
+        candidate_texts: list[str],
+    ) -> bool:
+        if match_result.status == "matched":
+            return False
+
+        if has_weak_ocr_candidates(candidate_texts):
+            return True
+
+        return match_result.status in {
+            "not_found",
+            "not_medicine_box",
+        }
 
     def _should_retry_ocr(
         self,
