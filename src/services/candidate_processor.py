@@ -1,9 +1,11 @@
 from src.matching.medicine_matcher import (
     calculate_medicine_score,
+    calculate_text_similarity,
     is_dosage_or_form_only_text,
+    is_generic_active_ingredient,
     is_generic_single_word,
 )
-from src.matching.text_normalizer import normalize_ocr_text
+from src.matching.text_normalizer import is_garbage_ocr_text, normalize_ocr_text
 from src.services.config import (
     IGNORED_OCR_PHRASES,
     MEDICINE_NAME_SUFFIXES,
@@ -51,6 +53,12 @@ def is_valid_base_name_candidate(text: str) -> bool:
     if is_generic_single_word(normalized_text):
         return False
 
+    if is_generic_active_ingredient(normalized_text):
+        return False
+
+    if is_garbage_ocr_text(normalized_text):
+        return False
+
     return True
 
 
@@ -74,6 +82,9 @@ def is_likely_active_ingredient(text: str) -> bool:
 
     if not is_single_alphabetic_word(normalized_text):
         return False
+
+    if is_generic_active_ingredient(normalized_text):
+        return True
 
     if len(normalized_text) <= 8:
         return False
@@ -202,6 +213,12 @@ def is_valid_matching_candidate(
     if is_generic_single_word(normalized_text):
         return False
 
+    if is_generic_active_ingredient(normalized_text):
+        return False
+
+    if is_garbage_ocr_text(normalized_text):
+        return False
+
     if is_dosage_or_form_only_text(normalized_text):
         return False
 
@@ -249,6 +266,26 @@ def filter_candidate_texts(
         filtered_texts.append(normalized_text)
 
     return filtered_texts
+
+
+def max_candidate_alpha_length(candidate_texts: list[str]) -> int:
+    """OCR adaylari arasindaki en uzun alfabetik uzunluk."""
+    if not candidate_texts:
+        return 0
+
+    return max(
+        count_alphabetic_characters(normalize_filter_text(text))
+        for text in candidate_texts
+    )
+
+
+def has_weak_ocr_candidates(
+    candidate_texts: list[str],
+    *,
+    minimum_alpha_length: int = 6,
+) -> bool:
+    """Marka adi okunamamis kisa/gurultulu OCR (or. lie) icin True."""
+    return max_candidate_alpha_length(candidate_texts) < minimum_alpha_length
 
 
 MatchRecord = tuple[dict[str, str], float, str]

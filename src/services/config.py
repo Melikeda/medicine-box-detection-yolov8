@@ -97,7 +97,7 @@ class PipelineConfig:
     confidence_threshold: float = 0.40
     fallback_confidence_threshold: float = 0.25
     ocr_scale_factor_accurate: float = 2.0
-    ocr_scale_factor_fast: float = 1.5
+    ocr_scale_factor_fast: float = 1.75
     max_image_dimension: int = 1280
     minimum_ocr_confidence: float = 0.0
     minimum_matching_text_length: int = 3
@@ -130,10 +130,13 @@ class PipelineConfig:
 
     @property
     def ocr_rotation_angles(self) -> tuple[int, ...]:
-        """fast: 0° ve 90° | accurate: dört açı."""
-        if self.ocr_mode == "fast":
-            return (0, 90)
+        """fast: dort aci (ters/yan kutular) | accurate: ayni."""
         return (0, 90, 180, 270)
+
+    @property
+    def ocr_retry_rotation_angles(self) -> tuple[int, ...]:
+        """Ilk gecis yeterli olmadiginda ek aci yok; derin OCR kullanilir."""
+        return ()
 
     @property
     def ocr_early_exit(self) -> bool:

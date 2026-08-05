@@ -369,31 +369,31 @@ See [Report 20](reports/20-production-hardening.md).
 
 ---
 
-# Phase 18 — Advanced Features
+# Phase 18–19 — Final Project Polish
 
-**Branch:** `feature/advanced-features`  
-**GitHub Issue:** #32
+**GitHub Issue:** [#50](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/50) (supersedes #32, #9)
 
-## Objectives
+**Branch workflow:** numbered improvement rounds — `feature/final-polish`, `feature/final-polish-2`, … Merge each round when done; open the next branch for the following slice.
+
+**Current round:** `feature/final-polish` (round 1 — open, not merged)
+
+**In this branch (2026-08-05):** camera (#48) and scan history (#49) via main base; matching fix for generic active-ingredient OCR (ibuprofen false match).
+
+## Objectives (features, from former Phase 18)
 
 - [x] LLM integration for medicine explanations (#8)
 - [x] Mobile camera capture (Report 22, PR #48)
 - [x] Mobile scan history — local SQLite (Report 23)
 - [~] OCR mode UI toggle — deferred (backend/API ready; default `fast` for MVP)
+- [x] Fix active-ingredient-only false matches (ibuprofen → wrong brand, round 1)
+- [x] Multi-box OCR: 180° fast rotation + 270° retry + garbage OCR filter (round 1)
 - [ ] PostgreSQL migration
 - [ ] User scan history (server sync)
 - [ ] Barcode/QR reading
 - [ ] Cloud deployment
 - [ ] iOS support
 
----
-
-# Phase 19 — Final Testing & Documentation
-
-**Branch:** `feature/final-testing`  
-**GitHub Issue:** #9
-
-## Objectives
+## Objectives (testing and docs, from former Phase 19)
 
 - [ ] Test complete mobile + backend system
 - [ ] Evaluate end-to-end performance
