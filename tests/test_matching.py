@@ -178,3 +178,18 @@ def test_levopront_and_biteral_match_when_ocr_reads_brand(
     assert biteral.medicine_name == "Biteral"
     assert nurofen.status == "matched"
     assert nurofen.medicine_name == "Nurofen Cold & Flu"
+
+
+def test_ornldarol_garbage_does_not_false_match_parol(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    """Ters Biteral OCR (ornldarol) Parol Plus ile eslesmemeli."""
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+    result = service.match_text(["ornldarol"])
+
+    assert result.status != "matched"
+    assert result.medicine_name != "Parol Plus"
+    assert result.medicine_name != "Parol"

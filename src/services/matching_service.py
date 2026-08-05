@@ -174,6 +174,60 @@ def _is_partial_brand_match(
     return coverage_ratio >= minimum_brand_coverage_ratio
 
 
+def _is_short_brand_embedded_false_positive(
+    query_text: str,
+    medicine: dict[str, str],
+    *,
+    name_similarity: float,
+    brand_similarity: float,
+) -> bool:
+    """
+    Uzun OCR gurultusunde kisa marka parçasinin yanlis eslesmesini reddeder.
+
+    Ornek: ornldarol -> Parol (arol parçasi)
+    """
+    medicine_name = medicine.get("medicine_name", "").strip()
+    brand_name = medicine.get("brand_name", "").strip()
+    if not medicine_name:
+        return False
+
+    query_alpha_length = count_alphabetic_characters(
+        normalize_filter_text(query_text)
+    )
+    name_alpha_length = count_alphabetic_characters(
+        normalize_filter_text(medicine_name)
+    )
+    brand_alpha_length = count_alphabetic_characters(
+        normalize_filter_text(brand_name)
+    )
+    shortest_label_length = min(
+        length
+        for length in (name_alpha_length, brand_alpha_length)
+        if length > 0
+    )
+
+    if query_alpha_length <= shortest_label_length + 2:
+        return False
+
+    best_similarity = max(name_similarity, brand_similarity)
+    if best_similarity >= 95.0:
+        return False
+
+    if best_similarity < 65.0:
+        return False
+
+    if query_alpha_length >= shortest_label_length + 3:
+        if name_similarity < 85.0:
+            return True
+        if (
+            shortest_label_length <= 6
+            and name_similarity < 95.0
+        ):
+            return True
+
+    return False
+
+
 def is_reliable_medicine_match(
     query_text: str,
     medicine_name: str,
@@ -213,7 +267,16 @@ def is_reliable_medicine_match(
                 medicine_name=brand_name,
             )
 
-    if max(name_similarity, brand_similarity) >= 65.0:
+    if medicine is not None and _is_short_brand_embedded_false_positive(
+        query_text=query_text,
+        medicine=medicine,
+        name_similarity=name_similarity,
+        brand_similarity=brand_similarity,
+    ):
+        pass
+    elif name_similarity >= 65.0 or brand_similarity >= 85.0:
+        return True
+    elif brand_similarity >= 65.0:
         return True
 
     query_alpha_length = count_alphabetic_characters(
@@ -232,6 +295,16 @@ def is_reliable_medicine_match(
     coverage_ratio = query_alpha_length / name_alpha_length
 
     if coverage_ratio >= minimum_name_coverage_ratio:
+        if (
+            medicine is not None
+            and _is_short_brand_embedded_false_positive(
+                query_text=query_text,
+                medicine=medicine,
+                name_similarity=name_similarity,
+                brand_similarity=brand_similarity,
+            )
+        ):
+            return False
         return True
 
     if (
