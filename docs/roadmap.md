@@ -378,9 +378,10 @@ See [Report 20](reports/20-production-hardening.md).
 
 - [x] LLM integration for medicine explanations (#8)
 - [x] Mobile camera capture (Report 22, PR #48)
+- [x] Mobile scan history — local SQLite (Report 23)
 - [~] OCR mode UI toggle — deferred (backend/API ready; default `fast` for MVP)
 - [ ] PostgreSQL migration
-- [ ] User scan history
+- [ ] User scan history (server sync)
 - [ ] Barcode/QR reading
 - [ ] Cloud deployment
 - [ ] iOS support

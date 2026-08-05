@@ -89,6 +89,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(AppConfig.appName),
+        actions: [
+          IconButton(
+            tooltip: 'Tarama gecmisi',
+            onPressed: () => Navigator.of(context).pushNamed(AppRoutes.history),
+            icon: const Icon(Icons.history),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Padding(

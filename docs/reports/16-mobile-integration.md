@@ -191,7 +191,7 @@ pytest tests/test_api.py::test_upload_validator_accepts_octet_stream_with_jpg_su
 ## Out of Scope (Phase 18+)
 
 - OCR mode UI toggle (deferred: API ready; default `fast` sufficient for MVP)
-- Scan history / offline cache
+- Scan history / offline cache → Done locally (Report 23); server sync deferred
 - iOS build
 
 ---

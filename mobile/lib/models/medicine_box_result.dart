@@ -57,4 +57,19 @@ class MedicineBoxResult {
   String? get category => medicine?['category'];
 
   String? get medicineId => medicine?['medicine_id'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'box_index': boxIndex,
+      'yolo_confidence': yoloConfidence,
+      'matching_score': matchingScore,
+      'status': status,
+      'display_message': displayMessage,
+      if (ocrText != null) 'ocr_text': ocrText,
+      if (medicineName != null) 'medicine_name': medicineName,
+      if (bestCandidate != null) 'best_candidate': bestCandidate,
+      if (error != null) 'error': error,
+      if (medicine != null) 'medicine': medicine,
+    };
+  }
 }

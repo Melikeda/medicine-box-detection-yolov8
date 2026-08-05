@@ -12,11 +12,13 @@ Android MVP client for the Medicine Box Detection System.
 - Splash, home, image preview, and **result** screens
 - Gallery and **camera** image picker
 - FastAPI integration (`POST /api/v1/analyze`)
+- **Local scan history** (sqflite, device-only)
 - Loading overlay, error SnackBars, summary + per-box result cards
 
 Phase 16 foundation: [Report 15](../docs/reports/15-flutter-foundation.md)  
 Phase 17 integration: [Report 16](../docs/reports/16-mobile-integration.md)  
-Camera capture: [Report 22](../docs/reports/22-camera-capture.md)
+Camera capture: [Report 22](../docs/reports/22-camera-capture.md)  
+Scan history: [Report 23](../docs/reports/23-scan-history.md)
 
 ---
 
@@ -168,6 +170,8 @@ Home ── "Fotograf Cek" / "Galeriden Sec" ──► Image Preview ── "Ana
 | Package | Purpose |
 |---------|---------|
 | `image_picker` | Gallery + camera image selection |
+| `sqflite` | Local scan history storage |
+| `path_provider` | Persist scan thumbnails under app documents |
 | `http` | Multipart analyze upload |
 
 ---

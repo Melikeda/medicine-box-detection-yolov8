@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/analyze_response.dart';
+import '../screens/history_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/image_preview_screen.dart';
 import '../screens/result_screen.dart';
@@ -21,6 +22,7 @@ class AppRoutes {
 
   static const splash = '/';
   static const home = '/home';
+  static const history = '/history';
   static const imagePreview = '/preview';
   static const result = '/result';
 
@@ -35,6 +37,11 @@ class AppRoutes {
         return MaterialPageRoute<void>(
           settings: settings,
           builder: (_) => const HomeScreen(),
+        );
+      case history:
+        return MaterialPageRoute<void>(
+          settings: settings,
+          builder: (_) => const HistoryScreen(),
         );
       case imagePreview:
         final imagePath = settings.arguments as String?;

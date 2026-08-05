@@ -17,5 +17,6 @@ void main() {
     expect(find.text('Galeriden Sec'), findsOneWidget);
     expect(find.byIcon(Icons.photo_camera_outlined), findsOneWidget);
     expect(find.byIcon(Icons.photo_library_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.history), findsOneWidget);
   });
 }
