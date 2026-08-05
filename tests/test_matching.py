@@ -4,6 +4,7 @@ from src.matching.medicine_matcher import (
     is_generic_active_ingredient,
     normalize_text,
 )
+from src.matching.text_normalizer import is_garbage_ocr_text
 from src.matching.text_normalizer import normalize_ocr_text
 from src.services.config import PipelineConfig
 from src.services.matching_service import (
@@ -136,3 +137,44 @@ def test_find_best_medicine_match_rejects_generic_active_ingredient() -> None:
     assert medicine is None
     assert score == 0.0
     assert is_generic_active_ingredient("ibuprofen")
+
+
+def test_garbage_ocr_text_is_detected() -> None:
+    assert is_garbage_ocr_text("1778v1 7dv~ ww 6w oc / bw od7")
+    assert not is_garbage_ocr_text("omesek")
+    assert not is_garbage_ocr_text("ibucold")
+
+
+def test_garbage_ocr_does_not_false_match_iburamin(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+    result = service.match_text(
+        ["1778v1 7dv~ ww 6w oc / bw od7"]
+    )
+
+    assert result.status != "matched"
+    assert result.medicine_name != "Iburamin Cold"
+
+
+def test_levopront_and_biteral_match_when_ocr_reads_brand(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+
+    levopront = service.match_text(["levopront"])
+    biteral = service.match_text(["biteral"])
+    nurofen = service.match_text(["nurofen cold flu"])
+
+    assert levopront.status == "matched"
+    assert levopront.medicine_name == "Levopront"
+    assert biteral.status == "matched"
+    assert biteral.medicine_name == "Biteral"
+    assert nurofen.status == "matched"
+    assert nurofen.medicine_name == "Nurofen Cold & Flu"

@@ -130,10 +130,17 @@ class PipelineConfig:
 
     @property
     def ocr_rotation_angles(self) -> tuple[int, ...]:
-        """fast: 0° ve 90° | accurate: dört açı."""
+        """fast: 0/90/180 (ters kutular) | accurate: dört açı."""
         if self.ocr_mode == "fast":
-            return (0, 90)
+            return (0, 90, 180)
         return (0, 90, 180, 270)
+
+    @property
+    def ocr_retry_rotation_angles(self) -> tuple[int, ...]:
+        """Zayif eslesmede ek OCR acilari (fast mod)."""
+        if self.ocr_mode == "fast":
+            return (270,)
+        return ()
 
     @property
     def ocr_early_exit(self) -> bool:

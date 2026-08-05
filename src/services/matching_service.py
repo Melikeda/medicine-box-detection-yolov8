@@ -7,7 +7,11 @@ from src.database.repository import (
     ensure_database_seeded,
     load_medicines_from_sqlite,
 )
-from src.matching.medicine_matcher import find_best_medicine_match
+from src.matching.medicine_matcher import (
+    calculate_text_similarity,
+    find_best_medicine_match,
+)
+from src.matching.text_normalizer import is_garbage_ocr_text, normalize_ocr_text
 from src.services.candidate_processor import (
     MatchRecord,
     count_alphabetic_characters,
@@ -190,8 +194,27 @@ def is_reliable_medicine_match(
     Yüksek skorlu marka parçası eşleşmelerine (ör. "fen" → Nurofen)
     bulanık fotoğraflar için izin verilir.
     """
+    if is_garbage_ocr_text(query_text):
+        return False
+
     normalized_query = normalize_filter_text(query_text)
     normalized_name = normalize_filter_text(medicine_name)
+
+    name_similarity = calculate_text_similarity(
+        query_text=query_text,
+        medicine_name=medicine_name,
+    )
+    brand_similarity = 0.0
+    if medicine is not None:
+        brand_name = medicine.get("brand_name", "").strip()
+        if brand_name:
+            brand_similarity = calculate_text_similarity(
+                query_text=query_text,
+                medicine_name=brand_name,
+            )
+
+    if max(name_similarity, brand_similarity) >= 65.0:
+        return True
 
     query_alpha_length = count_alphabetic_characters(
         normalized_query

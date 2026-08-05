@@ -15,6 +15,8 @@ MED011,Nurofen,Nurofen,Ibuprofen,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICI
 MED012,Nurofen Cold & Flu,Nurofen,"Ibuprofen / Pseudoephedrine Hydrochloride","200 mg / 30 mg",Film Coated Tablet,Soğuk Algınlığı
 MED033,Ibucold C,Ibucold C,Ibuprofen + Pseudoephedrine Hydrochloride + Ascorbic Acid,200 mg / 30 mg / 300 mg,Film Coated Tablet,Soğuk Algınlığı
 MED034,Ibucold,Ibucold,Ibuprofen + Pseudoephedrine Hydrochloride,200 mg / 30 mg,Film Coated Tablet,Soğuk Algınlığı
+MED032,Biteral,Biteral,Metronidazole / Ornidazole,500 MG,Film Coated Tablet,Antibiyotik
+MED036,Levopront,Levopront,Levodropropizine,60 mg,Tablet,Öksürük İlacı
 MED038,Parafon,Parafon,Paracetamol + Chlorzoxazone,250 mg / 300 mg,Tablet,Kas-İskelet
 """
 

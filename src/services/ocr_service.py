@@ -32,6 +32,7 @@ class OCRService:
         should_stop_after_variant: (
             Callable[[list[str]], bool] | None
         ) = None,
+        rotation_angles: tuple[int, ...] | None = None,
     ) -> tuple[list[str], OCRPipelineResult]:
         """
         Tek bir crop görüntüsünden OCR aday metinlerini üretir.
@@ -54,7 +55,9 @@ class OCRService:
             image_input=cropped_image,
             scale_factor=self.config.ocr_scale_factor,
             minimum_confidence=self.config.minimum_ocr_confidence,
-            rotation_angles=self.config.ocr_rotation_angles,
+            rotation_angles=(
+                rotation_angles or self.config.ocr_rotation_angles
+            ),
             blur_threshold=self.config.ocr_blur_threshold,
             limited_variants=self.config.ocr_limited_variants,
             save_preprocessed_images=save_debug_outputs,

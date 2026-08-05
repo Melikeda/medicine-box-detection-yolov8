@@ -12,7 +12,8 @@ from src.services.config import PipelineConfig
 
 def test_fast_mode_reduces_rotations_and_scale() -> None:
     config = PipelineConfig(ocr_mode="fast")
-    assert config.ocr_rotation_angles == (0, 90)
+    assert config.ocr_rotation_angles == (0, 90, 180)
+    assert config.ocr_retry_rotation_angles == (270,)
     assert config.ocr_scale_factor == 1.5
     assert config.ocr_early_exit is True
     assert config.ocr_limited_variants is True
@@ -21,6 +22,7 @@ def test_fast_mode_reduces_rotations_and_scale() -> None:
 def test_accurate_mode_keeps_full_search_space() -> None:
     config = PipelineConfig(ocr_mode="accurate")
     assert config.ocr_rotation_angles == (0, 90, 180, 270)
+    assert config.ocr_retry_rotation_angles == ()
     assert config.ocr_scale_factor == 2.0
     assert config.ocr_early_exit is False
     assert config.ocr_limited_variants is False

@@ -375,7 +375,9 @@ See [Report 20](reports/20-production-hardening.md).
 
 **Branch workflow:** numbered improvement rounds — `feature/final-polish`, `feature/final-polish-2`, … Merge each round when done; open the next branch for the following slice.
 
-**Current round:** `feature/final-polish` (round 1)
+**Current round:** `feature/final-polish` (round 1 — open, not merged)
+
+**In this branch (2026-08-05):** camera (#48) and scan history (#49) via main base; matching fix for generic active-ingredient OCR (ibuprofen false match).
 
 ## Objectives (features, from former Phase 18)
 
@@ -383,7 +385,8 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] Mobile camera capture (Report 22, PR #48)
 - [x] Mobile scan history — local SQLite (Report 23)
 - [~] OCR mode UI toggle — deferred (backend/API ready; default `fast` for MVP)
-- [ ] Fix active-ingredient-only false matches (round 1, `feature/final-polish`)
+- [x] Fix active-ingredient-only false matches (ibuprofen → wrong brand, round 1)
+- [x] Multi-box OCR: 180° fast rotation + 270° retry + garbage OCR filter (round 1)
 - [ ] PostgreSQL migration
 - [ ] User scan history (server sync)
 - [ ] Barcode/QR reading

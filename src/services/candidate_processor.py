@@ -1,10 +1,11 @@
 from src.matching.medicine_matcher import (
     calculate_medicine_score,
+    calculate_text_similarity,
     is_dosage_or_form_only_text,
     is_generic_active_ingredient,
     is_generic_single_word,
 )
-from src.matching.text_normalizer import normalize_ocr_text
+from src.matching.text_normalizer import is_garbage_ocr_text, normalize_ocr_text
 from src.services.config import (
     IGNORED_OCR_PHRASES,
     MEDICINE_NAME_SUFFIXES,
@@ -53,6 +54,9 @@ def is_valid_base_name_candidate(text: str) -> bool:
         return False
 
     if is_generic_active_ingredient(normalized_text):
+        return False
+
+    if is_garbage_ocr_text(normalized_text):
         return False
 
     return True
@@ -210,6 +214,9 @@ def is_valid_matching_candidate(
         return False
 
     if is_generic_active_ingredient(normalized_text):
+        return False
+
+    if is_garbage_ocr_text(normalized_text):
         return False
 
     if is_dosage_or_form_only_text(normalized_text):

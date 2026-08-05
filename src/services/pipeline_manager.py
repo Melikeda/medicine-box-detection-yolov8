@@ -9,7 +9,7 @@ from ultralytics import YOLO
 from src.ocr.ocr_reader import create_ocr_reader
 from src.services.config import PipelineConfig
 from src.services.detection_service import DetectionService
-from src.services.matching_service import MatchingService
+from src.services.matching_service import MatchingService, TextMatchResult
 from src.services.medicine_analyzer import (
     BoxAnalysisResult,
     MedicineAnalysisResult,
@@ -175,30 +175,15 @@ class PipelineManager:
 
             try:
                 ocr_started = time.perf_counter()
-                early_stop = (
-                    self._build_early_stop_checker()
-                    if self.config.ocr_early_exit
-                    else None
-                )
-                candidate_texts, pipeline_result = (
-                    self._ocr_service.analyze_crop(
-                        cropped_image=detected_box.cropped_image,
+                candidate_texts, match_result, pipeline_result = (
+                    self._analyze_detected_box(
+                        detected_box=detected_box,
                         box_index=index,
                         save_debug_outputs=save_debug_outputs,
-                        debug_subdirectory=f"box_{index:02d}",
-                        should_stop_after_variant=early_stop,
                     )
                 )
                 timing.ocr_ms += (
                     time.perf_counter() - ocr_started
-                ) * 1000
-
-                match_started = time.perf_counter()
-                match_result = self._matching_service.match_text(
-                    candidate_texts=candidate_texts,
-                )
-                timing.matching_ms += (
-                    time.perf_counter() - match_started
                 ) * 1000
 
                 ocr_text = match_result.best_ocr_text
@@ -318,6 +303,76 @@ class PipelineManager:
             medicines_compared=multi_result.medicines_compared,
             error=first_box.display_message,
         )
+
+    def _analyze_detected_box(
+        self,
+        *,
+        detected_box,
+        box_index: int,
+        save_debug_outputs: bool,
+    ) -> tuple[list[str], TextMatchResult, object]:
+        """OCR + eslestirme; zayif sonucta ek acilarla tekrar dener."""
+        assert self._ocr_service is not None
+        assert self._matching_service is not None
+
+        early_stop = (
+            self._build_early_stop_checker()
+            if self.config.ocr_early_exit
+            else None
+        )
+        candidate_texts, pipeline_result = (
+            self._ocr_service.analyze_crop(
+                cropped_image=detected_box.cropped_image,
+                box_index=box_index,
+                save_debug_outputs=save_debug_outputs,
+                debug_subdirectory=f"box_{box_index:02d}",
+                should_stop_after_variant=early_stop,
+            )
+        )
+        match_result = self._matching_service.match_text(
+            candidate_texts=candidate_texts,
+        )
+
+        if self._should_retry_ocr(match_result):
+            retry_angles = self.config.ocr_retry_rotation_angles
+            print(
+                f"OCR tekrar deneniyor "
+                f"(kutu {box_index}, acilar: {retry_angles})"
+            )
+            retry_texts, retry_pipeline_result = (
+                self._ocr_service.analyze_crop(
+                    cropped_image=detected_box.cropped_image,
+                    box_index=box_index,
+                    save_debug_outputs=save_debug_outputs,
+                    debug_subdirectory=(
+                        f"box_{box_index:02d}_retry"
+                    ),
+                    should_stop_after_variant=None,
+                    rotation_angles=retry_angles,
+                )
+            )
+            merged_candidates = list(
+                dict.fromkeys(candidate_texts + retry_texts)
+            )
+            match_result = self._matching_service.match_text(
+                candidate_texts=merged_candidates,
+            )
+            candidate_texts = merged_candidates
+            pipeline_result = retry_pipeline_result
+
+        return candidate_texts, match_result, pipeline_result
+
+    def _should_retry_ocr(
+        self,
+        match_result: TextMatchResult,
+    ) -> bool:
+        if not self.config.ocr_retry_rotation_angles:
+            return False
+
+        return match_result.status in {
+            "not_found",
+            "not_medicine_box",
+        }
 
     def _build_early_stop_checker(self):
         """Güvenilir eşleşme bulunduğunda OCR varyant döngüsünü durdurur."""
