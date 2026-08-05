@@ -4,7 +4,7 @@
 
 Adds direct camera capture on the home screen so users can photograph a medicine box in real time, not only pick from the gallery.
 
-**Branch:** `feature/camera-capture`  
+**Branch:** `feature/camera-capture` (merged PR #48)  
 **Phase:** 18 — Advanced Features ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32))
 
 ---
