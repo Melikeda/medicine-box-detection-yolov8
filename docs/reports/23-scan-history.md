@@ -6,6 +6,8 @@ Stores successful analyze results on the device so users can reopen past scans w
 
 **Scope:** Mobile-only (local SQLite). Backend `/api/v1/scans` is out of scope for this MVP slice.
 
+**Branch:** `feature/scan-history` (merged PR #49)
+
 ---
 
 ## Speed impact
