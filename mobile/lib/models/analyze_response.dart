@@ -53,4 +53,19 @@ class AnalyzeResponse {
       disclaimer: json['disclaimer'] as String?,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      if (filename != null) 'filename': filename,
+      'detection_count': detectionCount,
+      'medicines': medicines.map((item) => item.toJson()).toList(),
+      'medicines_compared': medicinesCompared,
+      if (error != null) 'error': error,
+      'summary': summary.toJson(),
+      'ocr_mode': ocrMode,
+      'processing_time_ms': processingTimeMs,
+      if (disclaimer != null) 'disclaimer': disclaimer,
+    };
+  }
 }

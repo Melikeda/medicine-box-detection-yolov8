@@ -20,6 +20,15 @@ class AnalyzeSummary {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'matched_count': matchedCount,
+      'not_found_count': notFoundCount,
+      'not_medicine_box_count': notMedicineBoxCount,
+      'error_count': errorCount,
+    };
+  }
+
   int get total =>
       matchedCount + notFoundCount + notMedicineBoxCount + errorCount;
 }
