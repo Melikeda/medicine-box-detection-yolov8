@@ -1,6 +1,7 @@
 from src.matching.medicine_matcher import (
     calculate_medicine_score,
     is_dosage_or_form_only_text,
+    is_generic_active_ingredient,
     is_generic_single_word,
 )
 from src.matching.text_normalizer import normalize_ocr_text
@@ -51,6 +52,9 @@ def is_valid_base_name_candidate(text: str) -> bool:
     if is_generic_single_word(normalized_text):
         return False
 
+    if is_generic_active_ingredient(normalized_text):
+        return False
+
     return True
 
 
@@ -74,6 +78,9 @@ def is_likely_active_ingredient(text: str) -> bool:
 
     if not is_single_alphabetic_word(normalized_text):
         return False
+
+    if is_generic_active_ingredient(normalized_text):
+        return True
 
     if len(normalized_text) <= 8:
         return False
@@ -200,6 +207,9 @@ def is_valid_matching_candidate(
         return False
 
     if is_generic_single_word(normalized_text):
+        return False
+
+    if is_generic_active_ingredient(normalized_text):
         return False
 
     if is_dosage_or_form_only_text(normalized_text):

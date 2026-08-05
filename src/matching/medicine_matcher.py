@@ -25,6 +25,25 @@ GENERIC_SINGLE_WORDS = {
     "suspension",
 }
 
+# Tek basina OCR okundugunda marka secilemeyen yaygin etken maddeler.
+GENERIC_ACTIVE_INGREDIENTS = frozenset(
+    {
+        "ibuprofen",
+        "paracetamol",
+        "parasetamol",
+        "diclofenac",
+        "naproxen",
+        "dexketoprofen",
+        "flurbiprofen",
+        "codeine",
+        "aspirin",
+        "metamizol",
+        "tramadol",
+    }
+)
+
+ACTIVE_INGREDIENT_ONLY_NAME_SCORE_LIMIT = 65.0
+
 
 def normalize_text(
     text: str,
@@ -63,6 +82,69 @@ def is_generic_single_word(
         return False
 
     return normalized_text in GENERIC_SINGLE_WORDS
+
+
+def is_generic_active_ingredient(text: str) -> bool:
+    """
+    OCR yalnizca yaygin bir etken madde adi ise True.
+
+    Ornek: ibuprofen → Nurofen ve Brufen ayirt edilemez.
+    """
+    normalized_text = normalize_text(text)
+    words = normalized_text.split()
+
+    if len(words) != 1:
+        return False
+
+    return normalized_text in GENERIC_ACTIVE_INGREDIENTS
+
+
+def is_active_ingredient_only_match(
+    query_text: str,
+    medicine: dict[str, str],
+    match_score: float,
+    *,
+    name_score_limit: float = ACTIVE_INGREDIENT_ONLY_NAME_SCORE_LIMIT,
+) -> bool:
+    """
+    Eslesmenin yalnizca active_ingredient alanindan geldigini tespit eder.
+
+    Marka veya urun adi sinyali yoksa yanlis urun secimini engeller.
+    """
+    if match_score < DEFAULT_SCORE_CUTOFF:
+        return False
+
+    active_ingredient = medicine.get("active_ingredient", "").strip()
+
+    if (
+        not active_ingredient
+        or active_ingredient.upper().startswith("VERIFY_FROM_OFFICIAL")
+    ):
+        return False
+
+    ingredient_score = calculate_text_similarity(
+        query_text=query_text,
+        medicine_name=active_ingredient,
+    )
+
+    if ingredient_score < match_score - 0.5:
+        return False
+
+    for field_name in ("medicine_name", "brand_name"):
+        field_value = medicine.get(field_name, "").strip()
+
+        if not field_value:
+            continue
+
+        field_score = calculate_text_similarity(
+            query_text=query_text,
+            medicine_name=field_value,
+        )
+
+        if field_score >= name_score_limit:
+            return False
+
+    return True
 
 
 def _looks_like_brand_word(word: str) -> bool:
@@ -259,6 +341,9 @@ def find_best_medicine_match(
     if is_generic_single_word(cleaned_query):
         return None, 0.0, None
 
+    if is_generic_active_ingredient(cleaned_query):
+        return None, 0.0, None
+
     best_medicine: dict[str, str] | None = None
     best_score = 0.0
     best_medicine_name: str | None = None
@@ -272,6 +357,13 @@ def find_best_medicine_match(
         )
 
         if medicine_name is None:
+            continue
+
+        if is_active_ingredient_only_match(
+            query_text=cleaned_query,
+            medicine=medicine,
+            match_score=score,
+        ):
             continue
 
         is_higher_score = score > best_score
@@ -343,6 +435,9 @@ def find_best_match_from_texts(
             continue
 
         if is_generic_single_word(cleaned_text):
+            continue
+
+        if is_generic_active_ingredient(cleaned_text):
             continue
 
         (

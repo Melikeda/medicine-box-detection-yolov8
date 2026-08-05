@@ -1,5 +1,7 @@
 from src.matching.medicine_matcher import (
+    find_best_medicine_match,
     is_dosage_or_form_only_text,
+    is_generic_active_ingredient,
     normalize_text,
 )
 from src.matching.text_normalizer import normalize_ocr_text
@@ -89,3 +91,48 @@ def test_parafon_exact_match(
     assert result.status == "matched"
     assert result.medicine_name == "Parafon"
     assert result.matching_score == 100.0
+
+
+def test_ibuprofen_only_ocr_does_not_false_match_brufen(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    """Etken madde tek basina okunursa marka secilmemeli (Nurofen -> Brufen hatasi)."""
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+    result = service.match_text(["ibuprofen"])
+
+    assert result.status == "not_found"
+    assert result.medicine_name is None
+
+
+def test_nurofen_brand_still_matches_cold_and_flu(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+    result = service.match_text(["nurofen cold flu"])
+
+    assert result.status == "matched"
+    assert result.medicine_name == "Nurofen Cold & Flu"
+
+
+def test_find_best_medicine_match_rejects_generic_active_ingredient() -> None:
+    from pathlib import Path
+
+    from src.database.csv_reader import load_medicines
+
+    medicines = load_medicines(
+        csv_path=Path("data/database/medicines.csv"),
+    )
+    medicine, score, _ = find_best_medicine_match(
+        query_text="ibuprofen",
+        medicines=medicines,
+    )
+
+    assert medicine is None
+    assert score == 0.0
+    assert is_generic_active_ingredient("ibuprofen")
