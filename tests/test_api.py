@@ -38,7 +38,7 @@ def test_list_medicines_endpoint(medicine_app: TestClient) -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["success"] is True
-    assert payload["total"] == 6
+    assert payload["total"] == 8
     assert payload["source"] == "sqlite"
 
 

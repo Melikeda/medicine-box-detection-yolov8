@@ -20,10 +20,10 @@ def test_seed_creates_expected_medicine_count(
         database_path=sqlite_path,
         replace_existing=True,
     )
-    assert count == 6
+    assert count == 8
 
     medicines = load_medicines_from_sqlite(sqlite_path)
-    assert len(medicines) == 6
+    assert len(medicines) == 8
     assert medicines[0]["medicine_id"] == "MED001"
 
 
@@ -63,7 +63,7 @@ def test_list_and_search_medicines(
 ) -> None:
     with session_scope() as session:
         all_medicines = list_medicines(session, limit=100)
-        assert len(all_medicines) == 6
+        assert len(all_medicines) == 8
 
         search_hits = list_medicines(
             session,
