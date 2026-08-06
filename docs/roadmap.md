@@ -336,6 +336,22 @@ See [Report 18](reports/18-medicine-database-expansion.md).
 
 ---
 
+# Phase 17.6b — Medicine Database Final Refresh
+
+**Branch:** `feature/final-polish-2`  
+**Date:** 2026-08-06
+
+## Objectives
+
+- [x] Re-download TİTCK SKRS (7948 active products)
+- [x] Expand catalog to 131 records (popular OTC + SKRS picks)
+- [x] Fix known bad dosage/form/category rows
+- [x] Re-seed SQLite; update data README and Report 24
+
+See [Report 24](reports/24-medicine-database-final-refresh.md).
+
+---
+
 # Phase 17.7 — Performance Optimization
 
 **Branch:** `feature/performance-improvement`  
@@ -375,9 +391,9 @@ See [Report 20](reports/20-production-hardening.md).
 
 **Branch workflow:** numbered improvement rounds — `feature/final-polish`, `feature/final-polish-2`, … Merge each round when done; open the next branch for the following slice.
 
-**Current round:** `feature/final-polish` (round 1 — open, not merged)
+**Current round:** `feature/final-polish-2` (round 2 — database refresh)
 
-**In this branch (2026-08-05):** camera (#48) and scan history (#49) via main base; matching fix for generic active-ingredient OCR (ibuprofen false match).
+**Round 1 (merged PR #51):** matching fixes, multi-box OCR, garbage filter.
 
 ## Objectives (features, from former Phase 18)
 
@@ -386,7 +402,8 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] Mobile scan history — local SQLite (Report 23)
 - [~] OCR mode UI toggle — deferred (backend/API ready; default `fast` for MVP)
 - [x] Fix active-ingredient-only false matches (ibuprofen → wrong brand, round 1)
-- [x] Multi-box OCR: 180° fast rotation + 270° retry + garbage OCR filter (round 1)
+- [x] Multi-box OCR: supplemental deep retry + garbage OCR filter (round 1)
+- [x] Medicine database final refresh — 131 rows, TİTCK re-sync (Report 24, round 2)
 - [ ] PostgreSQL migration
 - [ ] User scan history (server sync)
 - [ ] Barcode/QR reading

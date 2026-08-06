@@ -20,8 +20,8 @@ MED018,Iburamin Cold,Iburamin,Ibuprofen / Pseudoephedrine Hydrochloride / Chlorp
 MED019,Voltaren,Voltaren,Diclofenac,50 MG,Tablet,Kas ve Eklem
 MED020,Etol Fort,Etol,Etodolac,400 MG,Film Coated Tablet,Kas ve Eklem
 MED021,Muscoflex,Muscoflex,Thiocolchicoside,4 MG,Capsule,Kas Gevşetici
-MED022,Diclomec,Diclomec,Diclofenac,50 G,VERIFY_FROM_OFFICIAL_LEAFLET,Kas ve Eklem
-MED023,Rennie,Rennie,Ordinary Salt Combinations,100 ML,Chewable Tablet,Mide
+MED022,Diclomec,Diclomec,Diclofenac,50 mg,Film Kaplı Tablet,Kas ve Eklem
+MED023,Rennie,Rennie,Ordinary Salt Combinations,680 mg,Çiğnenebilir Tablet,Mide
 MED024,Gaviscon,Gaviscon,Alginic Acid,500 MG / 200 ML,Oral Suspension,Mide
 MED025,Talcid,Talcid,Hydrotalcite,0.5 G,Chewable Tablet,Mide
 MED026,Lansor,Lansor,Lansoprazole,15 MG,Capsule,Mide
@@ -54,7 +54,7 @@ MED052,Tylolhot Day,Tylolhot,"Paracetamol, Combinations Excl. Psycholeptics",500
 MED053,Brufen,Brufen,Ibuprofen,400 MG,Tablet,Kas ve Eklem
 MED054,Brufen Retard,Brufen,Ibuprofen,800 MG,Tablet,Kas ve Eklem
 MED055,Nimes,Nimes,Nimesulide,100 MG,Tablet,Kas ve Eklem
-MED056,Nimes %1,Nimes,Nimesulide,30 G,VERIFY_FROM_OFFICIAL_LEAFLET,Ağrı Kesici
+MED056,Nimes %1,Nimes,Nimesulide,30 G,Tablet,Ağrı Kesici
 MED057,Nimes Combo,Nimes,"Thiocolchicoside, Combinations",100 MG/ 8 MG,Tablet,Kas Gevşetici
 MED058,A-Ferin Sinus,A-Ferin,"Paracetamol, Combinations Excl. Psycholeptics",VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Ağrı Kesici
 MED059,A-Ferin Zero,A-Ferin,Paracetamol,120 MG/5 ML,Şurup,Ağrı Kesici
@@ -82,9 +82,9 @@ MED080,Voltaren Sr,Voltaren,Diclofenac,75 MG,Tablet,Kas ve Eklem
 MED081,Voltaren Emulgel %1,Voltaren,Diclofenac,50 G,VERIFY_FROM_OFFICIAL_LEAFLET,Kas ve Eklem
 MED082,Voltaren Retard,Voltaren,Diclofenac,100 MG,Tablet,Kas ve Eklem
 MED083,"Voltaren Emulgel Forte %2,32 Jel",Voltaren,Diclofenac,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Kas ve Eklem
-MED084,Tegretol %2,Tegretol,Carbamazepine,100 ML,Şurup,Kas ve Eklem
-MED085,Tegretol,Tegretol,Carbamazepine,200 MG,Tablet,Kas ve Eklem
-MED086,Tegretol Cr,Tegretol,Carbamazepine,200 MG,Tablet,Kas ve Eklem
+MED084,Tegretol %2,Tegretol,Carbamazepine,100 ML,Şurup,Nöroloji
+MED085,Tegretol,Tegretol,Carbamazepine,200 MG,Tablet,Nöroloji
+MED086,Tegretol Cr,Tegretol,Carbamazepine,200 MG,Tablet,Nöroloji
 MED087,Pantpas,Pantpas,Pantoprazole,40 MG,Tablet,Mide
 MED088,Nexium,Nexium,Esomeprazole,20 MG,Tablet,Mide
 MED089,Rennie Duo,Rennie,Alginic Acid,100 ML,Süspansiyon,Mide
@@ -103,6 +103,30 @@ MED101,Otrivine Mentol %0.1,Otrivine,Xylometazoline,10 ML,VERIFY_FROM_OFFICIAL_L
 MED102,Otrivine Ped.Doz Ayarli Sprey,Otrivine,Xylometazoline,10 ML,VERIFY_FROM_OFFICIAL_LEAFLET,Soğuk Algınlığı
 MED103,Otrivine Doz Ayarli,Otrivine,Xylometazoline,10 ML,VERIFY_FROM_OFFICIAL_LEAFLET,Soğuk Algınlığı
 MED104,Otrivine Care,Otrivine,Xylometazoline,1MG,VERIFY_FROM_OFFICIAL_LEAFLET,Soğuk Algınlığı
-MED105,Bepanthen,Bepanthen,Dexpanthenol,VERIFY_FROM_OFFICIAL_LEAFLET,VERIFY_FROM_OFFICIAL_LEAFLET,Vitamin ve Mineral
-MED106,Bepanthene,Bepanthene,Dexpanthenol,500 MG,VERIFY_FROM_OFFICIAL_LEAFLET,Vitamin ve Mineral
+MED105,Bepanthen,Bepanthen,Dexpanthenol,VERIFY_FROM_OFFICIAL_LEAFLET,Krem,Genel
+MED106,Bepanthene,Bepanthene,Dexpanthenol,500 MG,VERIFY_FROM_OFFICIAL_LEAFLET,Genel
 MED107,Bepanthen Plus Krem,Bepanthen,Dexpanthenol,30 G,Krem,Genel
+MED108,Tylol Plus,Tylol,"Paracetamol, Combinations Excl. Psycholeptics",VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Ağrı Kesici
+MED109,Klamoks Fort,Klamoks,Amoxicillin And Enzyme Inhibitor,312.5 MG / 100 ML,Süspansiyon,Antibiyotik
+MED110,Klamoks Es,Klamoks,Amoxicillin And Enzyme Inhibitor,42.9 MG / 100 ML,Süspansiyon,Antibiyotik
+MED111,Parcetol,Parcetol,Paracetamol,500 MG,Tablet,Ağrı Kesici
+MED112,Etolax,Etolax,"Thiocolchicoside, Combinations",500 MG/8 MG,Tablet,Kas Gevşetici
+MED113,Etol Sr,Etol,Etodolac,600 MG,Tablet,Kas ve Eklem
+MED114,Gaviscon Infant,Gaviscon,Alginic Acid,225 MG / 87.5 MG,Saşe,Mide
+MED115,Mucosolvan,Mucosolvan,Ambroxol HCl,30 mg/5 ml,Şurup,Öksürük İlacı
+MED116,Mucosolvan Tablet,Mucosolvan,Ambroxol HCl,30 mg,Tablet,Öksürük İlacı
+MED117,Bisolvon,Bisolvon,Bromhexine HCl,8 mg,Tablet,Öksürük İlacı
+MED118,Mydocalm,Mydocalm,Tolperisone HCl,150 mg,Tablet,Kas Gevşetici
+MED119,Mesulid,Mesulid,Nimesulide,100 mg,Tablet,Ağrı Kesici
+MED120,Redoxon,Redoxon,Ascorbic Acid,1000 mg,Efervesan Tablet,Vitamin ve Mineral
+MED121,Berocca,Berocca,Multivitamin / Mineral,Combined tablet,Efervesan Tablet,Vitamin ve Mineral
+MED122,Sinutab,Sinutab,Paracetamol / Pseudoephedrine,500 mg / 30 mg,Tablet,Soğuk Algınlığı
+MED123,Minol,Minol,Paracetamol,500 mg,Tablet,Ağrı Kesici
+MED124,Strepsils,Strepsils,Amylmetacresol / Dichlorobenzyl Alcohol,Combined lozenge,Pastil,Soğuk Algınlığı
+MED125,Deflamax,Deflamax,Diclofenac Potassium,50 mg,Tablet,Ağrı Kesici
+MED126,Mobilat,Mobilat,Etofenamate,Combined gel,Jel,Kas ve Eklem
+MED127,Pharmaton,Pharmaton,Multivitamin / Ginseng extract,Combined capsule,Kapsül,Vitamin ve Mineral
+MED128,Advil Liqui-Gels,Advil,Ibuprofen,200 MG,Kapsül,Kas ve Eklem
+MED129,Dolgit %5 Krem (50 G),Dolgit,Ibuprofen,50 G,Krem,Kas ve Eklem
+MED130,Klacid,Klacid,Clarithromycin,500 MG,Tablet,Antibiyotik
+MED131,Differin %,Differin,Adapalene,30 G,VERIFY_FROM_OFFICIAL_LEAFLET,Genel

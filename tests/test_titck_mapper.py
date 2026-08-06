@@ -107,3 +107,19 @@ def test_manual_override_nurofen() -> None:
 def test_category_from_atc_prefix() -> None:
     assert category_from_atc("N02BE01") == "Ağrı Kesici"
     assert category_from_atc("J01CR02") == "Antibiyotik"
+
+
+def test_row_corrections_fix_known_bad_fields() -> None:
+    corrected = apply_manual_overrides(
+        {
+            "medicine_id": "MED022",
+            "medicine_name": "Diclomec",
+            "brand_name": "Diclomec",
+            "active_ingredient": "Diclofenac",
+            "dosage": "50 G",
+            "form": "VERIFY_FROM_OFFICIAL_LEAFLET",
+            "category": "Kas ve Eklem",
+        }
+    )
+    assert corrected["dosage"] == "50 mg"
+    assert corrected["form"] == "Film Kaplı Tablet"
