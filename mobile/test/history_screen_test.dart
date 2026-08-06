@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:medicine_box_app/l10n/app_localizations.dart';
 import 'package:medicine_box_app/models/analyze_response.dart';
 import 'package:medicine_box_app/models/analyze_summary.dart';
 import 'package:medicine_box_app/models/medicine_box_result.dart';
@@ -17,20 +18,32 @@ class _FakeHistoryService extends ScanHistoryService {
   Future<List<ScanHistoryEntry>> listScans({int? limit}) async => entries;
 }
 
+Widget _wrap(Widget child) {
+  final locale = LocaleController();
+  return LocaleScope(
+    controller: locale,
+    child: ListenableBuilder(
+      listenable: locale,
+      builder: (context, _) => MaterialApp(home: child),
+    ),
+  );
+}
+
 void main() {
   testWidgets('History screen shows empty state', (tester) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: HistoryScreen(
+      _wrap(
+        HistoryScreen(
           historyService: _FakeHistoryService(const []),
         ),
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Tarama Gecmisi'), findsOneWidget);
-    expect(find.text('Henuz kayit yok'), findsOneWidget);
+    expect(find.text('Tarama Geçmişi'), findsOneWidget);
+    expect(find.text('Henüz kayıt yok'), findsOneWidget);
   });
 
   testWidgets('History screen lists saved scans', (tester) async {
@@ -62,14 +75,15 @@ void main() {
     ];
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: HistoryScreen(
+      _wrap(
+        HistoryScreen(
           historyService: _FakeHistoryService(entries),
         ),
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     expect(find.text('A-Ferin Forte, Dolorex'), findsOneWidget);
     expect(find.textContaining('2 kutu'), findsOneWidget);
