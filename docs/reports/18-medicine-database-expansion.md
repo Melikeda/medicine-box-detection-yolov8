@@ -95,3 +95,5 @@ Notable fixes:
 - Periodic re-run of `fetch_titck_skrs.py` when TİTCK publishes updates
 - Further reduce placeholders for topicals (gel/cream) via form-specific parsers
 - Optional CI job to validate CSV on `data/database/**` changes
+
+**Later refresh:** [Report 24 — Final refresh (131 rows)](24-medicine-database-final-refresh.md) on `feature/final-polish-2`.

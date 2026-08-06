@@ -85,11 +85,12 @@ class ScanHistoryService {
     await _trimOldEntries(db);
   }
 
-  Future<List<ScanHistoryEntry>> listScans() async {
+  Future<List<ScanHistoryEntry>> listScans({int? limit}) async {
     final db = await _db();
     final rows = await db.query(
       _tableName,
       orderBy: 'created_at DESC',
+      limit: limit,
     );
 
     return rows.map(_entryFromRow).toList();

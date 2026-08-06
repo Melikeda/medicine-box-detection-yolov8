@@ -2,7 +2,7 @@
 class AppConfig {
   AppConfig._();
 
-  static const String appName = 'Ilac Kutusu Tanima';
+  static const String appName = 'Yolocilin';
 
   /// Android emulator icin host makine localhost adresi.
   /// Fiziksel cihazda gelistirme makinesinin LAN IP'si ile override edilebilir.

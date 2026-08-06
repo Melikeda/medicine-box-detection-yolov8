@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/medicine_box_result.dart';
 import '../utils/medicine_display.dart';
+import '../theme/app_colors.dart';
 import 'medicine_explanation_section.dart';
 
 class MedicineResultCard extends StatelessWidget {
@@ -17,9 +18,14 @@ class MedicineResultCard extends StatelessWidget {
     final theme = Theme.of(context);
     final statusColor = _statusColor(theme, result.status);
 
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: statusColor.withValues(alpha: 0.12)),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -35,11 +41,23 @@ class MedicineResultCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Chip(
-                  label: Text(_statusLabel(result.status)),
-                  backgroundColor: statusColor.withValues(alpha: 0.12),
-                  labelStyle: TextStyle(color: statusColor),
-                  visualDensity: VisualDensity.compact,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    _statusLabel(result.status),
+                    style: TextStyle(
+                      color: statusColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -106,11 +124,11 @@ class MedicineResultCard extends StatelessWidget {
   Color _statusColor(ThemeData theme, String status) {
     switch (status) {
       case 'matched':
-        return Colors.green.shade700;
+        return AppColors.success;
       case 'not_found':
-        return Colors.orange.shade800;
+        return AppColors.warning;
       case 'not_medicine_box':
-        return Colors.blueGrey;
+        return AppColors.textSecondary;
       default:
         return theme.colorScheme.error;
     }

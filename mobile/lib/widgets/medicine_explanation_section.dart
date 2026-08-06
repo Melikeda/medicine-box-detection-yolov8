@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/explain_response.dart';
 import '../services/analyze_api_exception.dart';
 import '../services/explain_api_service.dart';
@@ -102,7 +103,7 @@ class _MedicineExplanationSectionState
           size: 22,
         ),
         title: Text(
-          'Ilac hakkinda',
+          context.s.aboutMedicine,
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
           ),

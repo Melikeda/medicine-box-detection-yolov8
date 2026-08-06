@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:medicine_box_app/l10n/app_localizations.dart';
 import 'package:medicine_box_app/models/analyze_response.dart';
 import 'package:medicine_box_app/models/analyze_summary.dart';
 import 'package:medicine_box_app/models/medicine_box_result.dart';
 import 'package:medicine_box_app/screens/result_screen.dart';
+
+Widget _wrap(Widget child) {
+  final locale = LocaleController();
+  return LocaleScope(
+    controller: locale,
+    child: ListenableBuilder(
+      listenable: locale,
+      builder: (context, _) => MaterialApp(home: child),
+    ),
+  );
+}
 
 void main() {
   testWidgets('Result screen shows summary and medicine card', (tester) async {
@@ -31,13 +43,12 @@ void main() {
     );
 
     await tester.pumpWidget(
-      const MaterialApp(
-        home: ResultScreen(response: response),
-      ),
+      _wrap(const ResultScreen(response: response)),
     );
+    await tester.pump();
 
     expect(find.text('Analiz Sonucu'), findsOneWidget);
-    expect(find.text('Eslesti: 1'), findsOneWidget);
+    expect(find.text('Eşleşti: 1'), findsOneWidget);
     expect(find.text('Kutu 1'), findsOneWidget);
     expect(find.text('Parol 500 mg'), findsOneWidget);
     expect(

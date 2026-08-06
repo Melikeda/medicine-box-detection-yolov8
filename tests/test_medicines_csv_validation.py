@@ -13,7 +13,7 @@ MEDICINES_CSV = PROJECT_ROOT / "data/database/medicines.csv"
 def test_medicines_csv_structure_and_minimum_size() -> None:
     errors, stats = validate_csv(MEDICINES_CSV)
     assert not errors, errors
-    assert stats["rows"] >= 100
+    assert stats["rows"] >= 130
     assert stats["duplicate_ids"] == 0
 
 

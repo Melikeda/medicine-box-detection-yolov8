@@ -7,6 +7,8 @@ import '../routes/app_router.dart';
 import '../services/analyze_api_exception.dart';
 import '../services/analyze_api_service.dart';
 import '../services/scan_history_service.dart';
+import '../theme/app_colors.dart';
+import '../widgets/loading_overlay.dart';
 
 class ImagePreviewScreen extends StatefulWidget {
   const ImagePreviewScreen({
@@ -117,22 +119,34 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Onizleme'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+          onPressed: _isAnalyzing ? null : () => Navigator.of(context).pop(),
+        ),
       ),
       body: SafeArea(
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceContainerHighest,
-                        ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.06),
+                            blurRadius: 20,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
                         child: Image.file(
                           file,
                           fit: BoxFit.contain,
@@ -141,26 +155,30 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.cloud_upload_outlined,
-                            color: theme.colorScheme.primary,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'Analiz, FastAPI uzerindeki YOLO + OCR '
-                              'pipeline\'ini calistirir.',
-                              style: theme.textTheme.bodyMedium,
+                  const SizedBox(height: 20),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.cameraCard,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.auto_awesome_outlined,
+                          color: AppColors.cameraIcon,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Analiz, YOLO tespiti ve OCR ile ilac '
+                            'kutularini tanir.',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: AppColors.primary,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -170,48 +188,32 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
                           )
-                        : const Icon(Icons.search),
+                        : const Icon(Icons.search_rounded),
                     label: Text(
                       _isAnalyzing ? 'Analiz ediliyor...' : 'Analiz Et',
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   OutlinedButton.icon(
                     onPressed: _isAnalyzing
                         ? null
                         : () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.arrow_back),
-                    label: const Text('Geri Don'),
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: const Text('Baska fotograf sec'),
                   ),
                 ],
               ),
             ),
             if (_isAnalyzing)
-              ColoredBox(
-                color: Colors.black.withValues(alpha: 0.25),
-                child: const Center(
-                  child: Card(
-                    child: Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 16),
-                          Text('Ilac kutusu analiz ediliyor...'),
-                          SizedBox(height: 4),
-                          Text(
-                            'CPU uzerinde OCR 1-3 dakika surebilir (fast mod).',
-                            style: TextStyle(fontSize: 12),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              const LoadingOverlay(
+                message: 'Ilac kutusu analiz ediliyor...',
+                subtitle:
+                    'CPU uzerinde OCR 1-3 dakika surebilir (fast mod).',
               ),
           ],
         ),

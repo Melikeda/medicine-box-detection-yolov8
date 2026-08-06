@@ -1,6 +1,6 @@
-# Flutter Mobile App
+# Yolocilin Mobile App
 
-Android MVP client for the Medicine Box Detection System.
+Android MVP client for the Yolocilin medicine box detection system.
 
 **Branch:** `feature/mobile-integration`  
 **GitHub Issue:** [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)

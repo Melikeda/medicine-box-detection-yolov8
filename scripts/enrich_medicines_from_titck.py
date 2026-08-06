@@ -17,6 +17,7 @@ from scripts.titck.medicine_mapper import (
     enrich_row_from_titck,
     normalize_match_text,
 )
+from scripts.titck.popular_manual_rows import append_popular_manual_rows
 from scripts.titck.skrs_client import DEFAULT_OUTPUT_DIR, load_skrs_dataframe, resolve_xlsx_path
 
 CSV_FIELDS = [
@@ -108,6 +109,17 @@ def main() -> None:
             start_index=start_index,
         )
         enriched_rows.extend(expansion)
+        existing_names = {
+            normalize_match_text(row["medicine_name"])
+            for row in enriched_rows
+        }
+        start_index = next_medicine_index(enriched_rows)
+        popular_rows = append_popular_manual_rows(
+            enriched_rows,
+            frame,
+            start_index=start_index,
+        )
+        enriched_rows.extend(popular_rows)
 
     if args.dry_run:
         print(f"Rows total: {len(enriched_rows)}")
