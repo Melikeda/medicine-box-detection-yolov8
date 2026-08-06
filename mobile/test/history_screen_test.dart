@@ -14,7 +14,7 @@ class _FakeHistoryService extends ScanHistoryService {
   final List<ScanHistoryEntry> entries;
 
   @override
-  Future<List<ScanHistoryEntry>> listScans() async => entries;
+  Future<List<ScanHistoryEntry>> listScans({int? limit}) async => entries;
 }
 
 void main() {

@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/scan_history_entry.dart';
 import '../routes/app_router.dart';
 import '../services/scan_history_service.dart';
+import '../theme/app_colors.dart';
+import '../widgets/animated_pastel_background.dart';
+import '../widgets/empty_state.dart';
+import '../widgets/language_toggle.dart';
+import '../widgets/recent_scan_tile.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({
     super.key,
     this.historyService,
+    this.embedded = false,
+    this.onEntryOpened,
   });
 
   final ScanHistoryService? historyService;
+  final bool embedded;
+  final VoidCallback? onEntryOpened;
 
   @override
-  State<HistoryScreen> createState() => _HistoryScreenState();
+  State<HistoryScreen> createState() => HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> {
+class HistoryScreenState extends State<HistoryScreen> {
   late final ScanHistoryService _historyService;
   late Future<List<ScanHistoryEntry>> _entriesFuture;
 
@@ -33,6 +43,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 
+  void reload() => _reload();
+
   Future<void> _openEntry(ScanHistoryEntry entry) async {
     await Navigator.of(context).pushNamed(
       AppRoutes.result,
@@ -41,6 +53,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         imagePath: entry.imagePath,
       ),
     );
+    widget.onEntryOpened?.call();
+    _reload();
   }
 
   Future<void> _deleteEntry(ScanHistoryEntry entry) async {
@@ -50,25 +64,26 @@ class _HistoryScreenState extends State<HistoryScreen> {
     }
     _reload();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Kayit silindi')),
+      SnackBar(content: Text(context.s.deleted)),
     );
   }
 
   Future<void> _clearAll() async {
+    final s = context.s;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Gecmisi temizle'),
-          content: const Text('Tum tarama kayitlari silinsin mi?'),
+          title: Text(s.clearHistory),
+          content: Text(s.clearHistoryConfirm),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Iptal'),
+              child: Text(s.cancel),
             ),
             FilledButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Sil'),
+              child: Text(s.delete),
             ),
           ],
         );
@@ -86,132 +101,150 @@ class _HistoryScreenState extends State<HistoryScreen> {
     _reload();
   }
 
+  Widget _buildBody() {
+    final theme = Theme.of(context);
+    final s = context.s;
+
+    return FutureBuilder<List<ScanHistoryEntry>>(
+      future: _entriesFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('${s.historyLoadError}: ${snapshot.error}'),
+          );
+        }
+
+        final entries = snapshot.data ?? const [];
+        if (entries.isEmpty) {
+          return Center(
+            child: EmptyState(
+              icon: Icons.history_rounded,
+              title: s.historyEmptyTitle,
+              message: s.historyEmptyBody,
+            ),
+          );
+        }
+
+        return ListView.separated(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            widget.embedded ? 8 : 16,
+            20,
+            24,
+          ),
+          itemCount: entries.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          itemBuilder: (context, index) {
+            final entry = entries[index];
+            return Dismissible(
+              key: ValueKey(entry.id),
+              direction: DismissDirection.endToStart,
+              background: Container(
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 20),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(
+                  Icons.delete_outline,
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+              ),
+              confirmDismiss: (_) async {
+                return await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(s.deleteEntry),
+                        content: Text(s.deleteEntryConfirm),
+                        actions: [
+                          TextButton(
+                            onPressed: () =>
+                                Navigator.of(context).pop(false),
+                            child: Text(s.cancel),
+                          ),
+                          FilledButton(
+                            onPressed: () =>
+                                Navigator.of(context).pop(true),
+                            child: Text(s.delete),
+                          ),
+                        ],
+                      ),
+                    ) ??
+                    false;
+              },
+              onDismissed: (_) => _deleteEntry(entry),
+              child: RecentScanTile(
+                entry: entry,
+                onTap: () => _openEntry(entry),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final s = context.s;
+
+    if (widget.embedded) {
+      return AnimatedPastelBackground(
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 12, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        s.historyTitle,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium
+                            ?.copyWith(
+                              fontSize: 24,
+                              fontStyle: FontStyle.normal,
+                              color: AppColors.primary,
+                            ),
+                      ),
+                    ),
+                    const LanguageToggle(),
+                    IconButton(
+                      tooltip: s.clearAllTooltip,
+                      onPressed: _clearAll,
+                      icon: const Icon(Icons.delete_sweep_outlined),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: _buildBody()),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tarama Gecmisi'),
+        title: Text(s.historyTitle),
         actions: [
           IconButton(
-            tooltip: 'Tumunu sil',
+            tooltip: s.clearAllTooltip,
             onPressed: _clearAll,
             icon: const Icon(Icons.delete_sweep_outlined),
           ),
         ],
       ),
-      body: FutureBuilder<List<ScanHistoryEntry>>(
-        future: _entriesFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('Gecmis yuklenemedi: ${snapshot.error}'),
-            );
-          }
-
-          final entries = snapshot.data ?? const [];
-          if (entries.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.history,
-                      size: 56,
-                      color: theme.colorScheme.primary.withValues(alpha: 0.7),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Henuz kayit yok',
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Basarili analizler otomatik olarak burada listelenir.',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withValues(
-                          alpha: 0.7,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: entries.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final entry = entries[index];
-              return Dismissible(
-                key: ValueKey(entry.id),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 20),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.errorContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.delete_outline,
-                    color: theme.colorScheme.onErrorContainer,
-                  ),
-                ),
-                confirmDismiss: (_) async {
-                  return await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Kaydi sil'),
-                          content: const Text('Bu tarama kaydi silinsin mi?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () =>
-                                  Navigator.of(context).pop(false),
-                              child: const Text('Iptal'),
-                            ),
-                            FilledButton(
-                              onPressed: () =>
-                                  Navigator.of(context).pop(true),
-                              child: const Text('Sil'),
-                            ),
-                          ],
-                        ),
-                      ) ??
-                      false;
-                },
-                onDismissed: (_) => _deleteEntry(entry),
-                child: Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Text('${entry.detectionCount}'),
-                    ),
-                    title: Text(
-                      entry.previewLabel,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Text(entry.subtitle),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => _openEntry(entry),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
+      body: _buildBody(),
     );
   }
 }

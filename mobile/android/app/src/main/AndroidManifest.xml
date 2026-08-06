@@ -11,7 +11,7 @@
         android:required="false" />
 
     <application
-        android:label="Ilac Kutusu Tanima"
+        android:label="Yolocilin"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:networkSecurityConfig="@xml/network_security_config"

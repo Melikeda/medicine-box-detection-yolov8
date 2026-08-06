@@ -1,5 +1,5 @@
 name: medicine_box_app
-description: Medicine box detection mobile client for the YOLOv8 + FastAPI pipeline.
+description: Yolocilin — medicine box detection mobile client for the YOLOv8 + FastAPI pipeline.
 publish_to: "none"
 version: 0.1.0+1
 
@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  google_fonts: ^6.2.1
   http: ^1.2.2
   http_parser: ^4.0.2
   image_picker: ^1.1.2

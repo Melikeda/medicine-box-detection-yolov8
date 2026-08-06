@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/analyze_response.dart';
-import '../screens/history_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/image_preview_screen.dart';
 import '../screens/result_screen.dart';
@@ -41,7 +40,7 @@ class AppRoutes {
       case history:
         return MaterialPageRoute<void>(
           settings: settings,
-          builder: (_) => const HistoryScreen(),
+          builder: (_) => const HomeScreen(initialTab: 2),
         );
       case imagePreview:
         final imagePath = settings.arguments as String?;
