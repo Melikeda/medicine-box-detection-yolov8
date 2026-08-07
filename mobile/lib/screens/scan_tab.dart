@@ -68,26 +68,11 @@ class ScanTab extends StatelessWidget {
                 onTryCamera: onCameraTap,
               ),
               const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _CameraActionCard(
-                      title: s.takePhoto,
-                      subtitle: s.takePhotoHint,
-                      isLoading: _isLoading(PickSource.camera),
-                      onTap: onCameraTap,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _GalleryActionCard(
-                      title: s.pickGallery,
-                      subtitle: s.pickGalleryHint,
-                      isLoading: _isLoading(PickSource.gallery),
-                      onTap: onGalleryTap,
-                    ),
-                  ),
-                ],
+              _GalleryActionCard(
+                title: s.pickGallery,
+                subtitle: s.pickGalleryHint,
+                isLoading: _isLoading(PickSource.gallery),
+                onTap: onGalleryTap,
               ),
               const SizedBox(height: 12),
             ],
@@ -183,7 +168,7 @@ class _ScanViewfinderState extends State<_ScanViewfinder>
                         CustomPaint(
                           size: const Size(148, 148),
                           painter: _CornerBracketPainter(
-                            color: const Color(0xFF38BDF8),
+                            color: AppColors.accentLight,
                           ),
                         ),
                         AnimatedBuilder(
@@ -201,14 +186,14 @@ class _ScanViewfinderState extends State<_ScanViewfinder>
                                   gradient: LinearGradient(
                                     colors: [
                                       Colors.transparent,
-                                      const Color(0xFF38BDF8)
+                                      AppColors.accentLight
                                           .withValues(alpha: 0.95),
                                       Colors.transparent,
                                     ],
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF38BDF8)
+                                      color: AppColors.accentLight
                                           .withValues(alpha: 0.55),
                                       blurRadius: 8,
                                     ),
@@ -251,7 +236,7 @@ class _ScanViewfinderState extends State<_ScanViewfinder>
                           width: 34,
                           height: 34,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0284C7).withValues(alpha: 0.35),
+                            color: AppColors.teal.withValues(alpha: 0.45),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: widget.isLoading
@@ -265,7 +250,7 @@ class _ScanViewfinderState extends State<_ScanViewfinder>
                               : const Icon(
                                   Icons.center_focus_strong_rounded,
                                   size: 20,
-                                  color: Color(0xFF7DD3FC),
+                                  color: AppColors.accentLight,
                                 ),
                         ),
                         const SizedBox(width: 10),
@@ -419,171 +404,6 @@ class _RealisticQrPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class _CameraActionCard extends StatelessWidget {
-  const _CameraActionCard({
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    this.isLoading = false,
-  });
-
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  final bool isLoading;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: isLoading ? null : onTap,
-        borderRadius: BorderRadius.circular(22),
-        child: Ink(
-          height: 176,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFFE0F2FE),
-                Color(0xFFBAE6FD),
-                Color(0xFF7DD3FC),
-              ],
-            ),
-            border: Border.all(color: const Color(0xFF7DD3FC)),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.cameraIcon.withValues(alpha: 0.18),
-                blurRadius: 14,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(child: _RealisticCameraLens(isLoading: isLoading)),
-                const Spacer(),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 10.5,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RealisticCameraLens extends StatelessWidget {
-  const _RealisticCameraLens({this.isLoading = false});
-
-  final bool isLoading;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 70,
-      height: 70,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: 70,
-            height: 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1E293B),
-                  Color(0xFF334155),
-                  Color(0xFF0F172A),
-                ],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: const RadialGradient(
-                colors: [
-                  Color(0xFF38BDF8),
-                  Color(0xFF0284C7),
-                  Color(0xFF0C4A6E),
-                ],
-              ),
-              border: Border.all(color: const Color(0xFF94A3B8), width: 3),
-            ),
-            child: isLoading
-                ? const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : Center(
-                    child: Container(
-                      width: 16,
-                      height: 16,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.25),
-                      ),
-                    ),
-                  ),
-          ),
-          Positioned(
-            top: 10,
-            right: 14,
-            child: Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF87171),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _GalleryActionCard extends StatelessWidget {
   const _GalleryActionCard({
     required this.title,
@@ -603,21 +423,20 @@ class _GalleryActionCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: isLoading ? null : onTap,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(24),
         child: Ink(
-          height: 176,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(24),
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color(0xFFCCFBF1),
-                Color(0xFF99F6E4),
-                Color(0xFF5EEAD4),
+                AppColors.pastelGreen,
+                AppColors.pastelAqua,
+                Color(0xFF95D5B2),
               ],
             ),
-            border: Border.all(color: const Color(0xFF5EEAD4)),
+            border: Border.all(color: AppColors.medicineSage),
             boxShadow: [
               BoxShadow(
                 color: AppColors.galleryIcon.withValues(alpha: 0.16),
@@ -627,39 +446,49 @@ class _GalleryActionCard extends StatelessWidget {
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),
+            child: Row(
               children: [
-                Center(
-                  child: isLoading
-                      ? const SizedBox(
-                          width: 36,
-                          height: 36,
+                isLoading
+                    ? const SizedBox(
+                        width: 74,
+                        height: 74,
+                        child: Center(
                           child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const _GalleryThumbGrid(),
-                ),
-                const Spacer(),
-                Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                        ),
+                      )
+                    : const _GalleryThumbGrid(),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.poppins(
+                          fontSize: 12.5,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.poppins(
-                    fontSize: 10.5,
-                    color: AppColors.textSecondary,
-                  ),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  color: AppColors.darkGreen.withValues(alpha: 0.55),
                 ),
               ],
             ),

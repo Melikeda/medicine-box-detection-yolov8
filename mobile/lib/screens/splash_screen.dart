@@ -79,9 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      context.locale.isTurkish
-                          ? 'İlaç Kutusu Tanıma'
-                          : 'Medicine Box Recognition',
+                      context.s.splashTagline,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 13,

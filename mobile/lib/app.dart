@@ -16,6 +16,12 @@ class _MedicineBoxAppState extends State<MedicineBoxApp> {
   final LocaleController _localeController = LocaleController();
 
   @override
+  void initState() {
+    super.initState();
+    _localeController.loadSaved();
+  }
+
+  @override
   void dispose() {
     _localeController.dispose();
     super.dispose();

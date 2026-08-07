@@ -211,9 +211,9 @@ class _CapsuleBackgroundState extends State<CapsuleBackground>
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Color(0xFFF7FAFC),
-                Color(0xFFF2F6F8),
-                Color(0xFFF8FAFB),
+                Color(0xFFF3FAF5),
+                Color(0xFFE8F5EE),
+                Color(0xFFF7FBF8),
               ],
             ),
           ),

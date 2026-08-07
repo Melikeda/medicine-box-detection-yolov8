@@ -45,7 +45,8 @@ class AppTheme {
     const colorScheme = ColorScheme.light(
       primary: AppColors.teal,
       onPrimary: Colors.white,
-      secondary: AppColors.accent,
+      secondary: AppColors.pastelAqua,
+      onSecondary: AppColors.darkGreen,
       surface: AppColors.surface,
       onSurface: AppColors.primary,
       error: Color(0xFFC62828),

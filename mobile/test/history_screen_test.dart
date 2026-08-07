@@ -87,5 +87,6 @@ void main() {
 
     expect(find.text('A-Ferin Forte, Dolorex'), findsOneWidget);
     expect(find.textContaining('2 kutu'), findsOneWidget);
+    expect(find.textContaining('eşleşti'), findsOneWidget);
   });
 }

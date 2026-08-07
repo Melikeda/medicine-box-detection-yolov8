@@ -77,8 +77,10 @@ class ResultScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Sure: ${(response.processingTimeMs / 1000).toStringAsFixed(1)} sn'
-                    ' · OCR: ${response.ocrMode}',
+                    s.durationLine(
+                      seconds: response.processingTimeMs / 1000,
+                      ocrMode: response.ocrMode,
+                    ),
                     style: theme.textTheme.bodySmall,
                   ),
                   if (response.error != null && response.error!.isNotEmpty) ...[

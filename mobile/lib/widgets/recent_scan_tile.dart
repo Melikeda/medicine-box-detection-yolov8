@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/scan_history_entry.dart';
 import '../theme/app_colors.dart';
 
@@ -16,6 +17,7 @@ class RecentScanTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = context.s;
 
     return Material(
       color: Colors.white,
@@ -57,7 +59,7 @@ class RecentScanTile extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      entry.subtitle,
+                      entry.subtitleFor(s),
                       style: theme.textTheme.bodySmall,
                     ),
                   ],

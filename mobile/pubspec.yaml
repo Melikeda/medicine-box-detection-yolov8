@@ -16,12 +16,25 @@ dependencies:
   path: ^1.9.0
   path_provider: ^2.1.4
   sqflite: ^2.3.3+1
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   sqflite_common_ffi: ^2.3.3
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/branding/app_logo.png
+  adaptive_icon_background: "#E8F5EE"
+  adaptive_icon_foreground: assets/branding/app_logo.png
+  min_sdk_android: 21
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/illustrations/yolocilin_vial_banner.png
+    - assets/branding/app_logo.png

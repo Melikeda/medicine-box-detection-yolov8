@@ -32,6 +32,14 @@ class ScanHistoryService {
     return _database!;
   }
 
+  Future<void> close() async {
+    final db = _database;
+    _database = null;
+    if (db != null) {
+      await db.close();
+    }
+  }
+
   static Future<Database> _defaultOpenDatabase() async {
     final documentsDir = await getApplicationDocumentsDirectory();
     final dbPath = p.join(documentsDir.path, _dbName);

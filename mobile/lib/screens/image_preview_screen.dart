@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../routes/app_router.dart';
 import '../services/analyze_api_exception.dart';
 import '../services/analyze_api_service.dart';
@@ -51,6 +52,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
       return;
     }
 
+    final s = context.s;
     setState(() => _isAnalyzing = true);
 
     try {
@@ -59,10 +61,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
         if (!mounted) {
           return;
         }
-        _showError(
-          'Backend hazir degil veya modeller yuklenmedi.\n'
-          'Once python run_api.py calistirin.',
-        );
+        _showError(s.backendNotReady);
         return;
       }
 
@@ -97,7 +96,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
       if (!mounted) {
         return;
       }
-      _showError('Beklenmeyen hata: $error');
+      _showError(context.s.unexpectedErrorWith(error));
     } finally {
       if (mounted) {
         setState(() => _isAnalyzing = false);
@@ -114,11 +113,12 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = context.s;
     final file = File(widget.imagePath);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Onizleme'),
+        title: Text(s.previewTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
           onPressed: _isAnalyzing ? null : () => Navigator.of(context).pop(),
@@ -171,8 +171,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Analiz, YOLO tespiti ve OCR ile ilac '
-                            'kutularini tanir.',
+                            s.previewHint,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: AppColors.primary,
                             ),
@@ -194,9 +193,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                             ),
                           )
                         : const Icon(Icons.search_rounded),
-                    label: Text(
-                      _isAnalyzing ? 'Analiz ediliyor...' : 'Analiz Et',
-                    ),
+                    label: Text(_isAnalyzing ? s.analyzing : s.analyze),
                   ),
                   const SizedBox(height: 10),
                   OutlinedButton.icon(
@@ -204,16 +201,15 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                         ? null
                         : () => Navigator.of(context).pop(),
                     icon: const Icon(Icons.refresh_rounded),
-                    label: const Text('Baska fotograf sec'),
+                    label: Text(s.chooseAnotherPhoto),
                   ),
                 ],
               ),
             ),
             if (_isAnalyzing)
-              const LoadingOverlay(
-                message: 'Ilac kutusu analiz ediliyor...',
-                subtitle:
-                    'CPU uzerinde OCR 1-3 dakika surebilir (fast mod).',
+              LoadingOverlay(
+                message: s.analyzingOverlay,
+                subtitle: s.analyzingOverlayHint,
               ),
           ],
         ),
