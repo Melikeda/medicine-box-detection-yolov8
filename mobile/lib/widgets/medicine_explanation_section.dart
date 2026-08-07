@@ -74,7 +74,7 @@ class _MedicineExplanationSectionState
       }
       setState(() {
         _loading = false;
-        _error = 'Aciklama yuklenemedi.';
+        _error = context.s.explanationFailed;
       });
     }
   }
@@ -141,7 +141,7 @@ class _MedicineExplanationSectionState
                     _loadExplanation();
                   },
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Tekrar dene'),
+                  label: Text(context.s.retry),
                 ),
               ],
             )

@@ -47,7 +47,14 @@ void main() {
   });
 
   tearDown(() async {
-    await tempDir.delete(recursive: true);
+    await service.close();
+    if (await tempDir.exists()) {
+      try {
+        await tempDir.delete(recursive: true);
+      } on PathAccessException {
+        // Windows may keep a brief lock after SQLite close.
+      }
+    }
   });
 
   AnalyzeResponse sampleResponse() {

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppLanguage { tr, en }
 
-/// Uygulama dili denetleyicisi.
+/// Uygulama dili denetleyicisi (tercih kalıcı).
 class LocaleController extends ChangeNotifier {
-  AppLanguage _language = AppLanguage.tr;
+  LocaleController({AppLanguage language = AppLanguage.tr})
+      : _language = language;
+
+  static const _prefsKey = 'app_language';
+
+  AppLanguage _language;
 
   AppLanguage get language => _language;
 
@@ -12,16 +18,33 @@ class LocaleController extends ChangeNotifier {
 
   AppStrings get strings => AppStrings.of(_language);
 
-  void setLanguage(AppLanguage language) {
+  Future<void> loadSaved() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_prefsKey);
+    if (raw == 'en') {
+      _language = AppLanguage.en;
+      notifyListeners();
+    } else if (raw == 'tr') {
+      _language = AppLanguage.tr;
+      notifyListeners();
+    }
+  }
+
+  Future<void> setLanguage(AppLanguage language) async {
     if (_language == language) {
       return;
     }
     _language = language;
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      _prefsKey,
+      language == AppLanguage.en ? 'en' : 'tr',
+    );
   }
 
-  void toggle() {
-    setLanguage(
+  Future<void> toggle() async {
+    await setLanguage(
       _language == AppLanguage.tr ? AppLanguage.en : AppLanguage.tr,
     );
   }
@@ -60,15 +83,12 @@ class AppStrings {
     required this.welcomeTitle,
     required this.welcomeSubtitle,
     required this.startScan,
-    required this.popularMedicines,
     required this.navHome,
     required this.navScan,
     required this.navHistory,
     required this.scanTitle,
     required this.scanSubtitle,
     required this.alignBox,
-    required this.takePhoto,
-    required this.takePhotoHint,
     required this.pickGallery,
     required this.pickGalleryHint,
     required this.tryCamera,
@@ -104,6 +124,36 @@ class AppStrings {
     required this.aboutMedicine,
     required this.galleryFailed,
     required this.cameraFailed,
+    required this.homeWarning,
+    required this.splashTagline,
+    required this.previewTitle,
+    required this.previewHint,
+    required this.analyze,
+    required this.analyzing,
+    required this.chooseAnotherPhoto,
+    required this.analyzingOverlay,
+    required this.analyzingOverlayHint,
+    required this.backendNotReady,
+    required this.unexpectedError,
+    required this.durationLabel,
+    required this.boxLabel,
+    required this.medicineLabel,
+    required this.matchScoreLabel,
+    required this.activeIngredientLabel,
+    required this.dosageLabel,
+    required this.formLabel,
+    required this.categoryLabel,
+    required this.nearestCandidateLabel,
+    required this.ocrLabel,
+    required this.statusMatched,
+    required this.statusNotFound,
+    required this.statusNotBox,
+    required this.statusError,
+    required this.verifyFromLeaflet,
+    required this.explanationFailed,
+    required this.retry,
+    required this.boxesWord,
+    required this.matchedWord,
   });
 
   final String appName;
@@ -111,15 +161,12 @@ class AppStrings {
   final String welcomeTitle;
   final String welcomeSubtitle;
   final String startScan;
-  final String popularMedicines;
   final String navHome;
   final String navScan;
   final String navHistory;
   final String scanTitle;
   final String scanSubtitle;
   final String alignBox;
-  final String takePhoto;
-  final String takePhotoHint;
   final String pickGallery;
   final String pickGalleryHint;
   final String tryCamera;
@@ -155,6 +202,36 @@ class AppStrings {
   final String aboutMedicine;
   final String galleryFailed;
   final String cameraFailed;
+  final String homeWarning;
+  final String splashTagline;
+  final String previewTitle;
+  final String previewHint;
+  final String analyze;
+  final String analyzing;
+  final String chooseAnotherPhoto;
+  final String analyzingOverlay;
+  final String analyzingOverlayHint;
+  final String backendNotReady;
+  final String unexpectedError;
+  final String durationLabel;
+  final String boxLabel;
+  final String medicineLabel;
+  final String matchScoreLabel;
+  final String activeIngredientLabel;
+  final String dosageLabel;
+  final String formLabel;
+  final String categoryLabel;
+  final String nearestCandidateLabel;
+  final String ocrLabel;
+  final String statusMatched;
+  final String statusNotFound;
+  final String statusNotBox;
+  final String statusError;
+  final String verifyFromLeaflet;
+  final String explanationFailed;
+  final String retry;
+  final String boxesWord;
+  final String matchedWord;
 
   static AppStrings of(AppLanguage language) {
     return language == AppLanguage.en ? _en : _tr;
@@ -177,6 +254,31 @@ class AppStrings {
     }
   }
 
+  String boxLabelFor(int boxIndex) => '$boxLabel $boxIndex';
+
+  String historySubtitle({
+    required int detectionCount,
+    required int matchedCount,
+    required DateTime createdAt,
+  }) {
+    final date =
+        '${createdAt.day.toString().padLeft(2, '0')}.'
+        '${createdAt.month.toString().padLeft(2, '0')}.'
+        '${createdAt.year} '
+        '${createdAt.hour.toString().padLeft(2, '0')}:'
+        '${createdAt.minute.toString().padLeft(2, '0')}';
+    return '$detectionCount $boxesWord · $matchedCount $matchedWord · $date';
+  }
+
+  String durationLine({
+    required double seconds,
+    required String ocrMode,
+  }) {
+    return '$durationLabel: ${seconds.toStringAsFixed(1)} · OCR: $ocrMode';
+  }
+
+  String unexpectedErrorWith(Object error) => '$unexpectedError: $error';
+
   static const _tr = AppStrings._(
     appName: 'Yolocilin',
     brandLabel: 'Yolocilin',
@@ -184,16 +286,12 @@ class AppStrings {
     welcomeSubtitle:
         'Yolocilin ile ilaç kutusu tanıma.\nFotoğraf çekin, analiz edin, sonucu görün.',
     startScan: 'Taramaya Başla',
-    popularMedicines: 'Popüler ilaçlar',
     navHome: 'Ana Sayfa',
     navScan: 'Tara',
     navHistory: 'Geçmiş',
     scanTitle: 'Hızlı İlaç Tarama',
-    scanSubtitle:
-        'İlaç kutusu fotoğrafını çekin veya galeriden seçin.',
+    scanSubtitle: 'İlaç kutusu fotoğrafını çekin veya galeriden seçin.',
     alignBox: 'Kutuyu çerçeveye hizalayın',
-    takePhoto: 'Fotoğraf Çek',
-    takePhotoHint: 'Kamera ile tara',
     pickGallery: 'Galeriden Seç',
     pickGalleryHint: 'Kayıtlı fotoğraflardan seç',
     tryCamera: 'Kamerayı Dene',
@@ -229,6 +327,38 @@ class AppStrings {
     aboutMedicine: 'İlaç hakkında',
     galleryFailed: 'Galeri açılamadı',
     cameraFailed: 'Kamera açılamadı',
+    homeWarning:
+        'Uyarı: Bu uygulama tıbbi tavsiye yerine geçmez. İlaç kullanımı için doktorunuza veya eczacınıza danışın.',
+    splashTagline: 'İlaç Kutusu Tanıma',
+    previewTitle: 'Önizleme',
+    previewHint: 'Analiz, YOLO tespiti ve OCR ile ilaç kutularını tanır.',
+    analyze: 'Analiz Et',
+    analyzing: 'Analiz ediliyor...',
+    chooseAnotherPhoto: 'Başka fotoğraf seç',
+    analyzingOverlay: 'İlaç kutusu analiz ediliyor...',
+    analyzingOverlayHint: 'CPU üzerinde OCR 1-3 dakika sürebilir (fast mod).',
+    backendNotReady:
+        'Backend hazır değil veya modeller yüklenmedi.\nÖnce python run_api.py çalıştırın.',
+    unexpectedError: 'Beklenmeyen hata',
+    durationLabel: 'Süre',
+    boxLabel: 'Kutu',
+    medicineLabel: 'İlaç',
+    matchScoreLabel: 'Eşleşme skoru',
+    activeIngredientLabel: 'Etken madde',
+    dosageLabel: 'Doz',
+    formLabel: 'Form',
+    categoryLabel: 'Kategori',
+    nearestCandidateLabel: 'En yakın aday',
+    ocrLabel: 'OCR',
+    statusMatched: 'Eşleşti',
+    statusNotFound: 'Bulunamadı',
+    statusNotBox: 'Kutu değil',
+    statusError: 'Hata',
+    verifyFromLeaflet: 'Resmi ürün bilgisinden doğrulanmalı',
+    explanationFailed: 'Açıklama yüklenemedi.',
+    retry: 'Tekrar dene',
+    boxesWord: 'kutu',
+    matchedWord: 'eşleşti',
   );
 
   static const _en = AppStrings._(
@@ -238,15 +368,12 @@ class AppStrings {
     welcomeSubtitle:
         'Medicine box recognition with Yolocilin.\nTake a photo, analyze, and see the result.',
     startScan: 'Start Scanning',
-    popularMedicines: 'Popular medicines',
     navHome: 'Home',
     navScan: 'Scan',
     navHistory: 'History',
     scanTitle: 'Quick Medicine Scan',
     scanSubtitle: 'Take a photo of a medicine box or choose from gallery.',
     alignBox: 'Align the box in the frame',
-    takePhoto: 'Take Photo',
-    takePhotoHint: 'Scan with camera',
     pickGallery: 'Choose from Gallery',
     pickGalleryHint: 'Pick from saved photos',
     tryCamera: 'Try Camera',
@@ -282,5 +409,37 @@ class AppStrings {
     aboutMedicine: 'About the medicine',
     galleryFailed: 'Could not open gallery',
     cameraFailed: 'Could not open camera',
+    homeWarning:
+        'Warning: This app does not replace medical advice. Consult your doctor or pharmacist before using any medicine.',
+    splashTagline: 'Medicine Box Recognition',
+    previewTitle: 'Preview',
+    previewHint: 'Analysis recognizes medicine boxes with YOLO and OCR.',
+    analyze: 'Analyze',
+    analyzing: 'Analyzing...',
+    chooseAnotherPhoto: 'Choose another photo',
+    analyzingOverlay: 'Analyzing medicine box...',
+    analyzingOverlayHint: 'OCR on CPU may take 1-3 minutes (fast mode).',
+    backendNotReady:
+        'Backend is not ready or models are not loaded.\nStart it with python run_api.py first.',
+    unexpectedError: 'Unexpected error',
+    durationLabel: 'Time',
+    boxLabel: 'Box',
+    medicineLabel: 'Medicine',
+    matchScoreLabel: 'Match score',
+    activeIngredientLabel: 'Active ingredient',
+    dosageLabel: 'Dose',
+    formLabel: 'Form',
+    categoryLabel: 'Category',
+    nearestCandidateLabel: 'Closest candidate',
+    ocrLabel: 'OCR',
+    statusMatched: 'Matched',
+    statusNotFound: 'Not found',
+    statusNotBox: 'Not a box',
+    statusError: 'Error',
+    verifyFromLeaflet: 'Must be verified from the official leaflet',
+    explanationFailed: 'Could not load explanation.',
+    retry: 'Try again',
+    boxesWord: 'boxes',
+    matchedWord: 'matched',
   );
 }

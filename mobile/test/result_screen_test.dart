@@ -52,7 +52,7 @@ void main() {
     expect(find.text('Kutu 1'), findsOneWidget);
     expect(find.text('Parol 500 mg'), findsOneWidget);
     expect(
-      find.text('Resmi urun bilgisinden dogrulanmali'),
+      find.text('Resmi ürün bilgisinden doğrulanmalı'),
       findsOneWidget,
     );
     expect(find.text('500 mg'), findsOneWidget);

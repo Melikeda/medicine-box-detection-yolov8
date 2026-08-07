@@ -1,3 +1,4 @@
+import '../l10n/app_localizations.dart';
 import 'analyze_response.dart';
 
 /// Yerel tarama gecmisi listesi icin hafif kayit modeli.
@@ -20,11 +21,9 @@ class ScanHistoryEntry {
   final String? imagePath;
   final AnalyzeResponse response;
 
-  String get subtitle =>
-      '$detectionCount kutu · $matchedCount eslesti · '
-      '${createdAt.day.toString().padLeft(2, '0')}.'
-      '${createdAt.month.toString().padLeft(2, '0')}.'
-      '${createdAt.year} '
-      '${createdAt.hour.toString().padLeft(2, '0')}:'
-      '${createdAt.minute.toString().padLeft(2, '0')}';
+  String subtitleFor(AppStrings strings) => strings.historySubtitle(
+        detectionCount: detectionCount,
+        matchedCount: matchedCount,
+        createdAt: createdAt,
+      );
 }

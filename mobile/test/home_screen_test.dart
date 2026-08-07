@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:medicine_box_app/l10n/app_localizations.dart';
 import 'package:medicine_box_app/screens/home_screen.dart';
@@ -16,6 +17,10 @@ Widget _wrap(Widget child, {LocaleController? controller}) {
 }
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('Home shell shows welcome and bottom navigation', (tester) async {
     await tester.binding.setSurfaceSize(const Size(390, 844));
     addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -26,7 +31,7 @@ void main() {
     expect(find.text('Yolocilin'), findsWidgets);
     expect(find.text('Hoş Geldiniz'), findsOneWidget);
     expect(find.text('Taramaya Başla'), findsOneWidget);
-    expect(find.text('Popüler ilaçlar'), findsOneWidget);
+    expect(find.textContaining('Uyarı:'), findsOneWidget);
     expect(find.text('Ana Sayfa'), findsOneWidget);
     expect(find.text('Tara'), findsOneWidget);
     expect(find.text('Geçmiş'), findsOneWidget);
@@ -45,10 +50,11 @@ void main() {
     await tester.tap(find.text('EN'));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
+    // SharedPreferences is async; allow language apply.
+    await tester.pump(const Duration(milliseconds: 50));
 
     expect(find.text('Welcome'), findsOneWidget);
     expect(find.text('Start Scanning'), findsOneWidget);
-    expect(find.text('Popular medicines'), findsOneWidget);
     expect(find.text('Home'), findsOneWidget);
     expect(find.text('Scan'), findsOneWidget);
     expect(find.text('History'), findsOneWidget);
@@ -64,7 +70,7 @@ void main() {
     await tester.pump();
 
     expect(find.text('Hızlı İlaç Tarama'), findsOneWidget);
-    expect(find.text('Fotoğraf Çek'), findsOneWidget);
+    expect(find.text('Kamerayı Dene'), findsOneWidget);
     expect(find.text('Galeriden Seç'), findsOneWidget);
   });
 }

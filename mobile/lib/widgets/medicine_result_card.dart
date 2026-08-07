@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../models/medicine_box_result.dart';
-import '../utils/medicine_display.dart';
 import '../theme/app_colors.dart';
+import '../utils/medicine_display.dart';
 import 'medicine_explanation_section.dart';
 
 class MedicineResultCard extends StatelessWidget {
@@ -16,6 +17,7 @@ class MedicineResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final s = context.s;
     final statusColor = _statusColor(theme, result.status);
 
     return Container(
@@ -35,7 +37,7 @@ class MedicineResultCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    MedicineDisplay.boxLabel(result.boxIndex),
+                    MedicineDisplay.boxLabel(result.boxIndex, strings: s),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -51,7 +53,7 @@ class MedicineResultCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    _statusLabel(result.status),
+                    _statusLabel(result.status, s),
                     style: TextStyle(
                       color: statusColor,
                       fontWeight: FontWeight.w600,
@@ -69,32 +71,47 @@ class MedicineResultCard extends StatelessWidget {
             if (result.isMatched) ...[
               const SizedBox(height: 12),
               _InfoRow(
-                label: 'Ilac',
+                label: s.medicineLabel,
                 value: result.medicineName ?? '-',
               ),
               _InfoRow(
-                label: 'Eslesme skoru',
+                label: s.matchScoreLabel,
                 value: '${result.matchingScore.toStringAsFixed(1)}%',
               ),
-              if (MedicineDisplay.shouldShowField(result.activeIngredient))
+              if (MedicineDisplay.shouldShowField(
+                result.activeIngredient,
+                strings: s,
+              ))
                 _InfoRow(
-                  label: 'Etken madde',
-                  value: MedicineDisplay.formatField(result.activeIngredient)!,
+                  label: s.activeIngredientLabel,
+                  value: MedicineDisplay.formatField(
+                    result.activeIngredient,
+                    strings: s,
+                  )!,
                 ),
-              if (MedicineDisplay.shouldShowField(result.dosage))
+              if (MedicineDisplay.shouldShowField(result.dosage, strings: s))
                 _InfoRow(
-                  label: 'Doz',
-                  value: MedicineDisplay.formatField(result.dosage)!,
+                  label: s.dosageLabel,
+                  value: MedicineDisplay.formatField(
+                    result.dosage,
+                    strings: s,
+                  )!,
                 ),
-              if (MedicineDisplay.shouldShowField(result.form))
+              if (MedicineDisplay.shouldShowField(result.form, strings: s))
                 _InfoRow(
-                  label: 'Form',
-                  value: MedicineDisplay.formatField(result.form)!,
+                  label: s.formLabel,
+                  value: MedicineDisplay.formatField(
+                    result.form,
+                    strings: s,
+                  )!,
                 ),
-              if (MedicineDisplay.shouldShowField(result.category))
+              if (MedicineDisplay.shouldShowField(result.category, strings: s))
                 _InfoRow(
-                  label: 'Kategori',
-                  value: MedicineDisplay.formatField(result.category)!,
+                  label: s.categoryLabel,
+                  value: MedicineDisplay.formatField(
+                    result.category,
+                    strings: s,
+                  )!,
                 ),
               if (result.medicineId != null &&
                   result.medicineId!.isNotEmpty) ...[
@@ -103,17 +120,20 @@ class MedicineResultCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 MedicineExplanationSection(
                   medicineId: result.medicineId!,
-                  medicineName: result.medicineName ?? 'Ilac',
+                  medicineName: result.medicineName ?? s.medicineLabel,
                 ),
               ],
             ] else if (result.bestCandidate != null &&
                 result.bestCandidate!.isNotEmpty) ...[
               const SizedBox(height: 8),
-              _InfoRow(label: 'En yakin aday', value: result.bestCandidate!),
+              _InfoRow(
+                label: s.nearestCandidateLabel,
+                value: result.bestCandidate!,
+              ),
             ],
             if (result.ocrText != null && result.ocrText!.isNotEmpty) ...[
               const SizedBox(height: 8),
-              _InfoRow(label: 'OCR', value: result.ocrText!),
+              _InfoRow(label: s.ocrLabel, value: result.ocrText!),
             ],
           ],
         ),
@@ -147,16 +167,16 @@ class MedicineResultCard extends StatelessWidget {
     }
   }
 
-  String _statusLabel(String status) {
+  String _statusLabel(String status, AppStrings s) {
     switch (status) {
       case 'matched':
-        return 'Eslesti';
+        return s.statusMatched;
       case 'not_found':
-        return 'Bulunamadi';
+        return s.statusNotFound;
       case 'not_medicine_box':
-        return 'Kutu degil';
+        return s.statusNotBox;
       default:
-        return 'Hata';
+        return s.statusError;
     }
   }
 }

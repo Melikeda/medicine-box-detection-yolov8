@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
+/// Yolocilin marka logosu — açık yeşil kapsül + yolocilin yazısı.
 class AppLogo extends StatelessWidget {
   const AppLogo({
     super.key,
@@ -18,58 +19,31 @@ class AppLogo extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(size * 0.28),
         boxShadow: showShadow
             ? [
                 BoxShadow(
-                  color: AppColors.accent.withValues(alpha: 0.15),
+                  color: AppColors.darkGreen.withValues(alpha: 0.16),
                   blurRadius: 24,
-                  offset: const Offset(0, 12),
+                  offset: Offset(0, size * 0.1),
                 ),
               ]
             : null,
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: size * 0.72,
-            height: size * 0.72,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.pastelSky,
-                  AppColors.pastelMint,
-                ],
-              ),
-              borderRadius: BorderRadius.circular(size * 0.22),
+      clipBehavior: Clip.antiAlias,
+      child: Image.asset(
+        'assets/branding/app_logo.png',
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) {
+          return ColoredBox(
+            color: AppColors.pastelGreen,
+            child: Icon(
+              Icons.medication_outlined,
+              size: size * 0.45,
+              color: AppColors.darkGreen,
             ),
-          ),
-          Icon(
-            Icons.medication_liquid_outlined,
-            size: size * 0.42,
-            color: AppColors.teal,
-          ),
-          Positioned(
-            right: size * 0.16,
-            bottom: size * 0.16,
-            child: Container(
-              padding: EdgeInsets.all(size * 0.06),
-              decoration: const BoxDecoration(
-                color: AppColors.tealDark,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.photo_camera_outlined,
-                size: size * 0.16,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
