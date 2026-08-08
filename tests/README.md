@@ -17,6 +17,7 @@ Automated tests for **Yolocilin** / the medicine box detection backend (pytest).
 | `test_security.py` | CORS, docs-off in prod, headers, analyze 429 |
 | `test_e2e_api_flow.py` | Health → medicines → explain → analyze (mock) → scans |
 | `test_performance.py` | Fast/accurate OCR config, early exit, resize |
+| `test_model_paths.py` | YOLO weight auto-resolve candidates |
 | `test_medicines_csv_validation.py` | Catalog CSV sanity |
 | `test_titck_mapper.py` | TİTCK mapping helpers |
 

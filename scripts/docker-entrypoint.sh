@@ -6,9 +6,13 @@ MODEL_PATH="${YOLO_MODEL_PATH:-runs/detect/runs/detect/medicine_box_yolov8n-2/we
 if [ ! -f "$MODEL_PATH" ]; then
     echo "ERROR: YOLO model not found at: $MODEL_PATH"
     echo ""
-    echo "Train the model locally (python src/train.py) or copy best.pt to the expected path,"
-    echo "then mount it into the container via docker-compose volumes."
-    echo "See docs/reports/14-docker-containerization.md for details."
+    echo "Also accepted locally (host) by the Python resolver:"
+    echo "  - runs/detect/medicine_box_yolov8n/weights/best.pt  (python src/train.py)"
+    echo "  - models/best.pt"
+    echo ""
+    echo "For Docker, mount your best.pt via YOLO_MODEL_HOST_PATH / YOLO_MODEL_PATH"
+    echo "(see docker-compose.yml and models/README.md)."
+    echo "Docs: docs/reports/14-docker-containerization.md"
     exit 1
 fi
 

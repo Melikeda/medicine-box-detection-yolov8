@@ -83,6 +83,7 @@ class PipelineManager:
         self._validate_paths()
 
         print("PipelineManager: YOLO modeli yükleniyor...")
+        print(f"PipelineManager: model path → {self.config.model_path}")
         self._yolo_model = YOLO(str(self.config.model_path))
 
         print("PipelineManager: EasyOCR reader hazırlanıyor...")
@@ -439,18 +440,14 @@ class PipelineManager:
         return should_stop
 
     def _validate_paths(self) -> None:
-        required_paths = {
-            "YOLO modeli": self.config.model_path,
-            "İlaç CSV dosyası": self.config.medicines_csv_path,
-        }
+        from src.services.model_paths import missing_model_help
 
-        for path_name, path in required_paths.items():
-            if not path.exists():
-                raise FileNotFoundError(
-                    f"{path_name} bulunamadı: {path}"
-                )
+        model_path = Path(self.config.model_path)
+        if not model_path.is_file():
+            raise FileNotFoundError(missing_model_help(model_path))
 
-            if not path.is_file():
-                raise ValueError(
-                    f"{path_name} bir dosya değil: {path}"
-                )
+        csv_path = Path(self.config.medicines_csv_path)
+        if not csv_path.is_file():
+            raise FileNotFoundError(
+                f"İlaç CSV dosyası bulunamadı: {csv_path}"
+            )

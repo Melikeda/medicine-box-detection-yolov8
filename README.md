@@ -126,7 +126,7 @@ cp .env.example .env   # optional local overrides
 python run_analyze.py --image data/samples/parol_plus.jpg --mode fast
 ```
 
-Trained YOLO weights are **not** in Git. Place `best.pt` at the path expected by config / compose (see [setup guide](docs/setup-guide.md)).
+Trained YOLO weights are **not** in Git. The app auto-finds `best.pt` under common `runs/detect/...` layouts or `models/best.pt` (see [models/README.md](models/README.md)). Override with `YOLO_MODEL_PATH`.
 
 ### API
 
@@ -191,16 +191,20 @@ See [SECURITY.md](SECURITY.md) and [Report 20](docs/reports/20-production-harden
 ```text
 medicine-box-detection-yolov8/
 ├── backend/app/           # FastAPI (analyze, medicines, explain, scans)
-├── src/                   # Pipeline services (YOLO, OCR, matching, DB)
+├── src/                   # Pipeline (YOLO, OCR, matching, SQLite models)
 ├── mobile/                # Yolocilin Flutter client
+├── models/                # Optional: drop best.pt here (see models/README.md)
 ├── data/
 │   ├── database/          # medicines.csv (+ SQLite at runtime)
+│   ├── dataset/           # YOLO data.yaml (images gitignored — Roboflow)
 │   └── samples/           # Test photos
 ├── docs/                  # Architecture, roadmap, reports, assets/
 ├── examples/              # Step-by-step learning scripts
 ├── tests/                 # pytest (incl. E2E smoke)
 ├── scripts/               # Dev helpers, e2e_api_flow, benchmarks
-├── run_api.py
+├── results/               # Local debug outputs only (gitignored)
+├── runs/                  # Local Ultralytics train/predict (gitignored)
+├── run_api.py             # API entry (not src/app.py)
 ├── run_analyze.py
 ├── docker-compose.yml
 └── requirements.txt

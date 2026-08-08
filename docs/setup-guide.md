@@ -77,18 +77,20 @@ pip list
 
 ## 5. YOLO Model
 
-Training produces weights under `runs/detect/`. For inference scripts, point to your trained `best.pt` file. Model files (`.pt`) are excluded from Git.
+`.pt` files are **not in Git**. The pipeline resolves weights automatically (`src/services/model_paths.py`):
 
-Train from scratch:
+1. `runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt` (legacy / Docker default)
+2. `runs/detect/medicine_box_yolov8n/weights/best.pt` ← `python src/train.py`
+3. `runs/detect/medicine_box_yolov8n-2/weights/best.pt`
+4. `models/best.pt` (optional manual copy)
+
+Or set `YOLO_MODEL_PATH` in `.env`. Details: [models/README.md](../models/README.md).
+
+Dataset images under `data/dataset/train|valid|test` are gitignored — restore from Roboflow before training ([data/README.md](../data/README.md)).
 
 ```bash
-python src/train.py
-```
-
-Run detection on a sample image:
-
-```bash
-python src/predict.py
+python src/train.py      # writes runs/detect/medicine_box_yolov8n/weights/best.pt
+python src/predict.py    # uses the same resolver; conf aligned with pipeline (0.40)
 ```
 
 ---
@@ -267,7 +269,9 @@ Emulator sample photos:
 ## 10. Docker Deployment
 
 Requires Docker Desktop and trained YOLO weights at  
-`runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt`.
+the path in `docker-compose.yml` (default nested `-2` layout), or set
+`YOLO_MODEL_HOST_PATH` to any local `best.pt` (including
+`runs/detect/medicine_box_yolov8n/weights/best.pt` from `src/train.py`).
 
 ```bash
 docker compose up --build

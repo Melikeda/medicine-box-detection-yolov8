@@ -37,7 +37,8 @@ runs/
 # Generated Results (local only)
 # ==========================
 
-results/
+results/**
+!results/README.md
 artifacts/
 
 # ==========================

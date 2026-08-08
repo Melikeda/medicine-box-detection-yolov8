@@ -4,11 +4,14 @@ import cv2
 from ultralytics import YOLO
 from ultralytics.engine.results import Results
 
-
-MODEL_PATH = Path(
-    "runs/detect/runs/detect/"
-    "medicine_box_yolov8n-2/weights/best.pt"
+from src.services.config import PipelineConfig
+from src.services.model_paths import (
+    missing_model_help,
+    resolve_default_model_path,
 )
+
+# Auto-resolves legacy nested path, train.py output, or models/best.pt
+MODEL_PATH = resolve_default_model_path()
 
 SOURCE_PATH = Path(
     "data/samples/aferin_forte.jpg"
@@ -24,7 +27,8 @@ CROP_OUTPUT_PATH = Path(
     "results/detection/crops"
 )
 
-CONFIDENCE_THRESHOLD = 0.60
+# Aligned with PipelineConfig.confidence_threshold (analyze pipeline).
+CONFIDENCE_THRESHOLD = PipelineConfig().confidence_threshold
 
 
 def validate_paths() -> None:
@@ -32,9 +36,7 @@ def validate_paths() -> None:
     Model ve kaynak yollarını kontrol eder.
     """
     if not MODEL_PATH.exists():
-        raise FileNotFoundError(
-            f"Model dosyası bulunamadı: {MODEL_PATH}"
-        )
+        raise FileNotFoundError(missing_model_help(MODEL_PATH))
 
     if not SOURCE_PATH.exists():
         raise FileNotFoundError(
