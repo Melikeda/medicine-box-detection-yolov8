@@ -158,15 +158,18 @@ pytest tests/test_api.py::test_upload_validator_accepts_octet_stream_with_jpg_su
 
 ## Manual E2E Checklist
 
+Updated checklist + automated API smoke: [Report 25](25-e2e-performance.md).
+
 1. Start backend: `venv\Scripts\Activate.ps1` then `python run_api.py`
 2. Verify health: `http://127.0.0.1:8000/health`
-3. Load Flutter env: `. .\scripts\env-flutter.ps1`
-4. Launch emulator: `flutter emulators --launch medicine_box_emulator`
-5. Push sample photos: `.\scripts\push-samples-to-emulator.ps1`
-6. Run app: `cd mobile; flutter run`
-7. Gallery → Preview → **Analiz Et** → wait 1–5 min on CPU
-8. Confirm result screen (medicine name, match score)
-9. Stop backend → confirm error SnackBar
+3. Optional API smoke: `python scripts/e2e_api_flow.py --skip-analyze`
+4. Load Flutter env: `. .\scripts\env-flutter.ps1`
+5. Launch emulator: `flutter emulators --launch medicine_box_emulator`
+6. Push sample photos: `.\scripts\push-samples-to-emulator.ps1`
+7. Run app: `cd mobile; flutter run`
+8. Gallery → Preview → **Analiz Et** → wait 1–5 min on CPU
+9. Confirm result screen (medicine name, match score) + history / explain as needed
+10. Stop backend → confirm error SnackBar
 
 ---
 

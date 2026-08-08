@@ -66,6 +66,19 @@ class LlmUnavailableError(ApiError):
         )
 
 
+class RateLimitExceededError(ApiError):
+    def __init__(
+        self,
+        message: str = (
+            "Cok fazla istek. Lutfen bir dakika sonra tekrar deneyin."
+        ),
+    ) -> None:
+        super().__init__(
+            message,
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+        )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(ApiError)
     async def handle_api_error(

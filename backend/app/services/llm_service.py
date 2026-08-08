@@ -8,7 +8,10 @@ from typing import Protocol
 from backend.app.config import ApiSettings
 from backend.app.exceptions import LlmNotConfiguredError, LlmUnavailableError
 from backend.app.llm_models import DEFAULT_GEMINI_MODEL, GEMINI_FREE_TIER_MODELS
-from backend.app.services.explanation_cache import ExplanationCache
+from backend.app.services.explanation_cache import (
+    ExplanationCache,
+    get_shared_explanation_cache,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -211,6 +214,8 @@ class GeminiMedicineExplainer:
 class LlmExplanationService:
     """İlaç açıklaması servisi; cache ve sağlayıcı seçimi."""
 
+    _instance: LlmExplanationService | None = None
+
     def __init__(
         self,
         *,
@@ -222,7 +227,7 @@ class LlmExplanationService:
     ) -> None:
         self.settings = settings
         self.explainer = explainer
-        self.cache = cache or ExplanationCache()
+        self.cache = cache or get_shared_explanation_cache()
         self.provider = provider
         self.model = model
 
@@ -246,9 +251,22 @@ class LlmExplanationService:
         return cls(
             settings=settings,
             explainer=explainer,
+            cache=get_shared_explanation_cache(),
             provider=provider,
             model=model,
         )
+
+    @classmethod
+    def get_instance(cls, settings: ApiSettings) -> LlmExplanationService:
+        """Aynı process içinde tek LLM servis örneği döndürür."""
+        if cls._instance is None:
+            cls._instance = cls.from_settings(settings)
+        return cls._instance
+
+    @classmethod
+    def reset_instance(cls) -> None:
+        """Test veya yeniden yapılandırma için servis singleton'ını sıfırlar."""
+        cls._instance = None
 
     def explain_medicine(
         self,

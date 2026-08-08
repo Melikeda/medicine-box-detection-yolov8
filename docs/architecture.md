@@ -64,24 +64,30 @@ The user captures a medicine box photo with the device camera or selects one fro
 
 **Phase 17 (Issue #31):** Connected to `POST /api/v1/analyze` with result screen, loading overlay, and error handling.
 
+Also: local scan history, best-effort `POST /api/v1/scans` sync, and optional `POST /api/v1/explain` (“İlaç hakkında”).
+
 ### Responsibilities
 
 - Image selection and preview
 - Multipart upload to FastAPI (`AnalyzeApiService`)
 - Loading and error states
 - Display medicine name, match score, and basic drug info
+- Local history + server scan sync (`ScanHistoryService`, `ScanApiService`)
 
 ### Key modules
 
 | Module | Role |
 |--------|------|
-| `config/app_config.dart` | API base URL, timeouts |
-| `services/analyze_api_service.dart` | HTTP client |
+| `config/app_config.dart` | API base URL, timeouts, endpoints |
+| `services/analyze_api_service.dart` | Analyze HTTP client |
+| `services/explain_api_service.dart` | Explain HTTP client |
+| `services/scan_api_service.dart` | Server scan-history client |
+| `services/scan_history_service.dart` | Local SQLite history |
 | `models/analyze_response.dart` | Response parsing |
 | `utils/medicine_display.dart` | Placeholder + box label formatting |
 | `screens/result_screen.dart` | Result UI |
 
-See [Report 16](reports/16-mobile-integration.md).
+See [Report 16](reports/16-mobile-integration.md) and [Report 23](reports/23-scan-history.md).
 
 ## 2. Backend API (FastAPI) ✅
 
@@ -94,6 +100,7 @@ Receives uploaded images and orchestrates the AI pipeline.
 - Async pipeline orchestration (`asyncio.to_thread`)
 - Structured JSON responses with summary counts
 - Health checks and logging
+- Optional LLM explanations and server scan history
 
 ### Endpoints
 
@@ -102,6 +109,16 @@ Receives uploaded images and orchestrates the AI pipeline.
 | GET | `/health` | Model readiness |
 | GET | `/api/v1/analyze/info` | Upload limits and formats |
 | POST | `/api/v1/analyze` | Multi-box analyze |
+| GET | `/api/v1/medicines` | List / search medicines |
+| GET | `/api/v1/medicines/categories` | Medicine categories |
+| GET | `/api/v1/medicines/{id}` | Medicine detail |
+| GET | `/api/v1/explain/info` | LLM readiness (`ready`) |
+| POST | `/api/v1/explain` | Gemini short explanation |
+| GET | `/api/v1/scans/info` | Server scan-history info |
+| GET | `/api/v1/scans` | List saved scans |
+| POST | `/api/v1/scans` | Persist successful analyze JSON |
+| GET | `/api/v1/scans/{id}` | Scan detail |
+| DELETE | `/api/v1/scans/{id}` | Delete scan |
 
 Entry point: `run_api.py`
 
@@ -204,10 +221,14 @@ OCR output is compared with CSV fields: `medicine_name`, `brand_name`, `active_i
 
 | Stage | Technology | Records |
 |-------|------------|---------|
-| Current | CSV (seed) + SQLite (runtime) | 107 drugs |
+| Current | CSV (seed) + SQLite (runtime) | **131** drugs |
 | Production (later) | PostgreSQL | — |
 
 Fields: `medicine_id`, `medicine_name`, `brand_name`, `active_ingredient`, `dosage`, `form`, `category`
+
+Same SQLite file also stores the server `scans` table for analyze-history sync.
+
+See [Report 24](reports/24-medicine-database-final-refresh.md).
 
 ---
 
@@ -227,6 +248,19 @@ See [Report 21](reports/21-llm-integration.md).
 
 ---
 
+## 9. Server Scan History ✅
+
+| Component | Detail |
+|-----------|--------|
+| Storage | SQLite `scans` table (analyze JSON; images stay on device) |
+| API | `POST/GET/DELETE /api/v1/scans` |
+| Mobile | Local history first; best-effort server sync |
+| Auth | Not yet — scans are global until user accounts exist |
+
+See [Report 23](reports/23-scan-history.md).
+
+---
+
 # 🔁 Data Flow
 
 ```text
@@ -239,11 +273,12 @@ FastAPI (analyze_service)
 PipelineManager.analyze_all()
    │
    ▼
-YOLOv8 → Crop → OpenCV → EasyOCR → Normalize → RapidFuzz → CSV
+YOLOv8 → Crop → OpenCV → EasyOCR → Normalize → RapidFuzz → SQLite (131)
    │
    ▼
 JSON Response → Flutter Result Screen
    │
+   ├─► local history + POST /api/v1/scans
    ▼ (optional, on demand)
 POST /api/v1/explain → Gemini → "İlaç hakkında" card
 ```
@@ -263,11 +298,15 @@ POST /api/v1/explain → Gemini → "İlaç hakkında" card
 
 # 🚀 Future Improvements
 
-- SQLite migration (#27)
+- SQLite migration (#27) ✅
 - Automated tests (#28) ✅
 - Docker deployment (#29) ✅
-- Flutter mobile MVP (#30–#31)
+- Flutter mobile MVP (#30–#31) ✅
+- LLM explain (#8) ✅
+- Server scan history ✅
+- PostgreSQL migration
+- Cloud deployment / HTTPS reverse proxy
+- Per-user auth for private scan lists
 - Barcode / QR code support
-- User scan history
 - YOLO retrain with blurry and negative samples
 - Multilingual OCR

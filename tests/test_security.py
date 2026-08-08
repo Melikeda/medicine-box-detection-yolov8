@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.exceptions import register_exception_handlers
+from backend.app.main import create_app
 from backend.app.middleware.rate_limit import (
     AnalyzeRateLimitMiddleware,
     AnalyzeRateLimiter,
@@ -20,6 +22,50 @@ def test_parse_cors_origins_from_comma_separated_string() -> None:
         "http://localhost:3000",
         "https://app.example.com",
     )
+
+
+def test_production_rejects_wildcard_cors() -> None:
+    settings = ApiSettings(
+        environment="production",
+        cors_origins="*",
+    )
+    with pytest.raises(RuntimeError, match="CORS_ORIGINS"):
+        settings.validate_production_security()
+
+    with pytest.raises(RuntimeError, match="CORS_ORIGINS"):
+        create_app(settings)
+
+
+def test_production_disables_api_docs() -> None:
+    settings = ApiSettings(
+        environment="production",
+        cors_origins="https://app.example.com",
+        rate_limit_enabled=False,
+    )
+    app = create_app(settings)
+    assert app.docs_url is None
+    assert app.redoc_url is None
+    assert app.openapi_url is None
+
+
+def test_development_keeps_api_docs() -> None:
+    settings = ApiSettings(
+        environment="development",
+        rate_limit_enabled=False,
+    )
+    assert settings.docs_enabled is True
+    app = create_app(settings)
+    assert app.docs_url == "/docs"
+    assert app.redoc_url == "/redoc"
+    assert app.openapi_url == "/openapi.json"
+
+
+def test_wildcard_cors_disables_credentials() -> None:
+    settings = ApiSettings(cors_origins="*")
+    assert settings.cors_allow_credentials is False
+
+    settings = ApiSettings(cors_origins="https://app.example.com")
+    assert settings.cors_allow_credentials is True
 
 
 def test_production_hides_internal_error_details() -> None:

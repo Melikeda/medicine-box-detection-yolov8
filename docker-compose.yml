@@ -9,12 +9,17 @@ services:
     environment:
       HOST: 0.0.0.0
       PORT: 8000
+      ENVIRONMENT: ${ENVIRONMENT:-development}
       OCR_MODE: ${OCR_MODE:-fast}
       USE_GPU: "false"
       USE_SQLITE: "true"
       SQLITE_PATH: data/database/medicines.db
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
       MAX_UPLOAD_SIZE_MB: ${MAX_UPLOAD_SIZE_MB:-10}
+      # Dev default "*"; for production set explicit origins (required when ENVIRONMENT=production)
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
+      RATE_LIMIT_ANALYZE_PER_MINUTE: ${RATE_LIMIT_ANALYZE_PER_MINUTE:-20}
       YOLO_MODEL_PATH: ${YOLO_MODEL_PATH:-runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt}
       LLM_ENABLED: ${LLM_ENABLED:-false}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
@@ -22,6 +27,8 @@ services:
       LLM_MOCK_MODE: ${LLM_MOCK_MODE:-false}
       LLM_CACHE_ENABLED: ${LLM_CACHE_ENABLED:-true}
       RATE_LIMIT_EXPLAIN_PER_MINUTE: ${RATE_LIMIT_EXPLAIN_PER_MINUTE:-5}
+      RATE_LIMIT_SCANS_PER_MINUTE: ${RATE_LIMIT_SCANS_PER_MINUTE:-30}
+      SCAN_HISTORY_MAX_ENTRIES: ${SCAN_HISTORY_MAX_ENTRIES:-200}
     volumes:
       # Trained YOLO weights (not in Git — mount from your local training output)
       - ${YOLO_MODEL_HOST_PATH:-./runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt}:${YOLO_MODEL_PATH:-runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt}:ro

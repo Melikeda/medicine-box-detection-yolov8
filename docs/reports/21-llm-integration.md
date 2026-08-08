@@ -68,8 +68,15 @@ JSON { explanation, disclaimer, cached, model }
 | `GEMINI_API_KEY` | — | Server-side only; never in mobile |
 | `LLM_MODEL` | `gemini-flash-latest` | Primary Gemini model |
 | `LLM_MOCK_MODE` | `false` | Deterministic mock responses |
-| `LLM_CACHE_ENABLED` | `true` | Cache by medicine_id |
+| `LLM_CACHE_ENABLED` | `true` | Shared in-process cache by medicine_id + locale |
 | `RATE_LIMIT_EXPLAIN_PER_MINUTE` | `5` | Per IP; aligns with free tier RPM |
+
+### Reliable enable checklist
+
+1. Set `GEMINI_API_KEY` (real key; placeholders rejected)
+2. Set `LLM_ENABLED=true` (production fails startup if enabled without key/mock)
+3. Keep `LLM_CACHE_ENABLED=true` and `RATE_LIMIT_EXPLAIN_PER_MINUTE=5`
+4. Verify `GET /api/v1/explain/info` → `ready=true`
 
 ### API response (POST /api/v1/explain)
 
@@ -126,7 +133,8 @@ JSON { explanation, disclaimer, cached, model }
 
 ## Tests
 
-- `tests/test_explain.py` — explain endpoint (mock mode)
+- `tests/test_explain.py` — explain endpoint, cache, rate limit 429, missing key
+- `tests/test_llm_config.py` — key validation + production fail-fast
 - `tests/test_llm_models.py` — model fallback chain
 - `mobile/test/explain_response_test.dart` — JSON parsing
 

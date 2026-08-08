@@ -2,6 +2,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from backend.app.dependencies import get_medicine_service
 from backend.app.exceptions import register_exception_handlers
 from backend.app.routers import analyze as analyze_router
 from backend.app.routers import health, medicines
@@ -26,9 +27,7 @@ def medicine_app(
             seeded_pipeline_config
         )
 
-    app.dependency_overrides[
-        medicines.get_medicine_service
-    ] = override_medicine_service
+    app.dependency_overrides[get_medicine_service] = override_medicine_service
 
     return TestClient(app)
 

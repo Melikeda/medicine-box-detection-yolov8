@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 import time
 from pathlib import Path
@@ -31,6 +32,12 @@ def main() -> None:
         default="fast",
         help="OCR mode",
     )
+    parser.add_argument(
+        "--json-out",
+        type=Path,
+        default=None,
+        help="Optional JSON report path",
+    )
     args = parser.parse_args()
 
     if not args.image.exists():
@@ -49,7 +56,14 @@ def main() -> None:
     print(f"Tespit: {result.detection_count}")
     print(f"Basari: {result.success}")
 
+    timing_payload = None
     if result.timing:
+        timing_payload = {
+            "yolo_ms": round(result.timing.yolo_ms, 1),
+            "ocr_ms": round(result.timing.ocr_ms, 1),
+            "matching_ms": round(result.timing.matching_ms, 1),
+            "total_ms": round(result.timing.total_ms, 1),
+        }
         print(
             "Aşama süreleri (ms): "
             f"YOLO={result.timing.yolo_ms:.0f}, "
@@ -60,13 +74,40 @@ def main() -> None:
 
     print(f"Duvar saati (ms): {wall_ms:.0f}")
 
+    boxes = []
     for box in result.medicines:
         label = box.medicine_name or box.status
         print(
             f"  Kutu {box.box_index}: {label} "
             f"(skor={box.matching_score:.1f})"
         )
+        boxes.append(
+            {
+                "box_index": box.box_index,
+                "status": box.status,
+                "medicine_name": box.medicine_name,
+                "matching_score": box.matching_score,
+            }
+        )
+
+    if args.json_out is not None:
+        args.json_out.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "mode": args.mode,
+            "image": str(args.image),
+            "success": result.success,
+            "detection_count": result.detection_count,
+            "wall_ms": round(wall_ms, 1),
+            "timing": timing_payload,
+            "boxes": boxes,
+        }
+        args.json_out.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        print(f"JSON report: {args.json_out}")
 
 
 if __name__ == "__main__":
     main()
+

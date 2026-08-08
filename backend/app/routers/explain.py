@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.constants import LLM_EXPLANATION_DISCLAIMER
-from backend.app.exceptions import LlmNotConfiguredError
+from backend.app.dependencies import get_llm_service, get_medicine_service
+from backend.app.exceptions import RateLimitExceededError
 from backend.app.middleware.rate_limit import AnalyzeRateLimiter
 from backend.app.schemas.explain import (
     ExplainInfoSchema,
@@ -22,22 +23,6 @@ def _get_explain_rate_limiter(max_requests: int) -> AnalyzeRateLimiter:
     return AnalyzeRateLimiter(max_requests=max_requests)
 
 
-def get_medicine_service(
-    settings: ApiSettings = Depends(get_api_settings),
-) -> MedicineQueryService:
-    return MedicineQueryService.from_pipeline_config(
-        settings.create_pipeline_config()
-    )
-
-
-def get_llm_service(
-    settings: ApiSettings = Depends(get_api_settings),
-) -> LlmExplanationService:
-    if not settings.llm_enabled:
-        raise LlmNotConfiguredError("LLM ozelligi devre disi.")
-    return LlmExplanationService.from_settings(settings)
-
-
 def enforce_explain_rate_limit(
     request: Request,
     settings: ApiSettings = Depends(get_api_settings),
@@ -48,12 +33,9 @@ def enforce_explain_rate_limit(
     limiter = _get_explain_rate_limiter(settings.rate_limit_explain_per_minute)
     client_host = request.client.host if request.client else "unknown"
     if not limiter.is_allowed(client_host):
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail=(
-                "Cok fazla aciklama istegi. "
-                "Lutfen bir dakika sonra tekrar deneyin."
-            ),
+        raise RateLimitExceededError(
+            "Cok fazla aciklama istegi. "
+            "Lutfen bir dakika sonra tekrar deneyin."
         )
 
 
@@ -66,8 +48,11 @@ async def explain_info(
         endpoint=f"{settings.api_prefix}/explain",
         llm_enabled=settings.llm_enabled,
         llm_configured=settings.llm_is_configured,
+        ready=settings.llm_is_configured,
+        status_message=settings.llm_status_message,
         provider=settings.llm_provider,
         model=settings.llm_model,
+        rate_limit_enabled=settings.rate_limit_enabled,
         rate_limit_explain_per_minute=(
             settings.rate_limit_explain_per_minute
             if settings.rate_limit_enabled

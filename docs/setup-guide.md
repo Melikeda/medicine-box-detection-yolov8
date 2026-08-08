@@ -126,7 +126,7 @@ python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
 | Try another photo | Pass `--image path/to/photo.jpg` — no code change |
 | Recognize a new drug | Add a row to `data/database/medicines.csv` |
 
-YOLO detects boxes; OCR reads text; RapidFuzz matches only drugs listed in the CSV (38 records).
+YOLO detects boxes; OCR reads text; RapidFuzz matches only drugs listed in the CSV (**131** records).
 
 ---
 
@@ -143,9 +143,13 @@ Server starts at http://127.0.0.1:8000
 | `GET /health` | API and model readiness |
 | `GET /api/v1/analyze/info` | Upload limits, formats, OCR modes |
 | `POST /api/v1/analyze?mode=fast` | Upload image (`file` field) |
-| `GET /api/v1/medicines` | List / search medicines (SQLite) |
+| `GET /api/v1/medicines` | List / search medicines (SQLite, 131 drugs) |
 | `GET /api/v1/medicines/categories` | Distinct categories |
 | `GET /api/v1/medicines/{id}` | Medicine detail |
+| `GET /api/v1/explain/info` | LLM / explain readiness |
+| `POST /api/v1/explain` | Gemini short explanation |
+| `GET /api/v1/scans` | Server scan history list |
+| `POST /api/v1/scans` | Persist successful analyze result |
 
 Example:
 

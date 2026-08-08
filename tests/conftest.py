@@ -4,6 +4,12 @@ from pathlib import Path
 
 import pytest
 
+from backend.app.routers import explain as explain_router
+from backend.app.routers import scans as scans_router
+from backend.app.services.explanation_cache import reset_shared_explanation_cache
+from backend.app.services.llm_service import LlmExplanationService
+from backend.app.services.medicine_service import MedicineQueryService
+from backend.app.services.scan_service import ScanQueryService
 from src.database.repository import seed_medicines_from_csv
 from src.database.session import reset_engine
 from src.services.config import PipelineConfig
@@ -54,5 +60,17 @@ def seeded_pipeline_config(
 @pytest.fixture(autouse=True)
 def _reset_db_engine() -> None:
     reset_engine()
+    MedicineQueryService.reset_instance()
+    ScanQueryService.reset_instance()
+    LlmExplanationService.reset_instance()
+    reset_shared_explanation_cache()
+    explain_router._get_explain_rate_limiter.cache_clear()
+    scans_router._get_scans_rate_limiter.cache_clear()
     yield
     reset_engine()
+    MedicineQueryService.reset_instance()
+    ScanQueryService.reset_instance()
+    LlmExplanationService.reset_instance()
+    reset_shared_explanation_cache()
+    explain_router._get_explain_rate_limiter.cache_clear()
+    scans_router._get_scans_rate_limiter.cache_clear()

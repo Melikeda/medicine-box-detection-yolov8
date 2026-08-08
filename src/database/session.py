@@ -12,6 +12,7 @@ from src.database.models import Base
 
 _engine: Engine | None = None
 _SessionLocal: sessionmaker[Session] | None = None
+_database_path: Path | None = None
 
 
 def get_sqlite_url(database_path: Path) -> str:
@@ -27,12 +28,22 @@ def init_engine(
     """
     SQLite engine ve session factory oluşturur.
 
+    Aynı veritabanı yolu için mevcut engine yeniden kullanılır.
     Veritabanı dosyasının bulunduğu klasör yoksa oluşturulur.
     """
-    global _engine, _SessionLocal
+    global _engine, _SessionLocal, _database_path
 
-    database_path = Path(database_path)
+    database_path = Path(database_path).resolve()
     database_path.parent.mkdir(parents=True, exist_ok=True)
+
+    if _engine is not None and _database_path == database_path:
+        return _engine
+
+    if _engine is not None:
+        _engine.dispose()
+        _engine = None
+        _SessionLocal = None
+        _database_path = None
 
     engine = create_engine(
         get_sqlite_url(database_path),
@@ -47,6 +58,7 @@ def init_engine(
         cursor.close()
 
     _engine = engine
+    _database_path = database_path
     _SessionLocal = sessionmaker(
         bind=engine,
         autoflush=False,
@@ -94,10 +106,11 @@ def session_scope() -> Generator[Session, None, None]:
 
 def reset_engine() -> None:
     """Test veya yeniden yapılandırma için engine'i sıfırlar."""
-    global _engine, _SessionLocal
+    global _engine, _SessionLocal, _database_path
 
     if _engine is not None:
         _engine.dispose()
 
     _engine = None
     _SessionLocal = None
+    _database_path = None
