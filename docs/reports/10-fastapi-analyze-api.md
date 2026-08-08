@@ -1,5 +1,10 @@
 # Report 10 — FastAPI Backend & Analyze API
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phases 11–12 add a production FastAPI backend with health checks, image upload validation, and a mobile-ready analyze endpoint that runs the full multi-box pipeline.

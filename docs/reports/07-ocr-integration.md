@@ -1,5 +1,10 @@
 # 📄 Report 07 — OCR Integration
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 This report documents the implementation of the Optical Character Recognition (OCR) module for the AI-Powered Medicine Box Detection System.

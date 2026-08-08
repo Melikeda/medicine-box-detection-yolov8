@@ -1,5 +1,10 @@
 # 📦 Dataset Preparation Report
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## 📌 Purpose
 
 The purpose of this phase is to prepare, organize, and validate a high-quality dataset for training the YOLOv8 object detection model.

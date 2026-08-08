@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../routes/app_router.dart';
+import '../models/analyze_response.dart';
 import '../services/analyze_api_exception.dart';
 import '../services/analyze_api_service.dart';
+import '../services/scan_api_service.dart';
 import '../services/scan_history_service.dart';
 import '../theme/app_colors.dart';
 import '../widgets/loading_overlay.dart';
@@ -17,11 +19,13 @@ class ImagePreviewScreen extends StatefulWidget {
     required this.imagePath,
     this.analyzeService,
     this.historyService,
+    this.scanApiService,
   });
 
   final String imagePath;
   final AnalyzeApiService? analyzeService;
   final ScanHistoryService? historyService;
+  final ScanApiService? scanApiService;
 
   @override
   State<ImagePreviewScreen> createState() => _ImagePreviewScreenState();
@@ -30,6 +34,7 @@ class ImagePreviewScreen extends StatefulWidget {
 class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
   late final AnalyzeApiService _analyzeService;
   late final ScanHistoryService _historyService;
+  late final ScanApiService _scanApiService;
   bool _isAnalyzing = false;
 
   @override
@@ -37,12 +42,16 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
     super.initState();
     _analyzeService = widget.analyzeService ?? AnalyzeApiService();
     _historyService = widget.historyService ?? ScanHistoryService();
+    _scanApiService = widget.scanApiService ?? ScanApiService();
   }
 
   @override
   void dispose() {
     if (widget.analyzeService == null) {
       _analyzeService.dispose();
+    }
+    if (widget.scanApiService == null) {
+      _scanApiService.dispose();
     }
     super.dispose();
   }
@@ -73,12 +82,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
         return;
       }
 
-      unawaited(
-        _historyService.saveScan(
-          response: response,
-          imagePath: widget.imagePath,
-        ),
-      );
+      unawaited(_persistScanHistory(response));
 
       await Navigator.of(context).pushNamed(
         AppRoutes.result,
@@ -101,6 +105,19 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
       if (mounted) {
         setState(() => _isAnalyzing = false);
       }
+    }
+  }
+
+  /// Local SQLite first; server sync is best-effort and never blocks UX.
+  Future<void> _persistScanHistory(AnalyzeResponse response) async {
+    await _historyService.saveScan(
+      response: response,
+      imagePath: widget.imagePath,
+    );
+    try {
+      await _scanApiService.createScan(response: response);
+    } catch (_) {
+      // Offline / server down — local history still available.
     }
   }
 

@@ -1,5 +1,10 @@
 # Report 19 — Pipeline Performance Optimization
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Reduces CPU analyze latency in `fast` mode by cutting OCR search space, stopping early on confident matches, resizing large uploads server-side, and exposing per-stage timing in the API response.

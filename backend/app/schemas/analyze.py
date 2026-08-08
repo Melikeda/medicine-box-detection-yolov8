@@ -12,7 +12,8 @@ class BoundingBoxSchema(BaseModel):
 
 class MedicineBoxResultSchema(BaseModel):
     box_index: int
-    bounding_box: BoundingBoxSchema
+    # Optional so mobile history sync (without bbox) can POST /scans.
+    bounding_box: BoundingBoxSchema | None = None
     yolo_confidence: float
     ocr_text: str | None = None
     medicine_name: str | None = None

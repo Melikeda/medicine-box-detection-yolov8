@@ -4,9 +4,9 @@
 
 Stores successful analyze results on the device so users can reopen past scans without re-running the backend pipeline.
 
-**Scope:** Mobile-only (local SQLite). Backend `/api/v1/scans` is out of scope for this MVP slice.
+**Scope:** Mobile local SQLite (MVP) + server sync via `/api/v1/scans` (final-polish-4).
 
-**Branch:** `feature/scan-history` (merged PR #49)
+**Branch:** `feature/scan-history` (merged PR #49); server API on `feature/final-polish-4`
 
 ---
 
@@ -67,7 +67,19 @@ Home → History icon → List → Tap → Result screen (saved JSON)
 
 ---
 
+## Server sync (final-polish-4)
+
+| Layer | Detail |
+|-------|--------|
+| Table | SQLite `scans` (same DB as medicines) |
+| API | `POST/GET/DELETE /api/v1/scans`, `GET /api/v1/scans/info` |
+| Auth | None yet — global list (document for production) |
+| Mobile | After local `saveScan`, best-effort `ScanApiService.createScan` |
+| Images | Stay on device; server stores analyze JSON only |
+| Cap | `SCAN_HISTORY_MAX_ENTRIES` (default 200) |
+
 ## Future (optional)
 
-- `POST /api/v1/scans` on backend when multi-device sync is needed
+- Per-user auth + private scan lists
 - PostgreSQL migration can absorb `scans` table later
+- Pull remote history into the mobile list UI

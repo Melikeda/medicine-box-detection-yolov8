@@ -1,5 +1,10 @@
 # Report 12 — SQLite Database Migration
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phase 13 migrates the medicine data layer from CSV-only reads to **SQLite + SQLAlchemy**, while keeping `medicines.csv` as the seed source of truth.

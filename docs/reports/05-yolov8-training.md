@@ -1,5 +1,10 @@
 # 🤖 YOLOv8 Training Report
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## 📌 Purpose
 
 The purpose of this phase is to train a YOLOv8 object detection model using the prepared medicine box dataset and evaluate its performance on unseen images.

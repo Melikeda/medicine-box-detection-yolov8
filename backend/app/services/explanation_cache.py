@@ -27,3 +27,22 @@ class ExplanationCache:
     def clear(self) -> None:
         with self._lock:
             self._entries.clear()
+
+
+_shared_cache: ExplanationCache | None = None
+
+
+def get_shared_explanation_cache() -> ExplanationCache:
+    """Uygulama genelinde paylaşılan cache singleton'ı döndürür."""
+    global _shared_cache
+    if _shared_cache is None:
+        _shared_cache = ExplanationCache()
+    return _shared_cache
+
+
+def reset_shared_explanation_cache() -> None:
+    """Test veya yeniden yapılandırma için paylaşılan cache'i sıfırlar."""
+    global _shared_cache
+    if _shared_cache is not None:
+        _shared_cache.clear()
+    _shared_cache = None

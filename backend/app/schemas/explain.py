@@ -28,7 +28,10 @@ class ExplainInfoSchema(BaseModel):
     method: str = "POST"
     llm_enabled: bool
     llm_configured: bool
+    ready: bool = False
+    status_message: str = ""
     provider: str
     model: str
+    rate_limit_enabled: bool = True
     rate_limit_explain_per_minute: int | None = None
     cache_enabled: bool = True

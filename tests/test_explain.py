@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from backend.app.config import ApiSettings, get_api_settings
+from backend.app.dependencies import get_llm_service, get_medicine_service
 from backend.app.exceptions import register_exception_handlers
 from backend.app.routers import explain as explain_router
 from backend.app.services.llm_service import (
@@ -49,13 +50,9 @@ def explain_app(
     def override_llm_service() -> LlmExplanationService:
         return llm_service
 
-    app.dependency_overrides[
-        explain_router.get_medicine_service
-    ] = override_medicine_service
+    app.dependency_overrides[get_medicine_service] = override_medicine_service
     app.dependency_overrides[get_api_settings] = override_settings
-    app.dependency_overrides[
-        explain_router.get_llm_service
-    ] = override_llm_service
+    app.dependency_overrides[get_llm_service] = override_llm_service
 
     return TestClient(app)
 
@@ -67,6 +64,11 @@ def test_explain_info_endpoint(explain_app: TestClient) -> None:
     assert payload["endpoint"] == "/api/v1/explain"
     assert payload["llm_enabled"] is True
     assert payload["llm_configured"] is True
+    assert payload["ready"] is True
+    assert "hazir" in payload["status_message"].lower()
+    assert payload["cache_enabled"] is True
+    assert payload["rate_limit_enabled"] is True
+    assert payload["rate_limit_explain_per_minute"] == 5
     assert payload["provider"] == "mock"
     assert payload["model"] == "gemini-flash-latest"
 
@@ -116,9 +118,7 @@ def test_explain_disabled_returns_503(
             seeded_pipeline_config
         )
 
-    app.dependency_overrides[
-        explain_router.get_medicine_service
-    ] = override_medicine_service
+    app.dependency_overrides[get_medicine_service] = override_medicine_service
     app.dependency_overrides[get_api_settings] = lambda: disabled_settings
 
     client = TestClient(app)
@@ -127,3 +127,120 @@ def test_explain_disabled_returns_503(
         json={"medicine_id": "MED001"},
     )
     assert response.status_code == 503
+    assert "LLM_ENABLED" in response.json()["error"]
+
+
+def test_explain_enabled_without_key_returns_503(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    app = FastAPI()
+    register_exception_handlers(app)
+    app.include_router(explain_router.router, prefix="/api/v1")
+
+    settings = ApiSettings(
+        llm_enabled=True,
+        llm_mock_mode=False,
+        llm_provider="gemini",
+        gemini_api_key=None,
+        rate_limit_enabled=False,
+    )
+
+    def override_medicine_service() -> MedicineQueryService:
+        return MedicineQueryService.from_pipeline_config(
+            seeded_pipeline_config
+        )
+
+    app.dependency_overrides[get_medicine_service] = override_medicine_service
+    app.dependency_overrides[get_api_settings] = lambda: settings
+
+    client = TestClient(app)
+    info = client.get("/api/v1/explain/info")
+    assert info.status_code == 200
+    assert info.json()["ready"] is False
+    assert "GEMINI_API_KEY" in info.json()["status_message"]
+
+    response = client.post(
+        "/api/v1/explain",
+        json={"medicine_id": "MED001"},
+    )
+    assert response.status_code == 503
+    assert response.json()["success"] is False
+
+
+def test_explain_rate_limit_returns_429(
+    seeded_pipeline_config: PipelineConfig,
+    llm_settings: ApiSettings,
+) -> None:
+    settings = ApiSettings(
+        llm_enabled=True,
+        llm_mock_mode=True,
+        llm_provider="mock",
+        rate_limit_enabled=True,
+        rate_limit_explain_per_minute=2,
+    )
+    app = FastAPI()
+    register_exception_handlers(app)
+    app.include_router(explain_router.router, prefix="/api/v1")
+
+    llm_service = LlmExplanationService(
+        settings=settings,
+        explainer=MockMedicineExplainer(),
+        provider="mock",
+        model="mock",
+    )
+
+    app.dependency_overrides[get_medicine_service] = (
+        lambda: MedicineQueryService.from_pipeline_config(
+            seeded_pipeline_config
+        )
+    )
+    app.dependency_overrides[get_api_settings] = lambda: settings
+    app.dependency_overrides[get_llm_service] = lambda: llm_service
+
+    client = TestClient(app)
+    assert client.post(
+        "/api/v1/explain",
+        json={"medicine_id": "MED001"},
+    ).status_code == 200
+    assert client.post(
+        "/api/v1/explain",
+        json={"medicine_id": "MED001"},
+    ).status_code == 200
+
+    blocked = client.post(
+        "/api/v1/explain",
+        json={"medicine_id": "MED001"},
+    )
+    assert blocked.status_code == 429
+    payload = blocked.json()
+    assert payload["success"] is False
+    assert "aciklama" in payload["error"].lower()
+
+
+def test_llm_cache_is_shared_across_service_instances(
+    llm_settings: ApiSettings,
+) -> None:
+    first = LlmExplanationService.from_settings(llm_settings)
+    second = LlmExplanationService.from_settings(llm_settings)
+
+    assert first.cache is second.cache
+
+    medicine = {
+        "medicine_id": "MED001",
+        "medicine_name": "Parol",
+        "category": "Ağrı Kesici",
+        "active_ingredient": "Paracetamol",
+    }
+    _, cached_first = first.explain_medicine(medicine, locale="tr")
+    _, cached_second = second.explain_medicine(medicine, locale="tr")
+
+    assert cached_first is False
+    assert cached_second is True
+
+
+def test_medicine_service_reuses_instance(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    first = MedicineQueryService.from_pipeline_config(seeded_pipeline_config)
+    second = MedicineQueryService.from_pipeline_config(seeded_pipeline_config)
+    assert first is second

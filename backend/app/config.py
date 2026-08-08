@@ -59,7 +59,10 @@ class ApiSettings(BaseSettings):
     llm_model: str = DEFAULT_GEMINI_MODEL
     llm_cache_enabled: bool = True
     llm_mock_mode: bool = False
-    rate_limit_explain_per_minute: int = Field(default=10, ge=1, le=1000)
+    # Keep aligned with Gemini free-tier RPM guidance (see Report 21).
+    rate_limit_explain_per_minute: int = Field(default=5, ge=1, le=1000)
+    rate_limit_scans_per_minute: int = Field(default=30, ge=1, le=1000)
+    scan_history_max_entries: int = Field(default=200, ge=10, le=5000)
 
     @field_validator("cors_origins", mode="before")
     @classmethod
@@ -79,12 +82,55 @@ class ApiSettings(BaseSettings):
         return ("*",)
 
     @property
+    def is_production(self) -> bool:
+        return self.environment == "production"
+
+    @property
     def expose_error_details(self) -> bool:
-        return self.environment != "production"
+        return not self.is_production
+
+    @property
+    def docs_enabled(self) -> bool:
+        """Swagger/ReDoc/OpenAPI only outside production."""
+        return not self.is_production
+
+    @property
+    def cors_allow_credentials(self) -> bool:
+        """Browsers reject credentials with wildcard CORS origins."""
+        return "*" not in self.cors_origins
 
     @property
     def max_upload_size_bytes(self) -> int:
         return int(self.max_upload_size_mb * 1024 * 1024)
+
+    def validate_production_security(self) -> None:
+        """Fail fast when production is misconfigured."""
+        if not self.is_production:
+            return
+
+        if not self.cors_origins or "*" in self.cors_origins:
+            raise RuntimeError(
+                "ENVIRONMENT=production requires explicit CORS_ORIGINS "
+                "(comma-separated origins; '*' is not allowed)."
+            )
+
+        self.validate_llm_configuration()
+
+    def validate_llm_configuration(self) -> None:
+        """
+        Fail fast when explain is enabled but not usable.
+
+        In production, LLM_ENABLED=true requires a valid key or mock mode.
+        """
+        if not self.llm_enabled or self.llm_is_configured:
+            return
+
+        message = (
+            "LLM_ENABLED=true but explain is not configured. "
+            "Set a valid GEMINI_API_KEY, or LLM_MOCK_MODE=true for local/dev."
+        )
+        if self.is_production:
+            raise RuntimeError(message)
 
     @property
     def llm_is_configured(self) -> bool:
@@ -94,7 +140,7 @@ class ApiSettings(BaseSettings):
             return True
 
         key = (self.gemini_api_key or "").strip()
-        if not key:
+        if len(key) < 20:
             return False
 
         lowered = key.lower()
@@ -104,11 +150,27 @@ class ApiSettings(BaseSettings):
             "paste",
             "example",
             "changeme",
+            "replace_me",
+            "xxx",
         )
         if any(marker in lowered for marker in placeholder_markers):
             return False
 
         return True
+
+    @property
+    def llm_status_message(self) -> str:
+        """Human-readable explain readiness for /explain/info and logs."""
+        if not self.llm_enabled:
+            return "LLM kapali. Acmak icin LLM_ENABLED=true yapin."
+        if self.llm_mock_mode or self.llm_provider == "mock":
+            return "LLM hazir (mock mode)."
+        if self.llm_is_configured:
+            return "LLM hazir (Gemini)."
+        key = (self.gemini_api_key or "").strip()
+        if not key:
+            return "LLM acik ama GEMINI_API_KEY eksik."
+        return "LLM acik ama GEMINI_API_KEY gecersiz veya ornek deger."
 
     def create_pipeline_config(self) -> PipelineConfig:
         from pathlib import Path

@@ -1,5 +1,10 @@
 # Report 16 — Mobile & Backend Integration (MVP)
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phase 17 connects the Flutter mobile client to the existing FastAPI analyze endpoint. The mobile app uploads a gallery photo, runs the same YOLO + OCR + matching pipeline as the backend CLI, and displays structured results on a dedicated result screen.
@@ -156,17 +161,27 @@ pytest tests/test_api.py::test_upload_validator_accepts_octet_stream_with_jpg_su
 
 ---
 
+## See also (current)
+
+- Product app name: **Yolocilin** — [mobile/README.md](../../mobile/README.md)
+- Explain API: [Report 21](21-llm-integration.md)
+- Scan history (local + server): [Report 23](23-scan-history.md)
+- E2E / performance: [Report 25](25-e2e-performance.md)
+
 ## Manual E2E Checklist
+
+Updated checklist + automated API smoke: [Report 25](25-e2e-performance.md).
 
 1. Start backend: `venv\Scripts\Activate.ps1` then `python run_api.py`
 2. Verify health: `http://127.0.0.1:8000/health`
-3. Load Flutter env: `. .\scripts\env-flutter.ps1`
-4. Launch emulator: `flutter emulators --launch medicine_box_emulator`
-5. Push sample photos: `.\scripts\push-samples-to-emulator.ps1`
-6. Run app: `cd mobile; flutter run`
-7. Gallery → Preview → **Analiz Et** → wait 1–5 min on CPU
-8. Confirm result screen (medicine name, match score)
-9. Stop backend → confirm error SnackBar
+3. Optional API smoke: `python scripts/e2e_api_flow.py --skip-analyze`
+4. Load Flutter env: `. .\scripts\env-flutter.ps1`
+5. Launch emulator: `flutter emulators --launch medicine_box_emulator`
+6. Push sample photos: `.\scripts\push-samples-to-emulator.ps1`
+7. Run app: `cd mobile; flutter run`
+8. Gallery → Preview → **Analiz Et** → wait 1–5 min on CPU
+9. Confirm result screen (medicine name, match score) + history / explain as needed
+10. Stop backend → confirm error SnackBar
 
 ---
 

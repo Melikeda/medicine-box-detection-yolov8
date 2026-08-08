@@ -1,6 +1,8 @@
 # Setup Guide
 
-Environment setup for the **Medicine Box Detection System**.
+Environment setup for **Yolocilin** (Medicine Box Detection System).
+
+Product overview: [root README](../README.md) · Security: [SECURITY.md](../SECURITY.md)
 
 ---
 
@@ -8,11 +10,11 @@ Environment setup for the **Medicine Box Detection System**.
 
 | Software | Purpose |
 |----------|---------|
-| Python 3.12+ | AI pipeline and backend |
+| Python **3.11+** (CI: 3.11 · Docker image: 3.12) | AI pipeline and backend |
 | Git | Version control |
 | VS Code (recommended) | Development IDE |
 | Docker Desktop | Container deployment (API) |
-| Flutter SDK | Mobile app (`mobile/`) |
+| Flutter SDK 3.19+ | Yolocilin mobile app (`mobile/`) |
 | Android Studio | Android emulator / device testing |
 
 ---
@@ -75,18 +77,20 @@ pip list
 
 ## 5. YOLO Model
 
-Training produces weights under `runs/detect/`. For inference scripts, point to your trained `best.pt` file. Model files (`.pt`) are excluded from Git.
+`.pt` files are **not in Git**. The pipeline resolves weights automatically (`src/services/model_paths.py`):
 
-Train from scratch:
+1. `runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt` (legacy / Docker default)
+2. `runs/detect/medicine_box_yolov8n/weights/best.pt` ← `python src/train.py`
+3. `runs/detect/medicine_box_yolov8n-2/weights/best.pt`
+4. `models/best.pt` (optional manual copy)
+
+Or set `YOLO_MODEL_PATH` in `.env`. Details: [models/README.md](../models/README.md).
+
+Dataset images under `data/dataset/train|valid|test` are gitignored — restore from Roboflow before training ([data/README.md](../data/README.md)).
 
 ```bash
-python src/train.py
-```
-
-Run detection on a sample image:
-
-```bash
-python src/predict.py
+python src/train.py      # writes runs/detect/medicine_box_yolov8n/weights/best.pt
+python src/predict.py    # uses the same resolver; conf aligned with pipeline (0.40)
 ```
 
 ---
@@ -126,7 +130,7 @@ python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
 | Try another photo | Pass `--image path/to/photo.jpg` — no code change |
 | Recognize a new drug | Add a row to `data/database/medicines.csv` |
 
-YOLO detects boxes; OCR reads text; RapidFuzz matches only drugs listed in the CSV (38 records).
+YOLO detects boxes; OCR reads text; RapidFuzz matches only drugs listed in the CSV (**131** records).
 
 ---
 
@@ -143,9 +147,13 @@ Server starts at http://127.0.0.1:8000
 | `GET /health` | API and model readiness |
 | `GET /api/v1/analyze/info` | Upload limits, formats, OCR modes |
 | `POST /api/v1/analyze?mode=fast` | Upload image (`file` field) |
-| `GET /api/v1/medicines` | List / search medicines (SQLite) |
+| `GET /api/v1/medicines` | List / search medicines (SQLite, 131 drugs) |
 | `GET /api/v1/medicines/categories` | Distinct categories |
 | `GET /api/v1/medicines/{id}` | Medicine detail |
+| `GET /api/v1/explain/info` | LLM / explain readiness |
+| `POST /api/v1/explain` | Gemini short explanation |
+| `GET /api/v1/scans` | Server scan history list |
+| `POST /api/v1/scans` | Persist successful analyze result |
 
 Example:
 
@@ -155,13 +163,34 @@ curl -X POST "http://127.0.0.1:8000/api/v1/analyze?mode=fast" \
   -F "file=@data/samples/coklu_resim.jpg"
 ```
 
-Interactive docs: http://127.0.0.1:8000/docs
+Interactive docs (development): http://127.0.0.1:8000/docs  
+Disabled when `ENVIRONMENT=production`.
 
-### Run tests
+### Environment & production
+
+```bash
+copy .env.example .env   # Windows
+```
+
+| Variable | Notes |
+|----------|--------|
+| `ENVIRONMENT` | `production` → hide 500 details, close `/docs`, require real CORS |
+| `CORS_ORIGINS` | Comma-separated; `*` forbidden in production |
+| `LLM_ENABLED` / `GEMINI_API_KEY` | Required for explain (or `LLM_MOCK_MODE=true`) |
+| `SCAN_HISTORY_MAX_ENTRIES` | Server history cap (default 200) |
+| `RATE_LIMIT_*` | Analyze / explain / scans |
+
+Check explain readiness: `curl http://127.0.0.1:8000/api/v1/explain/info`
+
+### Run tests & E2E smoke
 
 ```bash
 pytest
+pytest tests/test_e2e_api_flow.py -q
+python scripts/e2e_api_flow.py --skip-analyze
 ```
+
+See [Report 25](reports/25-e2e-performance.md).
 
 Restart the server after pulling code changes.
 
@@ -240,7 +269,9 @@ Emulator sample photos:
 ## 10. Docker Deployment
 
 Requires Docker Desktop and trained YOLO weights at  
-`runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt`.
+the path in `docker-compose.yml` (default nested `-2` layout), or set
+`YOLO_MODEL_HOST_PATH` to any local `best.pt` (including
+`runs/detect/medicine_box_yolov8n/weights/best.pt` from `src/train.py`).
 
 ```bash
 docker compose up --build

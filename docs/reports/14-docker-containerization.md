@@ -1,5 +1,10 @@
 # Report 14 — Docker Containerization
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phase 15 packages the FastAPI backend and AI pipeline into a reproducible Docker deployment so the API runs the same way on any machine with Docker installed.

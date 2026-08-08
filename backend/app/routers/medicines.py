@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from backend.app.config import ApiSettings, get_api_settings
+from backend.app.dependencies import get_medicine_service
 from backend.app.schemas.medicines import (
     MedicineCategoriesResponseSchema,
     MedicineDetailResponseSchema,
@@ -10,14 +10,6 @@ from backend.app.schemas.medicines import (
 from backend.app.services.medicine_service import MedicineQueryService
 
 router = APIRouter(prefix="/medicines", tags=["medicines"])
-
-
-def get_medicine_service(
-    settings: ApiSettings = Depends(get_api_settings),
-) -> MedicineQueryService:
-    return MedicineQueryService.from_pipeline_config(
-        settings.create_pipeline_config()
-    )
 
 
 @router.get("", response_model=MedicineListResponseSchema)

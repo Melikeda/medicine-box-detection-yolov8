@@ -3,14 +3,12 @@ from pathlib import Path
 from typing import Literal
 
 from src.ocr.ocr_pipeline import DEFAULT_BLUR_THRESHOLD
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
-DEFAULT_MODEL_PATH = (
-    PROJECT_ROOT
-    / "runs/detect/runs/detect/"
-    / "medicine_box_yolov8n-2/weights/best.pt"
+from src.services.model_paths import (
+    PROJECT_ROOT,
+    resolve_default_model_path,
 )
+
+DEFAULT_MODEL_PATH = resolve_default_model_path()
 
 DEFAULT_MEDICINES_CSV_PATH = (
     PROJECT_ROOT / "data/database/medicines.csv"

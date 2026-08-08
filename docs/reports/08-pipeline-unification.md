@@ -1,5 +1,10 @@
 # Report 08 — Pipeline Unification
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 This report documents Phase 9 of the AI-Powered Medicine Box Detection System: unifying the end-to-end AI pipeline under a single service layer in `src/services/`.

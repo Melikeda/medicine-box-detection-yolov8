@@ -37,10 +37,12 @@ Hardens the FastAPI backend and Android client for production-adjacent deploymen
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ENVIRONMENT` | `development` | `production` masks 500 details |
-| `CORS_ORIGINS` | `*` | Comma-separated allowed origins |
-| `RATE_LIMIT_ENABLED` | `true` | Toggle analyze rate limit |
-| `RATE_LIMIT_ANALYZE_PER_MINUTE` | `20` | Per IP per minute |
+| `ENVIRONMENT` | `development` | `production` masks 500 details + disables `/docs` |
+| `CORS_ORIGINS` | `*` | Comma-separated; `*` rejected in production |
+| `RATE_LIMIT_ENABLED` | `true` | Toggle rate limits |
+| `RATE_LIMIT_ANALYZE_PER_MINUTE` | `20` | Analyze per IP per minute |
+| `RATE_LIMIT_EXPLAIN_PER_MINUTE` | `5` | Explain per IP per minute |
+| `RATE_LIMIT_SCANS_PER_MINUTE` | `30` | Scans POST per IP per minute (final-polish-4) |
 
 ---
 
@@ -63,11 +65,12 @@ Hardens the FastAPI backend and Android client for production-adjacent deploymen
 
 ## Deployment checklist
 
-1. Set `ENVIRONMENT=production`
-2. Set `CORS_ORIGINS` to your app domain(s) — not `*`
-3. Deploy API behind **HTTPS** (reverse proxy / cloud)
-4. Build **release** APK with `API_BASE_URL=https://...`
-5. Keep secrets in `.env` only (never commit)
+1. Set `ENVIRONMENT=production` (also disables `/docs`, `/redoc`, `/openapi.json`)
+2. Set `CORS_ORIGINS` to your app domain(s) — not `*` (startup fails if missing in production)
+3. Pass the same vars via `docker-compose.yml` / `.env` (`ENVIRONMENT`, `CORS_ORIGINS`, rate limits)
+4. Deploy API behind **HTTPS** (reverse proxy / cloud)
+5. Build **release** APK with `API_BASE_URL=https://...`
+6. Keep secrets in `.env` only (never commit)
 
 ---
 
