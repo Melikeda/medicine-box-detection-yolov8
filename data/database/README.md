@@ -1,11 +1,11 @@
 # Medicine Database
 
 <p align="center">
-  <strong>Seed catalog for OCR fuzzy matching and runtime API queries</strong>
+  <strong>Yolocilin seed catalog — OCR fuzzy matching &amp; runtime API</strong>
 </p>
 
 <p align="center">
-  CSV source of truth · SQLite runtime store · TİTCK SKRS enrichment pipeline
+  CSV source of truth · SQLite runtime (`medicines` + `scans`) · TİTCK SKRS enrichment
 </p>
 
 ---

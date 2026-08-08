@@ -1,5 +1,10 @@
 # Report 15 — Flutter Mobile App Foundation
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phase 16 adds the Flutter mobile client foundation under `mobile/`. This phase focuses on UI scaffolding and gallery image selection; API integration is deferred to Phase 17 (Issue #31).

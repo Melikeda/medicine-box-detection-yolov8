@@ -1,5 +1,10 @@
 # Report 09 — Pipeline Servicification
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phase 10 refactors the unified pipeline into dedicated services with singleton resource management and configurable OCR modes. This prepares the codebase for FastAPI startup loading (Issue #25).

@@ -1,8 +1,10 @@
 # Examples
 
-The `examples/` directory contains **step-by-step learning scripts** and **usage demonstrations** created during the development of this project. These files document how YOLOv8, OpenCV, OCR, RapidFuzz, CSV database access, and pipeline integration were learned and built incrementally.
+Step-by-step learning scripts from the **Yolocilin** / medicine box detection internship project. They show how YOLOv8, OpenCV, OCR, RapidFuzz, CSV access, and pipeline integration were built incrementally.
 
-**Reusable, production-ready application logic lives under `src/`.** Example scripts should import and call public functions from `src/` instead of duplicating the main implementation.
+**Production logic lives under `src/`** (and the FastAPI app under `backend/`). Prefer importing from `src/` instead of copying implementations.
+
+Product docs: [root README](../README.md) · current catalog size **131** medicines.
 
 ---
 

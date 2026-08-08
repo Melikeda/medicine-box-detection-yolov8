@@ -1,6 +1,6 @@
 # Data Directory
 
-This folder contains dataset configuration, sample images, and the medicine database.
+Dataset configuration, sample images, and the medicine catalog for **Yolocilin**.
 
 ## Contents
 

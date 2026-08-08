@@ -1,5 +1,10 @@
 # Report 18 — Medicine Database Expansion (TİTCK SKRS)
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Expands the seed medicine catalog from **38** to **107** records by enriching placeholder fields from the official TİTCK SKRS E-Reçete list and appending common OTC brand variants used in Turkish pharmacy shelves.

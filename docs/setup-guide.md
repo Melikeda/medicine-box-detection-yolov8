@@ -1,6 +1,8 @@
 # Setup Guide
 
-Environment setup for the **Medicine Box Detection System**.
+Environment setup for **Yolocilin** (Medicine Box Detection System).
+
+Product overview: [root README](../README.md) · Security: [SECURITY.md](../SECURITY.md)
 
 ---
 
@@ -8,11 +10,11 @@ Environment setup for the **Medicine Box Detection System**.
 
 | Software | Purpose |
 |----------|---------|
-| Python 3.12+ | AI pipeline and backend |
+| Python **3.11+** (CI: 3.11 · Docker image: 3.12) | AI pipeline and backend |
 | Git | Version control |
 | VS Code (recommended) | Development IDE |
 | Docker Desktop | Container deployment (API) |
-| Flutter SDK | Mobile app (`mobile/`) |
+| Flutter SDK 3.19+ | Yolocilin mobile app (`mobile/`) |
 | Android Studio | Android emulator / device testing |
 
 ---
@@ -159,13 +161,34 @@ curl -X POST "http://127.0.0.1:8000/api/v1/analyze?mode=fast" \
   -F "file=@data/samples/coklu_resim.jpg"
 ```
 
-Interactive docs: http://127.0.0.1:8000/docs
+Interactive docs (development): http://127.0.0.1:8000/docs  
+Disabled when `ENVIRONMENT=production`.
 
-### Run tests
+### Environment & production
+
+```bash
+copy .env.example .env   # Windows
+```
+
+| Variable | Notes |
+|----------|--------|
+| `ENVIRONMENT` | `production` → hide 500 details, close `/docs`, require real CORS |
+| `CORS_ORIGINS` | Comma-separated; `*` forbidden in production |
+| `LLM_ENABLED` / `GEMINI_API_KEY` | Required for explain (or `LLM_MOCK_MODE=true`) |
+| `SCAN_HISTORY_MAX_ENTRIES` | Server history cap (default 200) |
+| `RATE_LIMIT_*` | Analyze / explain / scans |
+
+Check explain readiness: `curl http://127.0.0.1:8000/api/v1/explain/info`
+
+### Run tests & E2E smoke
 
 ```bash
 pytest
+pytest tests/test_e2e_api_flow.py -q
+python scripts/e2e_api_flow.py --skip-analyze
 ```
+
+See [Report 25](reports/25-e2e-performance.md).
 
 Restart the server after pulling code changes.
 

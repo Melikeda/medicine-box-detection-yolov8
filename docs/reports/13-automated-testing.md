@@ -1,5 +1,10 @@
 # Report 13 — Automated Testing
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phase 14 adds a `pytest` suite for matching, SQLite, and FastAPI endpoints without loading YOLO/EasyOCR on every run.

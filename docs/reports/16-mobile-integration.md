@@ -1,5 +1,10 @@
 # Report 16 — Mobile & Backend Integration (MVP)
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Phase 17 connects the Flutter mobile client to the existing FastAPI analyze endpoint. The mobile app uploads a gallery photo, runs the same YOLO + OCR + matching pipeline as the backend CLI, and displays structured results on a dedicated result screen.
@@ -155,6 +160,13 @@ pytest tests/test_api.py::test_upload_validator_accepts_octet_stream_with_jpg_su
 ```
 
 ---
+
+## See also (current)
+
+- Product app name: **Yolocilin** — [mobile/README.md](../../mobile/README.md)
+- Explain API: [Report 21](21-llm-integration.md)
+- Scan history (local + server): [Report 23](23-scan-history.md)
+- E2E / performance: [Report 25](25-e2e-performance.md)
 
 ## Manual E2E Checklist
 

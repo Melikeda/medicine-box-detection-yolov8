@@ -1,5 +1,10 @@
 # Report 11 — Real-World Detection & Matching Improvements
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 After the analyze API was deployed, testing with real phone photos revealed edge cases: blurry images with zero YOLO detections, partial OCR brand reads, dosage-only text false matches, and OCR confusions (e.g. `€` instead of `C`). This report documents the fixes merged to `main` in commit `57789fe`.

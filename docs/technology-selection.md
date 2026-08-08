@@ -1,6 +1,8 @@
 # Technology Selection
 
-This document explains which technologies are used in the project and why they were chosen.
+Technologies behind **Yolocilin** (Medicine Box Detection System) and why they were chosen.
+
+Product name on mobile: **Yolocilin**. Backend repo title remains descriptive for GitHub discoverability.
 
 ---
 
@@ -48,8 +50,8 @@ This document explains which technologies are used in the project and why they w
 
 | Stage | Technology | Why |
 |-------|------------|-----|
-| Current | CSV + SQLite | CSV seeds SQLite; matching/API use SQLite |
-| Production (later) | PostgreSQL | Scalable; supports concurrent users and history |
+| Current | CSV + SQLite | Catalog (**131**) + `scans` history table |
+| Production (later) | PostgreSQL | Concurrent users; optional when scaling cloud |
 
 ---
 
@@ -57,19 +59,19 @@ This document explains which technologies are used in the project and why they w
 
 **Role:** REST API backend for the mobile app.
 
-**Status:** Implemented — `GET /health`, `GET/POST /api/v1/analyze`, upload validation, async pipeline.
+**Status:** Implemented — health, analyze, medicines, explain, scans; upload validation; async pipeline.
 
 **Why:** Native async support, automatic OpenAPI docs, Pydantic validation, straightforward file upload handling, excellent Python AI ecosystem fit.
 
 ---
 
-## Flutter
+## Flutter (Yolocilin)
 
-**Role:** Cross-platform mobile app (Android MVP first).
+**Role:** Cross-platform mobile app (Android MVP first), branded **Yolocilin**.
 
 **Why:** Single codebase for Android and future iOS; mature camera/gallery packages (`image_picker`); good UI tooling for internship-level development.
 
-**Status:** Foundation (Phase 16) and API integration (Phase 17) implemented — see [Report 15](reports/15-flutter-foundation.md) and [Report 16](reports/16-mobile-integration.md).
+**Status:** Analyze + camera + bilingual UI + local/server history + explain client — see [mobile/README.md](../mobile/README.md), [Report 15](reports/15-flutter-foundation.md), [Report 16](reports/16-mobile-integration.md).
 
 ---
 

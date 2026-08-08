@@ -1,24 +1,29 @@
-# Yolocilin Mobile App
+# Yolocilin — Mobile (Android)
 
-Android MVP client for the Yolocilin medicine box detection system.
+Flutter client for the **Yolocilin** medicine box detection system.
 
-**Branch:** `feature/mobile-integration`  
-**GitHub Issue:** [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)
+<p align="center">
+  <img src="../docs/assets/yolocilin-logo.png" alt="Yolocilin" width="120" />
+</p>
+
+Talks to the FastAPI backend: analyze → result UI → optional Gemini explain → local + server scan history.
 
 ---
 
-## Scope
+## Features
 
-- Splash, home, image preview, and **result** screens
-- Gallery and **camera** image picker
-- FastAPI integration (`POST /api/v1/analyze`)
-- **Local scan history** (sqflite, device-only)
-- Loading overlay, error SnackBars, summary + per-box result cards
+| Feature | Status |
+|---------|--------|
+| Splash / home / preview / result | Done |
+| Gallery + camera capture | Done |
+| `POST /api/v1/analyze` | Done |
+| Bilingual UI (TR / EN) | Done |
+| Local scan history (sqflite) | Done |
+| Best-effort `POST /api/v1/scans` sync | Done |
+| “İlaç hakkında” (`POST /api/v1/explain`) | Done (needs backend LLM) |
+| iOS | Not yet |
 
-Phase 16 foundation: [Report 15](../docs/reports/15-flutter-foundation.md)  
-Phase 17 integration: [Report 16](../docs/reports/16-mobile-integration.md)  
-Camera capture: [Report 22](../docs/reports/22-camera-capture.md)  
-Scan history: [Report 23](../docs/reports/23-scan-history.md)
+Reports: [15](../docs/reports/15-flutter-foundation.md) · [16](../docs/reports/16-mobile-integration.md) · [22](../docs/reports/22-camera-capture.md) · [23](../docs/reports/23-scan-history.md) · [21](../docs/reports/21-llm-integration.md)
 
 ---
 
@@ -27,140 +32,78 @@ Scan history: [Report 23](../docs/reports/23-scan-history.md)
 | Tool | Version |
 |------|---------|
 | Flutter SDK | 3.19+ |
-| Android Studio | Latest (SDK + emulator) |
-| Running API | `python run_api.py` |
-
-Install Flutter: https://docs.flutter.dev/get-started/install
+| Android Studio | SDK + emulator |
+| Backend | `python run_api.py` (repo root, `venv`) |
 
 ---
 
-## First-time setup
+## Setup
 
-From the repository root:
+From the **repository root**:
 
 ```powershell
-# Load Flutter/Java/Android environment
 . .\scripts\env-flutter.ps1
-
-# Install deps + run analyze
 .\scripts\setup-mobile.ps1
+.\scripts\push-samples-to-emulator.ps1   # fill emulator gallery
 ```
 
-Permanent PATH (run once after SDK install):
-
-```powershell
-.\scripts\install-flutter-path.ps1
-```
-
-### Dev tools on D: drive (recommended if C: is low on space)
-
-Default layout:
-
-```text
-D:\dev\
-├── flutter\
-├── android-sdk\
-├── android-avd\
-├── gradle\
-└── pub-cache\
-```
-
-One-time migration from C::
-
-```powershell
-# Close emulator and flutter run first
-.\scripts\migrate-dev-to-d.ps1
-```
-
-Paths: `scripts/dev-paths.ps1` (loaded by `env-flutter.ps1`).
-
-Regenerate Android scaffolding if needed:
-
-```powershell
-.\scripts\setup-mobile.ps1 -RegeneratePlatforms
-```
-
-### Emulator test photos
-
-The emulator gallery is empty by default. Load project samples:
-
-```powershell
-.\scripts\push-samples-to-emulator.ps1
-```
-
-Photos appear under **Pictures → medicine-samples**.
+Optional D: drive layout for SDKs: `.\scripts\migrate-dev-to-d.ps1` (see comments in that script).
 
 ---
 
-## Run on Android
-
-1. Start the FastAPI backend (separate terminal):
+## Run
 
 ```powershell
+# Terminal 1 — API
 cd c:\Projects\medicine-box-detection-yolov8
-.\.venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 python run_api.py
-```
 
-2. Start the emulator or connect a device:
-
-```powershell
+# Terminal 2 — app
 . .\scripts\env-flutter.ps1
 flutter emulators --launch medicine_box_emulator
-```
-
-3. From `mobile/`:
-
-```powershell
+cd mobile
 flutter run
 ```
 
-4. **Fotoğraf Çek** or gallery → pick sample → **Analiz Et** → view results.
+Flow: **Fotoğraf Çek** / gallery → preview → **Analiz Et** → result (CPU OCR may take 1–3 minutes).
 
 ### API base URL
 
-Default for Android emulator: `http://10.0.2.2:8000` (maps to host `localhost:8000`).
-
-Override at build/run time (physical device on same LAN):
-
-```powershell
-flutter run --dart-define=API_BASE_URL=http://192.168.1.10:8000
-```
-
----
-
-## Project layout
-
-```text
-mobile/
-├── lib/
-│   ├── main.dart
-│   ├── app.dart
-│   ├── config/app_config.dart
-│   ├── routes/app_router.dart
-│   ├── models/                # API response models
-│   ├── screens/               # Splash, home, preview, result
-│   ├── services/              # Image picker + analyze API
-│   ├── utils/                 # Medicine field display helpers
-│   ├── widgets/               # Medicine result card
-│   └── theme/app_theme.dart
-├── test/                      # Model + widget tests
-├── android/
-└── pubspec.yaml
-```
+| Target | URL |
+|--------|-----|
+| Android emulator (default) | `http://10.0.2.2:8000` |
+| Physical device (LAN) | `flutter run --dart-define=API_BASE_URL=http://<PC-IP>:8000` |
 
 ---
 
 ## Screen flow
 
 ```text
-Splash (2s)
-    │
-    ▼
-Home ── "Fotograf Cek" / "Galeriden Sec" ──► Image Preview ── "Analiz Et" ──► Result
-    │                              │                            │
-    └──────── "Geri Don" ◄─────────┘                            │
-    └──────── "Ana Sayfaya Don" ◄───────────────────────────────┘
+Splash
+  └─► Home ── camera / gallery ──► Preview ── Analiz Et ──► Result
+        │                                              │
+        └──── History (local) ─────────────────────────┘
+                              Result may call explain + sync scans
+```
+
+---
+
+## Layout
+
+```text
+mobile/lib/
+├── config/app_config.dart      # endpoints, timeouts
+├── services/
+│   ├── analyze_api_service.dart
+│   ├── explain_api_service.dart
+│   ├── scan_api_service.dart     # server history
+│   └── scan_history_service.dart # local SQLite
+├── screens/                    # splash, home, preview, result, history, …
+├── models/
+├── l10n/                       # TR / EN strings
+├── theme/
+└── widgets/
 ```
 
 ---
@@ -169,10 +112,11 @@ Home ── "Fotograf Cek" / "Galeriden Sec" ──► Image Preview ── "Ana
 
 | Package | Purpose |
 |---------|---------|
-| `image_picker` | Gallery + camera image selection |
-| `sqflite` | Local scan history storage |
-| `path_provider` | Persist scan thumbnails under app documents |
-| `http` | Multipart analyze upload |
+| `image_picker` | Gallery + camera |
+| `http` | Analyze / explain / scans |
+| `sqflite` + `path_provider` | Local history + thumbnails |
+| `google_fonts` | Brand typography |
+| `shared_preferences` | Locale prefs |
 
 ---
 
@@ -186,6 +130,11 @@ flutter test
 
 ---
 
-## Next phase
+## Related backend
 
-Issue #32 — advanced features (LLM, scan history, iOS) on branch `feature/advanced-features`.
+- Health: `GET /health`
+- Analyze: `POST /api/v1/analyze`
+- Explain: `POST /api/v1/explain` (enable LLM in `.env`)
+- Scans: `POST /api/v1/scans` (best-effort after local save)
+
+Root docs: [README](../README.md) · [SECURITY](../SECURITY.md) · [E2E Report 25](../docs/reports/25-e2e-performance.md)

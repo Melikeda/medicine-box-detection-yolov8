@@ -37,10 +37,12 @@ Hardens the FastAPI backend and Android client for production-adjacent deploymen
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ENVIRONMENT` | `development` | `production` masks 500 details |
-| `CORS_ORIGINS` | `*` | Comma-separated allowed origins |
-| `RATE_LIMIT_ENABLED` | `true` | Toggle analyze rate limit |
-| `RATE_LIMIT_ANALYZE_PER_MINUTE` | `20` | Per IP per minute |
+| `ENVIRONMENT` | `development` | `production` masks 500 details + disables `/docs` |
+| `CORS_ORIGINS` | `*` | Comma-separated; `*` rejected in production |
+| `RATE_LIMIT_ENABLED` | `true` | Toggle rate limits |
+| `RATE_LIMIT_ANALYZE_PER_MINUTE` | `20` | Analyze per IP per minute |
+| `RATE_LIMIT_EXPLAIN_PER_MINUTE` | `5` | Explain per IP per minute |
+| `RATE_LIMIT_SCANS_PER_MINUTE` | `30` | Scans POST per IP per minute (final-polish-4) |
 
 ---
 

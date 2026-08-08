@@ -98,6 +98,6 @@ New code:
 
 ## Follow-up (post-MVP)
 
-- PostgreSQL migration when server-side history lands
+- PostgreSQL migration (server scan history already on SQLite — [Report 23](23-scan-history.md))
 - Reduce topical placeholders (gel/cream form parsers)
 - Optional CI job on `data/database/medicines.csv` changes

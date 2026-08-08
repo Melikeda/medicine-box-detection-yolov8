@@ -1,5 +1,10 @@
 # Report 22 — Mobile Camera Capture
 
+
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+
 ## Overview
 
 Adds direct camera capture on the home screen so users can photograph a medicine box in real time, not only pick from the gallery.

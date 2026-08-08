@@ -1,20 +1,25 @@
 # Contributing
 
-Thank you for contributing to the **Medicine Box Detection System**. This project uses a **Git Feature Branch Workflow**: one issue → one branch → one pull request → merge into `main`.
+Thanks for helping improve **Yolocilin** (Medicine Box Detection System).
+
+We use a **Git Feature Branch Workflow**: one focused change → one branch → one pull request → merge to `main`.
+
+Please read [SECURITY.md](SECURITY.md) before reporting vulnerabilities.
 
 ---
 
 ## Development setup
 
-1. Clone the repository and create a virtual environment:
-
 ```powershell
 python -m venv venv
 venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+copy .env.example .env
 ```
 
-2. For mobile work, load Flutter/Android tooling:
+**Python:** 3.11+ (CI: 3.11 · Docker: 3.12).
+
+Mobile:
 
 ```powershell
 . .\scripts\env-flutter.ps1
@@ -22,7 +27,7 @@ cd mobile
 flutter pub get
 ```
 
-See [docs/setup-guide.md](docs/setup-guide.md) for full instructions.
+Full guide: [docs/setup-guide.md](docs/setup-guide.md)
 
 ---
 
@@ -30,10 +35,8 @@ See [docs/setup-guide.md](docs/setup-guide.md) for full instructions.
 
 | Pattern | Example |
 |---------|---------|
-| `feature/<short-name>` | `feature/ci-cd` |
+| `feature/<short-name>` | `feature/final-polish-4` |
 | `fix/<short-name>` | `fix/upload-mime` |
-
-Create branches from up-to-date `main`:
 
 ```bash
 git checkout main
@@ -43,9 +46,7 @@ git checkout -b feature/my-change
 
 ---
 
-## Required checks before opening a PR
-
-Run the same commands that GitHub Actions runs locally:
+## Checks before a PR
 
 ### Backend
 
@@ -61,69 +62,50 @@ flutter analyze
 flutter test
 ```
 
-### Docker (optional, when Dockerfile changes)
+### Optional
 
 ```bash
+python scripts/e2e_api_flow.py --skip-analyze
 docker compose build
 ```
 
 ---
 
-## Continuous Integration (GitHub Actions)
+## Continuous Integration
 
-| Workflow | Trigger | What it runs |
-|----------|---------|--------------|
-| [Backend Tests](.github/workflows/backend-tests.yml) | Push/PR touching backend, `src/`, `tests/` | `pytest` on Ubuntu, Python 3.11 |
-| [Mobile Tests](.github/workflows/mobile-tests.yml) | Push/PR touching `mobile/` | `flutter analyze`, `flutter test` |
-| [Docker Build](.github/workflows/docker-build.yml) | Push to `main` (Docker paths) or manual | `docker build` (no push) |
+| Workflow | Runs |
+|----------|------|
+| [Backend Tests](.github/workflows/backend-tests.yml) | `pytest` (Python 3.11) |
+| [Mobile Tests](.github/workflows/mobile-tests.yml) | `flutter analyze` + `flutter test` |
+| [Docker Build](.github/workflows/docker-build.yml) | image build on Docker path changes |
 
-Status badges are shown in [README.md](README.md).
-
-### Enabling required checks (repository maintainers)
-
-After the first successful workflow run on `main`:
-
-1. GitHub → **Settings** → **Branches** → **Branch protection rules** → Add rule for `main`
-2. Enable **Require status checks to pass before merging**
-3. Select:
-   - `pytest (Python 3.11)` (Backend Tests)
-   - `flutter analyze & test` (Mobile Tests)
-4. Optional: require pull request reviews
+Badges: [README.md](README.md)
 
 ---
 
-## Pull request guidelines
+## Pull requests
 
-1. Link the GitHub issue (`Closes #39` in PR body)
-2. Keep PRs focused — one feature or fix per PR
-3. Update docs when setup, API, or architecture changes
-4. Add or update tests when behavior changes
-5. Do not commit secrets, model weights (`.pt`), or local databases
-
-Use the [pull request template](.github/PULL_REQUEST_TEMPLATE.md) when opening a PR.
+- Use the [PR template](.github/PULL_REQUEST_TEMPLATE.md)
+- Link related issues (`Fixes #…` / `Refs #…`)
+- Prefer small, reviewable diffs
+- Update docs when behaviour or setup changes ([CHANGELOG.md](CHANGELOG.md) for user-facing notes)
 
 ---
 
-## Documentation
+## Project docs map
 
-| Document | When to update |
-|----------|----------------|
-| `README.md` | User-facing setup or feature changes |
-| `docs/roadmap.md` | Phase completion |
-| `docs/architecture.md` | System design changes |
-| `docs/setup-guide.md` | Environment instructions |
-| `docs/reports/` | New technical report per major phase |
+| Doc | Role |
+|-----|------|
+| [README.md](README.md) | Product overview |
+| [docs/architecture.md](docs/architecture.md) | Design |
+| [docs/roadmap.md](docs/roadmap.md) | Phases |
+| [docs/reports/](docs/reports/) | Historical + feature reports |
+| [tests/README.md](tests/README.md) | Test inventory |
 
 ---
 
 ## Code style
 
-- **Python:** Match existing modules under `src/` and `backend/`; run `pytest` before push
-- **Dart/Flutter:** Follow `flutter analyze`; use `flutter_lints` rules in `mobile/analysis_options.yaml`
-- Prefer small, focused diffs over large refactors mixed with feature work
-
----
-
-## Questions
-
-Open a [GitHub Issue](https://github.com/Melikeda/medicine-box-detection-yolov8/issues) for bugs, features, or questions.
+- Prefer clear names and small modules under `src/` / `backend/app/`
+- Match existing patterns (routers → services → repository)
+- Do not commit secrets, weights (`.pt`), or local `.env`

@@ -166,6 +166,7 @@ Tested against Google AI Studio free tier (Aug 2026):
 
 ## Out of scope
 
-- PostgreSQL / scan history (Phase 18 remainder)
 - Billing / paid Gemini tier
 - Key vault (Secret Manager) — future production hardening
+
+> **Update (final-polish-4):** Server scan history is implemented separately — see [Report 23](23-scan-history.md) and `POST /api/v1/scans`. PostgreSQL remains optional.

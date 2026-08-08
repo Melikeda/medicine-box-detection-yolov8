@@ -1,162 +1,110 @@
-# Medicine Box Detection System
+<p align="center">
+  <img src="docs/assets/yolocilin-logo.png" alt="Yolocilin logo" width="160" />
+</p>
+
+# Yolocilin
+
+### Medicine Box Detection System
 
 <p align="center">
-  <strong>Scan a medicine box · Identify the drug · Get basic information</strong>
+  <strong>Scan a medicine box · Identify the drug · Get a short explanation</strong>
 </p>
 
 <p align="center">
-  An AI-powered computer vision project that detects medicine boxes, reads package text with OCR,
-  matches drug names with fuzzy search, and delivers results through a FastAPI backend and Flutter mobile app.
-</p>
-
-<p align="center">
-  Computer Engineering internship project · Modular Python architecture · Git Feature Branch Workflow
+  AI pipeline (YOLOv8 + OCR + fuzzy matching) · FastAPI backend · Flutter Android app<br/>
+  Computer Engineering internship project · Git Feature Branch Workflow
 </p>
 
 <p align="center">
   <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml/badge.svg" alt="Backend Tests"></a>
   <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml/badge.svg" alt="Mobile Tests"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python" />
+  <img src="https://img.shields.io/badge/flutter-3.19%2B-02569B" alt="Flutter" />
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="License" />
 </p>
 
----
+<p align="center">
+  <img src="docs/assets/yolocilin-banner.png" alt="Yolocilin banner" width="720" />
+</p>
 
-## About
-
-This repository contains an intelligent **medicine box recognition system**. It is not a single model but a multi-stage pipeline that combines object detection, image processing, OCR, and database matching.
-
-### What works today
-
-| Stage | Technology | Status |
-|-------|------------|--------|
-| Object detection | YOLOv8n | Done |
-| Image preprocessing | OpenCV | Done |
-| Text recognition | EasyOCR | Done |
-| Name matching | RapidFuzz | Done |
-| Medicine database | CSV seed + SQLite (**131** records) | Done |
-| End-to-end pipeline | `src/services/` + `PipelineManager` | Done |
-| OCR modes (fast/accurate) | `PipelineConfig.ocr_mode` | Done |
-| REST backend | FastAPI | Done |
-| Analyze API | `POST /api/v1/analyze` | Done |
-| Explain API | `POST /api/v1/explain` (Gemini) | Done |
-| Server scan history | `POST/GET/DELETE /api/v1/scans` | Done |
-| Medicine DB | SQLite + SQLAlchemy | Done |
-| Multi-box detection | `analyze_medicine_boxes()` | Done |
-| Real-world matching | Fallback YOLO, partial brand, dosage filter | Done |
-
-### What we are building next
-
-| Stage | Technology | GitHub Issue |
-|-------|------------|--------------|
-| Docker deployment | Docker Compose | Done ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
-| Mobile app foundation | Flutter (`mobile/`) | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30)) |
-| Mobile integration | Gallery → API → result | Done ([#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
-
-Post-MVP: LLM explanations ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)), server scan history, and production hardening are in place; remaining advanced items include PostgreSQL and cloud deploy ([#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32)).  
-CI/CD: GitHub Actions ([#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39)) — see [Report 17](docs/reports/17-ci-cd-github-actions.md).  
-LLM: [Report 21](docs/reports/21-llm-integration.md) · Scan history: [Report 23](docs/reports/23-scan-history.md) · Catalog: [Report 24](docs/reports/24-medicine-database-final-refresh.md).
+> **Not medical advice.** Yolocilin helps identify packaging text against a seed catalog. Always confirm with the official leaflet or a pharmacist.
 
 ---
 
-## System Workflow
+## Why this project?
+
+Photographing a box and guessing the brand is brittle. Yolocilin turns that into a clear pipeline:
+
+1. **Detect** the box (YOLOv8)
+2. **Read** the print (OpenCV + EasyOCR)
+3. **Match** against a curated catalog (RapidFuzz + SQLite, **131** drugs)
+4. **Show** results on Android — with optional Gemini explanation and scan history
+
+Built as a modular internship system: learnable `examples/`, production `src/` + `backend/` + `mobile/`.
+
+---
+
+## Features
+
+| Area | What you get |
+|------|----------------|
+| Detection | Multi-box YOLO with confidence fallback |
+| OCR | Fast / accurate modes, early exit on match |
+| Catalog | TİTCK-enriched seed CSV → SQLite (**131** rows) |
+| API | Analyze, medicines, explain, server scans |
+| Mobile (Yolocilin) | Gallery + camera, results, local history, best-effort server sync |
+| Ops | Docker, GitHub Actions CI, production CORS/docs hardening |
+| Quality | pytest + Flutter tests + API E2E smoke ([Report 25](docs/reports/25-e2e-performance.md)) |
+
+### Sample inputs
+
+| Single box | Multi-box |
+|------------|-----------|
+| ![Sample Parol](data/samples/parol_plus.jpg) | ![Sample multi](data/samples/coklu_resim.jpg) |
+
+---
+
+## How it works
 
 ```text
-Flutter Mobile App
+Yolocilin (Flutter)
         │
         ▼
 POST /api/v1/analyze  (FastAPI)
         │
         ▼
-YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → Medicine DB (131)
+YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → SQLite (131)
         │
-        ├─► local + server scan history (POST /api/v1/scans)
+        ├─► local history + POST /api/v1/scans
         ▼
-JSON response → Mobile result screen
+JSON → Result screen
         │
         ▼ (optional)
-POST /api/v1/explain → Gemini
+POST /api/v1/explain → Gemini → “İlaç hakkında”
 ```
 
-The AI pipeline itself is implemented in Python under `src/`. Learning scripts and demos live under `examples/`. The backend and mobile layers are the current development focus.
+More detail: [docs/architecture.md](docs/architecture.md)
 
 ---
 
-## Code layout
-
-| Directory | Purpose |
-|-----------|---------|
-| `src/` | Reusable, production-ready application logic |
-| `examples/` | Step-by-step learning scripts and usage demos |
-| `docs/` | Architecture, roadmap, setup guide, technical reports |
-| `tests/` | Automated tests (`pytest`) |
-
-See [examples/README.md](examples/README.md) for the full learning path.
-
----
-
-## Project Structure
-
-```text
-medicine-box-detection-yolov8/
-├── data/
-│   ├── database/          # medicines.csv
-│   ├── dataset/           # YOLO training config (images not in repo)
-│   └── samples/           # Test images
-├── docs/                  # Architecture, roadmap, setup, reports
-├── examples/              # Learning scripts (not production code)
-│   ├── preprocessing/     # OpenCV tutorials (22 steps)
-│   ├── ocr/               # OCR learning scripts
-│   ├── database/          # CSV database examples
-│   ├── matching/          # RapidFuzz examples
-│   ├── integration/       # Legacy step-by-step integration demos
-│   ├── pipeline/          # Current analyze_medicine_box demo
-│   └── README.md
-├── src/
-│   ├── preprocessing/     # OpenCV modules
-│   ├── ocr/               # EasyOCR pipeline
-│   ├── matching/          # RapidFuzz matcher + OCR text normalizer
-│   ├── database/          # CSV reader
-│   ├── services/          # Unified pipeline (analyze_medicine_box)
-│   └── integration/       # YOLO + OCR glue code
-├── src/train.py           # YOLO training script
-├── src/predict.py         # YOLO inference script
-├── backend/               # FastAPI application
-│   └── app/
-│       ├── main.py        # App factory + lifespan
-│       ├── config.py      # API settings
-│       ├── routers/       # health, analyze
-│       ├── services/      # analyze_service, upload_validator
-│       └── schemas/       # Pydantic response models
-├── run_api.py             # FastAPI / Uvicorn entry point
-├── run_analyze.py         # CLI pipeline runner (analyze_medicine_boxes)
-├── Dockerfile             # API container image
-├── docker-compose.yml     # Local deployment stack
-├── mobile/                # Flutter Android MVP client
-│   └── lib/               # Splash, home, preview, result + API client
-└── requirements.txt
-```
-
-Mobile app connects to `POST /api/v1/analyze` (Phase 17). See [mobile/README.md](mobile/README.md) and [Report 16](docs/reports/16-mobile-integration.md).
-
----
-
-## Tech Stack
+## Tech stack
 
 | Layer | Tools |
 |-------|-------|
 | Detection | YOLOv8n, Ultralytics, PyTorch |
-| Preprocessing | OpenCV |
-| OCR | EasyOCR |
+| Vision | OpenCV, EasyOCR |
 | Matching | RapidFuzz |
-| Data | CSV (seed) + SQLite (runtime) |
+| Data | CSV seed + SQLite (`medicines` + `scans`) |
 | Backend | FastAPI, Pydantic, Uvicorn |
-| Mobile | Flutter, Dart (`mobile/`) |
-| DevOps | pytest, Docker, GitHub Actions CI |
+| LLM | Google Gemini (optional) |
+| Mobile | Flutter / Dart — **Yolocilin** |
+| DevOps | pytest, Docker, GitHub Actions |
 
-See [docs/technology-selection.md](docs/technology-selection.md) for rationale.
+Rationale: [docs/technology-selection.md](docs/technology-selection.md)
 
 ---
 
-## Quick Start
+## Quick start
 
 ```bash
 git clone https://github.com/Melikeda/medicine-box-detection-yolov8.git
@@ -167,128 +115,47 @@ python -m venv venv
 venv\Scripts\Activate.ps1
 
 pip install -r requirements.txt
+cp .env.example .env   # optional local overrides
 ```
 
-### Train YOLOv8
+**Supported Python:** 3.11+ (CI uses 3.11; Docker image uses 3.12).
+
+### CLI analyze
 
 ```bash
-python src/train.py
+python run_analyze.py --image data/samples/parol_plus.jpg --mode fast
 ```
 
-### Run detection
+Trained YOLO weights are **not** in Git. Place `best.pt` at the path expected by config / compose (see [setup guide](docs/setup-guide.md)).
+
+### API
 
 ```bash
-python src/predict.py
-```
-
-### Run main pipeline (production entry point)
-
-```bash
-# Single or multi-box photo (fast mode, recommended)
-python run_analyze.py --image data/samples/samples3.jpg --mode fast
-
-# Multi-box sample
-python run_analyze.py --image data/samples/coklu_resim.jpg --mode fast
-
-# Accurate mode (slow on CPU)
-python run_analyze.py --image data/samples/aferin_forte.jpg --mode accurate
-
-# JSON output
-python run_analyze.py --image data/samples/parol_plus.jpg --mode fast --json
-```
-
-### Image vs CSV — important
-
-| Action | What to do |
-|--------|------------|
-| Test a **new photo** | Use `--image path/to/photo.jpg` — no code change needed |
-| Support a **new drug** | Add a row to `data/database/medicines.csv` |
-| Photo has a box detected | Does **not** mean the drug is in CSV |
-| Pipeline stages | YOLO detects box → OCR reads text → RapidFuzz matches **CSV only** |
-
-YOLO finds medicine **boxes**. OCR reads **text**. RapidFuzz matches only against drugs listed in `medicines.csv` (**131** records; TİTCK SKRS–enriched seed catalog — see [Report 24](docs/reports/24-medicine-database-final-refresh.md)).
-
-**Real-world tips:** Use steady, well-lit photos. Blurry images trigger YOLO fallback mode. Drugs not in CSV return `not_found`. Fast mode now uses fewer OCR variants, early exit on match, and server-side resize (1280 px) — see [Report 19](docs/reports/19-performance-optimization.md).
-
-### Run FastAPI backend
-
-```bash
-# Install new backend dependencies first
-pip install fastapi uvicorn[standard] python-multipart pydantic-settings
-
-# Start API (loads YOLO + EasyOCR + CSV once at startup)
 python run_api.py
 ```
 
-Endpoints:
-
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/health` | API and model readiness |
-| GET | `/api/v1/analyze/info` | Upload limits and supported formats |
-| POST | `/api/v1/analyze` | Upload image, analyze all boxes |
-| GET | `/api/v1/medicines` | List / search medicines (SQLite) |
-| GET | `/api/v1/medicines/categories` | Medicine categories |
-| GET | `/api/v1/medicines/{id}` | Medicine detail |
-| GET | `/api/v1/explain/info` | LLM / explain readiness (`ready`) |
-| POST | `/api/v1/explain` | Short Gemini explanation for a matched drug |
-| GET | `/api/v1/scans/info` | Server scan-history info |
-| GET | `/api/v1/scans` | List saved scans |
-| POST | `/api/v1/scans` | Persist a successful analyze result |
-| GET | `/api/v1/scans/{id}` | Scan detail (full analyze JSON) |
-| DELETE | `/api/v1/scans/{id}` | Delete a saved scan |
+| GET | `/health` | Readiness |
+| POST | `/api/v1/analyze` | Image → match results (`mode=fast\|accurate`) |
+| GET | `/api/v1/medicines` | Search / list catalog |
+| POST | `/api/v1/explain` | Short Gemini text (needs key) |
+| POST/GET/DELETE | `/api/v1/scans` | Server scan history |
 
-Query parameter for analyze:
-
-- `mode=fast` (default) — ~4 OCR variants per box (early exit when matched)
-- `mode=accurate` — ~52 OCR variants per box (slow on CPU)
-
-Example analyze request:
+Dev docs: `http://127.0.0.1:8000/docs` (disabled when `ENVIRONMENT=production`).
 
 ```bash
 curl -X POST "http://127.0.0.1:8000/api/v1/analyze?mode=fast" \
-  -F "file=@data/samples/samples3.jpg"
+  -F "file=@data/samples/parol_plus.jpg"
 ```
 
-Example info request:
-
-```bash
-curl http://127.0.0.1:8000/api/v1/analyze/info
-curl http://127.0.0.1:8000/api/v1/explain/info
-curl http://127.0.0.1:8000/api/v1/scans/info
-```
-
-Interactive docs (development only): http://127.0.0.1:8000/docs  
-(`/docs` is disabled when `ENVIRONMENT=production`.)
-
-### Production & security
-
-Copy `.env.example` to `.env` for local overrides. For deployment:
-
-- Set `ENVIRONMENT=production` (hides internal 500 error details; disables `/docs`)
-- Set `CORS_ORIGINS` to your app domain(s) — `*` is rejected in production
-- `RATE_LIMIT_ANALYZE_PER_MINUTE` limits heavy OCR abuse (default 20/min/IP)
-- Explain needs `LLM_ENABLED=true` + valid `GEMINI_API_KEY` (or `LLM_MOCK_MODE=true`)
-- Android **release** builds require HTTPS; **debug** allows HTTP for emulator (`10.0.2.2`)
-
-See [Report 20](docs/reports/20-production-hardening.md).
-
-### Run with Docker
-
-Requires [Docker Desktop](https://www.docker.com/products/docker-desktop/) and trained YOLO weights at  
-`runs/detect/runs/detect/medicine_box_yolov8n-2/weights/best.pt`.
+### Docker
 
 ```bash
 docker compose up --build
 ```
 
-API: http://127.0.0.1:8000/docs
-
-Full Docker guide: [docs/reports/14-docker-containerization.md](docs/reports/14-docker-containerization.md)
-
-### Run Flutter mobile app (Android)
-
-Requires Flutter SDK, Android emulator, and a running API (`python run_api.py`).
+### Mobile (Android)
 
 ```powershell
 . .\scripts\env-flutter.ps1
@@ -298,114 +165,123 @@ cd mobile
 flutter run
 ```
 
-Gallery → **Analiz Et** → result screen. CPU OCR may take 1–3 minutes per photo (fast mode; see [Report 19](docs/reports/19-performance-optimization.md)).
+Default API URL on emulator: `http://10.0.2.2:8000`.  
+Details: [mobile/README.md](mobile/README.md)
 
-Details: [mobile/README.md](mobile/README.md) · [Report 16](docs/reports/16-mobile-integration.md)
-
-### Run pipeline demo (examples wrapper)
-
-```bash
-python -m examples.pipeline.analyze_medicine_box_demo
-```
-
-### Run legacy integration demo (verbose output)
-
-```bash
-python -m examples.integration.legacy_multi_ocr_medicine_matching
-```
-
-### Run pipeline from Python
-
-```python
-from src.services import analyze_medicine_box
-
-result = analyze_medicine_box("data/samples/samples3.jpg")
-print(result.medicine, result.match_score)
-```
-
-Full setup instructions: [docs/setup-guide.md](docs/setup-guide.md)
+> CPU OCR often takes **1–3 minutes** per photo in fast mode.
 
 ---
 
-## Development Status
+## Configuration & security
 
-| Phase | Status |
+| Topic | Notes |
 |-------|--------|
-| Project setup & documentation | Done |
-| Dataset preparation (Roboflow) | Done |
-| YOLOv8 training | Done |
-| OpenCV preprocessing | Done |
-| OCR integration | Done |
-| Medicine matching (RapidFuzz) | Done |
-| Pipeline unification | Done ([#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23)) |
-| Pipeline servicification | Done ([#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24)) |
-| FastAPI backend | Done ([#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25)) |
-| Analyze API + matching improvements | Done ([#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26)) |
-| SQLite database | Done ([#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27)) |
-| Automated tests | Done ([#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28)) |
-| Docker deployment | Done ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) |
-| Flutter mobile MVP | Done ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30), [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
-| CI/CD (GitHub Actions) | Done ([#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39)) |
-| LLM integration (Gemini) | Done ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) |
-| E2E API smoke + performance tooling | Done ([Report 25](docs/reports/25-e2e-performance.md)) |
+| Env template | [`.env.example`](.env.example) |
+| Production | `ENVIRONMENT=production`, explicit `CORS_ORIGINS` (no `*`), `/docs` off |
+| Explain | `LLM_ENABLED=true` + valid `GEMINI_API_KEY` (or mock mode) |
+| Rate limits | Analyze / explain / scans (per IP) |
+| Secrets | Never commit `.env` or API keys |
 
-Detailed roadmap: [docs/roadmap.md](docs/roadmap.md)
+See [SECURITY.md](SECURITY.md) and [Report 20](docs/reports/20-production-hardening.md).
 
-### E2E & performance
+---
 
-```bash
-# CI-style API flow (no live YOLO required)
-pytest tests/test_e2e_api_flow.py -q
+## Project layout
 
-# Live backend smoke (skip OCR)
-python scripts/e2e_api_flow.py --skip-analyze --json-out artifacts/e2e-smoke.json
-
-# Pipeline benchmark (needs local weights + models)
-python scripts/benchmark_analyze.py --image data/samples/parol_plus.jpg --mode fast --json-out artifacts/bench.json
+```text
+medicine-box-detection-yolov8/
+├── backend/app/           # FastAPI (analyze, medicines, explain, scans)
+├── src/                   # Pipeline services (YOLO, OCR, matching, DB)
+├── mobile/                # Yolocilin Flutter client
+├── data/
+│   ├── database/          # medicines.csv (+ SQLite at runtime)
+│   └── samples/           # Test photos
+├── docs/                  # Architecture, roadmap, reports, assets/
+├── examples/              # Step-by-step learning scripts
+├── tests/                 # pytest (incl. E2E smoke)
+├── scripts/               # Dev helpers, e2e_api_flow, benchmarks
+├── run_api.py
+├── run_analyze.py
+├── docker-compose.yml
+└── requirements.txt
 ```
 
-See [Report 25](docs/reports/25-e2e-performance.md) for the mobile manual checklist.
+---
+
+## Status: done vs next
+
+### Done
+
+Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini explain, local + server scan history, production hardening, catalog refresh (131), E2E/perf tooling.
+
+### Still open
+
+| Item | Notes |
+|------|--------|
+| PostgreSQL migration | Optional scale-up |
+| Cloud deploy + HTTPS | Reverse proxy / hosting |
+| Per-user auth for scans | Scans are global until auth |
+| iOS client | Android-first today |
+| Internship final report | Docs polish in progress |
+| Dataset publishing / v1.0 release | Later phases |
+
+Roadmap: [docs/roadmap.md](docs/roadmap.md) · Active polish branch: `feature/final-polish-4`
+
+---
+
+## Tests & performance
+
+```bash
+pytest                                 # backend
+pytest tests/test_e2e_api_flow.py -q   # API E2E smoke
+python scripts/e2e_api_flow.py --skip-analyze
+python scripts/benchmark_analyze.py --image data/samples/parol_plus.jpg --mode fast
+```
+
+```powershell
+cd mobile
+flutter analyze
+flutter test
+```
 
 ---
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
+| Doc | Description |
+|-----|-------------|
 | [architecture.md](docs/architecture.md) | System design |
-| [roadmap.md](docs/roadmap.md) | Development phases and GitHub issues |
-| [setup-guide.md](docs/setup-guide.md) | Environment setup |
-| [technology-selection.md](docs/technology-selection.md) | Why each tool was chosen |
-| [reports/](docs/reports/) | Step-by-step technical reports (incl. E2E Report 25) |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Branch workflow, local tests, CI checks |
+| [setup-guide.md](docs/setup-guide.md) | Full environment setup |
+| [roadmap.md](docs/roadmap.md) | Phases & remaining work |
+| [technology-selection.md](docs/technology-selection.md) | Why each tool |
+| [reports/](docs/reports/) | Phase technical reports (01–25) |
+| [SECURITY.md](SECURITY.md) | Security & disclosure |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Branch / PR workflow |
+| [CHANGELOG.md](CHANGELOG.md) | Notable changes |
 
 ---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`feature/your-feature`)
-3. Commit with clear messages
-4. Open a Pull Request
+1. Branch from `main`: `feature/<short-name>`
+2. Keep changes focused; link issues in the PR
+3. Run backend + mobile checks before review
 
-Follow the existing modular structure in `src/` and link PRs to GitHub Issues.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## License
 
-MIT License — see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE).
 
 ---
 
 ## Author
 
-**Melike** — Computer Engineering Student
-
+**Melike** — Computer Engineering student  
 GitHub: [Melikeda](https://github.com/Melikeda)
 
----
-
 <p align="center">
-  If this project was useful to you, consider giving it a star.
+  If Yolocilin helped you learn or build something, a star is appreciated.
 </p>

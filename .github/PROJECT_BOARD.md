@@ -1,6 +1,6 @@
 # GitHub Project Board — Column Mapping
 
-Use this file when organizing issues on the GitHub Project board.
+Use this file when organizing issues on the GitHub Project board for **Yolocilin**.
 
 ## Done
 
@@ -21,25 +21,20 @@ Use this file when organizing issues on the GitHub Project board.
 | [#43](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/43) | Pipeline performance optimization |
 | [#45](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/45) | Production hardening & security |
 | [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) | LLM medicine explanations (Gemini) |
+| [#50](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/50) | Final polish rounds (partial — see open leftovers) |
 
 ## In Progress
 
-| Issue | Title | Branch |
-|-------|-------|--------|
-| — | — | — |
+| Item | Branch |
+|------|--------|
+| Final polish / docs refresh | `feature/final-polish-4` |
 
-## Todo — Mobile
+## Post-MVP / Todo
 
-| Issue | Branch |
+| Issue | Notes |
 |-------|--------|
-| — | — |
-
-## Post-MVP
-
-| Issue | Branch |
-|-------|--------|
-| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | `feature/advanced-features` |
-| [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | `feature/final-testing` |
+| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Advanced leftovers: PostgreSQL, cloud, barcode, iOS |
+| [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Internship report / final documentation wrap-up |
 
 ## Closed / Superseded
 
@@ -53,35 +48,33 @@ Use this file when organizing issues on the GitHub Project board.
 |-------|-----|
 | `ai-pipeline` | YOLO, OCR, matching |
 | `backend` | FastAPI |
-| `mobile` | Flutter |
+| `mobile` | Flutter / Yolocilin |
 | `database` | SQLite / PostgreSQL |
 | `testing` | pytest |
 | `infrastructure` | Docker, CI/CD |
 | `mvp` | Minimum viable product scope |
+| `docs` | README / reports |
 
-## Technical reports (docs/reports/)
+## Technical reports
 
-| Report | Phase |
-|--------|-------|
-| 01–09 | Setup through pipeline servicification |
-| [10-fastapi-analyze-api.md](../docs/reports/10-fastapi-analyze-api.md) | FastAPI + analyze endpoint |
-| [11-real-world-matching-improvements.md](../docs/reports/11-real-world-matching-improvements.md) | Detection fallback + matching fixes |
-| [12-sqlite-database.md](../docs/reports/12-sqlite-database.md) | SQLite + medicine query API |
-| [13-automated-testing.md](../docs/reports/13-automated-testing.md) | pytest suite |
-| [14-docker-containerization.md](../docs/reports/14-docker-containerization.md) | Docker deployment |
-| [15-flutter-foundation.md](../docs/reports/15-flutter-foundation.md) | Flutter foundation |
-| [16-mobile-integration.md](../docs/reports/16-mobile-integration.md) | Mobile API integration |
-| [17-ci-cd-github-actions.md](../docs/reports/17-ci-cd-github-actions.md) | GitHub Actions CI |
-| [18-medicine-database-expansion.md](../docs/reports/18-medicine-database-expansion.md) | TİTCK SKRS database expansion |
-| [19-performance-optimization.md](../docs/reports/19-performance-optimization.md) | Fast-mode latency optimization |
-| [20-production-hardening.md](../docs/reports/20-production-hardening.md) | Security & production settings |
-| [25-e2e-performance.md](../docs/reports/25-e2e-performance.md) | Mobile+backend E2E & performance tooling |
+Full index: [docs/reports/README.md](../docs/reports/README.md)
 
-## CI status checks (required for merge — recommended)
+| Report | Topic |
+|--------|--------|
+| 01–09 | Setup → pipeline servicification |
+| [10](../docs/reports/10-fastapi-analyze-api.md)–[14](../docs/reports/14-docker-containerization.md) | API, matching, SQLite, tests, Docker |
+| [15](../docs/reports/15-flutter-foundation.md)–[17](../docs/reports/17-ci-cd-github-actions.md) | Mobile + CI |
+| [18](../docs/reports/18-medicine-database-expansion.md)–[19](../docs/reports/19-performance-optimization.md) | Catalog + performance |
+| [20](../docs/reports/20-production-hardening.md) | Security |
+| [21](../docs/reports/21-llm-integration.md) | Gemini explain |
+| [22](../docs/reports/22-camera-capture.md) | Camera |
+| [23](../docs/reports/23-scan-history.md) | Local + server history |
+| [24](../docs/reports/24-medicine-database-final-refresh.md) | 131-row catalog |
+| [25](../docs/reports/25-e2e-performance.md) | E2E & benchmarks |
+
+## CI status checks (recommended for branch protection)
 
 | Check name | Workflow |
 |------------|----------|
 | `pytest (Python 3.11)` | Backend Tests |
 | `flutter analyze & test` | Mobile Tests |
-
-Enable in **Settings → Branches → Branch protection** after first green run on `main`.

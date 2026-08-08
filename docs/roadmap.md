@@ -415,7 +415,7 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] Test complete mobile + backend system — pytest E2E + live `scripts/e2e_api_flow.py` + mobile checklist (Report 25)
 - [x] Evaluate end-to-end performance — timing in e2e script + `benchmark_analyze.py --json-out` (Report 25)
 - [ ] Complete internship report
-- [ ] Finalize GitHub documentation
+- [~] Finalize GitHub documentation — living docs + SECURITY/CHANGELOG (final-polish-4; keep polishing)
 
 ---
 
@@ -472,8 +472,9 @@ See [Report 20](reports/20-production-hardening.md).
 | ✅ Mobile MVP Integration | Done | #31 |
 | ✅ CI/CD (GitHub Actions) | Done | #39 |
 | ✅ LLM explanations (Gemini) | Done | #8 |
-| ⏳ Advanced Features (remaining) | Planned | #32 |
-| ⏳ Final Testing & Documentation | Partial — E2E/perf tooling done (Report 25); internship report open | #9 |
+| ✅ Server scan history + E2E tooling | Done (final-polish-4) | #50 / Report 23–25 |
+| ⏳ Advanced Features (remaining) | PostgreSQL, cloud, barcode, iOS | #32 / #50 |
+| ⏳ Final Testing & Documentation | Docs refresh in progress; internship report open | #9 |
 | ⏳ Dataset Publishing | Planned | — |
 | ⏳ Project Release | Planned | — |
 
