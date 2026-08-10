@@ -81,12 +81,23 @@ async def explain_medicine(
         medicine,
         locale=payload.locale,
     )
+    structured = explanation.to_dict()
+    disclaimer = explanation.disclaimer or LLM_EXPLANATION_DISCLAIMER
 
     return ExplainResponseSchema(
         medicine_id=medicine["medicine_id"],
         medicine_name=medicine.get("medicine_name", ""),
-        explanation=explanation,
-        disclaimer=LLM_EXPLANATION_DISCLAIMER,
+        explanation=explanation.explanation_text,
+        summary=explanation.summary,
+        usage=explanation.usage,
+        commonUses=list(explanation.common_uses),
+        activeIngredient=explanation.active_ingredient,
+        dose=explanation.dose,
+        form=explanation.form,
+        category=explanation.category,
+        warnings=list(explanation.warnings),
+        structured=structured,
+        disclaimer=disclaimer,
         cached=cached,
         provider=llm_service.provider,
         model=llm_service.model,

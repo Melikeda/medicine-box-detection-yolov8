@@ -145,32 +145,149 @@ class _MedicineExplanationSectionState
                 ),
               ],
             )
-          else if (_response != null) ...[
-            Text(
-              _response!.explanation,
-              style: theme.textTheme.bodyMedium,
-            ),
+          else if (_response != null)
+            _ExplanationContent(response: _response!),
+        ],
+      ),
+    );
+  }
+}
+
+class _ExplanationContent extends StatelessWidget {
+  const _ExplanationContent({required this.response});
+
+  final ExplainResponse response;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final s = context.s;
+    final summary = response.summary.trim().isNotEmpty
+        ? response.summary.trim()
+        : response.explanation.trim();
+    final usage = response.usage.trim();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (summary.isNotEmpty) ...[
+          _SectionHeader(
+            icon: Icons.medication_outlined,
+            title: s.medicineUsedForTitle,
+          ),
+          const SizedBox(height: 6),
+          Text(summary, style: theme.textTheme.bodyMedium),
+          if (usage.isNotEmpty) ...[
             const SizedBox(height: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 16,
+            Text(usage, style: theme.textTheme.bodyMedium),
+          ],
+          const SizedBox(height: 14),
+        ],
+        if (response.commonUses.isNotEmpty) ...[
+          _SectionHeader(
+            icon: Icons.playlist_add_check_outlined,
+            title: s.medicineCommonUsesTitle,
+          ),
+          const SizedBox(height: 6),
+          ...response.commonUses.map(
+            (item) => _BulletRow(text: item),
+          ),
+          const SizedBox(height: 14),
+        ],
+        if (response.warnings.isNotEmpty) ...[
+          _SectionHeader(
+            icon: Icons.warning_amber_outlined,
+            title: s.medicineWarningsTitle,
+          ),
+          const SizedBox(height: 6),
+          ...response.warnings.map(
+            (item) => _BulletRow(text: item),
+          ),
+          const SizedBox(height: 12),
+        ],
+        if (!response.hasStructuredContent && summary.isEmpty)
+          Text(
+            s.medicineExplanationFallback,
+            style: theme.textTheme.bodyMedium,
+          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              Icons.info_outline,
+              size: 16,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                response.disclaimer.isNotEmpty
+                    ? response.disclaimer
+                    : s.medicineExplanationDisclaimer,
+                style: theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    _response!.disclaimer,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
+    required this.icon,
+    required this.title,
+  });
+
+  final IconData icon;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: theme.colorScheme.primary),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            title,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _BulletRow extends StatelessWidget {
+  const _BulletRow({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '•  ',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          Expanded(
+            child: Text(text, style: theme.textTheme.bodyMedium),
+          ),
         ],
       ),
     );

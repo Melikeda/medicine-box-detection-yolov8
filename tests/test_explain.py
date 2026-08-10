@@ -92,7 +92,14 @@ def test_explain_medicine_success(explain_app: TestClient) -> None:
     assert payload["medicine_id"] == "MED001"
     assert payload["medicine_name"] == "Parol"
     assert "Parol" in payload["explanation"]
-    assert "tavsiye" in payload["disclaimer"].lower()
+    assert "Parol" in payload["summary"]
+    assert isinstance(payload["commonUses"], list)
+    assert payload["commonUses"]
+    assert isinstance(payload["warnings"], list)
+    assert payload["warnings"]
+    assert payload["structured"] is not None
+    assert payload["structured"]["summary"] == payload["summary"]
+    assert "tıbbi" in payload["disclaimer"].lower()
     assert payload["provider"] == "mock"
     assert payload["cached"] is False
 
@@ -102,6 +109,21 @@ def test_explain_medicine_success(explain_app: TestClient) -> None:
     )
     assert cached.status_code == 200
     assert cached.json()["cached"] is True
+
+
+def test_explain_etol_fort_usage_focused(explain_app: TestClient) -> None:
+    response = explain_app.post(
+        "/api/v1/explain",
+        json={"medicine_id": "MED020", "locale": "tr"},
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["medicine_name"] == "Etol Fort"
+    assert payload["category"] == "Kas ve Eklem"
+    assert any("eklem" in item.lower() or "kas" in item.lower() for item in payload["commonUses"])
+    text = f"{payload['summary']} {payload['usage']}".lower()
+    assert "kullanmalısınız" not in text
+    assert "tavsiye edilir" not in text
 
 
 def test_explain_disabled_returns_503(
