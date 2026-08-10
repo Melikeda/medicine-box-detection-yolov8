@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, status
 
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.dependencies import get_scan_service
@@ -42,17 +42,67 @@ def enforce_scans_rate_limit(
         )
 
 
+def enforce_scans_delete_authorization(
+    settings: ApiSettings = Depends(get_api_settings),
+    x_api_key: str | None = Header(default=None, alias="X-API-Key"),
+) -> None:
+    """
+    Protect DELETE /scans/{id}.
+
+    Mobile only POSTs scans (local delete stays on-device). Server DELETE is
+    an operator/debug action:
+    - development: open (no key required)
+    - production + SCANS_API_KEY set: require matching X-API-Key
+    - production + SCANS_API_KEY unset: DELETE disabled (403)
+    """
+    if not settings.is_production:
+        return
+
+    expected = (settings.scans_api_key or "").strip()
+    if not expected:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=(
+                "Production ortaminda scan silme kapali. "
+                "Acmak icin SCANS_API_KEY tanimlayin ve X-API-Key gonderin."
+            ),
+        )
+
+    provided = (x_api_key or "").strip()
+    if provided != expected:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Gecerli X-API-Key gerekli.",
+            headers={"WWW-Authenticate": "ApiKey"},
+        )
+
+
 @router.get("/info", response_model=ScanInfoSchema)
 async def scans_info(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> ScanInfoSchema:
+    delete_protected = settings.is_production
     return ScanInfoSchema(
         endpoint=f"{settings.api_prefix}/scans",
         max_entries=settings.scan_history_max_entries,
+        auth_required=False,
+        note=(
+            "No end-user auth — scans are stored globally. "
+            "Images stay on the device; only analyze JSON is synced. "
+            + (
+                "DELETE requires X-API-Key (SCANS_API_KEY) in production."
+                if delete_protected
+                else "DELETE is open in development."
+            )
+        ),
     )
 
 
-@router.get("", response_model=ScanListResponseSchema)
+@router.get(
+    "",
+    response_model=ScanListResponseSchema,
+    dependencies=[Depends(enforce_scans_rate_limit)],
+)
 async def list_scans(
     limit: int = Query(default=50, ge=1, le=200),
     offset: int = Query(default=0, ge=0),
@@ -73,10 +123,10 @@ async def list_scans(
     "",
     response_model=ScanCreateResponseSchema,
     status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(enforce_scans_rate_limit)],
 )
 async def create_scan(
     payload: ScanCreateRequestSchema,
-    _rate_limit: None = Depends(enforce_scans_rate_limit),
     service: ScanQueryService = Depends(get_scan_service),
 ) -> ScanCreateResponseSchema:
     if not payload.response.success:
@@ -93,7 +143,11 @@ async def create_scan(
     return ScanCreateResponseSchema(scan=ScanDetailSchema(**scan))
 
 
-@router.get("/{scan_id}", response_model=ScanDetailResponseSchema)
+@router.get(
+    "/{scan_id}",
+    response_model=ScanDetailResponseSchema,
+    dependencies=[Depends(enforce_scans_rate_limit)],
+)
 async def get_scan(
     scan_id: int,
     service: ScanQueryService = Depends(get_scan_service),
@@ -110,7 +164,14 @@ async def get_scan(
     )
 
 
-@router.delete("/{scan_id}", response_model=ScanDeleteResponseSchema)
+@router.delete(
+    "/{scan_id}",
+    response_model=ScanDeleteResponseSchema,
+    dependencies=[
+        Depends(enforce_scans_rate_limit),
+        Depends(enforce_scans_delete_authorization),
+    ],
+)
 async def remove_scan(
     scan_id: int,
     service: ScanQueryService = Depends(get_scan_service),

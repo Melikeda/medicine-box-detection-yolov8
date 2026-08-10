@@ -3,6 +3,21 @@
 All notable changes to **Yolocilin** (Medicine Box Detection System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — `feature/final-polish-5`
+
+### Security
+
+- Production `DELETE /api/v1/scans/{id}` requires `SCANS_API_KEY` (`X-API-Key`); if unset, DELETE is disabled
+- Analyze rejects oversized uploads early via `Content-Length` (before full body read)
+- Scan list/get/create/delete share per-IP rate limiting
+
+### Changed
+
+- Upload magic-byte checks no longer use deprecated `imghdr` (JPEG/PNG/WEBP/BMP)
+- Removed unused `polars`, `polars-runtime-32`, and `nvidia-ml-py` from `requirements.txt`
+- Rate limiter prunes idle client keys under load
+- Docs: `.env.example`, `SECURITY.md`, project board status
+
 ## [Unreleased] — `feature/final-polish-4`
 
 ### Added

@@ -63,6 +63,10 @@ class ApiSettings(BaseSettings):
     rate_limit_explain_per_minute: int = Field(default=5, ge=1, le=1000)
     rate_limit_scans_per_minute: int = Field(default=30, ge=1, le=1000)
     scan_history_max_entries: int = Field(default=200, ge=10, le=5000)
+    # Optional operator key for destructive scan ops (DELETE).
+    # Mobile only POSTs scans; DELETE is admin/debug. In production, DELETE
+    # requires this key when set; if unset, DELETE is disabled.
+    scans_api_key: str | None = None
 
     @field_validator("cors_origins", mode="before")
     @classmethod

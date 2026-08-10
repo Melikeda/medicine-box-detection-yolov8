@@ -103,6 +103,35 @@ def test_analyze_info_endpoint() -> None:
     assert "matched" in payload["response_statuses"]
 
 
+def test_analyze_rejects_oversized_content_length_before_body() -> None:
+    from backend.app.config import ApiSettings, get_api_settings
+    from backend.app.routers.analyze import get_analyze_service
+
+    settings = ApiSettings(
+        max_upload_size_mb=1.0,
+        rate_limit_enabled=False,
+    )
+
+    class _ShouldNotRun:
+        async def analyze_upload(self, **_kwargs):  # pragma: no cover
+            raise AssertionError("analyze_upload should not run")
+
+    app = FastAPI()
+    register_exception_handlers(app)
+    app.include_router(analyze_router.router, prefix="/api/v1")
+    app.dependency_overrides[get_api_settings] = lambda: settings
+    app.dependency_overrides[get_analyze_service] = lambda: _ShouldNotRun()
+
+    client = TestClient(app)
+    response = client.post(
+        "/api/v1/analyze",
+        files={"file": ("tiny.jpg", b"\xff\xd8\xff\xe0" + b"\x00" * 8, "image/jpeg")},
+        headers={"Content-Length": str(5 * 1024 * 1024)},
+    )
+    assert response.status_code == 413
+    assert response.json()["success"] is False
+
+
 def test_upload_validator_rejects_bad_extension() -> None:
     with pytest.raises(Exception) as exc_info:
         validate_upload_metadata(
@@ -131,3 +160,20 @@ def test_upload_validator_accepts_png_bytes() -> None:
         b"\x18\xd8N\x00\x00\x00\x00IEND\xaeB`\x82"
     )
     validate_image_bytes(png_bytes, suffix=".png")
+
+
+def test_upload_validator_accepts_jpeg_magic_bytes() -> None:
+    jpeg_bytes = b"\xff\xd8\xff\xe0" + b"\x00" * 16
+    validate_image_bytes(jpeg_bytes, suffix=".jpg")
+
+
+def test_upload_validator_rejects_extension_content_mismatch() -> None:
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01"
+        b"\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde"
+        b"\x00\x00\x00\x0cIDATx\x9cc\xf8\x0f\x00\x00\x01\x01\x00\x05"
+        b"\x18\xd8N\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    with pytest.raises(Exception) as exc_info:
+        validate_image_bytes(png_bytes, suffix=".jpg")
+    assert "uyusmuyor" in str(exc_info.value)
