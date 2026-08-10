@@ -31,6 +31,7 @@ Adds automated continuous integration for backend pytest, Flutter analyze/test, 
 | `.github/workflows/backend-tests.yml` | `pytest` | `backend/`, `src/`, `tests/`, `requirements.txt` |
 | `.github/workflows/mobile-tests.yml` | Flutter analyze + test | `mobile/` |
 | `.github/workflows/docker-build.yml` | `docker build` | Dockerfile, compose, backend, src |
+| `.github/workflows/mobile-distribute.yml` | Release APK → Firebase App Distribution | **manual** (`workflow_dispatch`) |
 
 All PR workflows use **concurrency** groups to cancel outdated runs on the same branch.
 
@@ -41,7 +42,7 @@ All PR workflows use **concurrency** groups to cancel outdated runs on the same 
 - **Full `requirements.txt` in CI** — pytest imports backend routers that transitively load pipeline modules; lightweight installs would break collection
 - **Path filters** — mobile workflow does not run on Python-only changes (and vice versa)
 - **Docker build without push** — verifies Dockerfile and dependency install; model weights are mounted at runtime, not baked into CI
-- **No deploy step yet** — CD (cloud deploy) remains Phase 18+ scope
+- **App Distribution is manual CD** — builds bake a public `https://` `API_BASE_URL`; see [Firebase guide](../guides/firebase-app-distribution.md). Cloud hosting of the API remains optional.
 
 ---
 
