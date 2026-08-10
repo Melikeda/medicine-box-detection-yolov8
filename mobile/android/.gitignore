@@ -9,3 +9,7 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Firebase Android config (use google-services.json.example as a template)
+google-services.json
+app/google-services.json

@@ -27,7 +27,7 @@ Use this file when organizing issues on the GitHub Project board for **Yolocilin
 
 | Item | Branch |
 |------|--------|
-| Final polish / security hardening | `feature/final-polish-5` |
+| Firebase App Distribution (test APKs) | `feature/firebase-app-distribution` |
 
 ## Post-MVP / Todo
 
@@ -36,6 +36,7 @@ Use this file when organizing issues on the GitHub Project board for **Yolocilin
 | [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Advanced leftovers: PostgreSQL, cloud, barcode, iOS |
 | [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Internship report / final documentation wrap-up |
 | Auth for private scan namespaces | Scans remain global; production DELETE gated by `SCANS_API_KEY` |
+| Cloud API host (HTTPS) | Needed for long-lived remote testers; tunnel OK for demos |
 
 ## Closed / Superseded
 
@@ -79,3 +80,5 @@ Full index: [docs/reports/README.md](../docs/reports/README.md)
 |------------|----------|
 | `pytest (Python 3.11)` | Backend Tests |
 | `flutter analyze & test` | Mobile Tests |
+
+Optional CD (not a required status check): **Mobile Distribute (Firebase)** — see [Firebase App Distribution guide](../docs/guides/firebase-app-distribution.md).

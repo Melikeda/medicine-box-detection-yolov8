@@ -16,6 +16,9 @@ build/
 **/android/key.properties
 *.jks
 
+# Firebase (download from Console; see google-services.json.example)
+**/android/app/google-services.json
+
 # iOS / macOS (future)
 **/ios/Pods/
 **/ios/.symlinks/

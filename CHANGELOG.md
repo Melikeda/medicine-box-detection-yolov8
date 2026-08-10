@@ -3,6 +3,18 @@
 All notable changes to **Yolocilin** (Medicine Box Detection System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — `feature/firebase-app-distribution`
+
+### Added
+
+- Firebase App Distribution pipeline: manual GitHub Action + `scripts/distribute-android.ps1`
+- Guide: `docs/guides/firebase-app-distribution.md` (Spark plan, HTTPS `API_BASE_URL`, secrets)
+- Templates: `google-services.json.example`, `.firebaserc.example`, `firebase.json`
+
+### Security
+
+- Ignore Firebase config / service-account JSON in git; CI uses repository secrets only
+
 ## [Unreleased] — `feature/final-polish-5`
 
 ### Security

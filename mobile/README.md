@@ -74,6 +74,17 @@ Flow: **Fotoğraf Çek** / gallery → preview → **Analiz Et** → result (CPU
 |--------|-----|
 | Android emulator (default) | `http://10.0.2.2:8000` |
 | Physical device (LAN) | `flutter run --dart-define=API_BASE_URL=http://<PC-IP>:8000` |
+| Testers (any network) | Release APK with `API_BASE_URL=https://…` (tunnel or cloud) |
+
+Release builds **block cleartext HTTP** — use HTTPS for Firebase / remote testers.
+
+### Firebase App Distribution (test APKs)
+
+Ship builds to phones outside your Wi‑Fi without Play Store:
+
+1. One-time Firebase + GitHub secrets setup — [guide](../docs/guides/firebase-app-distribution.md)
+2. Local: `.\scripts\distribute-android.ps1 -ApiBaseUrl "https://…" -FirebaseAppId "1:…:android:…"`
+3. CI: Actions → **Mobile Distribute (Firebase)** → Run workflow
 
 ---
 

@@ -21,6 +21,16 @@ env/
 .env
 
 # ==========================
+# Firebase (local / secrets — never commit)
+# ==========================
+
+.firebaserc
+**/google-services.json
+!**/google-services.json.example
+firebase-service-account*.json
+*-firebase-adminsdk-*.json
+
+# ==========================
 # YOLO Models
 # ==========================
 

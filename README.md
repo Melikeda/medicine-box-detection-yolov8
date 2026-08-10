@@ -166,7 +166,7 @@ flutter run
 ```
 
 Default API URL on emulator: `http://10.0.2.2:8000`.  
-Details: [mobile/README.md](mobile/README.md)
+Details: [mobile/README.md](mobile/README.md) · remote testers: [Firebase App Distribution](docs/guides/firebase-app-distribution.md)
 
 > CPU OCR often takes **1–3 minutes** per photo in fast mode.
 
@@ -181,7 +181,7 @@ Details: [mobile/README.md](mobile/README.md)
 | Explain | `LLM_ENABLED=true` + valid `GEMINI_API_KEY` (or mock mode) |
 | Rate limits | Analyze / explain / scans (per IP) |
 | Scan DELETE | Production: set `SCANS_API_KEY` and send `X-API-Key`, or leave unset to disable DELETE |
-| Secrets | Never commit `.env` or API keys |
+| Secrets | Never commit `.env`, API keys, `google-services.json`, or Firebase service-account JSON |
 
 See [SECURITY.md](SECURITY.md) and [Report 20](docs/reports/20-production-hardening.md).
 

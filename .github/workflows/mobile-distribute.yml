@@ -1,0 +1,137 @@
+# Mobile Distribute (Firebase App Distribution)
+#
+# Manual only: builds a release APK with a public HTTPS API_BASE_URL and uploads
+# it to Firebase App Distribution for testers (Spark plan is enough).
+#
+# Required secrets (Settings → Secrets and variables → Actions):
+#   FIREBASE_APP_ID            — Firebase Android App ID
+#   FIREBASE_SERVICE_ACCOUNT   — Google service account JSON (App Distribution Admin)
+#   API_BASE_URL               — https://… public API (tunnel or cloud)
+# Optional:
+#   FIREBASE_TESTER_GROUPS     — default "testers"
+#
+# Docs: docs/guides/firebase-app-distribution.md
+
+name: Mobile Distribute (Firebase)
+
+on:
+  workflow_dispatch:
+    inputs:
+      api_base_url:
+        description: "HTTPS API base URL baked into the APK (leave empty to use secret API_BASE_URL)"
+        required: false
+        type: string
+        default: ""
+      groups:
+        description: "Firebase App Distribution tester groups (comma-separated)"
+        required: false
+        type: string
+        default: "testers"
+      release_notes:
+        description: "Release notes shown to testers"
+        required: false
+        type: string
+        default: "Yolocilin Android test build"
+
+concurrency:
+  group: mobile-distribute
+  cancel-in-progress: false
+
+jobs:
+  distribute:
+    name: build & distribute APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve API base URL
+        id: api
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="${{ inputs.api_base_url }}"
+          if [ -z "$URL" ]; then
+            URL="${{ secrets.API_BASE_URL }}"
+          fi
+          if [ -z "$URL" ]; then
+            echo "::error::Set workflow input api_base_url or repository secret API_BASE_URL (must be https://)."
+            exit 1
+          fi
+          case "$URL" in
+            https://*) ;;
+            *)
+              echo "::error::API_BASE_URL must start with https:// (release APK blocks cleartext HTTP)."
+              exit 1
+              ;;
+          esac
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build release APK
+        run: >
+          flutter build apk --release
+          --dart-define=API_BASE_URL=${{ steps.api.outputs.url }}
+
+      - name: Write Firebase service account
+        working-directory: ${{ github.workspace }}
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT}" ]; then
+            echo "::error::Missing secret FIREBASE_SERVICE_ACCOUNT"
+            exit 1
+          fi
+          printf '%s\n' "$FIREBASE_SERVICE_ACCOUNT" > "${{ runner.temp }}/firebase-sa.json"
+
+      - name: Upload to Firebase App Distribution
+        working-directory: ${{ github.workspace }}
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-sa.json
+        run: |
+          set -euo pipefail
+          if [ -z "${FIREBASE_APP_ID}" ]; then
+            echo "::error::Missing secret FIREBASE_APP_ID"
+            exit 1
+          fi
+          GROUPS="${{ inputs.groups }}"
+          if [ -z "$GROUPS" ]; then
+            GROUPS="${{ secrets.FIREBASE_TESTER_GROUPS }}"
+          fi
+          if [ -z "$GROUPS" ]; then
+            GROUPS="testers"
+          fi
+          npm install -g firebase-tools
+          firebase appdistribution:distribute \
+            mobile/build/app/outputs/flutter-apk/app-release.apk \
+            --app "$FIREBASE_APP_ID" \
+            --groups "$GROUPS" \
+            --release-notes "${{ inputs.release_notes }}"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yolocilin-app-release
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
