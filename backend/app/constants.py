@@ -6,6 +6,6 @@ MEDICAL_DISCLAIMER = (
 )
 
 LLM_EXPLANATION_DISCLAIMER = (
-    "Bu açıklama yapay zeka tarafından üretilmiştir ve tıbbi tavsiye değildir. "
-    "Kesin bilgi için prospektüs ve eczacınıza danışın."
+    "Bu bilgiler genel ilaç bilgisidir ve kişisel tıbbi öneri yerine geçmez. "
+    "İlacın sizin için uygun olup olmadığını doktorunuza veya eczacınıza danışın."
 )

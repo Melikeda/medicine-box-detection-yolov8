@@ -54,6 +54,10 @@ def main() -> int:
             print(f"Ilac: {payload.get('medicine_name')}")
             print(f"Provider: {payload.get('provider')} / {payload.get('model')}")
             print(f"Cached: {payload.get('cached')}")
+            print(f"Summary: {payload.get('summary')}")
+            print(f"Usage: {payload.get('usage')}")
+            print(f"Common uses: {payload.get('commonUses')}")
+            print(f"Warnings: {payload.get('warnings')}")
             print(f"Aciklama: {payload.get('explanation')}")
             print(f"Disclaimer: {payload.get('disclaimer')}")
             return 0

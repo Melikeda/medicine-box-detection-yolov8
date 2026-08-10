@@ -24,6 +24,9 @@ MED034,Ibucold,Ibucold,Ibuprofen + Pseudoephedrine Hydrochloride,200 mg / 30 mg,
 MED032,Biteral,Biteral,Metronidazole / Ornidazole,500 MG,Film Coated Tablet,Antibiyotik
 MED036,Levopront,Levopront,Levodropropizine,60 mg,Tablet,Öksürük İlacı
 MED038,Parafon,Parafon,Paracetamol + Chlorzoxazone,250 mg / 300 mg,Tablet,Kas-İskelet
+MED020,Etol Fort,Etol,Etodolac,400 MG,Film Coated Tablet,Kas ve Eklem
+MED027,Augmentin,Augmentin,Amoxicillin And Enzyme Inhibitor,500 MG/125 MG,Film Coated Tablet,Antibiyotik
+MED030,Supradyn,Supradyn,Multivitamin / Mineral,Combined tablet,Film Coated Tablet,Vitamin ve Mineral
 """
 
 

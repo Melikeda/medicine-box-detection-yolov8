@@ -154,6 +154,11 @@ class AppStrings {
     required this.retry,
     required this.boxesWord,
     required this.matchedWord,
+    required this.medicineUsedForTitle,
+    required this.medicineCommonUsesTitle,
+    required this.medicineWarningsTitle,
+    required this.medicineExplanationFallback,
+    required this.medicineExplanationDisclaimer,
   });
 
   final String appName;
@@ -232,6 +237,11 @@ class AppStrings {
   final String retry;
   final String boxesWord;
   final String matchedWord;
+  final String medicineUsedForTitle;
+  final String medicineCommonUsesTitle;
+  final String medicineWarningsTitle;
+  final String medicineExplanationFallback;
+  final String medicineExplanationDisclaimer;
 
   static AppStrings of(AppLanguage language) {
     return language == AppLanguage.en ? _en : _tr;
@@ -359,6 +369,13 @@ class AppStrings {
     retry: 'Tekrar dene',
     boxesWord: 'kutu',
     matchedWord: 'eşleşti',
+    medicineUsedForTitle: 'Bu ilaç ne için kullanılır?',
+    medicineCommonUsesTitle: 'Hangi durumlarda kullanılabilir?',
+    medicineWarningsTitle: 'Önemli uyarılar',
+    medicineExplanationFallback:
+        'Bu ilaç hakkında yeterli açıklayıcı bilgi bulunamadı.',
+    medicineExplanationDisclaimer:
+        'Bu bilgiler genel ilaç bilgisidir ve kişisel tıbbi öneri yerine geçmez. Kullanım için doktorunuzun veya eczacınızın önerisini takip edin.',
   );
 
   static const _en = AppStrings._(
@@ -441,5 +458,12 @@ class AppStrings {
     retry: 'Try again',
     boxesWord: 'boxes',
     matchedWord: 'matched',
+    medicineUsedForTitle: 'What is this medicine used for?',
+    medicineCommonUsesTitle: 'When may it be used?',
+    medicineWarningsTitle: 'Important warnings',
+    medicineExplanationFallback:
+        'Not enough explanatory information was found for this medicine.',
+    medicineExplanationDisclaimer:
+        'This information is general medicine information and does not replace personal medical advice. Follow your doctor or pharmacist guidance for use.',
   );
 }
