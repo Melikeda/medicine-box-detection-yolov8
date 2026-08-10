@@ -130,3 +130,25 @@ MED128,Advil Liqui-Gels,Advil,Ibuprofen,200 MG,Kapsül,Kas ve Eklem
 MED129,Dolgit %5 Krem (50 G),Dolgit,Ibuprofen,50 G,Krem,Kas ve Eklem
 MED130,Klacid,Klacid,Clarithromycin,500 MG,Tablet,Antibiyotik
 MED131,Differin %,Differin,Adapalene,30 G,VERIFY_FROM_OFFICIAL_LEAFLET,Genel
+MED132,Ferrum Hausman,Ferrum,Ferric Oxide Polymaltose Complexes,150 ML,Şurup,Vitamin ve Mineral
+MED133,Ferrum Hausmann,Ferrum,Ferric Oxide Polymaltose Complexes,30 ML,Damla,Vitamin ve Mineral
+MED134,Ferrum Hausman Fort,Ferrum,Ferric Oxide Polymaltose Complexes,100 MG,VERIFY_FROM_OFFICIAL_LEAFLET,Vitamin ve Mineral
+MED135,Ferro Sanol B,Ferro,Iron And Multivitamins,150 ML,Şurup,Vitamin ve Mineral
+MED136,Ferro Sanol Duodenal,Ferro,Ferrous Glycine Sulfate,100 MG,Kapsül,Vitamin ve Mineral
+MED137,Gyno Ferro Sanol,Gyno,"Iron, Vitamin B12 And Folic Acid",100MG/0.5 MG/2.5 MCG,Kapsül,Vitamin ve Mineral
+MED138,Buscopan,Buscopan,Butylscopolamine,10 MG,Kaplı Tablet,Mide
+MED139,Buscopan Plus,Buscopan,Butylscopolamine And Analgesics,10 MG / 500 MG,Film Kaplı Tablet,Mide
+MED140,Ventolin,Ventolin,Salbutamol,2 MG / 150 ML,Şurup,Solunum
+MED141,Ventolin Nebules,Ventolin,Salbutamol,2.5ML,VERIFY_FROM_OFFICIAL_LEAFLET,Solunum
+MED142,Ventolin Inhaler,Ventolin,Salbutamol,100 MCG,VERIFY_FROM_OFFICIAL_LEAFLET,Solunum
+MED143,Claritine,Claritine,Loratadine,10 MG,Tablet,Soğuk Algınlığı
+MED144,Zyrtec,Zyrtec,Cetirizine,1 MG / 200 ML,Şurup,Soğuk Algınlığı
+MED145,Singulair,Singulair,Montelukast,4 MG,Tablet,Solunum
+MED146,Euthyrox,Euthyrox,Levothyroxine Sodium,25 MCG,Tablet,Endokrin
+MED147,Concor,Concor,Bisoprolol,5 MG,Film Kaplı Tablet,Kardiyoloji
+MED148,Beloc Zok,Beloc,Metoprolol,50 MG,Tablet,Kardiyoloji
+MED149,Ator,Ator,Atorvastatin,10 MG,Tablet,Kardiyoloji
+MED150,Divator,Divator,Atorvastatin,10 MG,Tablet,Kardiyoloji
+MED151,Micator,Micator,Telmisartan,80 MG,Tablet,Kardiyoloji
+MED152,Crestor,Crestor,Rosuvastatin,10 MG,Tablet,Kardiyoloji
+MED153,Spazmol Plus,Spazmol,Butylscopolamine And Analgesics,VERIFY_FROM_OFFICIAL_LEAFLET,Tablet,Mide

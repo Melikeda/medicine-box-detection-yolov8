@@ -199,6 +199,23 @@ def test_ornldarol_garbage_does_not_false_match_parol(
     assert result.medicine_name != "Parol"
 
 
+def test_ferrum_matches_and_not_pharmaton() -> None:
+    """Ferrum OCR should hit Ferrum catalog rows, never Pharmaton."""
+    from pathlib import Path
+
+    config = PipelineConfig(
+        medicines_csv_path=Path("data/database/medicines.csv"),
+        use_sqlite=False,
+    )
+    service = MatchingService.from_config(config)
+    result = service.match_text(["FERRUM", "Ferrum Hausmann"])
+
+    assert result.status == "matched"
+    assert result.medicine_name is not None
+    assert "ferrum" in result.medicine_name.lower()
+    assert "pharmaton" not in result.medicine_name.lower()
+
+
 def test_has_weak_ocr_candidates_detects_short_reads() -> None:
     assert has_weak_ocr_candidates(["lie"])
     assert has_weak_ocr_candidates(["lie", "mg"])
