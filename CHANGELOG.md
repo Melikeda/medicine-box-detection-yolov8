@@ -3,6 +3,13 @@
 All notable changes to **Yolocilin** (Medicine Box Detection System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — popular TR catalog to ~1160
+
+### Added
+
+- Expanded TİTCK brand queries across high-use Turkish categories (pain, cold, antibiotics, GI, vitamins, cardio, diabetes, allergy, derm, …)
+- High-volume ATC group fill (`POPULAR_ATC_EXPANSION`) → catalog **1163** medicines (~10.9% placeholders)
+
 ## [Unreleased] — `feature/catalog-expand-matching-tighten`
 
 ### Added
