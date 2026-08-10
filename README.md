@@ -180,6 +180,7 @@ Details: [mobile/README.md](mobile/README.md)
 | Production | `ENVIRONMENT=production`, explicit `CORS_ORIGINS` (no `*`), `/docs` off |
 | Explain | `LLM_ENABLED=true` + valid `GEMINI_API_KEY` (or mock mode) |
 | Rate limits | Analyze / explain / scans (per IP) |
+| Scan DELETE | Production: set `SCANS_API_KEY` and send `X-API-Key`, or leave unset to disable DELETE |
 | Secrets | Never commit `.env` or API keys |
 
 See [SECURITY.md](SECURITY.md) and [Report 20](docs/reports/20-production-hardening.md).

@@ -24,11 +24,12 @@ Please **do not** open a public GitHub issue for sensitive reports.
 
 | Control | Notes |
 |---------|--------|
-| Upload validation | Extension + magic-byte checks, size limit |
-| Rate limiting | Analyze / explain / scans (per client IP) |
+| Upload validation | Extension + magic-byte checks, size limit, early `Content-Length` reject |
+| Rate limiting | Analyze / explain / scans (list/get/create/delete, per client IP) |
 | Production mode | `ENVIRONMENT=production` masks 500 details, disables `/docs` |
 | CORS | Explicit origins required in production (`*` rejected) |
 | Secrets | `.env` gitignored; Gemini key stays on the server |
+| Scan DELETE | In production: requires `SCANS_API_KEY` via `X-API-Key`, or DELETE is disabled |
 | Mobile release | HTTPS-only network config (cleartext only in debug) |
 | Medical disclaimer | API + UI — not a substitute for professional advice |
 
@@ -44,6 +45,7 @@ Details: [docs/reports/20-production-hardening.md](docs/reports/20-production-ha
 4. Keep `GEMINI_API_KEY` only on the server; rotate if leaked
 5. Put the API behind **HTTPS** (reverse proxy)
 6. Review rate-limit env vars under load
+7. For production scan deletes, set `SCANS_API_KEY` and send `X-API-Key` (or leave unset to keep DELETE disabled)
 
 ---
 

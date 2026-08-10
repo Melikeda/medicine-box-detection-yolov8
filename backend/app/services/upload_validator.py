@@ -1,4 +1,3 @@
-import imghdr
 from pathlib import Path
 
 from backend.app.exceptions import UnsupportedMediaTypeError
@@ -19,6 +18,9 @@ CONTENT_TYPE_BY_SUFFIX = {
     ".webp": "image/webp",
     ".bmp": "image/bmp",
 }
+
+_JPEG_SOI = b"\xff\xd8\xff"
+_PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
 def resolve_upload_suffix(
@@ -67,6 +69,23 @@ def validate_upload_metadata(
     return suffix
 
 
+def _detect_image_kind(file_bytes: bytes) -> str | None:
+    """Return canonical kind (jpeg/png/webp/bmp) from magic bytes."""
+    if len(file_bytes) >= 3 and file_bytes[:3] == _JPEG_SOI:
+        return "jpeg"
+    if len(file_bytes) >= 8 and file_bytes[:8] == _PNG_SIGNATURE:
+        return "png"
+    if (
+        len(file_bytes) >= 12
+        and file_bytes[:4] == b"RIFF"
+        and file_bytes[8:12] == b"WEBP"
+    ):
+        return "webp"
+    if len(file_bytes) >= 2 and file_bytes[:2] == b"BM":
+        return "bmp"
+    return None
+
+
 def validate_image_bytes(
     file_bytes: bytes,
     *,
@@ -76,26 +95,7 @@ def validate_image_bytes(
     if not file_bytes:
         raise UnsupportedMediaTypeError("Bos dosya yuklenemez.")
 
-    if suffix == ".webp":
-        if not (
-            len(file_bytes) >= 12
-            and file_bytes[:4] == b"RIFF"
-            and file_bytes[8:12] == b"WEBP"
-        ):
-            raise UnsupportedMediaTypeError(
-                "Gecersiz WEBP dosya icerigi."
-            )
-        return
-
-    if suffix == ".bmp":
-        if len(file_bytes) < 2 or file_bytes[:2] != b"BM":
-            raise UnsupportedMediaTypeError(
-                "Gecersiz BMP dosya icerigi."
-            )
-        return
-
-    detected_type = imghdr.what(None, h=file_bytes)
-
+    detected_type = _detect_image_kind(file_bytes)
     if detected_type is None:
         raise UnsupportedMediaTypeError(
             "Gecersiz gorsel dosya icerigi."
@@ -105,6 +105,8 @@ def validate_image_bytes(
         ".jpg": "jpeg",
         ".jpeg": "jpeg",
         ".png": "png",
+        ".webp": "webp",
+        ".bmp": "bmp",
     }.get(suffix)
 
     if expected_type is not None and detected_type != expected_type:

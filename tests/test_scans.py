@@ -5,6 +5,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from backend.app.config import ApiSettings, get_api_settings
 from backend.app.dependencies import get_scan_service
 from backend.app.exceptions import register_exception_handlers
 from backend.app.routers import scans as scans_router
@@ -139,3 +140,75 @@ def test_scan_history_trims_old_entries(
     listed = client.get("/api/v1/scans")
     assert listed.status_code == 200
     assert listed.json()["total"] == 5
+
+
+def _scans_client_with_settings(
+    config: PipelineConfig,
+    settings: ApiSettings,
+) -> TestClient:
+    app = FastAPI()
+    register_exception_handlers(app)
+    app.include_router(scans_router.router, prefix="/api/v1")
+
+    def override_scan_service() -> ScanQueryService:
+        return ScanQueryService.from_pipeline_config(
+            config,
+            max_entries=5,
+        )
+
+    app.dependency_overrides[get_scan_service] = override_scan_service
+    app.dependency_overrides[get_api_settings] = lambda: settings
+    return TestClient(app)
+
+
+def test_production_delete_disabled_without_scans_api_key(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    settings = ApiSettings(
+        environment="production",
+        cors_origins="https://app.example.com",
+        rate_limit_enabled=False,
+        scans_api_key=None,
+    )
+    client = _scans_client_with_settings(seeded_pipeline_config, settings)
+    created = client.post(
+        "/api/v1/scans",
+        json={"response": _sample_analyze_payload()},
+    )
+    scan_id = created.json()["scan"]["id"]
+
+    denied = client.delete(f"/api/v1/scans/{scan_id}")
+    assert denied.status_code == 403
+
+
+def test_production_delete_requires_matching_api_key(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    settings = ApiSettings(
+        environment="production",
+        cors_origins="https://app.example.com",
+        rate_limit_enabled=False,
+        scans_api_key="operator-secret-key-12345",
+    )
+    client = _scans_client_with_settings(seeded_pipeline_config, settings)
+    created = client.post(
+        "/api/v1/scans",
+        json={"response": _sample_analyze_payload()},
+    )
+    scan_id = created.json()["scan"]["id"]
+
+    unauthorized = client.delete(f"/api/v1/scans/{scan_id}")
+    assert unauthorized.status_code == 401
+
+    wrong = client.delete(
+        f"/api/v1/scans/{scan_id}",
+        headers={"X-API-Key": "wrong"},
+    )
+    assert wrong.status_code == 401
+
+    ok = client.delete(
+        f"/api/v1/scans/{scan_id}",
+        headers={"X-API-Key": "operator-secret-key-12345"},
+    )
+    assert ok.status_code == 200
+    assert ok.json()["deleted_id"] == scan_id

@@ -27,7 +27,7 @@ Use this file when organizing issues on the GitHub Project board for **Yolocilin
 
 | Item | Branch |
 |------|--------|
-| Final polish / docs refresh | `feature/final-polish-4` |
+| Final polish / security hardening | `feature/final-polish-5` |
 
 ## Post-MVP / Todo
 
@@ -35,6 +35,7 @@ Use this file when organizing issues on the GitHub Project board for **Yolocilin
 |-------|--------|
 | [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Advanced leftovers: PostgreSQL, cloud, barcode, iOS |
 | [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Internship report / final documentation wrap-up |
+| Auth for private scan namespaces | Scans remain global; production DELETE gated by `SCANS_API_KEY` |
 
 ## Closed / Superseded
 

@@ -33,10 +33,22 @@ class AnalyzeRateLimiter:
                 if timestamp > window_start
             ]
             if len(hits) >= self.max_requests:
-                self._hits[client_id] = hits
+                if hits:
+                    self._hits[client_id] = hits
+                else:
+                    self._hits.pop(client_id, None)
                 return False
             hits.append(now)
             self._hits[client_id] = hits
+            # Drop idle clients so unique-IP maps do not grow forever.
+            if len(self._hits) > 2048:
+                stale = [
+                    key
+                    for key, stamps in self._hits.items()
+                    if not stamps or stamps[-1] <= window_start
+                ]
+                for key in stale:
+                    self._hits.pop(key, None)
             return True
 
 
