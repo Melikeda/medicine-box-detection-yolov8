@@ -216,6 +216,21 @@ def test_ferrum_matches_and_not_pharmaton() -> None:
     assert "pharmaton" not in result.medicine_name.lower()
 
 
+def test_unknown_brand_returns_not_found_not_wrong_drug() -> None:
+    """Catalogda olmayan net marka token'i baska ilaca matched olmamali."""
+    from pathlib import Path
+
+    config = PipelineConfig(
+        medicines_csv_path=Path("data/database/medicines.csv"),
+        use_sqlite=False,
+    )
+    service = MatchingService.from_config(config)
+    result = service.match_text(["ZYXNOTREALBRAND", "ENDOXYZFAKE"])
+
+    assert result.status != "matched"
+    assert result.medicine_name is None
+
+
 def test_has_weak_ocr_candidates_detects_short_reads() -> None:
     assert has_weak_ocr_candidates(["lie"])
     assert has_weak_ocr_candidates(["lie", "mg"])

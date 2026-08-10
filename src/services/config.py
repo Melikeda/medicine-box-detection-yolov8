@@ -104,9 +104,9 @@ class PipelineConfig:
     minimum_name_coverage_ratio: float = 0.55
     minimum_brand_coverage_ratio: float = 0.50
     minimum_partial_brand_match_score: float = 88.0
-    minimum_match_score: float = 85.0
-    minimum_plausible_match_score: float = 60.0
-    minimum_best_candidate_score: float = 75.0
+    minimum_match_score: float = 88.0
+    minimum_plausible_match_score: float = 65.0
+    minimum_best_candidate_score: float = 80.0
     top_match_count: int = 5
     ocr_languages: tuple[str, ...] = ("tr", "en")
     use_gpu: bool = False

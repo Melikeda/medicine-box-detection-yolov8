@@ -3,7 +3,7 @@ from rapidfuzz import fuzz
 from src.matching.text_normalizer import normalize_ocr_text
 
 
-DEFAULT_SCORE_CUTOFF = 85.0
+DEFAULT_SCORE_CUTOFF = 88.0
 
 
 GENERIC_SINGLE_WORDS = {

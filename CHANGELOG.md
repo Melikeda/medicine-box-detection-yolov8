@@ -12,7 +12,8 @@ Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
 ### Changed
 
-- Matching gates tightened (`minimum_match_score` 85, stronger name/brand reliability + token overlap) to cut wrong-brand false positives
+- Matching gates tightened (`minimum_match_score` 88, brand-token overlap required) so missing-catalog OCR returns **not_found** instead of a wrong brand
+- Reject foreign brand tokens (e.g. Endofer-like OCR must not map to Coldaway C)
 
 ## [Unreleased] — `feature/firebase-app-distribution`
 
