@@ -117,6 +117,22 @@ POPULAR_MANUAL_ROWS: list[dict[str, str]] = [
         "form": "Kapsül",
         "category": "Vitamin ve Mineral",
     },
+    {
+        "medicine_name": "Endofer",
+        "brand_name": "Endofer",
+        "active_ingredient": "Iron / Ferric complex",
+        "dosage": "VERIFY_FROM_OFFICIAL_LEAFLET",
+        "form": "VERIFY_FROM_OFFICIAL_LEAFLET",
+        "category": "Vitamin ve Mineral",
+    },
+    {
+        "medicine_name": "Maltofer",
+        "brand_name": "Maltofer",
+        "active_ingredient": "Ferric Oxide Polymaltose Complexes",
+        "dosage": "VERIFY_FROM_OFFICIAL_LEAFLET",
+        "form": "Tablet",
+        "category": "Vitamin ve Mineral",
+    },
 ]
 
 # SKRS'den tek en iyi urun secilecek markalar.
