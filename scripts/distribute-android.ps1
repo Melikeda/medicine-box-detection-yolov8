@@ -77,23 +77,23 @@ if (-not (Test-Path $apkPath)) {
 Write-Host "APK ready: $apkPath"
 
 if ($SkipUpload) {
-    Write-Host "SkipUpload set — not uploading to Firebase."
+    Write-Host 'SkipUpload set - not uploading to Firebase.'
     return
 }
 
 if ([string]::IsNullOrWhiteSpace($FirebaseAppId)) {
-    throw "FirebaseAppId is required (pass -FirebaseAppId or set env FIREBASE_APP_ID)."
+    throw 'FirebaseAppId is required (pass -FirebaseAppId or set env FIREBASE_APP_ID).'
 }
 
 $firebase = Get-Command firebase -ErrorAction SilentlyContinue
 if (-not $firebase) {
-    throw "firebase CLI not found. Install with: npm i -g firebase-tools && firebase login"
+    throw 'firebase CLI not found. Install with: npm i -g firebase-tools ; firebase login'
 }
 
-Write-Host "==> firebase appdistribution:distribute"
+Write-Host '==> firebase appdistribution:distribute'
 & firebase appdistribution:distribute $apkPath `
     --app $FirebaseAppId `
     --groups $Groups `
     --release-notes $ReleaseNotes
 
-Write-Host "Done. Testers should open Firebase App Tester and install the new build."
+Write-Host 'Done. Testers should open Firebase App Tester and install the new build.'
