@@ -16,7 +16,7 @@ This directory holds the **medicine catalog** used by the analyze pipeline and t
 
 | Metric | Value |
 |--------|-------|
-| **Catalog size** | 153 medicines |
+| **Catalog size** | ~1160 medicines (popular TR brands + TİTCK ATC expansion) |
 | **Source file** | `medicines.csv` (committed) |
 | **Runtime DB** | `medicines.db` (generated, gitignored) |
 | **Placeholder rate** | ~7% of dosage/form/ingredient fields |
@@ -171,9 +171,10 @@ python scripts/enrich_medicines_from_titck.py --no-download
 
 1. **Match** each CSV row to the best TİTCK SKRS product (scored fuzzy match).
 2. **Fill** `active_ingredient`, `dosage`, and `form` from SKRS where confidence is sufficient.
-3. **Expand** common OTC brand variants (Parol, Augmentin, Voltaren, …).
-4. **Append** popular shelf medicines missing from SKRS under brand name (see manual layer below).
-5. **Apply** persistent corrections and overrides.
+3. **Expand** common OTC / high-use brand variants (Parol, Augmentin, Voltaren, Glucophage, …).
+4. **Fill** high-volume ATC groups (N02, M01, J01, A02, C07/C09/C10, …) up to curated limits.
+5. **Append** popular shelf medicines missing from SKRS under brand name (see manual layer below).
+6. **Apply** persistent corrections and overrides.
 
 ---
 
@@ -206,7 +207,7 @@ To add a medicine that SKRS cannot resolve by brand:
 
 ### ID convention
 
-- Format: `MED` + three-digit number (`MED001` … `MED131`).
+- Format: `MED` + number (`MED001` … `MED1163`).
 - New rows: use the next free ID (check the last row in CSV or run enrichment with `--dry-run`).
 
 ### Do not
