@@ -3,6 +3,18 @@
 All notable changes to **Yolocilin** (Medicine Box Detection System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — `feature/catalog-expand-matching-tighten`
+
+### Added
+
+- Controlled TİTCK catalog expansion: Ferrum / Ferro Sanol and additional pharmacy-shelf brands (Buscopan, Ventolin, Claritine, …) → **153** medicines
+- Regression: Ferrum OCR must not match Pharmaton
+
+### Changed
+
+- Matching gates tightened (`minimum_match_score` 88, brand-token overlap required) so missing-catalog OCR returns **not_found** instead of a wrong brand
+- Reject foreign brand tokens (e.g. Endofer-like OCR must not map to Coldaway C)
+
 ## [Unreleased] — `feature/firebase-app-distribution`
 
 ### Added

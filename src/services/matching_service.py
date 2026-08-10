@@ -228,6 +228,90 @@ def _is_short_brand_embedded_false_positive(
     return False
 
 
+def _significant_tokens(text: str) -> set[str]:
+    normalized = normalize_filter_text(text)
+    return {
+        token
+        for token in normalized.split()
+        if len(token) >= 4
+    }
+
+
+def _has_label_token_overlap(
+    *,
+    query_text: str,
+    medicine_name: str,
+    medicine: dict[str, str] | None,
+) -> bool:
+    """True when OCR and medicine share a meaningful brand/name token."""
+    query_norm = normalize_filter_text(query_text)
+    labels = {medicine_name}
+    if medicine is not None:
+        brand = medicine.get("brand_name", "").strip()
+        if brand:
+            labels.add(brand)
+
+    label_tokens: set[str] = set()
+    for label in labels:
+        label_tokens.update(_significant_tokens(label))
+        # Also treat compact brand strings (Ferrum, Parol) as one token.
+        compact = normalize_filter_text(label).replace(" ", "")
+        if len(compact) >= 4:
+            label_tokens.add(compact)
+
+    if not label_tokens:
+        return False
+
+    for token in label_tokens:
+        if token in query_norm or query_norm in token:
+            return True
+    return False
+
+
+def _query_has_foreign_brand_token(
+    *,
+    query_text: str,
+    medicine_name: str,
+    medicine: dict[str, str] | None,
+) -> bool:
+    """
+    True when OCR contains a long token absent from the candidate labels.
+
+    Missing-catalog drugs (e.g. Endofer before it was added) must not fuzzy-map
+    onto unrelated brands like Coldaway C just because RapidFuzz scores are mid.
+    """
+    query_tokens = {
+        token
+        for token in _significant_tokens(query_text)
+        if len(token) >= 5
+    }
+    compact_query = normalize_filter_text(query_text).replace(" ", "")
+    if len(compact_query) >= 5:
+        query_tokens.add(compact_query)
+
+    if not query_tokens:
+        return False
+
+    label_blob_parts = [normalize_filter_text(medicine_name)]
+    if medicine is not None:
+        brand = medicine.get("brand_name", "").strip()
+        if brand:
+            label_blob_parts.append(normalize_filter_text(brand))
+    label_blob = " ".join(label_blob_parts)
+    label_compact = label_blob.replace(" ", "")
+
+    for token in query_tokens:
+        if token in label_blob or token in label_compact:
+            continue
+        if any(
+            token in label_token or label_token in token
+            for label_token in _significant_tokens(label_blob)
+        ):
+            continue
+        return True
+    return False
+
+
 def is_reliable_medicine_match(
     query_text: str,
     medicine_name: str,
@@ -247,6 +331,9 @@ def is_reliable_medicine_match(
 
     Yüksek skorlu marka parçası eşleşmelerine (ör. "fen" → Nurofen)
     bulanık fotoğraflar için izin verilir.
+
+    Katalogda olmayan ilaçlar icin: OCR'da farkli bir marka token'i varken
+    baska ilaca matched donulmez; not_found tercih edilir.
     """
     if is_garbage_ocr_text(query_text):
         return False
@@ -273,10 +360,34 @@ def is_reliable_medicine_match(
         name_similarity=name_similarity,
         brand_similarity=brand_similarity,
     ):
-        pass
-    elif name_similarity >= 65.0 or brand_similarity >= 85.0:
-        return True
-    elif brand_similarity >= 65.0:
+        return False
+
+    has_overlap = _has_label_token_overlap(
+        query_text=query_text,
+        medicine_name=medicine_name,
+        medicine=medicine,
+    )
+    has_foreign = _query_has_foreign_brand_token(
+        query_text=query_text,
+        medicine_name=medicine_name,
+        medicine=medicine,
+    )
+
+    # Near-exact similarity may pass without overlap only if OCR does not
+    # introduce a clearly different brand-length token.
+    if name_similarity >= 95.0 or brand_similarity >= 95.0:
+        return not has_foreign
+
+    # Otherwise require shared brand/name evidence — never invent a match
+    # for a missing catalog drug by fuzzy-picking an unrelated brand.
+    if has_foreign and not has_overlap:
+        return False
+
+    if has_overlap and (
+        name_similarity >= 80.0
+        or brand_similarity >= 80.0
+        or match_score >= minimum_partial_brand_match_score
+    ):
         return True
 
     query_alpha_length = count_alphabetic_characters(
@@ -305,7 +416,11 @@ def is_reliable_medicine_match(
             )
         ):
             return False
-        return True
+        if not has_overlap:
+            return False
+        if name_similarity >= 75.0 or brand_similarity >= 75.0:
+            return True
+        return False
 
     if (
         medicine is not None
@@ -319,10 +434,11 @@ def is_reliable_medicine_match(
             ),
         )
     ):
-        return True
+        # Short OCR fragments like "fen" → Nurofen: allow only when the
+        # fragment is actually contained in the brand (no foreign token).
+        return not has_foreign
 
     return False
-
 
 @dataclass
 class TextMatchResult:

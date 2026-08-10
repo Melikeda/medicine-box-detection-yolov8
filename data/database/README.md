@@ -16,7 +16,7 @@ This directory holds the **medicine catalog** used by the analyze pipeline and t
 
 | Metric | Value |
 |--------|-------|
-| **Catalog size** | 131 medicines |
+| **Catalog size** | 153 medicines |
 | **Source file** | `medicines.csv` (committed) |
 | **Runtime DB** | `medicines.db` (generated, gitignored) |
 | **Placeholder rate** | ~7% of dosage/form/ingredient fields |

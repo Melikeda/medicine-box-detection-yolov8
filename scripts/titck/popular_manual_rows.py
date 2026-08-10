@@ -117,6 +117,22 @@ POPULAR_MANUAL_ROWS: list[dict[str, str]] = [
         "form": "Kapsül",
         "category": "Vitamin ve Mineral",
     },
+    {
+        "medicine_name": "Endofer",
+        "brand_name": "Endofer",
+        "active_ingredient": "Iron / Ferric complex",
+        "dosage": "VERIFY_FROM_OFFICIAL_LEAFLET",
+        "form": "VERIFY_FROM_OFFICIAL_LEAFLET",
+        "category": "Vitamin ve Mineral",
+    },
+    {
+        "medicine_name": "Maltofer",
+        "brand_name": "Maltofer",
+        "active_ingredient": "Ferric Oxide Polymaltose Complexes",
+        "dosage": "VERIFY_FROM_OFFICIAL_LEAFLET",
+        "form": "Tablet",
+        "category": "Vitamin ve Mineral",
+    },
 ]
 
 # SKRS'den tek en iyi urun secilecek markalar.
@@ -125,6 +141,28 @@ TITCK_SINGLE_BRAND_QUERIES: list[tuple[str, str]] = [
     ("Dolgit", "Kas ve Eklem"),
     ("Klacid", "Antibiyotik"),
     ("Differin", "Genel"),
+    # Controlled expansion (pharmacy-shelf / demo gaps)
+    ("Ferrum", "Vitamin ve Mineral"),
+    ("Ferrum Hausmann", "Vitamin ve Mineral"),
+    ("Ferro Sanol", "Vitamin ve Mineral"),
+    ("Supradyn", "Vitamin ve Mineral"),
+    ("Elevit", "Vitamin ve Mineral"),
+    ("Magnerot", "Vitamin ve Mineral"),
+    ("Buscopan", "Mide"),
+    ("Maalox", "Mide"),
+    ("Ventolin", "Solunum"),
+    ("Claritine", "Alerji"),
+    ("Zyrtec", "Alerji"),
+    ("Xyzal", "Alerji"),
+    ("Singulair", "Solunum"),
+    ("Glucophage", "Diyabet"),
+    ("Euthyrox", "Endokrin"),
+    ("Concor", "Kardiyoloji"),
+    ("Beloc", "Kardiyoloji"),
+    ("Ator", "Kardiyoloji"),
+    ("Crestor", "Kardiyoloji"),
+    ("Desirel", "Nöroloji"),
+    ("Spazmol", "Mide"),
 ]
 
 

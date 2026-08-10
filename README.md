@@ -37,7 +37,7 @@ Photographing a box and guessing the brand is brittle. Yolocilin turns that into
 
 1. **Detect** the box (YOLOv8)
 2. **Read** the print (OpenCV + EasyOCR)
-3. **Match** against a curated catalog (RapidFuzz + SQLite, **131** drugs)
+3. **Match** against a curated catalog (RapidFuzz + SQLite, **153** drugs)
 4. **Show** results on Android — with optional Gemini explanation and scan history
 
 Built as a modular internship system: learnable `examples/`, production `src/` + `backend/` + `mobile/`.
@@ -50,7 +50,7 @@ Built as a modular internship system: learnable `examples/`, production `src/` +
 |------|----------------|
 | Detection | Multi-box YOLO with confidence fallback |
 | OCR | Fast / accurate modes, early exit on match |
-| Catalog | TİTCK-enriched seed CSV → SQLite (**131** rows) |
+| Catalog | TİTCK-enriched seed CSV → SQLite (**153** rows) |
 | API | Analyze, medicines, explain, server scans |
 | Mobile (Yolocilin) | Gallery + camera, results, local history, best-effort server sync |
 | Ops | Docker, GitHub Actions CI, production CORS/docs hardening |
@@ -73,7 +73,7 @@ Yolocilin (Flutter)
 POST /api/v1/analyze  (FastAPI)
         │
         ▼
-YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → SQLite (131)
+YOLOv8 → Crop → OpenCV → EasyOCR → RapidFuzz → SQLite (153)
         │
         ├─► local history + POST /api/v1/scans
         ▼
@@ -217,7 +217,7 @@ medicine-box-detection-yolov8/
 
 ### Done
 
-Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini explain, local + server scan history, production hardening, catalog refresh (131), E2E/perf tooling.
+Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini explain, local + server scan history, production hardening, catalog refresh (153), E2E/perf tooling.
 
 ### Still open
 

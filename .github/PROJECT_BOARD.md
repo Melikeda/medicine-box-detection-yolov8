@@ -27,7 +27,7 @@ Use this file when organizing issues on the GitHub Project board for **Yolocilin
 
 | Item | Branch |
 |------|--------|
-| Firebase App Distribution (test APKs) | `feature/firebase-app-distribution` |
+| Catalog expand + matching tighten | `feature/catalog-expand-matching-tighten` |
 
 ## Post-MVP / Todo
 
