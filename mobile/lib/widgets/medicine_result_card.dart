@@ -65,7 +65,7 @@ class MedicineResultCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              result.displayMessage,
+              result.userMessage,
               style: theme.textTheme.bodyLarge,
             ),
             if (result.isMatched) ...[

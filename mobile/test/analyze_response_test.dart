@@ -57,6 +57,21 @@ void main() {
       expect(result.isMatched, isFalse);
       expect(result.bestCandidate, 'Unknown Drug');
     });
+
+    test('fromJson parses failure_reason and hint', () {
+      final result = MedicineBoxResult.fromJson({
+        'box_index': 2,
+        'yolo_confidence': 0.6,
+        'matching_score': 40.0,
+        'status': 'not_medicine_box',
+        'display_message': 'Kutu degil',
+        'failure_reason': 'partial_box',
+        'hint': 'Kutu kadrajda yarim kalmis olabilir.',
+      });
+
+      expect(result.failureReason, 'partial_box');
+      expect(result.userMessage, contains('yarim'));
+    });
   });
 
   group('AnalyzeResponse', () {

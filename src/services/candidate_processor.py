@@ -339,12 +339,24 @@ def rank_medicine_matches(
                     candidate_text,
                 )
 
+    from src.matching.brand_disambiguation import (
+        evidence_alignment_boost,
+        is_base_sku,
+        join_evidence_text,
+    )
+
+    evidence = join_evidence_text(list(candidate_texts))
+
     ranked_matches = sorted(
         best_matches_by_medicine.values(),
         key=lambda match: (
-            match[1],
+            match[1]
+            + evidence_alignment_boost(match[0], evidence),
+            evidence_alignment_boost(match[0], evidence),
+            1 if is_base_sku(match[0]) else 0,
             len(match[2]),
-            len(match[0].get("medicine_name", "")),
+            # Uzun isim artik birincil tie-break degil
+            -len(match[0].get("medicine_name", "")),
         ),
         reverse=True,
     )

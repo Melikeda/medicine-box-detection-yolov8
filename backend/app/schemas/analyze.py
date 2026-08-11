@@ -23,6 +23,8 @@ class MedicineBoxResultSchema(BaseModel):
     best_candidate: str | None = None
     error: str | None = None
     medicine: dict[str, str] | None = None
+    failure_reason: str | None = None
+    hint: str | None = None
 
 
 class AnalyzeSummarySchema(BaseModel):

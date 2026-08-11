@@ -69,6 +69,8 @@ class BoxAnalysisResult:
     best_candidate: str | None = None
     error: str | None = None
     medicine: dict[str, str] | None = None
+    failure_reason: str | None = None
+    hint: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
