@@ -400,15 +400,13 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] LLM integration for medicine explanations (#8)
 - [x] Mobile camera capture (Report 22, PR #48)
 - [x] Mobile scan history — local SQLite (Report 23)
-- [~] OCR mode UI toggle — deferred (backend/API ready; default `fast` for MVP)
+- [x] OCR mode UI toggle — preview screen Hızlı/Hassas; persists preference; calls `?mode=` (PR follow-up)
 - [x] Fix active-ingredient-only false matches (ibuprofen → wrong brand, round 1)
 - [x] Multi-box OCR: supplemental deep retry + garbage OCR filter (round 1)
 - [x] Medicine database final refresh — 131 rows, TİTCK re-sync (Report 24, round 2)
-- [ ] PostgreSQL migration
 - [x] User scan history (server sync) — `POST/GET/DELETE /api/v1/scans` + mobile best-effort sync (final-polish-4)
-- [ ] Barcode/QR reading
-- [ ] Cloud deployment
-- [ ] iOS support
+
+> **Moved to [Future Development](#-future-development):** PostgreSQL migration, Barcode/QR reading, Cloud deployment, iOS support. SQLite + Android MVP remain the supported product stage; revisit those items later if needed.
 
 ## Objectives (testing and docs, from former Phase 19)
 
@@ -416,6 +414,24 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] Evaluate end-to-end performance — timing in e2e script + `benchmark_analyze.py --json-out` (Report 25)
 - [ ] Complete internship report
 - [~] Finalize GitHub documentation — living docs + SECURITY/CHANGELOG (final-polish-4; keep polishing)
+
+---
+
+# 🔭 Future Development
+
+Post-MVP / production-scale work. **Not required** to close the current internship deliverable or Phase 18–19 polish. Track here so the main roadmap stays honest about what ships now vs later.
+
+| Item | Why later | When it becomes relevant |
+|------|-----------|---------------------------|
+| **PostgreSQL migration** | SQLite is enough for single-host demo, catalog matching (in-memory RapidFuzz), and low-traffic `scans`. Postgres adds concurrent writes, managed cloud DB, backups, and HA. | Multi-user cloud API, heavy scan-history write load, or ops requirements |
+| **Barcode / QR reading** | Core path is YOLO → OCR → fuzzy match on box text. Barcodes are a parallel identity signal (faster when present, fails when missing/damaged). | Need instant lookup for coded packs, or OCR-weak fallback |
+| **Cloud deployment** | Local API + Docker (+ optional HTTPS tunnel) already cover development and demos. Always-on public hosting adds cost, model/CPU sizing, and ops. | Public testers / production URL without a PC tunnel |
+| **iOS support** | Android Flutter MVP is complete; iOS needs Apple toolchain, signing, and device testing. | App Store / iPhone users |
+| Per-user auth for private scan lists | Scans are global / best-effort today | Multi-tenant production |
+| YOLO retrain (blurry / negative samples) | Current model covers primary demos | Systematic false “kutu değil” / partial-box cases |
+| Multilingual OCR | TR/EN pipeline is in place | Additional markets |
+
+**Principle:** keep CSV → SQLite and Android as the current delivery path; treat Postgres, barcode, cloud hosting, and iOS as optional next-stage work.
 
 ---
 
@@ -473,7 +489,7 @@ See [Report 20](reports/20-production-hardening.md).
 | ✅ CI/CD (GitHub Actions) | Done | #39 |
 | ✅ LLM explanations (Gemini) | Done | #8 |
 | ✅ Server scan history + E2E tooling | Done (final-polish-4) | #50 / Report 23–25 |
-| ⏳ Advanced Features (remaining) | PostgreSQL, cloud, barcode, iOS | #32 / #50 |
+| 🔭 Future Development | PostgreSQL, barcode/QR, cloud, iOS (post-MVP) | #32 / #50 |
 | ⏳ Final Testing & Documentation | Docs refresh in progress; internship report open | #9 |
 | ⏳ Dataset Publishing | Planned | — |
 | ⏳ Project Release | Planned | — |
