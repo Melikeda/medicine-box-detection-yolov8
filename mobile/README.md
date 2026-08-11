@@ -66,7 +66,14 @@ cd mobile
 flutter run
 ```
 
-Flow: **Fotoğraf Çek** / gallery → preview → **Analiz Et** → result (CPU OCR may take 1–3 minutes).
+Flow: **Fotoğraf Çek** / gallery → preview → choose **OCR mode** (Hızlı / Hassas) → **Analiz Et** → result.
+
+| OCR mode | API | Notes |
+|----------|-----|--------|
+| Hızlı (`fast`, default) | `?mode=fast` | Typical 1–3 min/box on CPU |
+| Hassas (`accurate`) | `?mode=accurate` | More OCR variants; much slower |
+
+Preference is stored on device (`SharedPreferences`).
 
 ### API base URL
 

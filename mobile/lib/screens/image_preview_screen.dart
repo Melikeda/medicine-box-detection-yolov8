@@ -4,14 +4,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
-import '../routes/app_router.dart';
 import '../models/analyze_response.dart';
+import '../models/ocr_mode.dart';
+import '../routes/app_router.dart';
 import '../services/analyze_api_exception.dart';
 import '../services/analyze_api_service.dart';
+import '../services/ocr_mode_preferences.dart';
 import '../services/scan_api_service.dart';
 import '../services/scan_history_service.dart';
 import '../theme/app_colors.dart';
 import '../widgets/loading_overlay.dart';
+import '../widgets/ocr_mode_selector.dart';
 
 class ImagePreviewScreen extends StatefulWidget {
   const ImagePreviewScreen({
@@ -20,12 +23,14 @@ class ImagePreviewScreen extends StatefulWidget {
     this.analyzeService,
     this.historyService,
     this.scanApiService,
+    this.ocrModePreferences,
   });
 
   final String imagePath;
   final AnalyzeApiService? analyzeService;
   final ScanHistoryService? historyService;
   final ScanApiService? scanApiService;
+  final OcrModePreferences? ocrModePreferences;
 
   @override
   State<ImagePreviewScreen> createState() => _ImagePreviewScreenState();
@@ -35,7 +40,9 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
   late final AnalyzeApiService _analyzeService;
   late final ScanHistoryService _historyService;
   late final ScanApiService _scanApiService;
+  late final OcrModePreferences _ocrModePreferences;
   bool _isAnalyzing = false;
+  OcrMode _ocrMode = OcrMode.fast;
 
   @override
   void initState() {
@@ -43,6 +50,22 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
     _analyzeService = widget.analyzeService ?? AnalyzeApiService();
     _historyService = widget.historyService ?? ScanHistoryService();
     _scanApiService = widget.scanApiService ?? ScanApiService();
+    _ocrModePreferences =
+        widget.ocrModePreferences ?? OcrModePreferences();
+    unawaited(_loadOcrMode());
+  }
+
+  Future<void> _loadOcrMode() async {
+    final mode = await _ocrModePreferences.load();
+    if (!mounted) {
+      return;
+    }
+    setState(() => _ocrMode = mode);
+  }
+
+  Future<void> _onOcrModeChanged(OcrMode mode) async {
+    setState(() => _ocrMode = mode);
+    await _ocrModePreferences.save(mode);
   }
 
   @override
@@ -76,6 +99,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
 
       final response = await _analyzeService.analyzeImage(
         imagePath: widget.imagePath,
+        ocrMode: _ocrMode.apiValue,
       );
 
       if (!mounted) {
@@ -172,7 +196,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -196,6 +220,12 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
                         ),
                       ],
                     ),
+                  ),
+                  const SizedBox(height: 14),
+                  OcrModeSelector(
+                    value: _ocrMode,
+                    enabled: !_isAnalyzing,
+                    onChanged: _onOcrModeChanged,
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
@@ -226,7 +256,7 @@ class _ImagePreviewScreenState extends State<ImagePreviewScreen> {
             if (_isAnalyzing)
               LoadingOverlay(
                 message: s.analyzingOverlay,
-                subtitle: s.analyzingOverlayHint,
+                subtitle: s.analyzingHintForMode(_ocrMode.apiValue),
               ),
           ],
         ),

@@ -133,6 +133,12 @@ class AppStrings {
     required this.chooseAnotherPhoto,
     required this.analyzingOverlay,
     required this.analyzingOverlayHint,
+    required this.analyzingOverlayHintAccurate,
+    required this.ocrModeLabel,
+    required this.ocrModeFast,
+    required this.ocrModeAccurate,
+    required this.ocrModeFastDescription,
+    required this.ocrModeAccurateDescription,
     required this.backendNotReady,
     required this.unexpectedError,
     required this.durationLabel,
@@ -216,6 +222,12 @@ class AppStrings {
   final String chooseAnotherPhoto;
   final String analyzingOverlay;
   final String analyzingOverlayHint;
+  final String analyzingOverlayHintAccurate;
+  final String ocrModeLabel;
+  final String ocrModeFast;
+  final String ocrModeAccurate;
+  final String ocrModeFastDescription;
+  final String ocrModeAccurateDescription;
   final String backendNotReady;
   final String unexpectedError;
   final String durationLabel;
@@ -287,6 +299,14 @@ class AppStrings {
     return '$durationLabel: ${seconds.toStringAsFixed(1)} · OCR: $ocrMode';
   }
 
+  /// Overlay alt yazisi — secilen OCR moduna gore.
+  String analyzingHintForMode(String ocrModeApiValue) {
+    if (ocrModeApiValue == 'accurate') {
+      return analyzingOverlayHintAccurate;
+    }
+    return analyzingOverlayHint;
+  }
+
   String unexpectedErrorWith(Object error) => '$unexpectedError: $error';
 
   static const _tr = AppStrings._(
@@ -346,7 +366,16 @@ class AppStrings {
     analyzing: 'Analiz ediliyor...',
     chooseAnotherPhoto: 'Başka fotoğraf seç',
     analyzingOverlay: 'İlaç kutusu analiz ediliyor...',
-    analyzingOverlayHint: 'CPU üzerinde OCR 1-3 dakika sürebilir (fast mod).',
+    analyzingOverlayHint: 'CPU üzerinde OCR 1-3 dakika sürebilir (hızlı mod).',
+    analyzingOverlayHintAccurate:
+        'Hassas mod daha uzun sürebilir (birkaç dakika / kutu). Lütfen bekleyin.',
+    ocrModeLabel: 'OCR modu',
+    ocrModeFast: 'Hızlı',
+    ocrModeAccurate: 'Hassas',
+    ocrModeFastDescription:
+        'Daha hızlı analiz. Çoğu net kutu için önerilir.',
+    ocrModeAccurateDescription:
+        'Daha fazla OCR denemesi; bulanık veya zor kutularda daha iyi olabilir, belirgin şekilde yavaşlar.',
     backendNotReady:
         'Backend hazır değil veya modeller yüklenmedi.\nÖnce python run_api.py çalıştırın.',
     unexpectedError: 'Beklenmeyen hata',
@@ -436,6 +465,15 @@ class AppStrings {
     chooseAnotherPhoto: 'Choose another photo',
     analyzingOverlay: 'Analyzing medicine box...',
     analyzingOverlayHint: 'OCR on CPU may take 1-3 minutes (fast mode).',
+    analyzingOverlayHintAccurate:
+        'Accurate mode can take several minutes per box. Please wait.',
+    ocrModeLabel: 'OCR mode',
+    ocrModeFast: 'Fast',
+    ocrModeAccurate: 'Accurate',
+    ocrModeFastDescription:
+        'Faster analysis. Recommended for most clear boxes.',
+    ocrModeAccurateDescription:
+        'More OCR attempts; may help on blurry or difficult boxes, but is clearly slower.',
     backendNotReady:
         'Backend is not ready or models are not loaded.\nStart it with python run_api.py first.',
     unexpectedError: 'Unexpected error',
