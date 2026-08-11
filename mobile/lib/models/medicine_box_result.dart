@@ -10,6 +10,8 @@ class MedicineBoxResult {
     this.bestCandidate,
     this.error,
     this.medicine,
+    this.failureReason,
+    this.hint,
   });
 
   final int boxIndex;
@@ -22,6 +24,8 @@ class MedicineBoxResult {
   final String? bestCandidate;
   final String? error;
   final Map<String, String>? medicine;
+  final String? failureReason;
+  final String? hint;
 
   factory MedicineBoxResult.fromJson(Map<String, dynamic> json) {
     final rawMedicine = json['medicine'];
@@ -43,10 +47,21 @@ class MedicineBoxResult {
       bestCandidate: json['best_candidate'] as String?,
       error: json['error'] as String?,
       medicine: medicineMap,
+      failureReason: json['failure_reason'] as String?,
+      hint: json['hint'] as String?,
     );
   }
 
   bool get isMatched => status == 'matched';
+
+  /// Kullaniciya gosterilecek aciklama (hint varsa onu tercih et).
+  String get userMessage {
+    final tip = hint?.trim();
+    if (tip != null && tip.isNotEmpty) {
+      return tip;
+    }
+    return displayMessage;
+  }
 
   String? get activeIngredient => medicine?['active_ingredient'];
 
@@ -70,6 +85,8 @@ class MedicineBoxResult {
       if (bestCandidate != null) 'best_candidate': bestCandidate,
       if (error != null) 'error': error,
       if (medicine != null) 'medicine': medicine,
+      if (failureReason != null) 'failure_reason': failureReason,
+      if (hint != null) 'hint': hint,
     };
   }
 }

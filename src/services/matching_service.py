@@ -7,6 +7,9 @@ from src.database.repository import (
     ensure_database_seeded,
     load_medicines_from_sqlite,
 )
+from src.matching.brand_disambiguation import (
+    disambiguate_brand_family_matches,
+)
 from src.matching.medicine_matcher import (
     calculate_text_similarity,
     find_best_medicine_match,
@@ -24,6 +27,7 @@ from src.services.candidate_processor import (
     select_brand_name_candidate,
 )
 from src.services.config import PipelineConfig
+from src.services.failure_reasons import hint_for
 
 MATCHED_MESSAGE = "İlaç eşleştirildi."
 NOT_FOUND_MESSAGE = "İlaç CSV veritabanında bulunamadı."
@@ -452,6 +456,8 @@ class TextMatchResult:
     status: str
     display_message: str
     ranked_matches: list[MatchRecord] = field(default_factory=list)
+    failure_reason: str | None = None
+    hint: str | None = None
 
 
 class MatchingService:
@@ -578,6 +584,9 @@ class MatchingService:
             empty_status = (
                 "not_found" if has_raw_text else "not_medicine_box"
             )
+            empty_reason = (
+                "ocr_weak" if has_raw_text else "ocr_weak"
+            )
             empty_message = (
                 NOT_FOUND_MESSAGE
                 if has_raw_text
@@ -596,10 +605,18 @@ class MatchingService:
                 best_candidate=None,
                 status=empty_status,
                 display_message=empty_message,
+                failure_reason=empty_reason,
+                hint=hint_for(empty_reason),
             )
 
         ranked_matches = self.rank_matches(
             filtered_candidates=filtered,
+        )
+        # Ham OCR (doz/form dahil) ile ayni marka varyantlarini ayirt et.
+        ranked_matches = disambiguate_brand_family_matches(
+            ranked_matches,
+            evidence_texts=list(candidate_texts) + list(expanded),
+            all_medicines=self.medicines,
         )
 
         display_ocr_text = _select_display_ocr_text(
@@ -635,6 +652,8 @@ class MatchingService:
                     best_candidate=None,
                     status="not_medicine_box",
                     display_message=NOT_MEDICINE_BOX_MESSAGE,
+                    failure_reason="low_confidence",
+                    hint=hint_for("low_confidence"),
                 )
 
             return TextMatchResult(
@@ -645,6 +664,8 @@ class MatchingService:
                 best_candidate=None,
                 status="not_found",
                 display_message=NOT_FOUND_MESSAGE,
+                failure_reason="not_in_catalog",
+                hint=hint_for("not_in_catalog"),
             )
 
         for medicine, score, ocr_text in ranked_matches:
@@ -704,6 +725,8 @@ class MatchingService:
                 status="not_medicine_box",
                 display_message=NOT_MEDICINE_BOX_MESSAGE,
                 ranked_matches=ranked_matches,
+                failure_reason="low_confidence",
+                hint=hint_for("low_confidence"),
             )
 
         return TextMatchResult(
@@ -720,4 +743,6 @@ class MatchingService:
             status="not_found",
             display_message=NOT_FOUND_MESSAGE,
             ranked_matches=ranked_matches,
+            failure_reason="not_in_catalog",
+            hint=hint_for("not_in_catalog"),
         )

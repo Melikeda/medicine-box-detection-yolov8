@@ -45,7 +45,8 @@ def test_partial_brand_match_accepts_fen(
     result = service.match_text(["fen"])
 
     assert result.status == "matched"
-    assert result.medicine_name == "Nurofen Cold & Flu"
+    # "fen" marka parcasi; varyant kaniti yoksa temel Nurofen tercih edilir
+    assert result.medicine_name == "Nurofen"
     assert result.matching_score >= 85.0
 
 

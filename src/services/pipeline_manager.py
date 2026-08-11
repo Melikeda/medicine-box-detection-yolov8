@@ -3,6 +3,7 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
+import cv2
 import easyocr
 from ultralytics import YOLO
 
@@ -11,6 +12,7 @@ from src.ocr.ocr_pipeline import DEFAULT_BLUR_THRESHOLD
 from src.services.candidate_processor import has_weak_ocr_candidates
 from src.services.config import PipelineConfig
 from src.services.detection_service import DetectionService
+from src.services.failure_reasons import classify_box_failure, hint_for
 from src.services.matching_service import MatchingService, TextMatchResult
 from src.services.medicine_analyzer import (
     BoxAnalysisResult,
@@ -161,12 +163,14 @@ class PipelineManager:
                 image_path=str(image_path),
                 detection_count=0,
                 medicines_compared=medicines_compared,
-                error=(
-                    "İlaç kutusu tespit edilemedi. "
-                    "Fotoğrafın net olduğundan, kutuların kadrajda "
-                    "ve yeterince büyük göründüğünden emin olun."
-                ),
+                error=hint_for("no_detection"),
             )
+
+        image_width = 0
+        image_height = 0
+        original_image = cv2.imread(str(image_path))
+        if original_image is not None:
+            image_height, image_width = original_image.shape[:2]
 
         box_results: list[BoxAnalysisResult] = []
 
@@ -193,13 +197,37 @@ class PipelineManager:
                 if ocr_text:
                     print(f"OCR metni: {ocr_text}")
 
+                failure_reason = match_result.failure_reason
+                hint = match_result.hint
+                display_message = match_result.display_message
+
+                if match_result.status != "matched":
+                    classified = classify_box_failure(
+                        status=match_result.status,
+                        matching_score=match_result.matching_score,
+                        ocr_text=ocr_text,
+                        candidate_texts=candidate_texts,
+                        cropped_image=detected_box.cropped_image,
+                        bounding_box=detected_box.bounding_box,
+                        image_width=image_width or None,
+                        image_height=image_height or None,
+                        blur_threshold=self.config.ocr_blur_threshold,
+                        minimum_plausible_match_score=(
+                            self.config.minimum_plausible_match_score
+                        ),
+                    )
+                    if classified is not None:
+                        failure_reason = classified.reason
+                        hint = classified.hint
+                        display_message = classified.hint
+
                 if match_result.status == "matched":
                     print(f"Sonuç: {match_result.medicine_name}")
                     print(
                         f"Eşleşme skoru: {match_result.matching_score:.2f}"
                     )
                 elif match_result.status == "not_medicine_box":
-                    print(f"Sonuç: {match_result.display_message}")
+                    print(f"Sonuç: {display_message}")
                 else:
                     print("Sonuç: CSV veritabanında bulunamadı")
                     if match_result.best_candidate:
@@ -208,6 +236,8 @@ class PipelineManager:
                             f"{match_result.best_candidate} "
                             f"({match_result.matching_score:.2f})"
                         )
+                    if hint:
+                        print(f"Ipucu: {hint}")
 
                 box_results.append(
                     BoxAnalysisResult(
@@ -218,9 +248,11 @@ class PipelineManager:
                         medicine_name=match_result.medicine_name,
                         matching_score=match_result.matching_score,
                         status=match_result.status,
-                        display_message=match_result.display_message,
+                        display_message=display_message,
                         best_candidate=match_result.best_candidate,
                         medicine=match_result.medicine,
+                        failure_reason=failure_reason,
+                        hint=hint,
                     )
                 )
 
@@ -232,8 +264,10 @@ class PipelineManager:
                         bounding_box=detected_box.bounding_box,
                         yolo_confidence=detected_box.confidence,
                         status="error",
-                        display_message=BOX_ERROR_MESSAGE,
+                        display_message=hint_for("error"),
                         error=str(exc),
+                        failure_reason="error",
+                        hint=hint_for("error"),
                     )
                 )
 

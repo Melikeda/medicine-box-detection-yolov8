@@ -348,6 +348,11 @@ def find_best_medicine_match(
     best_score = 0.0
     best_medicine_name: str | None = None
 
+    from src.matching.brand_disambiguation import (
+        evidence_alignment_boost,
+        is_base_sku,
+    )
+
     for medicine in medicines:
         score, medicine_name = (
             calculate_medicine_score(
@@ -367,19 +372,35 @@ def find_best_medicine_match(
             continue
 
         is_higher_score = score > best_score
-
         is_same_score = score == best_score
 
-        is_more_specific_name = (
-            best_medicine_name is None
-            or len(medicine_name)
-            > len(best_medicine_name)
-        )
+        # Ayni skor: uzun isim (Plus/Gargara/Jel) varsayilan kazanmasin.
+        # OCR kaniti varyanti desteklemiyorsa temel SKU tercih edilir.
+        should_replace = is_higher_score
+        if is_same_score and best_medicine is not None:
+            current_boost = evidence_alignment_boost(
+                medicine,
+                cleaned_query,
+            )
+            best_boost = evidence_alignment_boost(
+                best_medicine,
+                cleaned_query,
+            )
+            if current_boost > best_boost:
+                should_replace = True
+            elif current_boost == best_boost:
+                current_base = is_base_sku(medicine)
+                best_base = is_base_sku(best_medicine)
+                if current_base and not best_base:
+                    should_replace = True
+                elif current_base == best_base:
+                    # Esitlikte daha kisa / markaya yakin isim
+                    if len(medicine_name) < len(
+                        best_medicine_name or medicine_name
+                    ):
+                        should_replace = True
 
-        if is_higher_score or (
-            is_same_score
-            and is_more_specific_name
-        ):
+        if should_replace:
             best_medicine = medicine
             best_score = score
             best_medicine_name = medicine_name
