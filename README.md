@@ -18,6 +18,7 @@
 <p align="center">
   <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml/badge.svg" alt="Backend Tests"></a>
   <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml/badge.svg" alt="Mobile Tests"></a>
+  <a href="https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection"><img src="https://img.shields.io/badge/Kaggle-Dataset-20BEFF?logo=kaggle&logoColor=white" alt="Kaggle Dataset"></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python" />
   <img src="https://img.shields.io/badge/flutter-3.19%2B-02569B" alt="Flutter" />
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License" />
@@ -101,6 +102,21 @@ More detail: [docs/architecture.md](docs/architecture.md)
 | DevOps | pytest, Docker, GitHub Actions |
 
 Rationale: [docs/technology-selection.md](docs/technology-selection.md)
+
+---
+
+## Dataset (Kaggle)
+
+Privacy-cleaned **medicine-box** detection set for YOLOv8 (single class).
+
+| | |
+|---|---|
+| Images | **395** (train 363 · valid 15 · test 17) |
+| Format | YOLOv8 images + labels + `data.yaml` |
+| License | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| Download | [**melikeklahc/yolocilin-medicine-box-detection**](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) |
+
+Third-party screenshots and frames with personal handwritten notes were removed before publish. Images under `data/dataset/` stay gitignored; use Kaggle (or Roboflow) to obtain the files.
 
 ---
 
@@ -228,9 +244,9 @@ Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini 
 | Per-user auth for scans | Scans are global until auth |
 | iOS client | Android-first today |
 | Internship final report | Docs polish in progress |
-| Dataset publishing / v1.0 release | Later phases |
+| Project release v1.0 | Later phase |
 
-Roadmap: [docs/roadmap.md](docs/roadmap.md) · Active polish branch: `feature/final-polish-4`
+Roadmap: [docs/roadmap.md](docs/roadmap.md) · Dataset: [Kaggle](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection)
 
 ---
 
@@ -258,6 +274,8 @@ flutter test
 | [architecture.md](docs/architecture.md) | System design |
 | [setup-guide.md](docs/setup-guide.md) | Full environment setup |
 | [roadmap.md](docs/roadmap.md) | Phases & remaining work |
+| [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) | YOLO medicine-box images (CC BY 4.0) |
+| [kaggle-dataset.md](docs/guides/kaggle-dataset.md) | How the Kaggle dataset was published |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool |
 | [reports/](docs/reports/) | Phase technical reports (01–25) |
 | [SECURITY.md](SECURITY.md) | Security & disclosure |

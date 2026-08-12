@@ -412,8 +412,10 @@ See [Report 20](reports/20-production-hardening.md).
 
 - [x] Test complete mobile + backend system — pytest E2E + live `scripts/e2e_api_flow.py` + mobile checklist (Report 25)
 - [x] Evaluate end-to-end performance — timing in e2e script + `benchmark_analyze.py --json-out` (Report 25)
-- [ ] Complete internship report
-- [~] Finalize GitHub documentation — living docs + SECURITY/CHANGELOG (final-polish-4; keep polishing)
+- [ ] Complete internship report — **stays open until project completion**; close when the deliverable is submitted / project is declared finished
+- [~] Finalize GitHub documentation — SECURITY.md + CHANGELOG.md already exist; **keep polishing in the normal flow** (README/roadmap/changelog sync). Mark `[x]` only when the project is declared complete / Release prep starts (Phase 21)
+
+> These two doc items are **not** Future Development blockers and **not** deferred features. They remain active checklist items until end-of-project.
 
 ---
 
@@ -437,16 +439,20 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 
 # Phase 20 — Dataset Publishing
 
-**Branch:** `feature/dataset-publishing`
+**Branch:** `feature/dataset-publishing`  
+**Status:** Done (Aug 2026)
 
 ## Objectives
 
-- [ ] Review dataset image sources
-- [ ] Remove images with unclear copyright status
-- [ ] Prepare final dataset
-- [ ] Write dataset documentation
-- [ ] Publish dataset on Kaggle
-- [ ] Add Kaggle dataset link to README
+- [x] Review dataset image sources
+- [x] Remove images with unclear copyright status (screenshots, third-party, handwritten personal notes)
+- [x] Prepare final dataset (**395** images · train 363 / valid 15 / test 17)
+- [x] Write dataset documentation (Kaggle card + `data.yaml`)
+- [x] Publish dataset on Kaggle
+- [x] Add Kaggle dataset link to README
+
+**Dataset:** [melikeklahc/yolocilin-medicine-box-detection](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection)  
+**License:** CC BY 4.0 · single class `medicine-box` · YOLOv8 format
 
 ---
 
@@ -490,8 +496,8 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ LLM explanations (Gemini) | Done | #8 |
 | ✅ Server scan history + E2E tooling | Done (final-polish-4) | #50 / Report 23–25 |
 | 🔭 Future Development | PostgreSQL, barcode/QR, cloud, iOS (post-MVP) | #32 / #50 |
-| ⏳ Final Testing & Documentation | Docs refresh in progress; internship report open | #9 |
-| ⏳ Dataset Publishing | Planned | — |
+| ⏳ End-of-project docs | Internship report + GitHub docs polish — close when project is finished | #9 |
+| ✅ Dataset Publishing (Kaggle) | Done | [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) |
 | ⏳ Project Release | Planned | — |
 
 ---

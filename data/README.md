@@ -13,7 +13,12 @@ Dataset configuration, sample images, and the medicine catalog for **Yolocilin**
 
 ## Dataset images (not in repo)
 
-Training images and YOLO labels are excluded from Git to keep the repository lightweight. Download from Roboflow and place them here:
+Training images and YOLO labels are excluded from Git to keep the repository lightweight.
+
+**Preferred download (privacy-cleaned publish):**  
+[Kaggle — Yolocilin Medicine Box Detection](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) · **395** images · CC BY 4.0 · YOLOv8
+
+Alternatively, export from [Roboflow](https://universe.roboflow.com/melikes-workspace-jkw9f/medicine-detection-cfvfd) and place files here:
 
 ```text
 dataset/
@@ -23,7 +28,7 @@ dataset/
 └── data.yaml
 ```
 
-See [docs/reports/03-dataset-preparation.md](../docs/reports/03-dataset-preparation.md) for details.
+See [docs/reports/03-dataset-preparation.md](../docs/reports/03-dataset-preparation.md) and Phase 20 in [roadmap.md](../docs/roadmap.md).
 
 ## Medicine database
 
