@@ -28,10 +28,11 @@ Please **do not** open a public GitHub issue for sensitive reports.
 | Rate limiting | Analyze / explain / scans (list/get/create/delete, per client IP) |
 | Production mode | `ENVIRONMENT=production` masks 500 details, disables `/docs` |
 | CORS | Explicit origins required in production (`*` rejected) |
-| Secrets | `.env` gitignored; Gemini key stays on the server; Firebase `google-services.json` / service accounts stay local or in GitHub Actions secrets |
+| Secrets | `.env` gitignored; Gemini key stays on the server; Firebase `google-services.json` / service accounts stay local or in GitHub Actions secrets; **Kaggle `kaggle.json` stays only in `%USERPROFILE%\.kaggle\`** (never in the repo) |
 | Scan DELETE | In production: requires `SCANS_API_KEY` via `X-API-Key`, or DELETE is disabled |
 | Mobile release | HTTPS-only network config (cleartext only in debug) |
 | Medical disclaimer | API + UI — not a substitute for professional advice |
+| Published dataset | Kaggle images are privacy-cleaned; still **not** patient data — see [kaggle-dataset.md](docs/guides/kaggle-dataset.md) |
 
 Details: [docs/reports/20-production-hardening.md](docs/reports/20-production-hardening.md)
 
@@ -46,6 +47,7 @@ Details: [docs/reports/20-production-hardening.md](docs/reports/20-production-ha
 5. Put the API behind **HTTPS** (reverse proxy)
 6. Review rate-limit env vars under load
 8. Do not commit Firebase `google-services.json` or service-account keys; use GitHub Actions secrets for App Distribution
+9. Keep Kaggle credentials out of Git: only `%USERPROFILE%\.kaggle\kaggle.json`. After any publish session, **expire unused Access Tokens** and rotate the Legacy API key if it may have been exposed (Downloads copies, screenshots, chat logs). Restrict the file ACL to your user only.
 
 ---
 

@@ -21,6 +21,14 @@ env/
 .env
 
 # ==========================
+# Kaggle credentials / local API config (never commit)
+# ==========================
+
+.kaggle/
+**/kaggle.json
+kaggle.json
+
+# ==========================
 # Firebase (local / secrets — never commit)
 # ==========================
 
