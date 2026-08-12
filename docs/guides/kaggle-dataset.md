@@ -39,6 +39,23 @@ python -m kaggle datasets metadata melikeklahc/yolocilin-medicine-box-detection 
 
 Requires `kaggle.json` in `%USERPROFILE%\.kaggle\` (Legacy API key from Kaggle Settings).
 
+## Credential security (required)
+
+| Rule | Why |
+|------|-----|
+| Never commit `kaggle.json`, `.kaggle/`, or API tokens | Full write access to your Kaggle account / datasets |
+| Store the key only under `%USERPROFILE%\.kaggle\kaggle.json` | Standard CLI location; already gitignored |
+| Delete Downloads copies after install | Easy to sync/backup accidentally |
+| Do not paste tokens into chat, issues, or PRs | Treat like a password |
+| Expire unused **Access Tokens** in Kaggle Settings | We used Legacy `kaggle.json`; extra tokens increase risk |
+| Rotate Legacy API key if shared or leaked | Settings → API → Expire Legacy API Key, then create a new one |
+| Restrict Windows ACL on `kaggle.json` | Only your user should read it (`scripts/harden-kaggle-credentials.ps1`) |
+
+```powershell
+# One-time local hardening after placing kaggle.json
+.\scripts\harden-kaggle-credentials.ps1
+```
+
 License name for metadata updates must be exactly:
 
 `Attribution 4.0 International (CC BY 4.0)`
