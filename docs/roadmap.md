@@ -352,6 +352,17 @@ See [Report 24](reports/24-medicine-database-final-refresh.md).
 
 ---
 
+# Phase 17.6c — Catalog Expansion (merged)
+
+Later expansions on `main` (after Report 24). Historical sizes 131 and 153 stay in those phase notes; **current catalog is 1163**.
+
+## Objectives
+
+- [x] Controlled shelf-brand expand + matching tighten → 153 (`feature/catalog-expand-matching-tighten`)
+- [x] Popular TR / ATC expansion → **1163** (PR [#59](https://github.com/Melikeda/medicine-box-detection-yolov8/pull/59))
+
+---
+
 # Phase 17.7 — Performance Optimization
 
 **Branch:** `feature/performance-improvement`  
@@ -391,7 +402,7 @@ See [Report 20](reports/20-production-hardening.md).
 
 **Branch workflow:** numbered improvement rounds — `feature/final-polish`, `feature/final-polish-2`, … Merge each round when done; open the next branch for the following slice.
 
-**Current round:** `feature/final-polish-4` (round 4 — backend refresh)
+**Status:** Feature polish merged to `main`. Next: Phase 21 (`feature/project-release`).
 
 **Round 1 (merged PR #51):** matching fixes, multi-box OCR, garbage filter.
 
@@ -403,7 +414,7 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] OCR mode UI toggle — preview screen Hızlı/Hassas; persists preference; calls `?mode=` (PR follow-up)
 - [x] Fix active-ingredient-only false matches (ibuprofen → wrong brand, round 1)
 - [x] Multi-box OCR: supplemental deep retry + garbage OCR filter (round 1)
-- [x] Medicine database final refresh — 131 rows, TİTCK re-sync (Report 24, round 2)
+- [x] Medicine database final refresh — 131 rows, TİTCK re-sync (Report 24, round 2); later expanded to **1163**
 - [x] User scan history (server sync) — `POST/GET/DELETE /api/v1/scans` + mobile best-effort sync (final-polish-4)
 
 > **Moved to [Future Development](#-future-development):** PostgreSQL migration, Barcode/QR reading, Cloud deployment, iOS support. SQLite + Android MVP remain the supported product stage; revisit those items later if needed.
@@ -412,10 +423,9 @@ See [Report 20](reports/20-production-hardening.md).
 
 - [x] Test complete mobile + backend system — pytest E2E + live `scripts/e2e_api_flow.py` + mobile checklist (Report 25)
 - [x] Evaluate end-to-end performance — timing in e2e script + `benchmark_analyze.py --json-out` (Report 25)
-- [ ] Complete internship report — **stays open until project completion**; close when the deliverable is submitted / project is declared finished
-- [~] Finalize GitHub documentation — SECURITY.md + CHANGELOG.md already exist; **keep polishing in the normal flow** (README/roadmap/changelog sync). Mark `[x]` only when the project is declared complete / Release prep starts (Phase 21)
+- [x] GitHub [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) (test and document final system) — **closed**; repo testing/docs wrap-up done
 
-> These two doc items are **not** Future Development blockers and **not** deferred features. They remain active checklist items until end-of-project.
+> Written internship report and final GitHub docs polish are **Phase 21** deliverables (not open GitHub issues).
 
 ---
 
@@ -463,8 +473,9 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 ## Objectives
 
 - [ ] Final project review
+- [ ] Complete written internship report
+- [ ] Finalize GitHub documentation (README / roadmap / changelog sync)
 - [ ] Prepare Release v1.0.0
-- [ ] Update documentation
 - [ ] Update repository badges
 - [ ] Publish GitHub Release
 - [ ] Archive final deliverables
@@ -488,6 +499,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ FastAPI Backend | Completed | #25 |
 | ✅ Analyze API | Completed | #26 |
 | ✅ SQLite Database | Completed | #27 |
+| ✅ Catalog expansion (TİTCK → 1163) | Done | #41 / PR #59 |
 | ✅ Automated Testing | Completed | #28 |
 | ✅ Docker | Done | #29 |
 | ✅ Flutter Mobile App Foundation | Done | #30 |
@@ -496,7 +508,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ LLM explanations (Gemini) | Done | #8 |
 | ✅ Server scan history + E2E tooling | Done (final-polish-4) | #50 / Report 23–25 |
 | 🔭 Future Development | PostgreSQL, barcode/QR, cloud, iOS (post-MVP) | #32 / #50 |
-| ⏳ End-of-project docs | Internship report + GitHub docs polish — close when project is finished | #9 |
+| ⏳ End-of-project docs | Written internship report + GitHub docs polish | Phase 21 (#9 closed) |
 | ✅ Dataset Publishing (Kaggle) | Done | [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) |
 | ⏳ Project Release | Planned | — |
 

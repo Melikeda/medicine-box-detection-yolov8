@@ -50,7 +50,7 @@ Product name on mobile: **Yolocilin**. Backend repo title remains descriptive fo
 
 | Stage | Technology | Why |
 |-------|------------|-----|
-| Current | CSV + SQLite | Catalog (**131**) + `scans` history table |
+| Current | CSV + SQLite | Catalog (**1163**) + `scans` history table |
 | Production (later) | PostgreSQL | Concurrent users; optional when scaling cloud |
 
 ---

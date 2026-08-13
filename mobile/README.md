@@ -33,7 +33,7 @@ Reports: [15](../docs/reports/15-flutter-foundation.md) · [16](../docs/reports/
 |------|---------|
 | Flutter SDK | 3.19+ |
 | Android Studio | SDK + emulator |
-| Backend | `python run_api.py` or `.\scripts\start-backend.ps1` (repo root, `venv`; catalog ~1160 medicines) |
+| Backend | `python run_api.py` or `.\scripts\start-backend.ps1` (repo root, `venv`; catalog **1163** medicines) |
 
 ---
 
