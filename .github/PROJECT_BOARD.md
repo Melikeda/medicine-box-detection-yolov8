@@ -1,6 +1,6 @@
-# GitHub Project Board — Column Mapping
+# GitHub Project Board — Yolocilin
 
-Use this file when organizing issues on the GitHub Project board for **Yolocilin**.
+Use this file when organizing issues on the GitHub Project board named **Yolocilin**.
 
 ## Done
 

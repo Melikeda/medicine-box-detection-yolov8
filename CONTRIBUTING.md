@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve **Yolocilin** (Medicine Box Detection System).
+Thanks for helping improve **Yolocilin** (Medicine Box Detection, Identification and Information System).
 
 We use a **Git Feature Branch Workflow**: one focused change → one branch → one pull request → merge to `main`.
 

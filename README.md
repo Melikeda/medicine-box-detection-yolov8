@@ -4,7 +4,7 @@
 
 # Yolocilin
 
-### Medicine Box Detection System
+### Medicine Box Detection, Identification and Information System
 
 <p align="center">
   <strong>Scan a medicine box · Identify the drug · Get a short explanation</strong>
@@ -16,8 +16,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/backend-tests.yml/badge.svg" alt="Backend Tests"></a>
-  <a href="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml"><img src="https://github.com/Melikeda/medicine-box-detection-yolov8/actions/workflows/mobile-tests.yml/badge.svg" alt="Mobile Tests"></a>
+  <a href="https://github.com/Melikeda/yolocilin/actions/workflows/backend-tests.yml"><img src="https://github.com/Melikeda/yolocilin/actions/workflows/backend-tests.yml/badge.svg" alt="Backend Tests"></a>
+  <a href="https://github.com/Melikeda/yolocilin/actions/workflows/mobile-tests.yml"><img src="https://github.com/Melikeda/yolocilin/actions/workflows/mobile-tests.yml/badge.svg" alt="Mobile Tests"></a>
   <a href="https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection"><img src="https://img.shields.io/badge/Kaggle-Dataset-20BEFF?logo=kaggle&logoColor=white" alt="Kaggle Dataset"></a>
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python" />
   <img src="https://img.shields.io/badge/flutter-3.19%2B-02569B" alt="Flutter" />
@@ -123,8 +123,8 @@ Third-party screenshots and frames with personal handwritten notes were removed 
 ## Quick start
 
 ```bash
-git clone https://github.com/Melikeda/medicine-box-detection-yolov8.git
-cd medicine-box-detection-yolov8
+git clone https://github.com/Melikeda/yolocilin.git
+cd yolocilin
 python -m venv venv
 
 # Windows
@@ -206,7 +206,7 @@ See [SECURITY.md](SECURITY.md) and [Report 20](docs/reports/20-production-harden
 ## Project layout
 
 ```text
-medicine-box-detection-yolov8/
+yolocilin/
 ├── backend/app/           # FastAPI (analyze, medicines, explain, scans)
 ├── src/                   # Pipeline (YOLO, OCR, matching, SQLite models)
 ├── mobile/                # Yolocilin Flutter client
@@ -276,6 +276,9 @@ flutter test
 | [roadmap.md](docs/roadmap.md) | Phases & remaining work |
 | [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) | YOLO medicine-box images (CC BY 4.0) |
 | [kaggle-dataset.md](docs/guides/kaggle-dataset.md) | How the Kaggle dataset was published |
+| [Medium — Computer Vision](https://medium.com/@m.edakulahci/list/computer-vision-d0f63fcdf7d2) | Internship notes: YOLO, OpenCV, OCR |
+| [Medium — FastAPI](https://medium.com/@m.edakulahci/list/learning-rest-apis-with-fastapi-ad9c2442f9d6) | Internship notes: REST API |
+| [Medium — Database](https://medium.com/@m.edakulahci/list/database-25184640519a) | Internship notes: CSV / SQLite catalog |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool |
 | [reports/](docs/reports/) | Phase technical reports (01–25) |
 | [SECURITY.md](SECURITY.md) | Security & disclosure |

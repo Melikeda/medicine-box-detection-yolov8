@@ -314,7 +314,7 @@ class AppStrings {
     brandLabel: 'Yolocilin',
     welcomeTitle: 'Hoş Geldiniz',
     welcomeSubtitle:
-        'Yolocilin ile ilaç kutusu tanıma.\nFotoğraf çekin, analiz edin, sonucu görün.',
+        'Yolocilin ile kutu tespiti, ilaç tanıma ve kısa açıklama.\nFotoğraf çekin, analiz edin, sonucu görün.',
     startScan: 'Taramaya Başla',
     navHome: 'Ana Sayfa',
     navScan: 'Tara',
@@ -412,7 +412,7 @@ class AppStrings {
     brandLabel: 'Yolocilin',
     welcomeTitle: 'Welcome',
     welcomeSubtitle:
-        'Medicine box recognition with Yolocilin.\nTake a photo, analyze, and see the result.',
+        'Detect the box, identify the medicine, get a short explanation.\nTake a photo, analyze, and see the result.',
     startScan: 'Start Scanning',
     navHome: 'Home',
     navScan: 'Scan',

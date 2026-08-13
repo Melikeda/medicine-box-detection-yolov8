@@ -24,7 +24,7 @@ class ApiSettings(BaseSettings):
         extra="ignore",
     )
 
-    app_name: str = "Medicine Box Detection API"
+    app_name: str = "Yolocilin API"
     app_version: str = "0.1.0"
     api_prefix: str = "/api/v1"
     host: str = "127.0.0.1"

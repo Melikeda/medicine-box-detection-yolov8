@@ -1,6 +1,6 @@
 # Yolocilin — Mobile (Android)
 
-Flutter client for the **Yolocilin** medicine box detection system.
+Flutter client for **Yolocilin**: detect the box, identify the medicine, show a short explanation.
 
 <p align="center">
   <img src="../docs/assets/yolocilin-logo.png" alt="Yolocilin" width="120" />

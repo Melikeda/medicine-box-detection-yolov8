@@ -1,8 +1,8 @@
 # Technology Selection
 
-Technologies behind **Yolocilin** (Medicine Box Detection System) and why they were chosen.
+Technologies behind **Yolocilin** (Medicine Box Detection, Identification and Information System) and why they were chosen.
 
-Product name on mobile: **Yolocilin**. Backend repo title remains descriptive for GitHub discoverability.
+Product name across GitHub, Kaggle, Medium notes and the Android app: **Yolocilin**.
 
 ---
 

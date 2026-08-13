@@ -1,6 +1,6 @@
 # Security Policy
 
-**Yolocilin / Medicine Box Detection System** accepts images and may call external LLM APIs. Please treat secrets and uploads carefully.
+**Yolocilin** (Medicine Box Detection, Identification and Information System) accepts images and may call external LLM APIs. Please treat secrets and uploads carefully.
 
 ---
 

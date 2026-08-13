@@ -1,6 +1,6 @@
 # Examples
 
-Step-by-step learning scripts from the **Yolocilin** / medicine box detection internship project. They show how YOLOv8, OpenCV, OCR, RapidFuzz, CSV access, and pipeline integration were built incrementally.
+Step-by-step learning scripts from the **Yolocilin** internship project (detection, identification and information). They show how YOLOv8, OpenCV, OCR, RapidFuzz, CSV access, and pipeline integration were built incrementally.
 
 **Production logic lives under `src/`** (and the FastAPI app under `backend/`). Prefer importing from `src/` instead of copying implementations.
 
