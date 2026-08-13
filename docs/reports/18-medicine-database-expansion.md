@@ -3,7 +3,7 @@
 
 > **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
 > Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
-> Current product: **Yolocilin** · catalog **131** medicines · APIs: analyze · medicines · explain · scans.
+> Current product: **Yolocilin** · catalog **1163** medicines · APIs: analyze · medicines · explain · scans.
 
 ## Overview
 
@@ -101,4 +101,4 @@ Notable fixes:
 - Further reduce placeholders for topicals (gel/cream) via form-specific parsers
 - Optional CI job to validate CSV on `data/database/**` changes
 
-**Later refresh:** [Report 24 — Final refresh (131 rows)](24-medicine-database-final-refresh.md) on `feature/final-polish-2`.
+**Later refresh:** [Report 24](24-medicine-database-final-refresh.md) (131 rows), then catalog expansions to **1163**.

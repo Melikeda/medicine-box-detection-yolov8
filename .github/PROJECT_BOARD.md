@@ -21,20 +21,22 @@ Use this file when organizing issues on the GitHub Project board for **Yolocilin
 | [#43](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/43) | Pipeline performance optimization |
 | [#45](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/45) | Production hardening & security |
 | [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) | LLM medicine explanations (Gemini) |
-| [#50](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/50) | Final polish rounds (partial — see open leftovers) |
+| [#50](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/50) | Final polish rounds |
+| Catalog expand + matching tighten | Merged (`feature/catalog-expand-matching-tighten` → 153) |
+| Popular TR catalog (~1160) | Merged (PR [#59](https://github.com/Melikeda/medicine-box-detection-yolov8/pull/59) → **1163**) |
+| [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Test and document final system — closed |
 
 ## In Progress
 
-| Item | Branch |
-|------|--------|
-| Catalog expand + matching tighten | `feature/catalog-expand-matching-tighten` |
+None — `main` is current. Next planned work: Phase 21 (`feature/project-release`).
 
 ## Post-MVP / Todo
 
-| Issue | Notes |
-|-------|--------|
-| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Advanced leftovers: PostgreSQL, cloud, barcode, iOS |
-| [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Internship report / final documentation wrap-up |
+| Item | Notes |
+|------|--------|
+| Written internship report | Phase 21 deliverable (GitHub #9 is closed) |
+| GitHub docs polish | Finish in Phase 21 / Release v1.0.0 |
+| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Closed; leftovers are Future Development: PostgreSQL, cloud, barcode, iOS |
 | Auth for private scan namespaces | Scans remain global; production DELETE gated by `SCANS_API_KEY` |
 | Cloud API host (HTTPS) | Needed for long-lived remote testers; tunnel OK for demos |
 
@@ -71,7 +73,7 @@ Full index: [docs/reports/README.md](../docs/reports/README.md)
 | [21](../docs/reports/21-llm-integration.md) | Gemini explain |
 | [22](../docs/reports/22-camera-capture.md) | Camera |
 | [23](../docs/reports/23-scan-history.md) | Local + server history |
-| [24](../docs/reports/24-medicine-database-final-refresh.md) | 131-row catalog |
+| [24](../docs/reports/24-medicine-database-final-refresh.md) | 131-row refresh (current catalog **1163**) |
 | [25](../docs/reports/25-e2e-performance.md) | E2E & benchmarks |
 
 ## CI status checks (recommended for branch protection)

@@ -4,7 +4,7 @@ Step-by-step learning scripts from the **Yolocilin** / medicine box detection in
 
 **Production logic lives under `src/`** (and the FastAPI app under `backend/`). Prefer importing from `src/` instead of copying implementations.
 
-Product docs: [root README](../README.md) · current catalog size **131** medicines.
+Product docs: [root README](../README.md) · current catalog size **1163** medicines.
 
 ---
 

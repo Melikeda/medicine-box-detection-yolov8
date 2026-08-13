@@ -3,6 +3,13 @@
 All notable changes to **Yolocilin** (Medicine Box Detection System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — docs catalog and status sync
+
+### Changed
+
+- Living docs now report the current **1163**-row catalog (was mixed 131 / 153 / ~1160)
+- Roadmap and project board: catalog expansions marked done; issue #9 closed; internship report moved to Phase 21
+
 ## [Unreleased] — popular TR catalog to ~1160
 
 ### Added

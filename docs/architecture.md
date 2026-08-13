@@ -27,7 +27,7 @@ POST /api/v1/analyze (FastAPI)
 YOLOv8 (+ confidence fallback) → Crop → OpenCV → EasyOCR
  │
  ▼
-Normalize → RapidFuzz → SQLite catalog (131)
+Normalize → RapidFuzz → SQLite catalog (1163)
  │
  ▼
 JSON (per-box status + summary) → Result screen
@@ -205,14 +205,14 @@ OCR output is compared with CSV fields: `medicine_name`, `brand_name`, `active_i
 
 | Stage | Technology | Records |
 |-------|------------|---------|
-| Current | CSV (seed) + SQLite (runtime) | **131** drugs |
+| Current | CSV (seed) + SQLite (runtime) | **1163** drugs |
 | Production (later) | PostgreSQL | — |
 
 Fields: `medicine_id`, `medicine_name`, `brand_name`, `active_ingredient`, `dosage`, `form`, `category`
 
 Same SQLite file also stores the server `scans` table for analyze-history sync.
 
-See [Report 24](reports/24-medicine-database-final-refresh.md).
+See [Report 24](reports/24-medicine-database-final-refresh.md) (131-row refresh; current catalog **1163**).
 
 ---
 
@@ -257,7 +257,7 @@ FastAPI (analyze_service)
 PipelineManager.analyze_all()
    │
    ▼
-YOLOv8 → Crop → OpenCV → EasyOCR → Normalize → RapidFuzz → SQLite (131)
+YOLOv8 → Crop → OpenCV → EasyOCR → Normalize → RapidFuzz → SQLite (1163)
    │
    ▼
 JSON Response → Flutter Result Screen

@@ -16,7 +16,7 @@ This directory holds the **medicine catalog** used by the analyze pipeline and t
 
 | Metric | Value |
 |--------|-------|
-| **Catalog size** | ~1160 medicines (popular TR brands + TİTCK ATC expansion) |
+| **Catalog size** | **1163** medicines (popular TR brands + TİTCK ATC expansion) |
 | **Source file** | `medicines.csv` (committed) |
 | **Runtime DB** | `medicines.db` (generated, gitignored) |
 | **Placeholder rate** | ~7% of dosage/form/ingredient fields |
@@ -255,7 +255,7 @@ Quality gates (enforced in CI via pytest):
 |----------|-------------|
 | [Report 12 — SQLite database](../../docs/reports/12-sqlite-database.md) | Initial SQLite integration |
 | [Report 18 — TİTCK expansion](../../docs/reports/18-medicine-database-expansion.md) | First SKRS pipeline (38 → 107 rows) |
-| [Report 24 — Final refresh](../../docs/reports/24-medicine-database-final-refresh.md) | Latest catalog refresh (131 rows) |
+| [Report 24 — Final refresh](../../docs/reports/24-medicine-database-final-refresh.md) | 131-row refresh; later expanded to **1163** |
 | [Project roadmap — Phase 17.6](../../docs/roadmap.md) | Database phase tracking |
 
 ---
