@@ -1,7 +1,25 @@
 # Changelog
 
-All notable changes to **Yolocilin** (Medicine Box Detection System) are documented here.  
+All notable changes to **Yolocilin** (Medicine Box Detection, Identification and Information System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
+
+## [Unreleased] — internship report generators and public naming
+
+### Added
+
+- Word generators for the CE499 internship report (Turkish and English)
+- Report figures: pipeline architecture and catalog-growth charts
+
+### Changed
+
+- Public product subtitle: detection, identification and information
+- GitHub clone URLs and description aligned with the `yolocilin` repository name
+- README links to Medium notes (Computer Vision, FastAPI, Database)
+
+### Security
+
+- Generated `.docx` files and the Düzce University cover logo stay local (gitignored); they are not republished in the repo
+- Cover logo is optional: generators skip it when the file is absent
 
 ## [Unreleased] — docs catalog and status sync
 

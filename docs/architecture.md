@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Yolocilin** (Medicine Box Detection System) is a modular computer-vision product: object detection, OpenCV preprocessing, OCR, fuzzy matching, a FastAPI backend, and a Flutter Android client.
+**Yolocilin** (Medicine Box Detection, Identification and Information System) is a modular computer-vision product: object detection, OpenCV preprocessing, OCR, fuzzy matching, a FastAPI backend, and a Flutter Android client.
 
 Users photograph a medicine box, receive structured match results, optionally a short Gemini explanation, and keep history locally with best-effort server sync.
 

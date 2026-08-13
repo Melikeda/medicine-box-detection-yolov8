@@ -1,5 +1,5 @@
 """
-OCR package for the AI-Powered Medicine Box Detection System.
+OCR package for Yolocilin (detection, identification and information).
 
 This package provides reusable utilities for:
 

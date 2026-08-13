@@ -1,6 +1,6 @@
 # Setup Guide
 
-Environment setup for **Yolocilin** (Medicine Box Detection System).
+Environment setup for **Yolocilin** (Medicine Box Detection, Identification and Information System).
 
 Product overview: [root README](../README.md) · Security: [SECURITY.md](../SECURITY.md)
 
@@ -22,8 +22,8 @@ Product overview: [root README](../README.md) · Security: [SECURITY.md](../SECU
 ## 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Melikeda/medicine-box-detection-yolov8.git
-cd medicine-box-detection-yolov8
+git clone https://github.com/Melikeda/yolocilin.git
+cd yolocilin
 ```
 
 ---

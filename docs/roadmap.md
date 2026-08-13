@@ -1,6 +1,6 @@
 # 🗺️ Project Roadmap
 
-This document describes the complete development roadmap of the **AI-Powered Medicine Box Detection System**.
+This document describes the complete development roadmap of **Yolocilin** (Medicine Box Detection, Identification and Information System).
 
 The project follows a **Git Feature Branch Workflow**, where each major development stage is implemented in its own feature branch, reviewed through a Pull Request, and merged into the **main** branch after successful validation.
 
