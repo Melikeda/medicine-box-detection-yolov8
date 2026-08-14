@@ -258,3 +258,5 @@ The system is capable of extracting medicine-related text from YOLO-detected med
 The next phase of the project will focus on RapidFuzz-based medicine name matching to correct OCR spelling errors and improve overall recognition accuracy.
 
 > **Update (Phase 9):** Medicine matching and pipeline unification are now complete. See [08-pipeline-unification.md](08-pipeline-unification.md).
+
+> **Update (engine trial):** PaddleOCR was compared on the same pipeline and **not** adopted. Production OCR remains EasyOCR. See [Report 26](26-ocr-engine-comparison.md).

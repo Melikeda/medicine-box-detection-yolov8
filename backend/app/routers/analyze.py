@@ -54,6 +54,7 @@ async def analyze_info(
         max_upload_size_mb=settings.max_upload_size_mb,
         allowed_extensions=list(settings.allowed_extensions),
         ocr_modes=["fast", "accurate"],
+        ocr_engines=["easyocr"],
         response_statuses=[
             "matched",
             "not_found",

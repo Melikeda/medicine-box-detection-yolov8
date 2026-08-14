@@ -1,0 +1,53 @@
+{
+  "mode": "fast",
+  "results": [
+    {
+      "image": "data\\compare-photos\\arveles.png",
+      "mode": "fast",
+      "easyocr": {
+        "success": true,
+        "detection_count": 1,
+        "error": null,
+        "timing": {
+          "yolo_ms": 210.2,
+          "ocr_ms": 781.9,
+          "matching_ms": 0.0,
+          "total_ms": 996.6
+        },
+        "boxes": [
+          {
+            "box_index": 1,
+            "status": "matched",
+            "ocr_text": "arveles\"",
+            "medicine_name": "Arveles",
+            "matching_score": 93.33
+          }
+        ],
+        "engine": "easyocr",
+        "wall_ms": 3249.3
+      },
+      "paddleocr": {
+        "success": true,
+        "detection_count": 1,
+        "error": null,
+        "timing": {
+          "yolo_ms": 78.3,
+          "ocr_ms": 2335.6,
+          "matching_ms": 0.0,
+          "total_ms": 2416.7
+        },
+        "boxes": [
+          {
+            "box_index": 1,
+            "status": "matched",
+            "ocr_text": "arveles°",
+            "medicine_name": "Arveles",
+            "matching_score": 93.33
+          }
+        ],
+        "engine": "paddleocr",
+        "wall_ms": 6454.8
+      }
+    }
+  ]
+}

@@ -56,6 +56,7 @@ class AnalyzeResponseSchema(BaseModel):
         default_factory=AnalyzeSummarySchema
     )
     ocr_mode: str = "fast"
+    ocr_engine: str = "easyocr"
     processing_time_ms: float = 0.0
     timing: AnalyzeTimingSchema | None = None
     image_resized: bool = False
@@ -72,6 +73,9 @@ class AnalyzeInfoSchema(BaseModel):
     max_upload_size_mb: float
     allowed_extensions: list[str]
     ocr_modes: list[str]
+    ocr_engines: list[str] = Field(
+        default_factory=lambda: ["easyocr"]
+    )
     response_statuses: list[str]
     rate_limit_analyze_per_minute: int | None = None
 
@@ -82,6 +86,7 @@ class HealthResponseSchema(BaseModel):
     version: str
     models_loaded: bool
     ocr_mode: str
+    ocr_engine: str = "easyocr"
     medicine_count: int | None = None
     database_source: str | None = None
 

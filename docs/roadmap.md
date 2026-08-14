@@ -141,6 +141,7 @@ A reusable preprocessing module capable of preparing medicine-box images for OCR
 - [x] Build YOLO + OCR integration pipeline
 - [x] Save OCR outputs
 - [x] Create OCR example scripts
+- [x] Evaluate PaddleOCR as an alternative engine (not adopted; [Report 26](reports/26-ocr-engine-comparison.md))
 
 ### Output
 
@@ -493,6 +494,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ YOLOv8 Model Training | Completed | — |
 | ✅ OpenCV Image Preprocessing | Completed | — |
 | ✅ OCR Integration | Completed | — |
+| ✅ OCR engine comparison (PaddleOCR trial) | EasyOCR kept | [Report 26](reports/26-ocr-engine-comparison.md) |
 | ✅ Medicine Name Matching | Completed | #6 |
 | ✅ Pipeline Unification | Completed | #23 |
 | ✅ Pipeline Servicification | Completed | #24 |

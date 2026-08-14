@@ -34,6 +34,7 @@ async def health_check(
         version=settings.app_version,
         models_loaded=models_loaded,
         ocr_mode=settings.ocr_mode,
+        ocr_engine="easyocr",
         medicine_count=medicine_count,
         database_source=database_source,
     )

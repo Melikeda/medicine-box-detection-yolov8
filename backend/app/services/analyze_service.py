@@ -69,6 +69,7 @@ def _run_analysis(
         error=pipeline_result.error,
         summary=_build_summary(pipeline_result.medicines),
         ocr_mode=ocr_mode,
+        ocr_engine="easyocr",
         processing_time_ms=0.0,
         timing=(
             AnalyzeTimingSchema(**pipeline_result.timing.to_dict())
@@ -133,7 +134,7 @@ class AnalyzeService:
                 temp_path = Path(temp_file.name)
 
             logger.info(
-                "Analyze request: filename=%s size=%s mode=%s",
+                "Analyze request: filename=%s size=%s mode=%s engine=easyocr",
                 filename,
                 len(file_bytes),
                 selected_mode,

@@ -115,6 +115,35 @@ def select_brand_name_candidate(
     )
 
 
+def brand_without_trailing_dosage(text: str) -> str | None:
+    """
+    OCR sometimes reads brand+dose as one line: ``Levopront 60 mg``.
+
+    Matching rejects lines that contain ``mg``/``ml``, so keep the brand prefix.
+    """
+    words = normalize_filter_text(text).split()
+    if len(words) < 2:
+        return None
+
+    dosage_units = {"mg", "ml", "mcg", "gr", "g", "iu"}
+    if words[-1] in dosage_units:
+        rest = words[:-1]
+        if rest and rest[-1].replace(".", "").replace(",", "").isdigit():
+            rest = rest[:-1]
+        brand = " ".join(rest)
+        if brand and brand != " ".join(words):
+            return brand
+
+    last = words[-1]
+    for unit in dosage_units:
+        if last.endswith(unit):
+            amount = last[: -len(unit)]
+            if amount and amount.replace(".", "").replace(",", "").isdigit():
+                brand = " ".join(words[:-1])
+                return brand or None
+    return None
+
+
 def create_medicine_name_candidates(
     candidate_texts: list[str],
 ) -> list[str]:
@@ -137,6 +166,14 @@ def create_medicine_name_candidates(
 
         seen_normalized_candidates.add(normalized_text)
         normalized_candidates.append(normalized_text)
+
+        stripped_dosage = brand_without_trailing_dosage(normalized_text)
+        if (
+            stripped_dosage
+            and stripped_dosage not in seen_normalized_candidates
+        ):
+            seen_normalized_candidates.add(stripped_dosage)
+            normalized_candidates.append(stripped_dosage)
 
     suffix_candidates = [
         text

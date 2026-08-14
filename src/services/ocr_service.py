@@ -1,8 +1,8 @@
 from collections.abc import Callable
 
-import easyocr
 import numpy as np
 
+from src.ocr.ocr_reader import OCRReader
 from src.ocr.ocr_pipeline import (
     OCRPipelineResult,
     get_candidate_texts,
@@ -12,12 +12,12 @@ from src.services.config import PipelineConfig
 
 
 class OCRService:
-    """EasyOCR tabanlı metin çıkarma servisi."""
+    """Crop görüntüsünden metin çıkarır (EasyOCR)."""
 
     def __init__(
         self,
         config: PipelineConfig,
-        reader: easyocr.Reader,
+        reader: OCRReader,
     ) -> None:
         self.config = config
         self.reader = reader
@@ -46,6 +46,7 @@ class OCRService:
             print(f"OCR modu: {self.config.ocr_mode} (kutu {box_index})")
         else:
             print(f"OCR modu: {self.config.ocr_mode}")
+        print("OCR motoru: easyocr")
 
         output_directory = None
         if save_debug_outputs and debug_subdirectory:

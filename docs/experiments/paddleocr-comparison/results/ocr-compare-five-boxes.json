@@ -1,0 +1,109 @@
+{
+  "mode": "fast",
+  "results": [
+    {
+      "image": "data\\compare-photos\\five_boxes.png",
+      "mode": "fast",
+      "easyocr": {
+        "success": true,
+        "detection_count": 5,
+        "error": null,
+        "timing": {
+          "yolo_ms": 128.3,
+          "ocr_ms": 32776.3,
+          "matching_ms": 0.0,
+          "total_ms": 32913.2
+        },
+        "boxes": [
+          {
+            "box_index": 1,
+            "status": "matched",
+            "ocr_text": "cold & flu",
+            "medicine_name": "Gribex Cold & Flu",
+            "matching_score": 90.0
+          },
+          {
+            "box_index": 2,
+            "status": "matched",
+            "ocr_text": "dex",
+            "medicine_name": "Dodex",
+            "matching_score": 90.0
+          },
+          {
+            "box_index": 3,
+            "status": "matched",
+            "ocr_text": "omesek",
+            "medicine_name": "Omesek",
+            "matching_score": 100.0
+          },
+          {
+            "box_index": 4,
+            "status": "matched",
+            "ocr_text": "ibucold c",
+            "medicine_name": "Ibucold C",
+            "matching_score": 100.0
+          },
+          {
+            "box_index": 5,
+            "status": "matched",
+            "ocr_text": "uno",
+            "medicine_name": "Imunol Defence",
+            "matching_score": 90.0
+          }
+        ],
+        "engine": "easyocr",
+        "wall_ms": 35051.3
+      },
+      "paddleocr": {
+        "success": true,
+        "detection_count": 5,
+        "error": null,
+        "timing": {
+          "yolo_ms": 91.2,
+          "ocr_ms": 148748.2,
+          "matching_ms": 0.0,
+          "total_ms": 148849.8
+        },
+        "boxes": [
+          {
+            "box_index": 1,
+            "status": "matched",
+            "ocr_text": "nurofen",
+            "medicine_name": "Nurofen Cold & Flu",
+            "matching_score": 100.0
+          },
+          {
+            "box_index": 2,
+            "status": "matched",
+            "ocr_text": "itr",
+            "medicine_name": "Azitro",
+            "matching_score": 90.0
+          },
+          {
+            "box_index": 3,
+            "status": "not_found",
+            "ocr_text": "nãn",
+            "medicine_name": null,
+            "matching_score": 72.0
+          },
+          {
+            "box_index": 4,
+            "status": "matched",
+            "ocr_text": "ibucold c",
+            "medicine_name": "Ibucold C",
+            "matching_score": 100.0
+          },
+          {
+            "box_index": 5,
+            "status": "matched",
+            "ocr_text": "uda",
+            "medicine_name": "Neruda",
+            "matching_score": 90.0
+          }
+        ],
+        "engine": "paddleocr",
+        "wall_ms": 151491.6
+      }
+    }
+  ]
+}

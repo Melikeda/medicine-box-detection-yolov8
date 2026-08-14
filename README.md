@@ -215,7 +215,7 @@ yolocilin/
 │   ├── database/          # medicines.csv (+ SQLite at runtime)
 │   ├── dataset/           # YOLO data.yaml (images gitignored — Roboflow)
 │   └── samples/           # Test photos
-├── docs/                  # Architecture, roadmap, reports, assets/
+├── docs/                  # Architecture, roadmap, reports, experiments, assets/
 ├── examples/              # Step-by-step learning scripts
 ├── tests/                 # pytest (incl. E2E smoke)
 ├── scripts/               # Dev helpers, e2e_api_flow, benchmarks
@@ -275,12 +275,14 @@ flutter test
 | [setup-guide.md](docs/setup-guide.md) | Full environment setup |
 | [roadmap.md](docs/roadmap.md) | Phases & remaining work |
 | [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) | YOLO medicine-box images (CC BY 4.0) |
+| [ocr-engines.md](docs/guides/ocr-engines.md) | EasyOCR (PaddleOCR trial: [Report 26](docs/reports/26-ocr-engine-comparison.md)) |
+| [experiments/](docs/experiments/) | Closed evaluations (not loaded at runtime) |
 | [kaggle-dataset.md](docs/guides/kaggle-dataset.md) | How the Kaggle dataset was published |
 | [Medium — Computer Vision](https://medium.com/@m.edakulahci/list/computer-vision-d0f63fcdf7d2) | Internship notes: YOLO, OpenCV, OCR |
 | [Medium — FastAPI](https://medium.com/@m.edakulahci/list/learning-rest-apis-with-fastapi-ad9c2442f9d6) | Internship notes: REST API |
 | [Medium — Database](https://medium.com/@m.edakulahci/list/database-25184640519a) | Internship notes: CSV / SQLite catalog |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool |
-| [reports/](docs/reports/) | Phase technical reports (01–25) |
+| [reports/](docs/reports/) | Phase technical reports (01–26) |
 | [SECURITY.md](SECURITY.md) | Security & disclosure |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branch / PR workflow |
 | [CHANGELOG.md](CHANGELOG.md) | Notable changes |

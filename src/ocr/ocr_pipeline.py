@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Any
 
 import cv2
-import easyocr
 import numpy as np
+
+from src.ocr.ocr_reader import OCRReader
 
 
 ImageInput = str | Path | np.ndarray
@@ -710,11 +711,13 @@ def normalize_candidate_text(
 
 
 def run_ocr_on_variant(
-    reader: easyocr.Reader,
+    reader: OCRReader,
     image: np.ndarray,
 ) -> list[Any]:
     """
-    Tek bir preprocessing varyantında EasyOCR çalıştırır.
+    Tek bir preprocessing varyantında OCR çalıştırır.
+
+    EasyOCR ``readtext(image, detail=1, paragraph=False)`` kullanır.
     """
     return reader.readtext(
         image,
@@ -950,7 +953,7 @@ def save_ocr_variants(
 
 
 def run_ocr_pipeline(
-    reader: easyocr.Reader,
+    reader: OCRReader,
     image_input: ImageInput,
     scale_factor: float = 2.0,
     minimum_confidence: float = 0.0,

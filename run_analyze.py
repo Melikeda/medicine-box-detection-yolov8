@@ -98,6 +98,7 @@ def main() -> None:
     print("Ana pipeline: analyze_medicine_boxes()")
     print(f"Gorsel: {args.image}")
     print(f"OCR modu: {config.ocr_mode}")
+    print("OCR motoru: easyocr")
     print("CSV: data/database/medicines.csv")
 
     if config.ocr_mode == "accurate":

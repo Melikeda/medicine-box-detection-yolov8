@@ -1,0 +1,53 @@
+{
+  "mode": "fast",
+  "results": [
+    {
+      "image": "data\\compare-photos\\levopront.png",
+      "mode": "fast",
+      "easyocr": {
+        "success": true,
+        "detection_count": 1,
+        "error": null,
+        "timing": {
+          "yolo_ms": 261.1,
+          "ocr_ms": 124652.8,
+          "matching_ms": 0.0,
+          "total_ms": 124923.6
+        },
+        "boxes": [
+          {
+            "box_index": 1,
+            "status": "not_found",
+            "ocr_text": "dompe",
+            "medicine_name": null,
+            "matching_score": 72.0
+          }
+        ],
+        "engine": "easyocr",
+        "wall_ms": 127686.5
+      },
+      "paddleocr": {
+        "success": false,
+        "detection_count": 1,
+        "error": null,
+        "timing": {
+          "yolo_ms": 106.8,
+          "ocr_ms": 0.0,
+          "matching_ms": 0.0,
+          "total_ms": 1611.7
+        },
+        "boxes": [
+          {
+            "box_index": 1,
+            "status": "error",
+            "ocr_text": null,
+            "medicine_name": null,
+            "matching_score": 0.0
+          }
+        ],
+        "engine": "paddleocr",
+        "wall_ms": 5615.9
+      }
+    }
+  ]
+}

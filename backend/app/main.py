@@ -32,6 +32,7 @@ async def lifespan(app: FastAPI):
     logger.info("Starting %s v%s", settings.app_name, settings.app_version)
     logger.info("Environment: %s", settings.environment)
     logger.info("OCR mode: %s", settings.ocr_mode)
+    logger.info("OCR engine: easyocr")
     logger.info("API docs enabled: %s", settings.docs_enabled)
     logger.info("Explain status: %s", settings.llm_status_message)
     if settings.llm_enabled and not settings.llm_is_configured:

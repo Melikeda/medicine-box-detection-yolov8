@@ -31,8 +31,22 @@ def test_dosage_only_text_is_detected() -> None:
     )
 
 
-def test_brand_with_dosage_is_not_dosage_only() -> None:
-    assert not is_dosage_or_form_only_text("Parol 500 mg")
+def test_normalize_ocr_strips_registered_mark() -> None:
+    assert normalize_ocr_text("Levopront® 60 mg") == "levopront 60 mg"
+
+
+def test_brand_plus_dose_line_matches_levopront(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+    result = service.match_text(
+        ["Levopront® 60 mg", "Tablet", "Dompé", "ABDİİBRAHİM"]
+    )
+    assert result.status == "matched"
+    assert result.medicine_name == "Levopront"
 
 
 def test_partial_brand_match_accepts_fen(

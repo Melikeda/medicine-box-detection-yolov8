@@ -1,0 +1,12 @@
+# ARCHIVED — do not install for Yolocilin.
+# Snapshot of extra packages used only during the OCR engine trial.
+# Do NOT merge into the product requirements.txt. See Report 26.
+#
+#   pip install -r requirements-paddleocr.txt
+#   .\scripts\setup-paddleocr.ps1
+#
+# PaddlePaddle 3.x keeps the repo NumPy 2.x pin. First run downloads models.
+# Verified locally with paddle==3.3.1 and paddleocr==3.7.0.
+
+paddlepaddle>=3.1.0,<4.0.0
+paddleocr>=3.1.0,<4.0.0

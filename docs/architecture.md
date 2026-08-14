@@ -8,7 +8,7 @@ Users photograph a medicine box, receive structured match results, optionally a 
 
 Architecture stays modular so each layer can be tested and improved independently.
 
-Living product docs: [root README](../README.md) · [roadmap](roadmap.md) · [reports index](reports/README.md)
+Living product docs: [root README](../README.md) · [roadmap](roadmap.md) · [reports index](reports/README.md) · [experiments](experiments/)
 
 ---
 
@@ -180,6 +180,8 @@ The cropped image is enhanced before OCR using multi-variant preprocessing (scal
 |------|------------------|----------|
 | `fast` | ~4 (2 angles × 2; early exit) | API default, CPU-friendly |
 | `accurate` | ~52 | Difficult / rotated text |
+
+Production OCR is **EasyOCR** only. PaddleOCR was evaluated on the same pipeline and not adopted ([Report 26](reports/26-ocr-engine-comparison.md)).
 
 ---
 

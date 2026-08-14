@@ -19,21 +19,20 @@ from .ocr_pipeline import (
     load_ocr_image,
     run_ocr_pipeline,
 )
-
 from .ocr_reader import (
+    OCRReader,
     create_ocr_reader,
     draw_ocr_results,
     read_text_from_image,
 )
-
 from .text_cleaner import (
     clean_text,
     combine_texts,
     extract_texts,
 )
 
-
 __all__ = [
+    "OCRReader",
     "OCRCandidate",
     "OCRPipelineResult",
     "create_ocr_variants",

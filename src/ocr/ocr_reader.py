@@ -1,9 +1,22 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
 
 import cv2
 import easyocr
 import numpy as np
+
+
+@runtime_checkable
+class OCRReader(Protocol):
+    """Minimal reader used by ``run_ocr_on_variant`` (EasyOCR ``readtext``)."""
+
+    def readtext(
+        self,
+        image: Any,
+        detail: int = 1,
+        paragraph: bool = False,
+    ) -> list[Any]:
+        """Return EasyOCR-style ``[(bbox, text, confidence), ...]``."""
 
 
 def create_ocr_reader(
@@ -11,7 +24,7 @@ def create_ocr_reader(
     use_gpu: bool = False,
 ) -> easyocr.Reader:
     """
-    EasyOCR okuyucusunu oluşturur.
+    EasyOCR okuyucusunu oluşturur (Türkçe + İngilizce varsayılan).
 
     Args:
         languages:
@@ -22,21 +35,19 @@ def create_ocr_reader(
             False verilirse CPU kullanır.
 
     Returns:
-        Hazırlanmış EasyOCR Reader nesnesi.
+        EasyOCR ``Reader`` nesnesi.
     """
     if languages is None:
         languages = ["tr", "en"]
 
-    reader = easyocr.Reader(
+    return easyocr.Reader(
         languages,
         gpu=use_gpu,
     )
 
-    return reader
-
 
 def read_text_from_image(
-    reader: easyocr.Reader,
+    reader: OCRReader,
     image_path: str | Path,
 ) -> list[Any]:
     """

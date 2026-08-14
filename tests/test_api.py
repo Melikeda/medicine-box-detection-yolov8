@@ -88,6 +88,7 @@ def test_health_endpoint_with_loaded_manager() -> None:
     assert payload["status"] == "ok"
     assert payload["medicine_count"] == 6
     assert payload["database_source"] == "sqlite"
+    assert payload["ocr_engine"] == "easyocr"
 
 
 def test_analyze_info_endpoint() -> None:
@@ -100,6 +101,8 @@ def test_analyze_info_endpoint() -> None:
     payload = response.json()
     assert payload["file_field"] == "file"
     assert "fast" in payload["ocr_modes"]
+    assert "easyocr" in payload["ocr_engines"]
+    assert payload["ocr_engines"] == ["easyocr"]
     assert "matched" in payload["response_statuses"]
 
 

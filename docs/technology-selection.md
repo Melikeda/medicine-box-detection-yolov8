@@ -32,9 +32,11 @@ Product name across GitHub, Kaggle, Medium notes and the Android app: **Yolocili
 
 ## EasyOCR
 
-**Role:** Read medicine names from cropped box images.
+**Role:** Engine to read medicine names from cropped box images.
 
-**Why:** Supports Turkish and English; simple API; works well with our preprocessing pipeline.
+**Why:** Supports Turkish and English; simple API; works with the OpenCV variant pipeline; already in the production venv and Docker image.
+
+A PaddleOCR trial (same YOLO crops + matcher) did not improve identity accuracy enough to justify the extra install or CPU cost. **Not adopted.** See [Report 26](reports/26-ocr-engine-comparison.md).
 
 ---
 

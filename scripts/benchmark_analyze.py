@@ -52,6 +52,7 @@ def main() -> None:
     wall_ms = (time.perf_counter() - started) * 1000
 
     print(f"Mod: {args.mode}")
+    print("Motor: easyocr")
     print(f"Görüntü: {args.image}")
     print(f"Tespit: {result.detection_count}")
     print(f"Basari: {result.success}")
@@ -94,6 +95,7 @@ def main() -> None:
         args.json_out.parent.mkdir(parents=True, exist_ok=True)
         payload = {
             "mode": args.mode,
+            "engine": "easyocr",
             "image": str(args.image),
             "success": result.success,
             "detection_count": result.detection_count,

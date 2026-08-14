@@ -2,8 +2,8 @@
 
 Phase-by-phase engineering notes for the **Yolocilin** medicine box detection internship project.
 
-> **Living docs** (always prefer these for current truth):  
-> [Root README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Setup](../setup-guide.md) · [SECURITY](../../SECURITY.md)
+> Living docs (always prefer these for current truth):  
+> [Root README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Setup](../setup-guide.md) · [SECURITY](../../SECURITY.md) · [Experiments](../experiments/)
 
 **Current product snapshot:** Flutter app **Yolocilin** · catalog **1163** medicines · APIs: analyze · medicines · explain · scans.
 
@@ -14,7 +14,7 @@ Phase-by-phase engineering notes for the **Yolocilin** medicine box detection in
 | Kind | Reports | Guidance |
 |------|---------|----------|
 | Historical diaries | **01–19**, **22** | Written at the time of that phase. Numbers (e.g. 38/107 drugs) may be outdated — see “Current snapshot” above. |
-| Still accurate feature docs | **20**, **21**, **23**, **24**, **25** | Keep aligned with code; small footnotes added when superseding work lands. |
+| Still accurate feature docs | **20**, **21**, **23**, **24**, **25**, **26** | Keep aligned with code; small footnotes added when superseding work lands. |
 
 ---
 
@@ -47,3 +47,4 @@ Phase-by-phase engineering notes for the **Yolocilin** medicine box detection in
 | 23 | [23-scan-history.md](23-scan-history.md) | Local + server history |
 | 24 | [24-medicine-database-final-refresh.md](24-medicine-database-final-refresh.md) | 131-row refresh (now **1163**) |
 | 25 | [25-e2e-performance.md](25-e2e-performance.md) | E2E & benchmarks |
+| 26 | [26-ocr-engine-comparison.md](26-ocr-engine-comparison.md) | EasyOCR vs PaddleOCR trial (EasyOCR kept) |

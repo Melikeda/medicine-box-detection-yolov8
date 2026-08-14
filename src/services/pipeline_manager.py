@@ -4,10 +4,9 @@ import time
 from pathlib import Path
 
 import cv2
-import easyocr
 from ultralytics import YOLO
 
-from src.ocr.ocr_reader import create_ocr_reader
+from src.ocr.ocr_reader import OCRReader, create_ocr_reader
 from src.ocr.ocr_pipeline import DEFAULT_BLUR_THRESHOLD
 from src.services.candidate_processor import has_weak_ocr_candidates
 from src.services.config import PipelineConfig
@@ -38,7 +37,7 @@ class PipelineManager:
     def __init__(self, config: PipelineConfig | None = None) -> None:
         self.config = config or PipelineConfig()
         self._yolo_model: YOLO | None = None
-        self._ocr_reader: easyocr.Reader | None = None
+        self._ocr_reader: OCRReader | None = None
         self._detection_service: DetectionService | None = None
         self._ocr_service: OCRService | None = None
         self._matching_service: MatchingService | None = None
@@ -77,7 +76,7 @@ class PipelineManager:
         return self._matching_service.source
 
     def load(self) -> None:
-        """YOLO, EasyOCR ve ilaç veritabanını belleğe yükler."""
+        """YOLO, OCR okuyucu ve ilaç veritabanını belleğe yükler."""
         if self.is_loaded:
             print("PipelineManager: kaynaklar zaten yüklü.")
             return
@@ -88,7 +87,7 @@ class PipelineManager:
         print(f"PipelineManager: model path → {self.config.model_path}")
         self._yolo_model = YOLO(str(self.config.model_path))
 
-        print("PipelineManager: EasyOCR reader hazırlanıyor...")
+        print("PipelineManager: OCR reader hazırlanıyor (EasyOCR)...")
         self._ocr_reader = create_ocr_reader(
             languages=list(self.config.ocr_languages),
             use_gpu=self.config.use_gpu,
@@ -112,7 +111,8 @@ class PipelineManager:
             f"PipelineManager: hazır "
             f"({self._matching_service.medicine_count} ilaç, "
             f"kaynak: {self._matching_service.source}, "
-            f"OCR modu: {self.config.ocr_mode})"
+            f"OCR modu: {self.config.ocr_mode}, "
+            f"OCR motoru: easyocr)"
         )
 
     def unload(self) -> None:

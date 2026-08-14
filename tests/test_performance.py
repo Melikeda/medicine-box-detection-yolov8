@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
+import inspect
 from unittest.mock import MagicMock, patch
 
 import numpy as np
 
 from src.ocr.ocr_pipeline import OCRPipelineResult, run_ocr_pipeline
+from src.ocr.ocr_reader import create_ocr_reader
 from src.services.config import PipelineConfig
+
+
+def test_pipeline_uses_easyocr_only() -> None:
+    assert not hasattr(PipelineConfig(), "ocr_engine")
+    assert "engine" not in inspect.signature(create_ocr_reader).parameters
 
 
 def test_fast_mode_reduces_rotations_and_scale() -> None:
