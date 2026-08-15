@@ -3,6 +3,17 @@
 All notable changes to **Yolocilin** (Medicine Box Detection, Identification and Information System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — EasyOCR kept after PaddleOCR trial
+
+### Added
+
+- Report 26 and `docs/experiments/paddleocr-comparison/` (photos, JSON, archived adapter)
+
+### Changed
+
+- Production OCR stays **EasyOCR** only; PaddleOCR is not installed or selectable
+- Matching: strip `®` and trailing dosage from OCR lines (`Levopront 60 mg` → brand)
+
 ## [Unreleased] — internship report generators and public naming
 
 ### Added
