@@ -24,6 +24,7 @@ Use this file when organizing issues on the GitHub Project board named **Yolocil
 | [#50](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/50) | Final polish rounds |
 | Catalog expand + matching tighten | Merged (`feature/catalog-expand-matching-tighten` → 153) |
 | Popular TR catalog (~1160) | Merged (PR [#59](https://github.com/Melikeda/medicine-box-detection-yolov8/pull/59) → **1163**) |
+| Matching reliability | Merged (PR [#67](https://github.com/Melikeda/yolocilin/pull/67) — suffix OCR must not guess a drug) |
 | [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Test and document final system — closed |
 
 ## In Progress
@@ -75,6 +76,8 @@ Full index: [docs/reports/README.md](../docs/reports/README.md)
 | [23](../docs/reports/23-scan-history.md) | Local + server history |
 | [24](../docs/reports/24-medicine-database-final-refresh.md) | 131-row refresh (current catalog **1163**) |
 | [25](../docs/reports/25-e2e-performance.md) | E2E & benchmarks |
+| [26](../docs/reports/26-ocr-engine-comparison.md) | EasyOCR vs PaddleOCR (EasyOCR kept) |
+| [27](../docs/reports/27-matching-reliability.md) | Matching reliability gates |
 
 ## CI status checks (recommended for branch protection)
 

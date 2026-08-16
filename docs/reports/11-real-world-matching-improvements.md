@@ -1,7 +1,8 @@
 # Report 11 — Real-World Detection & Matching Improvements
 
 
-> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.  
+> **Matching policy:** `fen` → Nurofen is **no longer** product behaviour. Current gates: [Report 27](27-matching-reliability.md) (PR #67).
 > Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
 > Current product: **Yolocilin** · catalog **1163** medicines · APIs: analyze · medicines · explain · scans.
 

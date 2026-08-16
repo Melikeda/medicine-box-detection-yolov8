@@ -178,8 +178,8 @@ The cropped image is enhanced before OCR using multi-variant preprocessing (scal
 
 | Mode | Variants per box | Use case |
 |------|------------------|----------|
-| `fast` | ~4 (2 angles × 2; early exit) | API default, CPU-friendly |
-| `accurate` | ~52 | Difficult / rotated text |
+| `fast` | up to 8 (4 angles × 2; stop only if score ≥ 95) | API default, CPU-friendly |
+| `accurate` | ~24–52 | Difficult / rotated text |
 
 Production OCR is **EasyOCR** only. PaddleOCR was evaluated on the same pipeline and not adopted ([Report 26](reports/26-ocr-engine-comparison.md)).
 
@@ -196,6 +196,7 @@ OCR output is compared with CSV fields: `medicine_name`, `brand_name`, `active_i
 - Partial brand matching only for prefix fragments of at least 5 letters; suffix pieces (`fen` → Nurofen) are rejected
 - Dosage-only text filtering (`250 mg / 300 mg tablet` patterns)
 - `not_medicine_box` status for YOLO false positives (UNO cards, etc.)
+- Prefer `not_found` over a wrong identity ([Report 27](reports/27-matching-reliability.md))
 
 ### Per-box status
 
@@ -230,7 +231,7 @@ Issue [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) �
 | Endpoint | `POST /api/v1/explain` |
 | Mobile UI | Expandable “İlaç hakkında” card |
 
-See [Report 21](reports/21-llm-integration.md).
+See [Report 21](reports/21-llm-integration.md). Off by default; enable locally with `LLM_ENABLED=true` and `GEMINI_API_KEY` in `.env` (never commit `.env`).
 
 ---
 
