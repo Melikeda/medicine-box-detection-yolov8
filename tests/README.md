@@ -7,7 +7,7 @@ Automated tests for **Yolocilin** / the medicine box detection backend (pytest).
 | File | Coverage |
 |------|----------|
 | `conftest.py` | Temp CSV/SQLite seed, singleton resets |
-| `test_matching.py` | RapidFuzz, OCR normalize, dosage filters |
+| `test_matching.py` | RapidFuzz, OCR normalize, dosage filters, suffix-fragment rejection |
 | `test_database.py` | SQLite seed, list, search, categories |
 | `test_api.py` | Medicines API, health, analyze/info, upload validation |
 | `test_explain.py` | Explain endpoint, cache, rate limit, missing key |

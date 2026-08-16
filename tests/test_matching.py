@@ -49,7 +49,7 @@ def test_brand_plus_dose_line_matches_levopront(
     assert result.medicine_name == "Levopront"
 
 
-def test_partial_brand_match_accepts_fen(
+def test_short_suffix_fragment_does_not_match_nurofen(
     seeded_pipeline_config: PipelineConfig,
 ) -> None:
     service = MatchingService.from_sqlite(
@@ -58,10 +58,8 @@ def test_partial_brand_match_accepts_fen(
     )
     result = service.match_text(["fen"])
 
-    assert result.status == "matched"
-    # "fen" marka parcasi; varyant kaniti yoksa temel Nurofen tercih edilir
-    assert result.medicine_name == "Nurofen"
-    assert result.matching_score >= 85.0
+    assert result.status != "matched"
+    assert result.medicine_name != "Nurofen"
 
 
 def test_ibucold_euro_matches_ibucold_c(
@@ -94,8 +92,8 @@ def test_single_letter_is_not_reliable_match() -> None:
     assert not is_reliable_medicine_match(
         query_text="s",
         medicine_name="Gaviscon",
-        minimum_text_length=3,
-        minimum_name_coverage_ratio=0.45,
+        minimum_text_length=5,
+        minimum_name_coverage_ratio=0.55,
     )
 
 
@@ -251,3 +249,58 @@ def test_has_weak_ocr_candidates_detects_short_reads() -> None:
     assert has_weak_ocr_candidates(["lie", "mg"])
     assert not has_weak_ocr_candidates(["levopront"])
     assert max_candidate_alpha_length(["lie", "levopront"]) == 9
+
+
+def test_suffix_ocr_fragments_do_not_pick_wrong_brand() -> None:
+    """Phone-photo failures: 3-letter suffixes must not become a drug card."""
+    from pathlib import Path
+
+    config = PipelineConfig(
+        medicines_csv_path=Path("data/database/medicines.csv"),
+        use_sqlite=False,
+    )
+    service = MatchingService.from_config(config)
+
+    cases = (
+        ("alm", "Mydocalm"),
+        ("pal", "Gripal"),
+        ("dex", "Dodex"),
+        ("uno", "Imunol Defence"),
+        ("ocalm", "Mydocalm"),
+    )
+    for ocr_text, forbidden_name in cases:
+        result = service.match_text([ocr_text])
+        assert result.status != "matched", ocr_text
+        assert result.medicine_name != forbidden_name, ocr_text
+
+
+def test_exact_short_brand_etol_still_matches(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+    result = service.match_text(["etol"])
+
+    assert result.status == "matched"
+    assert result.medicine_name is not None
+    assert "etol" in result.medicine_name.lower()
+
+
+def test_full_brand_reads_still_match(
+    seeded_pipeline_config: PipelineConfig,
+) -> None:
+    service = MatchingService.from_sqlite(
+        seeded_pipeline_config,
+        seed_from_csv=False,
+    )
+
+    parol = service.match_text(["parol"])
+    nurofen = service.match_text(["nurofen"])
+
+    assert parol.status == "matched"
+    assert parol.medicine_name == "Parol"
+    assert parol.matching_score == 100.0
+    assert nurofen.status == "matched"
+    assert nurofen.medicine_name == "Nurofen"

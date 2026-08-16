@@ -456,9 +456,9 @@ class PipelineManager:
         }
 
     def _build_early_stop_checker(self):
-        """Güvenilir eşleşme bulunduğunda OCR varyant döngüsünü durdurur."""
+        """Yalnızca neredeyse tam okumada OCR varyant döngüsünü durdurur."""
         assert self._matching_service is not None
-        minimum_score = self.config.minimum_match_score
+        minimum_score = self.config.early_exit_minimum_score
 
         def should_stop(candidate_texts: list[str]) -> bool:
             if not candidate_texts:

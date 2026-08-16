@@ -27,7 +27,7 @@ Phase 14 adds a `pytest` suite for matching, SQLite, and FastAPI endpoints witho
 
 | Module | What it verifies |
 |--------|------------------|
-| `tests/test_matching.py` | `fen`→Nurofen, `ibucold €`→Ibucold C, dosage false-positive block |
+| `tests/test_matching.py` | suffix fragments (`fen`, `alm`) → not_found; `ibucold €`→Ibucold C; dosage false-positive block |
 | `tests/test_database.py` | CSV→SQLite seed/upsert, search, categories |
 | `tests/test_api.py` | `/api/v1/medicines`, `/health`, `/analyze/info`, upload rules |
 
