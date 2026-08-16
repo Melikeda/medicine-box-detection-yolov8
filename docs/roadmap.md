@@ -221,7 +221,7 @@ A reusable OCR package integrated with the YOLO detection pipeline and capable o
 ### Real-world improvements (same release)
 
 - [x] YOLO confidence fallback for blurry photos
-- [x] Partial brand matching (e.g. `fen` → Nurofen)
+- [x] Partial brand matching (e.g. `fen` → Nurofen) — historical; current policy rejects suffix fragments ([Report 27](reports/27-matching-reliability.md))
 - [x] Dosage-only OCR filtering
 - [x] OCR confusable normalization (`€` → `c` for Ibucold C)
 - [x] Add Parafon to CSV (38 drugs total)
@@ -414,6 +414,7 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] Mobile scan history — local SQLite (Report 23)
 - [x] OCR mode UI toggle — preview screen Hızlı/Hassas; persists preference; calls `?mode=` (PR follow-up)
 - [x] Fix active-ingredient-only false matches (ibuprofen → wrong brand, round 1)
+- [x] Matching reliability: suffix OCR (`fen`, `alm`) → `not_found` (PR [#67](https://github.com/Melikeda/yolocilin/pull/67), [Report 27](reports/27-matching-reliability.md))
 - [x] Multi-box OCR: supplemental deep retry + garbage OCR filter (round 1)
 - [x] Medicine database final refresh — 131 rows, TİTCK re-sync (Report 24, round 2); later expanded to **1163**
 - [x] User scan history (server sync) — `POST/GET/DELETE /api/v1/scans` + mobile best-effort sync (final-polish-4)
@@ -474,6 +475,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 ## Objectives
 
 - [ ] Final project review
+- [x] Align living docs with matching reliability gates ([Report 27](reports/27-matching-reliability.md))
 - [ ] Complete written internship report
 - [ ] Finalize GitHub documentation (README / roadmap / changelog sync)
 - [ ] Prepare Release v1.0.0
@@ -495,6 +497,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ OpenCV Image Preprocessing | Completed | — |
 | ✅ OCR Integration | Completed | — |
 | ✅ OCR engine comparison (PaddleOCR trial) | EasyOCR kept | [Report 26](reports/26-ocr-engine-comparison.md) |
+| ✅ Matching reliability gates | Suffix fragments → not_found | [PR #67](https://github.com/Melikeda/yolocilin/pull/67) / [Report 27](reports/27-matching-reliability.md) |
 | ✅ Medicine Name Matching | Completed | #6 |
 | ✅ Pipeline Unification | Completed | #23 |
 | ✅ Pipeline Servicification | Completed | #24 |

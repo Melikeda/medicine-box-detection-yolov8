@@ -28,7 +28,7 @@ Two matching helpers discovered during the trial remain, because they also help 
 - strip `®` from OCR text
 - drop a trailing dosage (`Levopront 60 mg` → `levopront`) so brand+dose lines can match
 
-Wrong-name errors from **short OCR fragments** (`dex` → Dodex) are a matcher issue, not a reason to swap engines. See Report 26.
+Wrong-name errors from **short OCR fragments** (`dex` → Dodex) were a matcher issue, not a reason to swap engines. That gate is now tightened: [Report 27](../../reports/27-matching-reliability.md).
 
 ## Results (fast mode, CPU)
 
@@ -40,7 +40,7 @@ Wrong-name errors from **short OCR fragments** (`dex` → Dodex) are a matcher i
 | Levopront (first Paddle run) | `dompe` → not found | Windows oneDNN crash | — |
 | Large `parol_plus.jpg` crop | Parol 100 (typical ~12 s on API) | Very slow / process crash | — |
 
-On the five-box carpet photo both engines missed the upside-down brands and both accepted 3-letter garbage as a “confident” match (≥88). PaddleOCR won Nurofen (`nurofen`) where EasyOCR only read `cold & flu` → Gribex. EasyOCR won Omesek. Neither is a net upgrade.
+On the five-box carpet photo both engines missed the upside-down brands and both accepted 3-letter garbage as a “confident” match (≥88) **at trial time**. PaddleOCR won Nurofen (`nurofen`) where EasyOCR only read `cold & flu` → Gribex. EasyOCR won Omesek. Neither was a net upgrade. Product matching now rejects those suffix fragments ([Report 27](../../reports/27-matching-reliability.md)).
 
 Raw JSON: [results/](results/). Trial photos: [photos/](photos/).
 

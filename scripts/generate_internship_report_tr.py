@@ -576,7 +576,7 @@ def build() -> None:
         [
             [
                 "fast (API varsayılanı)",
-                "Ölçek 1,75x, dört dönüş, açı başına 2 varyant (en fazla 8 OCR geçişi), erken çıkış açık",
+                "Ölçek 1,75x, dört dönüş, açı başına 2 varyant (en fazla 8 OCR geçişi), erken çıkış yalnızca skor ≥ 95",
             ],
             [
                 "accurate",
@@ -601,8 +601,8 @@ def build() -> None:
         "skor tutulur. Birkaç kural bu kazananı eler."
     )
     rep.caption(
-        "Tablo 4.5 Eşleme korumaları. Son kabul kesiti 88’dir. OCR erken çıkışı 80 "
-        "alt kapısını kullanabilir.",
+        "Tablo 4.5 Eşleme korumaları. Son kabul kesiti 88’dir. Fast OCR erken çıkışı "
+        "yalnız skor ≥ 95 iken durur.",
         above=True,
     )
     rep.table(
@@ -610,7 +610,7 @@ def build() -> None:
         [
             ["En düşük eşleme skoru", "88", "Katalog büyüdükten sonra 80 hâlâ yanlış komşuyu kabul ediyordu"],
             ["Ad kapsama oranı", "0,55", "Tek harfli yanlış pozitifleri keser"],
-            ["Kısmi marka kapsaması", "sorgu markanın içinde, kapsama 0,50, skor ≥ 88", "Bulanık baskıda fen → Nurofen"],
+            ["Kısmi marka kapsaması", "yalnızca baştan ≥ 5 harf, kapsama 0,55; sonek reddedilir", "fen / alm / pal ilaç kartı açmamalı"],
             ["Genel tek sözcükler", "forte, plus, tablet, şurup, …", "Bu parçalar birçok kutuda vardır"],
             ["Genel etken maddeler", "yalnızca ibuprofen, paracetamol, …", "Nurofen ile Brufen ayırt edilemez"],
             ["Yalnızca etken madde eşlemesi", "ad/marka skorları 65’in altındaysa elenir", "Parafon, etken madde üzerinden Nurofen oluyordu"],
@@ -864,9 +864,9 @@ def build() -> None:
     r = p.add_run("Kısmi marka OCR (fen) not_found verdi. ")
     set_run_font(r, bold=True)
     r2 = p.add_run(
-        "Kapsama kontrolleri kısa dizileri reddediyordu. Kısmi marka eşlemesi eklendi: "
-        "sorgu brand_name içinde alt dizi olmalı, yeterli harf kapsamı ve yüksek RapidFuzz "
-        "skoru gerekir. Tek harfler hâlâ reddedilir."
+        "Kapsama kontrolleri kısa dizileri reddediyordu. Bir ara kısmi marka eşlemesi "
+        "eklendi (bulanık fen → Nurofen). Son politika bunu geri aldı: sonek parçaları "
+        "yanlış kart açmaz, not_found döner (PR #67)."
     )
     set_run_font(r2)
     p = rep._p()

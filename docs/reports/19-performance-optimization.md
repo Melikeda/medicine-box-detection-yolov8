@@ -1,8 +1,8 @@
 # Report 19 — Pipeline Performance Optimization
 
 
-> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.
-> Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).
+> **Historical phase report.** Written for that phase; some numbers or “next steps” may be outdated.  
+> Current fast OCR: up to **8** variants (4 angles × 2); early-exit at score **≥ 95** ([Report 27](27-matching-reliability.md)). Living docs: [README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Reports index](README.md).  
 > Current product: **Yolocilin** · catalog **1163** medicines · APIs: analyze · medicines · explain · scans.
 
 ## Overview

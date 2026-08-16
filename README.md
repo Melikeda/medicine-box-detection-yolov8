@@ -50,7 +50,8 @@ Built as a modular internship system: learnable `examples/`, production `src/` +
 | Area | What you get |
 |------|----------------|
 | Detection | Multi-box YOLO with confidence fallback |
-| OCR | Fast / accurate modes, early exit on match |
+| OCR | Fast / accurate modes; EasyOCR on CPU (typical wait); early exit only on near-complete match |
+| Matching | RapidFuzz + reliability gates — wrong-name suffix fragments rejected ([Report 27](docs/reports/27-matching-reliability.md)) |
 | Catalog | TİTCK-enriched seed CSV → SQLite (**1163** rows) |
 | API | Analyze, medicines, explain, server scans |
 | Mobile (Yolocilin) | Gallery + camera, results, local history, best-effort server sync |
@@ -184,7 +185,7 @@ flutter run
 Default API URL on emulator: `http://10.0.2.2:8000`.  
 Details: [mobile/README.md](mobile/README.md) · remote testers: [Firebase App Distribution](docs/guides/firebase-app-distribution.md)
 
-> CPU OCR often takes **1–3 minutes** per photo in fast mode.
+> CPU OCR often takes **tens of seconds to a few minutes** per photo in fast mode. Blurry, distant, or multi-box shots may return **not found** instead of a guessed brand ([Report 27](docs/reports/27-matching-reliability.md)).
 
 ---
 

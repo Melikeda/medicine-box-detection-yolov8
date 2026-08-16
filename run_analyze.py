@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
         "--mode",
         choices=["fast", "accurate"],
         default="fast",
-        help="OCR mode: fast (~4 variants/box, early exit) or accurate (~52 variants/box)",
+        help="OCR mode: fast (up to 8 variants/box, early exit at score >= 95) or accurate (deep variants)",
     )
     parser.add_argument(
         "--preload",

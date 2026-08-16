@@ -92,7 +92,7 @@ On a full-resolution `parol_plus.jpg` crop, PaddleOCR hit `max_side_limit` (4000
 | Docs | This report + [experiments/paddleocr-comparison](../experiments/paddleocr-comparison/) |
 | Kept from the trial | `®` stripping; `brand_without_trailing_dosage()` for `Brand 60 mg` lines |
 
-Follow-up (out of scope here): tighten matching so short fragments cannot early-exit as a match. That work is independent of which OCR engine is used.
+Follow-up: short OCR fragments no longer early-exit as a match. See [Report 27](27-matching-reliability.md) (PR [#67](https://github.com/Melikeda/yolocilin/pull/67)). Independent of which OCR engine is used.
 
 ---
 

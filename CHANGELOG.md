@@ -5,6 +5,10 @@ Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased] — tighter matching gates
 
+### Added
+
+- Report 27 (matching reliability gates; prefer `not_found` over a wrong drug card)
+
 ### Changed
 
 - Matching no longer treats 3-letter suffix OCR (`fen`, `alm`, `pal`) as a confident drug identity

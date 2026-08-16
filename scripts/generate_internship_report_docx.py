@@ -1070,7 +1070,7 @@ def build():
         [
             [
                 "fast (API default)",
-                "Scale 1.75x, four rotations, 2 variants per angle (up to 8 OCR passes), early exit on",
+                "Scale 1.75x, four rotations, 2 variants per angle (up to 8 OCR passes), early exit only at score ≥ 95",
             ],
             [
                 "accurate",
@@ -1095,8 +1095,8 @@ def build():
         "the best score. Several rules can discard that winner."
     )
     rep.caption(
-        "Table 4.5 Matching guards. The final accept cutoff is 88. Early OCR exit may "
-        "use a lower gate of 80.",
+        "Table 4.5 Matching guards. The final accept cutoff is 88. Fast OCR early-exit "
+        "stops only when the score is at least 95.",
         above=True,
     )
     rep.table(
@@ -1104,7 +1104,7 @@ def build():
         [
             ["Minimum match score", "88", "After catalog growth, 80 still accepted wrong neighbours"],
             ["Name coverage ratio", "0.55", "Blocks one-letter false positives"],
-            ["Partial brand coverage", "query inside brand, coverage 0.50, score ≥ 88", "Allows fen to match Nurofen on blurry prints"],
+            ["Partial brand coverage", "prefix fragment ≥ 5 letters, coverage 0.55; suffix rejected", "fen/alm/pal must not become a drug card"],
             ["Generic single words", "forte, plus, tablet, şurup, …", "Those tokens appear on many boxes"],
             ["Generic active ingredients", "ibuprofen, paracetamol, … as the only token", "Cannot choose Nurofen versus Brufen"],
             ["Active-ingredient-only match", "discarded if name/brand scores stay below 65", "Parafon was matching Nurofen via the ingredient field"],
@@ -1375,9 +1375,9 @@ def build():
     r = p.add_run("Partial brand OCR (fen) produced not_found. ")
     set_run_font(r, bold=True)
     r2 = p.add_run(
-        "Coverage checks rejected short strings. Partial brand matching was added: the "
-        "query must be a substring of brand_name with enough alphabetic coverage and a "
-        "high RapidFuzz score. Single letters are still rejected."
+        "Coverage checks rejected short strings. Partial brand matching was later added "
+        "so blurry fen could hit Nurofen. The current policy reversed that: suffix "
+        "fragments return not_found instead of a wrong card (PR #67)."
     )
     set_run_font(r2)
     p = rep._p()
