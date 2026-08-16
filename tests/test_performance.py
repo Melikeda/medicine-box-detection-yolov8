@@ -24,6 +24,9 @@ def test_fast_mode_reduces_rotations_and_scale() -> None:
     assert config.ocr_scale_factor == 1.75
     assert config.ocr_early_exit is True
     assert config.ocr_limited_variants is True
+    assert config.early_exit_minimum_score == 95.0
+    assert config.minimum_partial_match_text_length == 5
+    assert config.minimum_brand_coverage_ratio == 0.55
 
 
 def test_accurate_mode_keeps_full_search_space() -> None:

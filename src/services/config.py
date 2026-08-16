@@ -98,13 +98,19 @@ class PipelineConfig:
     ocr_scale_factor_fast: float = 1.75
     max_image_dimension: int = 1280
     minimum_ocr_confidence: float = 0.0
+    # Keep 3 so exact short brands (Etol, Avil) still reach the matcher.
+    # Partial/suffix fragments use minimum_partial_match_text_length.
     minimum_matching_text_length: int = 3
+    # Short OCR pieces (fen, alm, pal) must not become a medicine card.
+    minimum_partial_match_text_length: int = 5
     # Tighter gates reduce wrong-brand matches when OCR is noisy or
     # the true drug is missing from a smaller catalog.
     minimum_name_coverage_ratio: float = 0.55
-    minimum_brand_coverage_ratio: float = 0.50
+    minimum_brand_coverage_ratio: float = 0.55
     minimum_partial_brand_match_score: float = 88.0
     minimum_match_score: float = 88.0
+    # Fast-mode OCR may stop only on a near-complete, reliable match.
+    early_exit_minimum_score: float = 95.0
     minimum_plausible_match_score: float = 65.0
     minimum_best_candidate_score: float = 80.0
     top_match_count: int = 5

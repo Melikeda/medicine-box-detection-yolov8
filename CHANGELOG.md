@@ -3,6 +3,14 @@
 All notable changes to **Yolocilin** (Medicine Box Detection, Identification and Information System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased] — tighter matching gates
+
+### Changed
+
+- Matching no longer treats 3-letter suffix OCR (`fen`, `alm`, `pal`) as a confident drug identity
+- Fast-mode OCR early-exit now requires a near-complete match (score ≥ 95), so a partial hit cannot stop the remaining variants
+- Exact short brands such as Etol still match; a miss now returns `not_found` instead of a wrong card
+
 ## [Unreleased] — EasyOCR kept after PaddleOCR trial
 
 ### Added

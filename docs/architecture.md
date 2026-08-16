@@ -191,9 +191,9 @@ OCR output is compared with CSV fields: `medicine_name`, `brand_name`, `active_i
 
 ### Reliability guards
 
-- Minimum match score (80)
+- Minimum match score (88); fast OCR early-exit only at ≥ 95
 - Name coverage ratio (prevents single-letter false positives)
-- Partial brand matching for blurry reads (`fen` → Nurofen)
+- Partial brand matching only for prefix fragments of at least 5 letters; suffix pieces (`fen` → Nurofen) are rejected
 - Dosage-only text filtering (`250 mg / 300 mg tablet` patterns)
 - `not_medicine_box` status for YOLO false positives (UNO cards, etc.)
 

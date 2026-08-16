@@ -138,6 +138,87 @@ def should_reject_as_non_medicine_box(
     return False
 
 
+def _compact_alpha_text(text: str) -> str:
+    """Karşılaştırma için boşluksuz, normalize edilmiş metin."""
+    return normalize_filter_text(text).replace(" ", "")
+
+
+def _is_exact_catalog_label(
+    query_text: str,
+    medicine_name: str,
+    medicine: dict[str, str] | None,
+) -> bool:
+    """OCR, katalogdaki marka veya ürün adıyla birebir örtüşüyorsa True."""
+    compact_query = _compact_alpha_text(query_text)
+
+    if count_alphabetic_characters(compact_query) < 3:
+        return False
+
+    labels = [medicine_name]
+    if medicine is not None:
+        brand_name = medicine.get("brand_name", "").strip()
+        if brand_name:
+            labels.append(brand_name)
+
+    for label in labels:
+        compact_label = _compact_alpha_text(label)
+        if compact_query == compact_label:
+            return True
+
+        first_token = normalize_filter_text(label).split()
+        if first_token and compact_query == first_token[0]:
+            return True
+
+    return False
+
+
+def _is_suffix_only_label_fragment(
+    query_text: str,
+    medicine_name: str,
+    medicine: dict[str, str] | None,
+) -> bool:
+    """
+    OCR parçası yalnızca ismin/markanın sonuna yapışıyorsa True.
+
+    Örnek: alm → Mydocalm, fen → Nurofen, pal → Gripal.
+    Baştan okunan parçalar (nurof → Nurofen) suffix sayılmaz.
+    """
+    compact_query = _compact_alpha_text(query_text)
+
+    if not compact_query:
+        return False
+
+    labels = [medicine_name]
+    if medicine is not None:
+        brand_name = medicine.get("brand_name", "").strip()
+        if brand_name:
+            labels.append(brand_name)
+
+    saw_suffix = False
+
+    for label in labels:
+        compact_label = _compact_alpha_text(label)
+
+        if not compact_label or compact_query == compact_label:
+            continue
+
+        if compact_label.startswith(compact_query):
+            return False
+
+        if compact_label.endswith(compact_query):
+            saw_suffix = True
+
+        for word in normalize_filter_text(label).split():
+            if word == compact_query:
+                continue
+            if word.startswith(compact_query):
+                return False
+            if word.endswith(compact_query):
+                saw_suffix = True
+
+    return saw_suffix
+
+
 def _is_partial_brand_match(
     query_text: str,
     medicine: dict[str, str],
@@ -146,9 +227,9 @@ def _is_partial_brand_match(
     minimum_brand_coverage_ratio: float,
 ) -> bool:
     """
-    Bulanık OCR'da marka adının yalnızca bir parçası okunabilir.
+    Bulanık OCR'da markanın baştan okunan yeterince uzun parçasına izin verir.
 
-    Örnek: "fen" → brand_name "Nurofen"
+    Suffix parçaları (fen → Nurofen) kabul edilmez.
     """
     normalized_query = normalize_filter_text(query_text)
     query_alpha_length = count_alphabetic_characters(
@@ -171,7 +252,10 @@ def _is_partial_brand_match(
     if brand_alpha_length == 0:
         return False
 
-    if normalized_query not in normalized_brand:
+    compact_query = _compact_alpha_text(query_text)
+    compact_brand = _compact_alpha_text(brand_name)
+
+    if not compact_brand.startswith(compact_query):
         return False
 
     coverage_ratio = query_alpha_length / brand_alpha_length
@@ -266,8 +350,17 @@ def _has_label_token_overlap(
     if not label_tokens:
         return False
 
+    compact_query = _compact_alpha_text(query_text)
+
     for token in label_tokens:
-        if token in query_norm or query_norm in token:
+        if token in query_norm or query_norm == token:
+            return True
+        # Prefix fragment of a brand token is evidence; suffix is not
+        # (fen in nurofen must not count as overlap).
+        if (
+            token.startswith(compact_query)
+            and len(compact_query) >= 5
+        ):
             return True
     return False
 
@@ -324,20 +417,15 @@ def is_reliable_medicine_match(
     match_score: float = 0.0,
     minimum_text_length: int,
     minimum_name_coverage_ratio: float,
-    minimum_brand_coverage_ratio: float = 0.40,
+    minimum_brand_coverage_ratio: float = 0.55,
     minimum_partial_brand_match_score: float = 85.0,
 ) -> bool:
     """
     Kısa veya parçalı OCR metinlerinin yanlış eşleşmesini engeller.
 
-    Tek harfli OCR çıktıları (ör. "s", "u") RapidFuzz'ta yüksek skor
-    alabilir; bu kontrol güvenilir eşleşmeyi doğrular.
-
-    Yüksek skorlu marka parçası eşleşmelerine (ör. "fen" → Nurofen)
-    bulanık fotoğraflar için izin verilir.
-
-    Katalogda olmayan ilaçlar icin: OCR'da farkli bir marka token'i varken
-    baska ilaca matched donulmez; not_found tercih edilir.
+    Tam okunan kısa markalar (Etol) kabul edilir. Suffix parçaları
+    (fen → Nurofen, alm → Mydocalm) reddedilir; şüphede not_found
+    tercih edilir.
     """
     if is_garbage_ocr_text(query_text):
         return False
@@ -358,14 +446,6 @@ def is_reliable_medicine_match(
                 medicine_name=brand_name,
             )
 
-    if medicine is not None and _is_short_brand_embedded_false_positive(
-        query_text=query_text,
-        medicine=medicine,
-        name_similarity=name_similarity,
-        brand_similarity=brand_similarity,
-    ):
-        return False
-
     has_overlap = _has_label_token_overlap(
         query_text=query_text,
         medicine_name=medicine_name,
@@ -376,6 +456,38 @@ def is_reliable_medicine_match(
         medicine_name=medicine_name,
         medicine=medicine,
     )
+
+    if (
+        _is_exact_catalog_label(
+            query_text,
+            medicine_name,
+            medicine,
+        )
+        and not has_foreign
+    ):
+        return True
+
+    if _is_suffix_only_label_fragment(
+        query_text,
+        medicine_name,
+        medicine,
+    ):
+        return False
+
+    if medicine is not None and _is_short_brand_embedded_false_positive(
+        query_text=query_text,
+        medicine=medicine,
+        name_similarity=name_similarity,
+        brand_similarity=brand_similarity,
+    ):
+        return False
+
+    query_alpha_length = count_alphabetic_characters(
+        normalized_query
+    )
+
+    if query_alpha_length < minimum_text_length:
+        return False
 
     # Near-exact similarity may pass without overlap only if OCR does not
     # introduce a clearly different brand-length token.
@@ -394,15 +506,9 @@ def is_reliable_medicine_match(
     ):
         return True
 
-    query_alpha_length = count_alphabetic_characters(
-        normalized_query
-    )
     name_alpha_length = count_alphabetic_characters(
         normalized_name
     )
-
-    if query_alpha_length < minimum_text_length:
-        return False
 
     if name_alpha_length == 0:
         return False
@@ -438,8 +544,6 @@ def is_reliable_medicine_match(
             ),
         )
     ):
-        # Short OCR fragments like "fen" → Nurofen: allow only when the
-        # fragment is actually contained in the brand (no foreign token).
         return not has_foreign
 
     return False
@@ -683,7 +787,7 @@ class MatchingService:
                     medicine=medicine,
                     match_score=score,
                     minimum_text_length=(
-                        self.config.minimum_matching_text_length
+                        self.config.minimum_partial_match_text_length
                     ),
                     minimum_name_coverage_ratio=(
                         self.config.minimum_name_coverage_ratio
