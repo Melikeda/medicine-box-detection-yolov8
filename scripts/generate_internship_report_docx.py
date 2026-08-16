@@ -743,7 +743,8 @@ def build():
         "explain, scans); SQLite as the runtime catalog; automated tests, Docker and "
         "GitHub Actions; Flutter Android client (gallery, then camera); catalog "
         "expansion from TİTCK SKRS; then CPU performance work, production hardening, "
-        "Gemini explanations, scan history and end-to-end tooling."
+        "Gemini explanations, scan history, end-to-end tooling; a PaddleOCR trial "
+        "(not adopted); and tighter matching so suffix OCR cannot open a wrong drug card."
     )
     rep.body(
         "An early idea of a Streamlit web interface was dropped. GitHub issue #7 was "
@@ -768,7 +769,7 @@ def build():
             ["Language (AI and API)", "Python 3.11+ (CI 3.11, Docker 3.12)", "Pipeline and FastAPI"],
             ["Detection", "YOLOv8n, Ultralytics 8.4.87, PyTorch 2.12.1", "Single-class medicine-box detector"],
             ["Image processing", "OpenCV, Pillow", "Crop, resize, CLAHE, threshold, OCR variants"],
-            ["OCR", "EasyOCR 1.7.2 (tr, en)", "Text from cropped boxes"],
+            ["OCR", "EasyOCR 1.7.2 (tr, en)", "Text from cropped boxes; PaddleOCR tried, not adopted"],
             ["Matching", "RapidFuzz 3.14.5 (fuzz.WRatio)", "Noisy OCR to catalog row"],
             ["Catalog seed", "CSV (medicines.csv)", "Source of truth, 1163 rows"],
             ["Runtime database", "SQLite via SQLAlchemy 2.0.46", "medicines and scans tables"],
@@ -1084,6 +1085,14 @@ def build():
         "Generic phrases and dosage-only lines are dropped before RapidFuzz. CLAHE and "
         "sharpening are listed in Appendix A; fast-mode variants are in Appendix C."
     )
+    rep.body(
+        "PaddleOCR was also run on the same YOLO crops. On Turkish box photos it was "
+        "not a net accuracy win, it was slower on CPU, and it added Windows operational "
+        "cost. Production OCR stayed EasyOCR [10], [33]. Wall-clock wait is almost "
+        "entirely EasyOCR on CPU; YOLO and catalog matching are milliseconds to a "
+        "second. Blurry, distant or multi-box shots may run 8 variants then a 24-variant "
+        "deep retry; that limit is expected with the internship hardware."
+    )
 
     rep.h2("4.8 Matching Algorithms and Business Rules")
     rep.body(
@@ -1112,6 +1121,7 @@ def build():
             ["Label token overlap", "shared token of at least 4 letters", "Missing-catalog OCR must return not_found"],
             ["Foreign brand token", "long OCR token absent from candidate labels", "Endofer-like text must not map to Coldaway C"],
             ["Brand-family disambiguation", "Plus / Forte / Jel / Gargara tokens", "Same score must not prefer the longer SKU name by default"],
+            ["Fast OCR early-exit", "score ≥ 95", "An 88 suffix guess must not stop remaining variants"],
         ],
     )
     rep.body(
@@ -1120,7 +1130,9 @@ def build():
         "not_medicine_box (YOLO crop failed plausibility checks), and error (exception "
         "on that crop). Brand-family logic lives in src/matching/brand_disambiguation.py. "
         "Parol versus Parol Plus is decided by whether OCR actually contains plus, not "
-        "by longer name wins. The related listing is Appendix D."
+        "by longer name wins. Exact short brands such as Etol still match. Suffix "
+        "fragments (fen, alm, pal) are not a match; the product prefers not_found "
+        "(PR #67, repository Report 27) [33]. The related listing is Appendix D."
     )
 
     rep.h2("4.9 Database")
@@ -1372,12 +1384,13 @@ def build():
     )
     set_run_font(r2)
     p = rep._p()
-    r = p.add_run("Partial brand OCR (fen) produced not_found. ")
+    r = p.add_run("Short suffix OCR opened the wrong drug card. ")
     set_run_font(r, bold=True)
     r2 = p.add_run(
-        "Coverage checks rejected short strings. Partial brand matching was later added "
-        "so blurry fen could hit Nurofen. The current policy reversed that: suffix "
-        "fragments return not_found instead of a wrong card (PR #67)."
+        "RapidFuzz treated three-letter pieces such as fen, alm and pal as Nurofen, "
+        "Mydocalm or Gripal at WRatio ≥ 88, and fast mode stopped OCR on the first "
+        "hit. The policy was tightened: suffixes are rejected, early-exit requires "
+        "score ≥ 95, and a miss returns not_found (PR #67)."
     )
     set_run_font(r2)
     p = rep._p()
@@ -1395,6 +1408,15 @@ def build():
     r2 = p.add_run(
         "The normalizer maps currency and copyright lookalikes to c. Adjacent OCR "
         "tokens are concatenated. Reported match after the fix: Ibucold C at score 100."
+    )
+    set_run_font(r2)
+    p = rep._p()
+    r = p.add_run("PaddleOCR did not give better drug identity than EasyOCR. ")
+    set_run_font(r, bold=True)
+    r2 = p.add_run(
+        "It was compared on the same crops and catalog. It won some boxes, produced "
+        "wrong names on others, and was typically 2–4× slower on CPU. The engine was "
+        "not swapped; false names came from the matcher (repository Reports 26 and 27) [33]."
     )
     set_run_font(r2)
     p = rep._p()
@@ -1431,7 +1453,9 @@ def build():
     r2 = p.add_run(
         "Timeout was raised to 300 seconds, loading copy was changed, gallery and "
         "server resize were added, and fast-mode OCR search space was cut. Baseline "
-        "about 255 seconds versus later about 1 to 3 minutes on typical CPU fast runs."
+        "about 255 seconds; later typical fast CPU times on a clear single box range "
+        "from tens of seconds to 1–3 minutes. The wait is EasyOCR on CPU; GPU was not "
+        "the intern default. A retake prompt on a blurry or distant shot is expected."
     )
     set_run_font(r2)
     p = rep._p()
@@ -1472,7 +1496,7 @@ def build():
             ["TİTCK SKRS active rows used as reference", "7948 (manifest 06.08.2026)"],
             ["Public YOLO images", "395"],
             ["YOLO class count", "1 (medicine-box)"],
-            ["Final match cutoff", "88"],
+            ["Final match cutoff", "88 (early-exit ≥ 95)"],
             ["Upload cap", "10 MB"],
             ["Local history cap", "50"],
             ["Server history cap", "200"],
@@ -1485,7 +1509,9 @@ def build():
     rep.body(
         "The product name is Yolocilin. The GitHub repository, the GitHub Projects "
         "board, the Android application and the Kaggle dataset use the same name "
-        "[5], [33]. Work was tracked with issues and pull requests."
+        "[5], [33]. Work was tracked with issues and pull requests. Living technical "
+        "records in the repository include the EasyOCR decision (Report 26) and "
+        "matching reliability (Report 27) [33]."
     )
     rep.body(
         "Training images are not committed to Git. The privacy-cleaned YOLO set of 395 "
@@ -1517,16 +1543,17 @@ def build():
         "Most of the engineering time after the first best.pt went into OCR variants, "
         "RapidFuzz guards, catalog quality, and making a three-minute CPU call usable "
         "in a mobile UI. Raising the match cutoff and refusing foreign brand tokens "
-        "mattered more for trust than adding another YOLO scale. After the first false "
-        "matches, the goal was that the system should fail as not_found more often than "
-        "as the wrong brand."
+        "and suffix OCR fragments mattered more for trust than adding another YOLO "
+        "scale or OCR engine. After the first false matches, the goal was that the "
+        "system should fail as not_found more often than as the wrong brand."
     )
     rep.body(
         "Limits are part of the result. There is no user authentication; server scan "
-        "history is global. Inference is CPU-bound and far from real-time. The catalog "
-        "is not the full TİTCK list. iOS, PostgreSQL, barcode reading and a public HTTPS "
-        "deployment were left as later items. Gemini explanations are optional and must "
-        "not be read as a prospectus."
+        "history is global. Inference is CPU-bound and far from real-time; blurry or "
+        "distant photos make OCR slow or return not_found. The catalog is not the full "
+        "TİTCK list. iOS, PostgreSQL, barcode reading and a public HTTPS deployment "
+        "were left as later items. Gemini explanations are optional and must not be "
+        "read as a prospectus."
     )
     rep.body(
         "For a computer engineering internship the delivery is a working vertical slice: "
@@ -1625,6 +1652,8 @@ def build():
         "ocr_scale_factor_fast: float = 1.75\n"
         "max_image_dimension: int = 1280\n"
         "minimum_match_score: float = 88.0\n"
+        "minimum_partial_match_text_length: int = 5\n"
+        "early_exit_minimum_score: float = 95.0\n"
         'ocr_languages: tuple[str, ...] = ("tr", "en")\n'
         'ocr_mode: OCRMode = "fast"\n'
         "# ocr_rotation_angles -> (0, 90, 180, 270)\n"

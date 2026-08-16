@@ -269,7 +269,8 @@ def build() -> None:
         "explain, scans); çalışma anı katalog olarak SQLite; otomatik test, Docker ve "
         "GitHub Actions; Flutter Android istemcisi (galeri, sonra kamera); TİTCK SKRS "
         "ile katalog genişletme; CPU performansı, üretim sertleştirmesi, Gemini "
-        "açıklamaları, tarama geçmişi ve uçtan uca araçlar."
+        "açıklamaları, tarama geçmişi, uçtan uca araçlar; EasyOCR yerine PaddleOCR "
+        "denemesi (alınmadı); sonek OCR parçalarının yanlış ilaç kartı açmaması."
     )
     rep.body(
         "Erken dönemde düşünülen Streamlit arayüzü bırakıldı. GitHub #7 kapatıldı; "
@@ -293,7 +294,7 @@ def build() -> None:
             ["Dil (YZ ve API)", "Python 3.11+ (CI 3.11, Docker 3.12)", "Hat ve FastAPI"],
             ["Tespit", "YOLOv8n, Ultralytics 8.4.87, PyTorch 2.12.1", "Tek sınıflı ilaç kutusu detektörü"],
             ["Görüntü işleme", "OpenCV, Pillow", "Kırpma, ölçek, CLAHE, eşik, OCR varyantları"],
-            ["OCR", "EasyOCR 1.7.2 (tr, en)", "Kırpılmış kutudan metin"],
+            ["OCR", "EasyOCR 1.7.2 (tr, en)", "Kırpılmış kutudan metin; PaddleOCR denendi, alınmadı"],
             ["Eşleme", "RapidFuzz 3.14.5 (fuzz.WRatio)", "Gürültülü OCR → katalog satırı"],
             ["Katalog tohumu", "CSV (medicines.csv)", "Kaynak gerçek, 1163 satır"],
             ["Çalışma anı DB", "SQLite / SQLAlchemy 2.0.46", "medicines ve scans tabloları"],
@@ -590,6 +591,14 @@ def build() -> None:
         "ifadeler ve yalnızca doz satırları RapidFuzz’tan önce düşer. CLAHE ve "
         "keskinleştirme alıntısı Ek A’dadır; hızlı kip varyantları Ek C’dedir."
     )
+    rep.body(
+        "Aynı YOLO kırpımları üzerinde PaddleOCR de denendi. Türkçe kutu fotoğraflarında "
+        "net bir doğruluk kazancı yoktu, CPU’da daha yavaştı ve Windows’ta işletme maliyeti "
+        "vardı. Üretim OCR’si EasyOCR olarak kaldı [10], [33]. Bekleme süresi büyük ölçüde "
+        "CPU’daki EasyOCR’dir; YOLO ve katalog eşlemesi milisaniye–saniye bandındadır. "
+        "Bulanık, uzak veya çoklu kutu karelerinde 8 ardından 24 varyantlık derin tarama "
+        "çalışabilir; bu staj imkânlarıyla beklenen bir sınırdır."
+    )
 
     rep.h2("4.8 Eşleme Algoritmaları ve İş Kuralları")
     rep.body(
@@ -618,6 +627,7 @@ def build() -> None:
             ["Etiket parça örtüşmesi", "en az 4 harflik ortak parça", "Katalogda olmayan OCR not_found dönmeli"],
             ["Yabancı marka parçası", "aday etiketlerinde olmayan uzun OCR parçası", "Endofer benzeri metin Coldaway C olmamalı"],
             ["Marka ailesi ayırımı", "Plus / Forte / Jel / Gargara parçaları", "Aynı skorda daha uzun SKU adı kazanmamalı"],
+            ["Fast OCR erken çıkış", "skor ≥ 95", "88’lik sonek tahmini kalan varyantları durdurmamalı"],
         ],
     )
     rep.body(
@@ -626,7 +636,9 @@ def build() -> None:
         "not_medicine_box (YOLO kırpımı inandırıcılık kontrolünü geçmedi), error "
         "(o kırpımda istisna). Marka ailesi mantığı src/matching/brand_disambiguation.py "
         "içindedir. Parol ile Parol Plus, OCR’da plus geçip geçmediğine bakılarak "
-        "seçilir; daha uzun ad kazanmaz. İlgili kod Ek D’dedir."
+        "seçilir; daha uzun ad kazanmaz. Tam okunan kısa markalar (Etol) hâlâ eşleşir. "
+        "Sonek parçaları (fen, alm, pal) eşleşme sayılmaz; şüphede not_found tercih "
+        "edilir (PR #67, depo Rapor 27) [33]. İlgili kod Ek D’dedir."
     )
 
     rep.h2("4.9 Veritabanı")
@@ -861,12 +873,13 @@ def build() -> None:
     )
     set_run_font(r2)
     p = rep._p()
-    r = p.add_run("Kısmi marka OCR (fen) not_found verdi. ")
+    r = p.add_run("Kısa sonek OCR yanlış ilaç kartı açtı. ")
     set_run_font(r, bold=True)
     r2 = p.add_run(
-        "Kapsama kontrolleri kısa dizileri reddediyordu. Bir ara kısmi marka eşlemesi "
-        "eklendi (bulanık fen → Nurofen). Son politika bunu geri aldı: sonek parçaları "
-        "yanlış kart açmaz, not_found döner (PR #67)."
+        "RapidFuzz, fen / alm / pal gibi üç harfi Nurofen, Mydocalm, Gripal ile "
+        "WRatio ≥ 88 sayıyordu; fast kip ilk “eşleşmede” OCR’yi durduruyordu. "
+        "Politika sıkılaştırıldı: sonek reddedilir, erken çıkış yalnız skor ≥ 95, "
+        "şüphede not_found (PR #67)."
     )
     set_run_font(r2)
     p = rep._p()
@@ -884,6 +897,15 @@ def build() -> None:
     r2 = p.add_run(
         "Normalleştirici para birimi ve telif benzerlerini c yapar. Yan yana OCR "
         "parçaları birleştirilir. Düzeltme sonrası bildirilen eşleme: Ibucold C, skor 100."
+    )
+    set_run_font(r2)
+    p = rep._p()
+    r = p.add_run("PaddleOCR, EasyOCR’den daha doğru ilaç kimliği vermedi. ")
+    set_run_font(r, bold=True)
+    r2 = p.add_run(
+        "Aynı kırpım ve katalogla yan yana denendi. Bazı kutularda kazandı, bazılarında "
+        "yanlış eşleşme üretti, CPU’da genelde 2–4 kat yavaştı. Motor değiştirilmedi; "
+        "yanlış isimlerin kaynağı eşleme kapısıydı (depo Rapor 26 ve 27) [33]."
     )
     set_run_font(r2)
     p = rep._p()
@@ -917,7 +939,9 @@ def build() -> None:
     r2 = p.add_run(
         "Zaman aşımı 300 saniyeye çıkarıldı, yükleme metni değiştirildi, galeri ve sunucu "
         "küçültmesi eklendi, fast OCR arama uzayı kesildi. Taban yaklaşık 255 saniye, "
-        "sonraki tipik fast CPU süreleri yaklaşık 1–3 dakika."
+        "net tek kutuda sonraki tipik fast CPU süreleri onlarca saniye ile 1–3 dakika "
+        "arasındadır. Asıl maliyet EasyOCR’nin CPU’da tekrarlanmasıdır; GPU staj "
+        "varsayılanı değildi. Bulanık veya uzak karede “yeniden çek” beklenen davranıştır."
     )
     set_run_font(r2)
     p = rep._p()
@@ -955,7 +979,7 @@ def build() -> None:
             ["Referans TİTCK SKRS aktif satır", "7948 (bildirim 06.08.2026)"],
             ["Yayımlanan YOLO görüntüsü", "395"],
             ["YOLO sınıf sayısı", "1 (medicine-box)"],
-            ["Son eşleme kesiti", "88"],
+            ["Son eşleme kesiti", "88 (erken çıkış ≥ 95)"],
             ["Yükleme tavanı", "10 MB"],
             ["Yerel geçmiş tavanı", "50"],
             ["Sunucu geçmiş tavanı", "200"],
@@ -968,7 +992,8 @@ def build() -> None:
     rep.body(
         "Ürün adı Yolocilin’dir. GitHub deposu, GitHub Projects tahtası, Android "
         "uygulama ve Kaggle veri seti aynı adı kullanır [5], [33]. İş takibi issue ve "
-        "çekme istekleriyle yürütülmüştür."
+        "çekme istekleriyle yürütülmüştür. Depodaki yaşayan teknik kayıtlar arasında "
+        "EasyOCR kararı (Rapor 26) ve eşleme güvenilirliği (Rapor 27) vardır [33]."
     )
     rep.body(
         "Eğitim görüntüleri Git deposuna konmamıştır. Gizlilik temizliği yapılan 395 "
@@ -998,14 +1023,16 @@ def build() -> None:
         "doğruluğu, mutfak masası fotoğrafında tanıma ile aynı problem değildir. İlk "
         "best.pt’den sonraki sürenin çoğu OCR varyantlarına, RapidFuzz korumalarına, "
         "katalog kalitesine ve üç dakikalık CPU çağrısını mobil arayüzde kullanılabilir "
-        "kılmaya gitti. Eşleme kesitini yükseltmek ve yabancı marka parçalarını reddetmek, "
-        "başka bir YOLO ölçeği eklemekten daha çok güven verdi. İlk yanlış eşlemelerden "
-        "sonra hedef, sistemin yanlış markadan çok not_found ile düşmesiydi."
+        "kılmaya gitti. Eşleme kesitini yükseltmek, yabancı marka parçalarını ve sonek "
+        "OCR’yi reddetmek, başka bir YOLO ölçeği veya OCR motoru eklemekten daha çok "
+        "güven verdi. İlk yanlış eşlemelerden sonra hedef, sistemin yanlış markadan çok "
+        "not_found ile düşmesiydi."
     )
     rep.body(
         "Sınırlar da sonucun parçasıdır. Kullanıcı kimliği yoktur; sunucu tarama geçmişi "
-        "geneldir. Çıkarım CPU’ya bağlıdır, gerçek zamanlı değildir. Katalog tam TİTCK "
-        "listesi değildir. iOS, PostgreSQL, barkod ve genel HTTPS yayını sonraya bırakıldı. "
+        "geneldir. Çıkarım CPU’ya bağlıdır, gerçek zamanlı değildir; bulanık veya uzak "
+        "fotoğrafta OCR uzun sürer veya not_found döner. Katalog tam TİTCK listesi "
+        "değildir. iOS, PostgreSQL, barkod ve genel HTTPS yayını sonraya bırakıldı. "
         "Gemini açıklamaları isteğe bağlıdır ve prospektüs yerine okunmamalıdır."
     )
     rep.body(
@@ -1101,6 +1128,8 @@ def build() -> None:
         "ocr_scale_factor_fast: float = 1.75\n"
         "max_image_dimension: int = 1280\n"
         "minimum_match_score: float = 88.0\n"
+        "minimum_partial_match_text_length: int = 5\n"
+        "early_exit_minimum_score: float = 95.0\n"
         'ocr_languages: tuple[str, ...] = ("tr", "en")\n'
         'ocr_mode: OCRMode = "fast"\n'
         "# ocr_rotation_angles -> (0, 90, 180, 270)\n"

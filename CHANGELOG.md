@@ -30,7 +30,7 @@ Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
 ### Added
 
-- Word generators for the CE499 internship report (Turkish and English)
+- Word generators for the CE499 internship report (Turkish and English); matching reliability, EasyOCR-only OCR, and CPU wait limits aligned with Reports 26–27
 - Report figures: pipeline architecture and catalog-growth charts
 
 ### Changed
