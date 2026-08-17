@@ -281,28 +281,30 @@ class AppStrings {
     final trimmedName = name.trim().isEmpty
         ? (isEnglish ? 'This medicine' : 'Bu ilaç')
         : name.trim();
-    final hasIngredient = ingredient != null && ingredient.trim().isNotEmpty;
-    final hasCategory = category != null && category.trim().isNotEmpty;
+    final ingredientText = ingredient?.trim() ?? '';
+    final categoryText = category?.trim() ?? '';
+    final hasIngredient = ingredientText.isNotEmpty;
+    final hasCategory = categoryText.isNotEmpty;
     if (isEnglish) {
       if (hasIngredient && hasCategory) {
-        return '$trimmedName is a ${category!.trim()} medicine that contains ${ingredient!.trim()}.';
+        return '$trimmedName is a $categoryText medicine that contains $ingredientText.';
       }
       if (hasIngredient) {
-        return '$trimmedName contains ${ingredient!.trim()}.';
+        return '$trimmedName contains $ingredientText.';
       }
       if (hasCategory) {
-        return '$trimmedName is listed in the ${category!.trim()} category.';
+        return '$trimmedName is listed in the $categoryText category.';
       }
       return 'Limited catalog information is available for $trimmedName.';
     }
     if (hasIngredient && hasCategory) {
-      return '$trimmedName, ${ingredient!.trim()} içeren ve ${category!.trim()} kategorisinde yer alan bir ilaçtır.';
+      return '$trimmedName, $ingredientText içeren ve $categoryText kategorisinde yer alan bir ilaçtır.';
     }
     if (hasIngredient) {
-      return '$trimmedName, ${ingredient!.trim()} içeren bir ilaçtır.';
+      return '$trimmedName, $ingredientText içeren bir ilaçtır.';
     }
     if (hasCategory) {
-      return '$trimmedName, ${category!.trim()} kategorisinde yer alan bir ilaçtır.';
+      return '$trimmedName, $categoryText kategorisinde yer alan bir ilaçtır.';
     }
     return '$trimmedName hakkında sınırlı katalog bilgisi bulunmaktadır.';
   }
