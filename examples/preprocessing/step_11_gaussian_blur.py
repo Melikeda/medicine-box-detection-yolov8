@@ -25,7 +25,7 @@ from src.preprocessing.geometric_operations import (
 
 def main() -> None:
     """
-    Gaussian Blur kullanımını örnekler.
+    Demonstrates Gaussian Blur usage.
     """
 
     image_path = Path(
@@ -36,15 +36,15 @@ def main() -> None:
         "results/preprocessing/medicine_sample_gaussian_blur.jpg"
     )
 
-    # Görüntüyü oku.
+    # Read the image.
     image = read_image(image_path)
 
-    # Önce grayscale'e dönüştür.
+    # Convert to grayscale first.
     grayscale_image = convert_to_grayscale(
         image
     )
 
-    # Gaussian Blur uygula.
+    # Apply Gaussian Blur.
     blurred_image = apply_gaussian_blur(
         grayscale_image,
         kernel_size=(5, 5),

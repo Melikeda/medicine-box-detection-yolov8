@@ -18,7 +18,7 @@ from src.services.config import PipelineConfig
 
 
 class MedicineQueryService:
-    """SQLite üzerinden ilaç listeleme ve detay sorgusu."""
+    """List medicines and query details through SQLite."""
 
     _instance: MedicineQueryService | None = None
 
@@ -50,7 +50,7 @@ class MedicineQueryService:
         sqlite_path: Path,
         source: str = "sqlite",
     ) -> MedicineQueryService:
-        """Aynı DB yolu için tek servis örneği döndürür."""
+        """Return one service instance for the same DB path."""
         resolved = Path(sqlite_path).resolve()
         if (
             cls._instance is None
@@ -65,7 +65,7 @@ class MedicineQueryService:
 
     @classmethod
     def reset_instance(cls) -> None:
-        """Test veya yeniden yapılandırma için servis singleton'ını sıfırlar."""
+        """Reset the service singleton for tests or reconfiguration."""
         cls._instance = None
 
     def list_medicines(

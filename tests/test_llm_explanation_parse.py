@@ -1,4 +1,6 @@
-"""LLM açıklama parse / fallback birim testleri."""
+"""
+LLM explanation parsing and fallback unit tests.
+"""
 
 from backend.app.services.llm_service import (
     MedicineExplanation,
@@ -64,7 +66,7 @@ def test_parse_fenced_json_explanation() -> None:
     ```"""
     result = parse_llm_explanation(raw, medicine=_etol())
     assert result.summary == "Kısa özet"
-    # commonUses boşsa kategori fallback
+    # Fall back to the category when commonUses is empty.
     assert result.common_uses
 
 
@@ -72,7 +74,7 @@ def test_parse_invalid_json_falls_back_to_plain_text() -> None:
     raw = "Bu ilaç hakkında genel bir düz metin açıklama."
     result = parse_llm_explanation(raw, medicine=_etol())
     assert result.summary.startswith("Bu ilaç hakkında")
-    assert result.common_uses  # kategori fallback
+    assert result.common_uses  # category fallback
     assert result.warnings
 
 

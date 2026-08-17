@@ -1,4 +1,4 @@
-"""OCR metinlerini eşleştirme öncesi normalize eder."""
+"""Normalize OCR text before matching."""
 
 OCR_CONFUSABLE_TRANSLATION = str.maketrans(
     {
@@ -14,9 +14,9 @@ OCR_CONFUSABLE_TRANSLATION = str.maketrans(
 
 def normalize_ocr_text(text: str) -> str:
     """
-    OCR çıktısını karşılaştırma için standart biçime dönüştürür.
+    Convert OCR output to a standard form for comparison.
 
-    Sık OCR hatalarını düzeltir (ör. € → c, Ibucold C kutularında).
+    Fix common OCR mistakes, for example euro-like symbols to c on Ibucold C boxes.
     """
     cleaned = text.strip().casefold().translate(
         OCR_CONFUSABLE_TRANSLATION
@@ -26,9 +26,9 @@ def normalize_ocr_text(text: str) -> str:
 
 def is_garbage_ocr_text(text: str) -> bool:
     """
-    Anlamsiz OCR gurultusunu tespit eder.
+    Detect meaningless OCR noise.
 
-    Ornek: 1778v1 7dv~ ww 6w oc / bw od7
+    Example: 1778v1 7dv~ ww 6w oc / bw od7
     """
     normalized = normalize_ocr_text(text)
 

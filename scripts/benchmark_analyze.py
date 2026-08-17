@@ -1,4 +1,4 @@
-"""Yerel analyze pipeline benchmark aracı."""
+"""Local analyze-pipeline benchmark tool."""
 
 from __future__ import annotations
 

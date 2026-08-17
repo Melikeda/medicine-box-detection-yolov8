@@ -6,7 +6,7 @@ from backend.app.schemas.medicines import MedicineSchema
 
 
 class BarcodeLookupResponseSchema(BaseModel):
-    """Metin barkod ile katalog araması."""
+    """Catalog lookup by barcode text."""
 
     success: bool
     barcode: str
@@ -23,7 +23,7 @@ class DecodedBarcodeSchema(BaseModel):
 
 
 class BarcodeScanResponseSchema(BaseModel):
-    """Görüntüden barkod çözme + katalog eşlemesi."""
+    """Barcode decoding from an image plus catalog matching."""
 
     success: bool
     status: Literal["matched", "not_found", "no_barcode"]

@@ -12,7 +12,7 @@ from src.preprocessing.basic_operations import read_image
 
 def main() -> None:
     """
-    Bir görüntünün yükseklik, genişlik ve kanal bilgilerini inceler.
+    Inspects an image's height, width, and channel information.
     """
 
     image_path = Path(
@@ -21,14 +21,14 @@ def main() -> None:
 
     image = read_image(image_path)
 
-    # Renkli görüntünün shape bilgisi:
-    # (yükseklik, genişlik, kanal sayısı)
+    # Shape information for the color image:
+    # (height, width, channel count)
     height, width, channels = image.shape
 
-    # Görüntünün genişliğinin yüksekliğine oranı.
+    # Ratio of image width to height.
     aspect_ratio = width / height
 
-    # Görüntünün merkez koordinatları.
+    # Image center coordinates.
     center_x = width // 2
     center_y = height // 2
 

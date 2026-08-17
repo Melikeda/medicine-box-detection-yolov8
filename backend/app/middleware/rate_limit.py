@@ -1,4 +1,4 @@
-"""Analyze endpoint için basit IP rate limit."""
+"""Simple IP rate limiting for the analyze endpoint."""
 
 from __future__ import annotations
 

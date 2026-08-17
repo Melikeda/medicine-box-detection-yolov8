@@ -1,4 +1,6 @@
-"""TİTCK SKRS E-Reçete ilaç listesini indirir ve parse eder."""
+"""
+Downloads and parses the TITCK SKRS e-prescription medicine list.
+"""
 
 from __future__ import annotations
 
@@ -43,7 +45,7 @@ def discover_latest_skrs_xlsx(
     page_url: str = TITCK_SKRS_PAGE_URL,
     timeout: int = 30,
 ) -> SkrsDownloadInfo:
-    """TİTCK SKRS sayfasındaki en güncel XLSX bağlantısını bulur."""
+    """Finds the latest XLSX link on the TITCK SKRS page."""
     response = requests.get(page_url, timeout=timeout)
     response.raise_for_status()
     html = response.text
@@ -79,7 +81,7 @@ def download_skrs_xlsx(
 
 
 def _barcode_cell_to_text(value: object) -> str:
-    """Excel float / .0 / bilimsel gösterimi rakam dizisine çevirir."""
+    """Converts Excel floats, .0 values, and scientific notation to a digit string."""
     if value is None:
         return ""
     try:
@@ -115,7 +117,7 @@ def _barcode_cell_to_text(value: object) -> str:
 
 
 def load_skrs_dataframe(xlsx_path: Path) -> pd.DataFrame:
-    """AKTIF URUNLER listesini normalize edilmiş sütunlarla yükler."""
+    """Loads the active-products list with normalized columns."""
     raw = pd.read_excel(xlsx_path, sheet_name=0, skiprows=2)
     raw.columns = SKRS_COLUMNS[: len(raw.columns)]
     frame = raw.copy()

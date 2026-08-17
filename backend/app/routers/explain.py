@@ -43,7 +43,7 @@ def enforce_explain_rate_limit(
 async def explain_info(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> ExplainInfoSchema:
-    """Explain endpoint yapılandırma bilgisi."""
+    """Explain endpoint configuration information."""
     return ExplainInfoSchema(
         endpoint=f"{settings.api_prefix}/explain",
         llm_enabled=settings.llm_enabled,
@@ -69,7 +69,7 @@ async def explain_medicine(
     medicine_service: MedicineQueryService = Depends(get_medicine_service),
     llm_service: LlmExplanationService = Depends(get_llm_service),
 ) -> ExplainResponseSchema:
-    """Eşleşen ilaç için kısa Türkçe LLM açıklaması üretir."""
+    """Generate a brief Turkish LLM explanation for a matched medicine."""
     medicine = medicine_service.get_medicine(payload.medicine_id)
     if medicine is None:
         raise HTTPException(

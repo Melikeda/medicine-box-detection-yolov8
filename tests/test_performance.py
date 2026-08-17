@@ -1,4 +1,6 @@
-"""Performans yapılandırması ve OCR erken çıkış testleri."""
+"""
+Performance configuration and OCR early-exit tests.
+"""
 
 from __future__ import annotations
 

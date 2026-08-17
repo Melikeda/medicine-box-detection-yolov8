@@ -114,7 +114,7 @@ def test_parafon_exact_match(
 def test_ibuprofen_only_ocr_does_not_false_match_brufen(
     seeded_pipeline_config: PipelineConfig,
 ) -> None:
-    """Etken madde tek basina okunursa marka secilmemeli (Nurofen -> Brufen hatasi)."""
+    """A brand should not be selected when OCR reads only the active ingredient (Nurofen -> Brufen bug)."""
     service = MatchingService.from_sqlite(
         seeded_pipeline_config,
         seed_from_csv=False,
@@ -200,7 +200,7 @@ def test_levopront_and_biteral_match_when_ocr_reads_brand(
 def test_ornldarol_garbage_does_not_false_match_parol(
     seeded_pipeline_config: PipelineConfig,
 ) -> None:
-    """Ters Biteral OCR (ornldarol) Parol Plus ile eslesmemeli."""
+    """Reversed Biteral OCR (ornldarol) must not match Parol Plus."""
     service = MatchingService.from_sqlite(
         seeded_pipeline_config,
         seed_from_csv=False,
@@ -230,7 +230,7 @@ def test_ferrum_matches_and_not_pharmaton() -> None:
 
 
 def test_unknown_brand_returns_not_found_not_wrong_drug() -> None:
-    """Catalogda olmayan net marka token'i baska ilaca matched olmamali."""
+    """A clear brand token outside the catalog must not match another medicine."""
     from pathlib import Path
 
     config = PipelineConfig(

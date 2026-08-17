@@ -15,7 +15,7 @@ from src.preprocessing.basic_operations import (
 
 def main() -> None:
     """
-    Okunan görüntünün OpenCV penceresinde gösterilmesini örnekler.
+    Demonstrates displaying a loaded image in an OpenCV window.
     """
 
     image_path = Path(

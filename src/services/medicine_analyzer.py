@@ -17,7 +17,7 @@ BOX_ERROR_MESSAGE = "Bu ilaç kutusu analiz edilemedi."
 @dataclass
 class MedicineAnalysisResult:
     """
-    analyze_medicine_box() çıktısı — tek kutu (geriye dönük uyumluluk).
+    Output of analyze_medicine_box() for a single box, kept for backward compatibility.
     """
 
     success: bool
@@ -43,7 +43,7 @@ class MedicineAnalysisResult:
 
 @dataclass
 class PipelineTiming:
-    """Analyze pipeline aşama süreleri (ms)."""
+    """Analyze pipeline stage timings in milliseconds."""
 
     yolo_ms: float = 0.0
     ocr_ms: float = 0.0
@@ -57,7 +57,7 @@ class PipelineTiming:
 
 @dataclass
 class BoxAnalysisResult:
-    """Tek bir ilaç kutusu için analiz sonucu."""
+    """Analysis result for a single medicine box."""
 
     box_index: int
     bounding_box: BoundingBox
@@ -83,7 +83,7 @@ class BoxAnalysisResult:
 
 @dataclass
 class MultiMedicineAnalysisResult:
-    """Fotoğraftaki tüm ilaç kutuları için analiz sonucu."""
+    """Analysis result for all medicine boxes in a photo."""
 
     success: bool
     image_path: str
@@ -118,7 +118,7 @@ def build_analysis_result(
     ranked_matches: list[MatchRecord],
     medicines_compared: int,
 ) -> MedicineAnalysisResult:
-    """Eşleştirme sonuçlarından MedicineAnalysisResult oluşturur."""
+    """Build MedicineAnalysisResult from matching results."""
     if not ranked_matches:
         return MedicineAnalysisResult(
             success=False,
@@ -172,7 +172,7 @@ def _box_result_to_single_result(
     medicines_compared: int,
     ocr_candidates: list[str] | None = None,
 ) -> MedicineAnalysisResult:
-    """Tek kutu sonucunu MedicineAnalysisResult'a dönüştürür."""
+    """Convert a single box result to MedicineAnalysisResult."""
     if box_result.status == "error":
         return MedicineAnalysisResult(
             success=False,
@@ -212,9 +212,9 @@ def analyze_medicine_boxes(
     save_debug_outputs: bool = False,
 ) -> MultiMedicineAnalysisResult:
     """
-    Fotoğraftaki tüm ilaç kutularını tespit eder, OCR ve eşleştirme yapar.
+    Detect all medicine boxes in the photo, then run OCR and matching.
 
-    FastAPI aşamasında kullanılacak ana fonksiyondur.
+    This is the main function used by the FastAPI layer.
     """
     from src.services.pipeline_manager import PipelineManager
 
@@ -251,9 +251,9 @@ def analyze_medicine_box(
     save_debug_outputs: bool = False,
 ) -> MedicineAnalysisResult:
     """
-    Tek kutulu analiz — en yüksek confidence'lı kutuyu işler.
+    Single-box analysis that processes the highest-confidence box.
 
-    Geriye dönük uyumluluk için korunmuştur.
+    Kept for backward compatibility.
     """
     multi_result = analyze_medicine_boxes(
         image_path=image_path,

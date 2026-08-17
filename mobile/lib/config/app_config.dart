@@ -1,11 +1,11 @@
-/// Uygulama sabitleri ve FastAPI baglanti ayarlari.
+/// Application constants and FastAPI connection settings.
 class AppConfig {
   AppConfig._();
 
   static const String appName = 'Yolocilin';
 
-  /// Android emulator icin host makine localhost adresi.
-  /// Fiziksel cihazda gelistirme makinesinin LAN IP'si ile override edilebilir.
+  /// Host-machine localhost address for the Android emulator.
+  /// Can be overridden with the development machine's LAN IP on a physical device.
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'http://10.0.2.2:8000',
@@ -23,7 +23,7 @@ class AppConfig {
 
   static const String healthEndpoint = '/health';
 
-  /// CPU uzerinde OCR (fast mod, ~4 varyant + erken cikis) dakikalarca surebilir.
+  /// CPU OCR (fast mode, ~4 variants plus early exit) can take several minutes.
   static const Duration analyzeTimeout = Duration(seconds: 300);
 
   static const Duration explainTimeout = Duration(seconds: 30);

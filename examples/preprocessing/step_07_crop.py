@@ -22,7 +22,7 @@ from src.preprocessing.geometric_operations import (
 
 def main() -> None:
     """
-    Crop (görüntü kırpma) işlemini örnekler.
+    Demonstrates cropping an image region.
     """
 
     image_path = Path(
@@ -33,21 +33,21 @@ def main() -> None:
         "results/preprocessing/medicine_sample_crop.jpg"
     )
 
-    # Görüntüyü oku.
+    # Read the image.
     image = read_image(image_path)
 
     print("\n===== CROP INFORMATION =====")
     print(f"Orijinal Shape : {image.shape}")
 
     # -------------------------------------------------
-    # Crop yapılacak alan
+    # Area to crop
     # -------------------------------------------------
     x = 700
     y = 405
     width = 2350
     height = 1020
 
-    # Crop işlemini uygula.
+    # Apply the crop operation.
     cropped_image = crop_image(
         image=image,
         x=x,
@@ -58,7 +58,7 @@ def main() -> None:
 
     print(f"Kırpılmış Shape : {cropped_image.shape}")
 
-    # Crop sonucunu kaydet.
+    # Save the crop result.
     save_image(
         cropped_image,
         output_path,
@@ -67,7 +67,7 @@ def main() -> None:
     print(f"\nGörüntü kaydedildi: {output_path}")
 
     # -------------------------------------------------
-    # Crop alanını orijinal görüntü üzerinde göster.
+    # Show the crop area on the original image.
     # -------------------------------------------------
 
     preview_image = image.copy()
@@ -80,13 +80,13 @@ def main() -> None:
         thickness=10,
     )
 
-    # Büyük görüntüyü ekrana sığdırmak için küçült.
+    # Shrink the large image to fit on screen.
     preview_image = resize_image(
         preview_image,
         width=800,
     )
 
-    # Crop sonucunu da ekrana sığdır.
+    # Shrink the crop result to fit on screen as well.
     cropped_preview = resize_image(
         cropped_image,
         width=800,

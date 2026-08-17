@@ -1,4 +1,6 @@
-"""Gemini baglanti teshisi — API key'i yazdirmaz."""
+"""
+Gemini connection diagnostics without printing the API key.
+"""
 
 from __future__ import annotations
 

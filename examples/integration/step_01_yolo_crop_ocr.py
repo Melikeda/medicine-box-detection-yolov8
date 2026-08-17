@@ -47,7 +47,7 @@ def print_separator(
     separator_length: int = 60,
 ) -> None:
     """
-    Terminalde başlık ve ayırıcı çizgi gösterir.
+    Shows a title and separator line in the terminal.
     """
     print(f"\n{title}")
     print("-" * separator_length)
@@ -55,7 +55,7 @@ def print_separator(
 
 def validate_paths() -> None:
     """
-    Model ve görsel yollarının varlığını kontrol eder.
+    Validates that the model and image paths exist.
     """
     if not MODEL_PATH.exists():
         raise FileNotFoundError(
@@ -82,16 +82,16 @@ def crop_best_detection(
     result: Results,
 ) -> tuple[np.ndarray, float] | None:
     """
-    YOLO sonucundaki en yüksek güven skoruna sahip
-    bounding box'ı seçer ve görüntüyü kırpar.
+    Selects the bounding box with the highest confidence score
+    from the YOLO result and crops the image.
 
     Returns:
         (
-            kırpılmış görüntü,
-            YOLO güven skoru
+            cropped image,
+            YOLO confidence score
         )
 
-        Tespit bulunamazsa None döndürür.
+        Returns None when no detection is found.
     """
     if result.orig_img is None:
         return None
@@ -201,7 +201,7 @@ def save_image(
     output_path: Path,
 ) -> Path:
     """
-    Görüntüyü belirtilen dosya yoluna kaydeder.
+    Saves the image to the specified file path.
     """
     if image.size == 0:
         raise ValueError(
@@ -230,8 +230,8 @@ def print_variant_results(
     pipeline_result: OCRPipelineResult,
 ) -> None:
     """
-    Her preprocessing varyantının ham EasyOCR
-    sonuçlarını terminalde gösterir.
+    Displays raw EasyOCR results for each
+    preprocessing variant in the terminal.
     """
     print_separator(
         "Varyant Bazlı OCR Sonuçları"
@@ -267,8 +267,8 @@ def print_candidates(
     pipeline_result: OCRPipelineResult,
 ) -> None:
     """
-    Çoklu preprocessing sonucunda elde edilen
-    temizlenmiş OCR adaylarını gösterir.
+    Displays cleaned OCR candidates obtained
+    from multi-preprocessing results.
     """
     print_separator(
         "Birleştirilmiş OCR Adayları"
@@ -303,7 +303,7 @@ def print_saved_files(
     pipeline_result: OCRPipelineResult,
 ) -> None:
     """
-    Pipeline sırasında kaydedilen dosyaları gösterir.
+    Displays files saved during the pipeline.
     """
     print_separator(
         "Kaydedilen Dosyalar"
@@ -324,18 +324,18 @@ def print_saved_files(
 
 def main() -> None:
     """
-    YOLO crop ve çoklu OCR entegrasyonunu çalıştırır.
+    Runs the YOLO crop and multi-OCR integration.
 
-    İşlem sırası:
-    1. Model ve görsel yollarını kontrol eder.
-    2. YOLO ile ilaç kutusunu tespit eder.
-    3. En yüksek güvenli bounding box'ı seçer.
-    4. İlaç kutusunu kırpar.
-    5. Crop görüntüsünü OCR pipeline'a gönderir.
-    6. Dört preprocessing varyantı oluşturur.
-    7. Her varyantta OCR çalıştırır.
-    8. Komşu OCR parçalarını birleştirir.
-    9. Oluşturulan adayları terminalde gösterir.
+    Processing order:
+    1. Validate model and image paths.
+    2. Detect the medicine box with YOLO.
+    3. Select the highest-confidence bounding box.
+    4. Crop the medicine box.
+    5. Send the crop image to the OCR pipeline.
+    6. Create four preprocessing variants.
+    7. Run OCR on each variant.
+    8. Merge neighboring OCR fragments.
+    9. Display generated candidates in the terminal.
     """
     validate_paths()
 

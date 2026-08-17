@@ -1,4 +1,4 @@
-"""SKRS marka eslesmesi olmayan populer OTC ilaclar ve ek TITCK markalari."""
+"""Popular OTC medicines without SKRS brand matches and additional TITCK brands."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from scripts.titck.medicine_mapper import (
     score_titck_row,
 )
 
-# TITCK SKRS listesinde marka adiyla bulunmayan raf ilaclari (prospektus/OTC).
+# Shelf medicines not found by brand name in the TITCK SKRS list (leaflet/OTC).
 POPULAR_MANUAL_ROWS: list[dict[str, str]] = [
     {
         "medicine_name": "Mucosolvan",
@@ -135,7 +135,7 @@ POPULAR_MANUAL_ROWS: list[dict[str, str]] = [
     },
 ]
 
-# SKRS'den tek en iyi urun secilecek markalar.
+# Brands for which the single best SKRS product should be selected.
 TITCK_SINGLE_BRAND_QUERIES: list[tuple[str, str]] = [
     ("Advil", "Ağrı Kesici"),
     ("Dolgit", "Kas ve Eklem"),
@@ -224,7 +224,7 @@ def append_popular_manual_rows(
     *,
     start_index: int,
 ) -> list[dict[str, str]]:
-    """Mevcut CSV'ye populer manual + secili TITCK satirlarini ekler."""
+    """Appends popular manual rows and selected TITCK rows to the current CSV."""
     used = _existing_keys(rows)
     appended: list[dict[str, str]] = []
     next_index = start_index

@@ -1,4 +1,4 @@
-"""Türkçe Düzce Üniversitesi CE499 staj raporu (Word)."""
+"""Turkish Düzce University CE499 internship report (Word)."""
 
 from __future__ import annotations
 

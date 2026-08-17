@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-/// Yolocilin temel paleti: koyu yeşil + açık pastel yeşil.
+/// Yolocilin core palette: dark green plus light pastel green.
 ///
-/// Not: Arka plan kapsülleri ve küçük kapsül dekorları kendi
-/// renklerini [CapsulePalette] içinde tutar; buradaki renkler
-/// uygulama chrome'u (buton, nav, kart, metin) içindir.
+/// Note: background capsules and small capsule decorations keep their
+/// colors in [CapsulePalette]; the colors here are used for
+/// application chrome such as buttons, navigation, cards, and text.
 class AppColors {
   AppColors._();
 
-  /// Temel çift.
+  /// Base pair.
   static const Color darkGreen = Color(0xFF1B4332);
   static const Color pastelGreen = Color(0xFFE8F5EE);
 
@@ -16,7 +16,7 @@ class AppColors {
   static const Color surface = Colors.white;
   static const Color primary = darkGreen;
 
-  /// Buton / vurgu (koyu yeşilin bir ton açığı).
+  /// Button/accent color, one shade lighter than dark green.
   static const Color teal = Color(0xFF2D6A4F);
   static const Color tealDark = darkGreen;
   static const Color accent = Color(0xFF40916C);

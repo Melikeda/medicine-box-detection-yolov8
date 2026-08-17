@@ -12,7 +12,7 @@ class Base(DeclarativeBase):
 
 
 class Medicine(Base):
-    """İlaç kaydı — CSV alanlarıyla birebir uyumlu."""
+    """Medicine record aligned one-to-one with the CSV fields."""
 
     __tablename__ = "medicines"
 
@@ -43,7 +43,7 @@ class Medicine(Base):
     )
 
     def to_dict(self) -> dict[str, str]:
-        """RapidFuzz / API için sözlük formuna çevirir."""
+        """Convert the record to dictionary form for RapidFuzz and the API."""
         return {
             "medicine_id": self.medicine_id,
             "medicine_name": self.medicine_name,
@@ -56,7 +56,7 @@ class Medicine(Base):
 
 
 class MedicineBarcode(Base):
-    """TİTCK / paket barkodu → ilaç kaydı (bir ilacın birden fazla kodu olabilir)."""
+    """TITCK/package barcode to medicine record; one medicine may have multiple codes."""
 
     __tablename__ = "medicine_barcodes"
 
@@ -72,7 +72,7 @@ class MedicineBarcode(Base):
 
 
 class Scan(Base):
-    """Sunucu taraflı tarama geçmişi kaydı (auth yok — global liste)."""
+    """Server-side scan history record; no auth, stored as a global list."""
 
     __tablename__ = "scans"
 

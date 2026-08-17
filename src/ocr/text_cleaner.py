@@ -6,12 +6,12 @@ def clean_text(
     text: str,
 ) -> str:
     """
-    OCR tarafından bulunan tek bir metni temizler.
+    Clean a single text value found by OCR.
 
-    Yapılan işlemler:
-    - Satır sonlarını boşluğa çevirir.
-    - Birden fazla boşluğu teke indirir.
-    - Metnin başındaki ve sonundaki boşlukları kaldırır.
+    Operations performed:
+    - Convert line breaks to spaces.
+    - Collapse repeated spaces into one.
+    - Remove leading and trailing spaces.
     """
     text = text.replace("\n", " ")
     text = text.replace("\r", " ")
@@ -30,10 +30,9 @@ def extract_texts(
     minimum_confidence: float = 0.0,
 ) -> list[str]:
     """
-    EasyOCR sonuçlarından yalnızca temizlenmiş metinleri çıkarır.
+    Extract only cleaned text values from EasyOCR results.
 
-    Güven skoru minimum_confidence değerinden düşük olan
-    sonuçlar listeye alınmaz.
+    Results with confidence below minimum_confidence are excluded from the list.
     """
     extracted_texts: list[str] = []
 
@@ -56,7 +55,7 @@ def combine_texts(
     separator: str = " ",
 ) -> str:
     """
-    Metin listesini tek bir metin hâline getirir.
+    Combine a list of text values into a single text value.
     """
     cleaned_texts = [
         clean_text(text)

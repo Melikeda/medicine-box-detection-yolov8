@@ -1,7 +1,7 @@
-"""Ayni marka ailesindeki SKU'lari OCR kanitina gore ayirt eder.
+"""Distinguish SKUs in the same brand family using OCR evidence.
 
-Parol vs Parol Plus, Majezik vs Gargara, Dolorex vs Jel gibi
-beraberliklerde uzun isim tercihi yerine form/varyant kaniti kullanir.
+Uses form and variant evidence instead of preferring longer names in ties,
+such as Parol vs Parol Plus, Majezik vs Gargara, and Dolorex vs Jel.
 """
 
 from __future__ import annotations
@@ -11,10 +11,10 @@ from src.matching.medicine_matcher import (
     normalize_text,
 )
 
-# (medicine, score, ocr_text) — candidate_processor.MatchRecord ile ayni sekil
+# Same shape as candidate_processor.MatchRecord: (medicine, score, ocr_text).
 MatchRecord = tuple[dict[str, str], float, str]
 
-# Urun adi / OCR'da varyant veya form ayirici token'lar.
+# Variant or form discriminator tokens in the product name or OCR text.
 VARIANT_FORM_TOKENS = frozenset(
     {
         "plus",
@@ -73,7 +73,7 @@ def _token_set(text: str) -> set[str]:
 
 
 def join_evidence_text(evidence_texts: list[str]) -> str:
-    """Ham OCR adaylarini tek kanit metninde birlestirir."""
+    """Combine raw OCR candidates into one evidence string."""
     parts = [
         normalize_text(text)
         for text in evidence_texts
@@ -83,7 +83,7 @@ def join_evidence_text(evidence_texts: list[str]) -> str:
 
 
 def medicine_variant_tokens(medicine: dict[str, str]) -> set[str]:
-    """medicine_name + form icindeki ayirici token'lar."""
+    """Discriminator tokens from medicine_name and form."""
     name = medicine.get("medicine_name", "") or ""
     form = medicine.get("form", "") or ""
     brand = medicine.get("brand_name", "") or ""
@@ -112,7 +112,7 @@ def evidence_alignment_boost(
     evidence_text: str,
 ) -> float:
     """
-    Form/varyant kanitina gore -20..+20 arasi skor ayari.
+    Score adjustment from -20 to +20 based on form or variant evidence.
 
     Pozitif: OCR kaniti bu SKU'yu destekliyor.
     Negatif: OCR kaniti baska bir varyanti isaret ediyor.
@@ -138,7 +138,7 @@ def evidence_alignment_boost(
     else:
         # Temel SKU: OCR'da baska varyant yoksa tercih et.
         if evidence_tokens & VARIANT_FORM_TOKENS:
-            # Ornek: OCR'da "plus" var ama bu Parol (base) — cezalandir.
+    # Example: OCR contains "plus" but this is base Parol, so penalize it.
             if evidence_tokens & (PLUS_TOKENS | DUO_TOKENS | GARGLE_TOKENS | GEL_TOKENS):
                 if not (
                     (evidence_tokens & GEL_TOKENS and catalog_tokens & GEL_TOKENS)
@@ -208,10 +208,10 @@ def disambiguate_brand_family_matches(
     score_epsilon: float = SCORE_EPSILON,
 ) -> list[MatchRecord]:
     """
-    Ayni marka ailesinde RapidFuzz beraberligini OCR kaniti ile cozer.
+    Resolve RapidFuzz ties within the same brand family using OCR evidence.
 
-    ranked_matches icinde olmasa bile ayni brand_name altindaki
-    yakin skorlu SKU'lari yeniden degerlendirir.
+    Re-evaluate close-scoring SKUs under the same brand_name even when they
+    are not already present in ranked_matches.
     """
     if not ranked_matches:
         return ranked_matches

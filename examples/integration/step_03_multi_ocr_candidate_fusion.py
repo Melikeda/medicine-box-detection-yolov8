@@ -34,7 +34,7 @@ def print_separator(
     separator_length: int = 70,
 ) -> None:
     """
-    Terminalde başlık ve ayırıcı çizgi gösterir.
+    Shows a title and separator line in the terminal.
     """
     print(f"\n{title}")
     print("-" * separator_length)
@@ -42,7 +42,7 @@ def print_separator(
 
 def validate_variant_paths() -> list[Path]:
     """
-    Seçilen OCR varyantlarının mevcut olduğunu kontrol eder.
+    Checks that the selected OCR variants exist.
     """
     variant_paths: list[Path] = []
 
@@ -65,7 +65,7 @@ def load_image(
     image_path: Path,
 ) -> np.ndarray:
     """
-    Görüntüyü OpenCV ile okur.
+    Reads the image with OpenCV.
     """
     image = cv2.imread(
         str(image_path),
@@ -85,7 +85,7 @@ def run_ocr(
     image: np.ndarray,
 ) -> list[Any]:
     """
-    Görüntü üzerinde EasyOCR çalıştırır.
+    Runs EasyOCR on the image.
     """
     return reader.readtext(
         image,
@@ -98,14 +98,14 @@ def normalize_candidate(
     text: str,
 ) -> str:
     """
-    OCR adayını karşılaştırmaya uygun hâle getirir.
+    Converts an OCR candidate into a comparison-friendly form.
 
-    İşlemler:
-    - Metni temizler.
-    - Küçük harfe çevirir.
-    - Köşeli parantez gibi OCR artıklarını kaldırır.
-    - Tireleri boşluğa dönüştürür.
-    - Fazla boşlukları temizler.
+    Steps:
+    - Cleans the text.
+    - Converts it to lowercase.
+    - Removes OCR artifacts such as brackets.
+    - Converts hyphens to spaces.
+    - Removes extra whitespace.
     """
     normalized_text = clean_text(
         text
@@ -144,8 +144,7 @@ def extract_candidates(
     minimum_confidence: float,
 ) -> list[tuple[str, float]]:
     """
-    EasyOCR sonuçlarından metin ve güven
-    skoru çiftlerini çıkarır.
+    Extracts text and confidence score pairs from EasyOCR results.
     """
     candidates: list[tuple[str, float]] = []
 
@@ -183,10 +182,9 @@ def create_adjacent_candidates(
     candidates: list[tuple[str, float]],
 ) -> list[tuple[str, float]]:
     """
-    Yan yana bulunan OCR parçalarını birleştirerek
-    yeni adaylar oluşturur.
+    Creates new candidates by combining adjacent OCR fragments.
 
-    Örnek:
+    Example:
         A + ferin → aferin
     """
     combined_candidates: list[
@@ -228,8 +226,7 @@ def remove_duplicate_candidates(
     candidates: list[tuple[str, float]],
 ) -> list[tuple[str, float]]:
     """
-    Aynı metne sahip adaylardan en yüksek güvenli
-    olanı korur.
+    Keeps the highest-confidence candidate for each unique text.
     """
     best_candidates: dict[str, float] = {}
 
@@ -255,11 +252,11 @@ def is_possible_medicine_name(
     text: str,
 ) -> bool:
     """
-    OCR adayının ilaç adı olabilecek genel yapıda
-    olup olmadığını kontrol eder.
+    Checks whether an OCR candidate has the general structure
+    of a possible medicine name.
 
-    Bu fonksiyon yalnızca çok kısa, tamamen sayısal
-    veya doz bilgisine benzeyen adayları eler.
+    This function filters only candidates that are very short,
+    fully numeric, or similar to dosage information.
     """
     compact_text = text.replace(
         " ",
@@ -297,7 +294,7 @@ def print_variant_results(
     candidates: list[tuple[str, float]],
 ) -> None:
     """
-    Bir varyanttan çıkarılan OCR adaylarını gösterir.
+    Shows OCR candidates extracted from one variant.
     """
     print_separator(
         f"Varyant: {variant_name}"
@@ -318,8 +315,8 @@ def print_variant_results(
 
 def main() -> None:
     """
-    Seçilen preprocessing varyantlarının OCR
-    sonuçlarını birleştirerek ortak aday havuzu üretir.
+    Combines OCR results from selected preprocessing variants
+    into a shared candidate pool.
     """
     variant_paths = validate_variant_paths()
 

@@ -16,7 +16,7 @@ _database_path: Path | None = None
 
 
 def get_sqlite_url(database_path: Path) -> str:
-    """SQLite connection URL üretir."""
+    """Build a SQLite connection URL."""
     return f"sqlite:///{database_path.resolve().as_posix()}"
 
 
@@ -26,10 +26,10 @@ def init_engine(
     echo: bool = False,
 ) -> Engine:
     """
-    SQLite engine ve session factory oluşturur.
+    Create the SQLite engine and session factory.
 
-    Aynı veritabanı yolu için mevcut engine yeniden kullanılır.
-    Veritabanı dosyasının bulunduğu klasör yoksa oluşturulur.
+    Reuse the existing engine for the same database path.
+    Create the parent directory for the database file when it does not exist.
     """
     global _engine, _SessionLocal, _database_path
 
@@ -69,7 +69,7 @@ def init_engine(
 
 
 def create_tables(engine: Engine | None = None) -> None:
-    """Medicine tablosunu oluşturur (yoksa)."""
+    """Create the Medicine table if it does not exist."""
     active_engine = engine or _engine
 
     if active_engine is None:
@@ -105,7 +105,7 @@ def session_scope() -> Generator[Session, None, None]:
 
 
 def reset_engine() -> None:
-    """Test veya yeniden yapılandırma için engine'i sıfırlar."""
+    """Reset the engine for tests or reconfiguration."""
     global _engine, _SessionLocal, _database_path
 
     if _engine is not None:

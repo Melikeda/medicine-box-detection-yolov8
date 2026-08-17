@@ -25,7 +25,7 @@ from src.preprocessing.geometric_operations import (
 
 def main() -> None:
     """
-    Median Blur kullanımını örnekler.
+    Demonstrates Median Blur usage.
     """
 
     image_path = Path(
@@ -36,15 +36,15 @@ def main() -> None:
         "results/preprocessing/medicine_sample_median_blur.jpg"
     )
 
-    # Görüntüyü oku.
+    # Read the image.
     image = read_image(image_path)
 
-    # Önce grayscale'e dönüştür.
+    # Convert to grayscale first.
     grayscale_image = convert_to_grayscale(
         image
     )
 
-    # Median Blur uygula.
+    # Apply Median Blur.
     blurred_image = apply_median_blur(
         grayscale_image,
         kernel_size=5,
@@ -71,7 +71,7 @@ def main() -> None:
         f"{output_path}"
     )
 
-    # Büyük görüntüleri yalnızca gösterim için küçült.
+    # Shrink large images for display only.
     grayscale_preview = resize_image(
         grayscale_image,
         width=800,

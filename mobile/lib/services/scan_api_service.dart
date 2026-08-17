@@ -94,7 +94,7 @@ class ScanApiService {
         }
       }
     } catch (_) {
-      // ignore parse issues — upload itself succeeded
+      // Ignore parse issues; the upload itself succeeded.
     }
     return null;
   }

@@ -1,4 +1,4 @@
-"""Temel HTTP güvenlik başlıkları."""
+"""Basic HTTP security headers."""
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request

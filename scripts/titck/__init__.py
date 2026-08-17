@@ -1,1 +1,1 @@
-"""TİTCK SKRS veri kaynağı yardımcıları."""
+"""Helpers for the TITCK SKRS data source."""

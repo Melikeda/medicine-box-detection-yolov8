@@ -1,4 +1,6 @@
-"""TİTCK eşleme ve CSV zenginleştirme birim testleri."""
+"""
+TITCK matching and CSV enrichment unit tests.
+"""
 
 from __future__ import annotations
 

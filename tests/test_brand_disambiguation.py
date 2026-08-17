@@ -1,4 +1,4 @@
-"""Marka varyanti disambiguation + failure_reason siniflandirmasi."""
+"""Brand-variant disambiguation and failure_reason classification."""
 
 from src.matching.brand_disambiguation import (
     disambiguate_brand_family_matches,

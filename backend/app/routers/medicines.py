@@ -26,7 +26,7 @@ async def list_medicines(
     offset: int = Query(default=0, ge=0),
     service: MedicineQueryService = Depends(get_medicine_service),
 ) -> MedicineListResponseSchema:
-    """İlaç listesini döndürür (SQLite)."""
+    """Return the medicine list from SQLite."""
     medicines, total = service.list_medicines(
         search=search,
         category=category,
@@ -53,7 +53,7 @@ async def list_medicines(
 async def get_medicine_categories(
     service: MedicineQueryService = Depends(get_medicine_service),
 ) -> MedicineCategoriesResponseSchema:
-    """Benzersiz ilaç kategorilerini döndürür."""
+    """Return unique medicine categories."""
     categories = service.list_categories()
     return MedicineCategoriesResponseSchema(
         count=len(categories),
@@ -70,7 +70,7 @@ async def get_medicine(
     medicine_id: str,
     service: MedicineQueryService = Depends(get_medicine_service),
 ) -> MedicineDetailResponseSchema:
-    """medicine_id ile tek ilaç kaydı döndürür."""
+    """Return a single medicine record by medicine_id."""
     medicine = service.get_medicine(medicine_id)
 
     if medicine is None:

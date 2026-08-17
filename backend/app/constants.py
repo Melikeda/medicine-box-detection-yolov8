@@ -1,4 +1,4 @@
-"""API sabitleri."""
+"""API constants."""
 
 MEDICAL_DISCLAIMER = (
     "Bu uygulama tıbbi tavsiye vermez. "

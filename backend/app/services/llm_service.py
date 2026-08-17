@@ -21,9 +21,9 @@ VERIFY_PLACEHOLDER = "VERIFY_FROM_OFFICIAL_LEAFLET"
 
 FALLBACK_SUMMARY = "Bu ilaç hakkında yeterli açıklayıcı bilgi bulunamadı."
 
-# Katalog kategorilerine dayalı genel kullanım alanları.
-# İlaç bazlı resmi endikasyon alanı DB'de yok; bu yüzden yalnızca kategori
-# taksonomisinden türetilmiş güvenli ifadeler LLM context'ine verilir.
+# General usage areas based on catalog categories.
+# The DB does not store official per-medicine indications, so only safe
+# statements derived from the category taxonomy are sent to the LLM context.
 CATEGORY_USAGE_HINTS: dict[str, list[str]] = {
     "ağrı kesici": [
         "Hafif veya orta şiddette bazı ağrı durumları",
@@ -175,7 +175,7 @@ Yalnızca geçerli JSON döndür. Markdown, kod bloğu veya ek metin yazma.
 
 @dataclass
 class MedicineExplanation:
-    """Yapılandırılmış ilaç açıklaması."""
+    """Structured medicine explanation."""
 
     summary: str
     usage: str = ""
@@ -189,7 +189,7 @@ class MedicineExplanation:
 
     @property
     def explanation_text(self) -> str:
-        """Geriye uyumlu düz metin (summary + usage)."""
+        """Backward-compatible plain text (summary + usage)."""
         parts = [part.strip() for part in (self.summary, self.usage) if part.strip()]
         return " ".join(parts) if parts else FALLBACK_SUMMARY
 
@@ -214,7 +214,7 @@ class MedicineExplanation:
         try:
             data = json.loads(payload)
         except json.JSONDecodeError:
-            # Eski cache: düz metin açıklama
+            # Legacy cache: plain-text explanation.
             text = payload.strip()
             if not text:
                 return None
@@ -277,7 +277,7 @@ def get_allowed_warnings(category: str | None) -> list[str]:
 
 
 def build_medicine_context(medicine: dict[str, str]) -> dict[str, Any]:
-    """LLM'e gönderilecek yapılandırılmış ilaç context'i."""
+    """Structured medicine context sent to the LLM."""
     category = _format_field(medicine.get("category"))
     return {
         "name": _format_field(medicine.get("medicine_name")),
@@ -359,7 +359,7 @@ def normalize_explanation_payload(
     *,
     medicine: dict[str, str] | None = None,
 ) -> MedicineExplanation:
-    """LLM/cache JSON'unu doğrular ve eksik alanlar için fallback uygular."""
+    """Validate LLM/cache JSON and apply fallbacks for missing fields."""
     summary = str(data.get("summary") or "").strip()
     usage = str(data.get("usage") or "").strip()
     common_uses = _as_string_list(
@@ -391,7 +391,7 @@ def normalize_explanation_payload(
     if not warnings:
         warnings = get_allowed_warnings(category or (medicine or {}).get("category"))
 
-    # Uzunluk sınırları
+    # Length limits.
     common_uses = common_uses[:5]
     warnings = warnings[:5]
 
@@ -413,12 +413,12 @@ def parse_llm_explanation(
     *,
     medicine: dict[str, str],
 ) -> MedicineExplanation:
-    """LLM metnini güvenli şekilde MedicineExplanation'a çevirir."""
+    """Safely convert LLM text into a MedicineExplanation."""
     data = _extract_json_object(raw_text)
     if data is not None:
         return normalize_explanation_payload(data, medicine=medicine)
 
-    # Düz metin fallback — uygulama çökmez
+    # Plain-text fallback keeps the app from crashing.
     plain = re.sub(r"\s+", " ", raw_text).strip()
     return MedicineExplanation(
         summary=plain or FALLBACK_SUMMARY,
@@ -505,7 +505,7 @@ def _is_retryable_gemini_error(exc: Exception) -> bool:
 
 
 class MockMedicineExplainer:
-    """API anahtarı olmadan geliştirme ve test için deterministik açıklama."""
+    """Deterministic explanation for development and tests without an API key."""
 
     def explain(
         self,
@@ -518,7 +518,7 @@ class MockMedicineExplainer:
 
 
 class GeminiMedicineExplainer:
-    """Google Gemini API ile ilaç açıklaması üretir; model fallback destekler."""
+    """Generate medicine explanations with Google Gemini and model fallback."""
 
     def __init__(
         self,
@@ -611,7 +611,7 @@ class GeminiMedicineExplainer:
         )
 
     def _generate(self, client: Any, *, model: str, contents: str) -> Any:
-        """JSON çıktı tercih eder; desteklenmezse düz çağrıya düşer."""
+        """Prefer JSON output and fall back to a plain request if unsupported."""
         try:
             from google.genai import types
         except ImportError:
@@ -626,7 +626,7 @@ class GeminiMedicineExplainer:
                 ),
             )
         except Exception as exc:
-            # Bazı modeller JSON mime type desteklemeyebilir
+            # Some models may not support the JSON MIME type.
             if "response_mime_type" in str(exc) or "INVALID_ARGUMENT" in str(exc):
                 logger.info(
                     "JSON mime type unsupported for %s; retrying plain text",
@@ -640,7 +640,7 @@ class GeminiMedicineExplainer:
 
 
 class LlmExplanationService:
-    """İlaç açıklaması servisi; cache ve sağlayıcı seçimi."""
+    """Medicine explanation service with cache and provider selection."""
 
     _instance: LlmExplanationService | None = None
 
@@ -686,14 +686,14 @@ class LlmExplanationService:
 
     @classmethod
     def get_instance(cls, settings: ApiSettings) -> LlmExplanationService:
-        """Aynı process içinde tek LLM servis örneği döndürür."""
+        """Return a single LLM service instance within the same process."""
         if cls._instance is None:
             cls._instance = cls.from_settings(settings)
         return cls._instance
 
     @classmethod
     def reset_instance(cls) -> None:
-        """Test veya yeniden yapılandırma için servis singleton'ını sıfırlar."""
+        """Reset the service singleton for tests or reconfiguration."""
         cls._instance = None
 
     def explain_medicine(

@@ -8,7 +8,7 @@ from ultralytics.engine.results import Results
 
 @dataclass(frozen=True)
 class BoundingBox:
-    """YOLO bounding box koordinatları (piksel)."""
+    """YOLO bounding box coordinates in pixels."""
 
     x1: int
     y1: int
@@ -26,7 +26,7 @@ class BoundingBox:
 
 @dataclass
 class DetectedBox:
-    """Tek bir YOLO tespiti ve kırpılmış görüntü."""
+    """A single YOLO detection and its cropped image."""
 
     cropped_image: np.ndarray
     confidence: float
@@ -56,9 +56,9 @@ def detect_all_boxes(
     result: Results,
 ) -> list[DetectedBox]:
     """
-    YOLO NMS sonucundaki tüm kutuları confidence'a göre sıralı döndürür.
+    Return all boxes from the YOLO NMS result sorted by confidence.
 
-    Yalnızca geçerli crop üretilebilen kutular listelenir.
+    Only boxes that can produce a valid crop are listed.
     """
     if result.orig_img is None:
         return []
@@ -116,9 +116,9 @@ def crop_best_detection(
     result: Results,
 ) -> tuple[np.ndarray, float] | None:
     """
-    En yüksek güven skoruna sahip tek kutuyu döndürür.
+    Return the single box with the highest confidence score.
 
-    Geriye dönük uyumluluk için korunmuştur.
+    Kept for backward compatibility.
     """
     detected_boxes = detect_all_boxes(result)
 

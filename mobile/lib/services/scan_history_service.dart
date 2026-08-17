@@ -62,7 +62,7 @@ class ScanHistoryService {
     );
   }
 
-  /// Analiz bittikten sonra arka planda cagirilir; await zorunlu degil.
+  /// Called in the background after analysis completes; awaiting is optional.
   Future<void> saveScan({
     required AnalyzeResponse response,
     String? imagePath,

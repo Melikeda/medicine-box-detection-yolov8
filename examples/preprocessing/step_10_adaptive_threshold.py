@@ -28,7 +28,7 @@ from src.preprocessing.threshold_operations import (
 
 def main() -> None:
     """
-    Binary threshold ve adaptive threshold sonuçlarını karşılaştırır.
+    Compares binary threshold and adaptive threshold results.
     """
 
     image_path = Path(
@@ -43,21 +43,21 @@ def main() -> None:
         "results/preprocessing/medicine_sample_adaptive_threshold.jpg"
     )
 
-    # Renkli görüntüyü oku.
+    # Read the color image.
     image = read_image(image_path)
 
-    # Threshold işlemleri tek kanallı görüntü beklediği için
-    # görüntüyü önce grayscale biçimine dönüştür.
+    # Threshold operations expect a single-channel image, so
+    # convert the image to grayscale first.
     grayscale_image = convert_to_grayscale(image)
 
-    # Tüm görüntü için tek bir eşik değeri kullan.
+    # Use one threshold value for the whole image.
     used_threshold, binary_threshold_image = apply_binary_threshold(
         grayscale_image=grayscale_image,
         threshold_value=127,
         max_value=255,
     )
 
-    # Her yerel bölge için farklı eşik değeri hesapla.
+    # Calculate a different threshold for each local region.
     adaptive_threshold_image = apply_adaptive_threshold(
         grayscale_image=grayscale_image,
         max_value=255,
@@ -82,7 +82,7 @@ def main() -> None:
         f"{np.unique(adaptive_threshold_image)}"
     )
 
-    # Sonuçları diske kaydet.
+    # Save the results to disk.
     save_image(
         binary_threshold_image,
         binary_output_path,
@@ -103,7 +103,7 @@ def main() -> None:
         f"{adaptive_output_path}"
     )
 
-    # Büyük görüntüleri yalnızca gösterim için küçült.
+    # Shrink large images for display only.
     grayscale_preview = resize_image(
         grayscale_image,
         width=800,

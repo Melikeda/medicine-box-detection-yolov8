@@ -60,7 +60,7 @@ class MedicineBoxResult {
 
   bool get isMatched => status == 'matched';
 
-  /// Kullaniciya gosterilecek aciklama (hint varsa onu tercih et).
+  /// User-facing message; prefer `hint` when present.
   String get userMessage {
     final tip = hint?.trim();
     if (tip != null && tip.isNotEmpty) {

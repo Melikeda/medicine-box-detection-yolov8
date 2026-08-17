@@ -1,4 +1,4 @@
-/// Backend `POST /analyze?mode=` degerleri (fast | accurate).
+/// Backend `POST /analyze?mode=` values (fast | accurate).
 enum OcrMode {
   fast('fast'),
   accurate('accurate');

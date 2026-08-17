@@ -21,7 +21,7 @@ def print_ocr_results(
     results: list,
 ) -> None:
     """
-    OCR sonuçlarını terminale düzenli şekilde yazdırır.
+    Prints OCR results to the terminal in a readable format.
     """
     print(f"\n{title}")
     print("-" * 60)
@@ -43,7 +43,7 @@ def apply_clahe(
     grayscale_image: np.ndarray,
 ) -> np.ndarray:
     """
-    Grayscale görüntünün yerel kontrastını CLAHE ile artırır.
+    Enhances local contrast in a grayscale image with CLAHE.
     """
     clahe = cv2.createCLAHE(
         clipLimit=2.0,
@@ -57,7 +57,7 @@ def apply_sharpening(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Görüntüdeki harf kenarlarını hafifçe keskinleştirir.
+    Slightly sharpens letter edges in the image.
     """
     sharpening_kernel = np.array(
         [

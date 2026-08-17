@@ -30,7 +30,7 @@ from src.preprocessing.threshold_operations import (
 
 def main():
     """
-    Closing işlemini örnekler.
+    Demonstrates the Closing operation.
     """
 
     image_path = Path(

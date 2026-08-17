@@ -28,7 +28,7 @@ def get_pipeline_manager(request: Request) -> PipelineManager:
 def get_medicine_service(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> MedicineQueryService:
-    """Paylaşılan ilaç sorgu servisini döndürür (tek DB engine init)."""
+    """Return the shared medicine query service with one DB engine init."""
     return MedicineQueryService.from_pipeline_config(
         settings.create_pipeline_config()
     )
@@ -37,7 +37,7 @@ def get_medicine_service(
 def get_scan_service(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> ScanQueryService:
-    """Paylaşılan sunucu tarama geçmişi servisini döndürür."""
+    """Return the shared server-side scan history service."""
     return ScanQueryService.from_pipeline_config(
         settings.create_pipeline_config(),
         max_entries=settings.scan_history_max_entries,
@@ -47,10 +47,10 @@ def get_scan_service(
 def get_llm_service(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> LlmExplanationService:
-    """Paylaşılan LLM servisini döndürür (tek cache singleton).
+    """Return the shared LLM service with a single cache singleton.
 
-    Gemini yapılandırılmamışsa 503 yerine katalog metni üretir; mobil
-    “İlaç hakkında” kartı kırmızı hata göstermez.
+    When Gemini is not configured, generate catalog text instead of a 503 so
+    the mobile "About medicine" card does not show a red error state.
     """
     if settings.llm_is_configured:
         return LlmExplanationService.get_instance(settings)

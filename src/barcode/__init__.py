@@ -1,4 +1,4 @@
-"""Barkod okuma ve katalog anahtarı normalizasyonu."""
+"""Barcode reading and catalog key normalization."""
 
 from src.barcode.decoder import (
     DecodedBarcode,

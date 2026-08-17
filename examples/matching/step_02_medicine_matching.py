@@ -18,8 +18,7 @@ def format_verified_value(
     value: str,
 ) -> str:
     """
-    Henüz doğrulanmamış CSV değerlerini
-    kullanıcı dostu biçimde gösterir.
+    Displays unverified CSV values in a user-friendly format.
     """
     if value == "VERIFY_FROM_OFFICIAL_LEAFLET":
         return "Bilgi henüz doğrulanmadı."
@@ -34,8 +33,8 @@ def print_medicine_result(
     matched_medicine_name: str | None,
 ) -> None:
     """
-    Eşleşen ilaç bilgilerini terminale
-    düzenli şekilde yazdırır.
+    Prints matched medicine details to the terminal
+    in a readable format.
     """
     active_ingredient = format_verified_value(
         medicine["active_ingredient"]

@@ -11,7 +11,7 @@ import '../widgets/language_toggle.dart';
 
 enum PickSource { camera, gallery }
 
-/// Kamera / galeri tarama sayfasi.
+/// Camera / gallery scan page.
 class ScanTab extends StatelessWidget {
   const ScanTab({
     super.key,

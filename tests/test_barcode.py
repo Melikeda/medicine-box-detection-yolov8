@@ -1,4 +1,6 @@
-"""Barkod normalizasyonu, çözme ve katalog eşlemesi testleri."""
+"""
+Barcode normalization, decoding, and catalog matching tests.
+"""
 
 from __future__ import annotations
 

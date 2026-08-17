@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/ocr_mode.dart';
 
-/// Kullanicinin OCR mod tercihini kalici saklar (varsayilan: fast).
+/// Persist the user's OCR mode preference (default: fast).
 class OcrModePreferences {
   OcrModePreferences({SharedPreferences? prefs}) : _prefs = prefs;
 

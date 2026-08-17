@@ -4,7 +4,7 @@ from threading import Lock
 
 
 class ExplanationCache:
-    """medicine_id + locale bazlı bellek içi açıklama önbelleği."""
+    """In-memory explanation cache keyed by medicine_id and locale."""
 
     def __init__(self) -> None:
         self._entries: dict[str, str] = {}
@@ -33,7 +33,7 @@ _shared_cache: ExplanationCache | None = None
 
 
 def get_shared_explanation_cache() -> ExplanationCache:
-    """Uygulama genelinde paylaşılan cache singleton'ı döndürür."""
+    """Return the application-wide shared cache singleton."""
     global _shared_cache
     if _shared_cache is None:
         _shared_cache = ExplanationCache()
@@ -41,7 +41,7 @@ def get_shared_explanation_cache() -> ExplanationCache:
 
 
 def reset_shared_explanation_cache() -> None:
-    """Test veya yeniden yapılandırma için paylaşılan cache'i sıfırlar."""
+    """Reset the shared cache for tests or reconfiguration."""
     global _shared_cache
     if _shared_cache is not None:
         _shared_cache.clear()

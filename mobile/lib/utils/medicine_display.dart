@@ -1,6 +1,6 @@
 import '../l10n/app_localizations.dart';
 
-/// Veritabani placeholder ve bos alanlari kullaniciya uygun metne cevirir.
+/// Map database placeholders and empty fields to user-facing text.
 class MedicineDisplay {
   MedicineDisplay._();
 
@@ -19,7 +19,7 @@ class MedicineDisplay {
   static bool shouldShowField(String? value, {required AppStrings strings}) =>
       formatField(value, strings: strings) != null;
 
-  /// Backend 1-tabanli `box_index` dondurur.
+  /// Backend returns a 1-based `box_index`.
   static String boxLabel(int boxIndex, {required AppStrings strings}) =>
       strings.boxLabelFor(boxIndex);
 }

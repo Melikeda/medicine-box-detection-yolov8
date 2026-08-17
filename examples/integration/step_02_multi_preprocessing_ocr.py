@@ -35,7 +35,7 @@ def print_separator(
     separator_length: int = 70,
 ) -> None:
     """
-    Terminalde başlık ve ayırıcı çizgi gösterir.
+    Displays a heading and separator line in the terminal.
     """
     print(f"\n{title}")
     print("-" * separator_length)
@@ -43,7 +43,7 @@ def print_separator(
 
 def validate_input_path() -> None:
     """
-    Girdi görselinin mevcut olup olmadığını kontrol eder.
+    Checks whether the input image exists.
     """
     if not INPUT_IMAGE_PATH.exists():
         raise FileNotFoundError(
@@ -57,7 +57,7 @@ def load_image(
     image_path: Path,
 ) -> np.ndarray:
     """
-    Görseli OpenCV ile okur.
+    Reads the image with OpenCV.
     """
     image = cv2.imread(
         str(image_path),
@@ -76,7 +76,7 @@ def convert_to_grayscale(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    BGR görüntüyü gri tonlamaya dönüştürür.
+    Converts a BGR image to grayscale.
     """
     return cv2.cvtColor(
         image,
@@ -90,10 +90,10 @@ def apply_clahe(
     tile_grid_size: tuple[int, int] = (8, 8),
 ) -> np.ndarray:
     """
-    Görüntünün yerel kontrastını artırır.
+    Increases local image contrast.
 
-    CLAHE, özellikle aydınlatmanın görüntünün farklı
-    bölgelerinde değiştiği durumlarda yararlıdır.
+    CLAHE is especially useful when lighting varies
+    across different image regions.
     """
     clahe = cv2.createCLAHE(
         clipLimit=clip_limit,
@@ -109,7 +109,7 @@ def apply_gaussian_blur(
     grayscale_image: np.ndarray,
 ) -> np.ndarray:
     """
-    Görüntüdeki küçük gürültüleri azaltır.
+    Reduces small noise in the image.
     """
     return cv2.GaussianBlur(
         grayscale_image,
@@ -122,8 +122,8 @@ def apply_otsu_threshold(
     grayscale_image: np.ndarray,
 ) -> np.ndarray:
     """
-    Otsu yöntemi ile otomatik eşik değeri belirleyerek
-    siyah-beyaz görüntü oluşturur.
+    Creates a black-and-white image by determining
+    an automatic threshold with Otsu's method.
     """
     blurred_image = apply_gaussian_blur(
         grayscale_image
@@ -144,8 +144,8 @@ def apply_adaptive_threshold(
     grayscale_image: np.ndarray,
 ) -> np.ndarray:
     """
-    Görüntünün farklı bölgeleri için farklı eşik değerleri
-    kullanarak siyah-beyaz görüntü oluşturur.
+    Creates a black-and-white image using different
+    threshold values for different image regions.
     """
     blurred_image = apply_gaussian_blur(
         grayscale_image
@@ -165,7 +165,7 @@ def apply_sharpening(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Kenarları ve yazıları daha belirgin hâle getirir.
+    Makes edges and text more prominent.
     """
     sharpening_kernel = np.array(
         [
@@ -187,8 +187,8 @@ def apply_unsharp_mask(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Görüntünün bulanık bir kopyasını kullanarak
-    detayları ve yazı kenarlarını güçlendirir.
+    Strengthens details and text edges by using
+    a blurred copy of the image.
     """
     blurred_image = cv2.GaussianBlur(
         image,
@@ -211,8 +211,8 @@ def create_preprocessing_variants(
     image: np.ndarray,
 ) -> dict[str, np.ndarray]:
     """
-    OCR ile test edilecek farklı görüntü
-    ön işleme varyantlarını oluşturur.
+    Creates different image preprocessing variants
+    to test with OCR.
     """
     grayscale_image = convert_to_grayscale(
         image
@@ -253,7 +253,7 @@ def save_variant(
     image: np.ndarray,
 ) -> Path:
     """
-    Ön işleme varyantını dosyaya kaydeder.
+    Saves the preprocessing variant to a file.
     """
     OUTPUT_DIRECTORY.mkdir(
         parents=True,
@@ -283,14 +283,12 @@ def run_easyocr(
     image: np.ndarray,
 ) -> list[Any]:
     """
-    Belirtilen görüntü üzerinde EasyOCR çalıştırır.
+    Runs EasyOCR on the specified image.
 
-    detail=1 kullanıldığı için sonuçlarda:
-    - koordinatlar
-    - metin
-    - güven skoru
-
-    bilgileri bulunur.
+    Because detail=1 is used, results include:
+    - coordinates
+    - text
+    - confidence score
     """
     results = reader.readtext(
         image,
@@ -305,7 +303,7 @@ def calculate_average_confidence(
     ocr_results: list[Any],
 ) -> float:
     """
-    OCR sonuçlarının ortalama güven skorunu hesaplar.
+    Calculates the average confidence score for OCR results.
     """
     confidence_values: list[float] = []
 
@@ -336,8 +334,8 @@ def print_ocr_results(
     ocr_results: list[Any],
 ) -> None:
     """
-    Bir ön işleme varyantının OCR sonuçlarını
-    terminalde gösterir.
+    Displays OCR results for one preprocessing
+    variant in the terminal.
     """
     print_separator(
         f"OCR Varyantı: {variant_name}"
@@ -397,8 +395,8 @@ def print_summary(
     ],
 ) -> None:
     """
-    Tüm ön işleme varyantlarının sonuçlarını
-    özet olarak gösterir.
+    Displays a summary of results from all
+    preprocessing variants.
     """
     print_separator(
         "Çoklu Ön İşleme OCR Özeti",
@@ -435,8 +433,8 @@ def print_summary(
 
 def main() -> None:
     """
-    Aynı YOLO crop üzerinde farklı ön işleme
-    yöntemlerini deneyerek OCR sonuçlarını karşılaştırır.
+    Compares OCR results by trying different preprocessing
+    methods on the same YOLO crop.
     """
     validate_input_path()
 

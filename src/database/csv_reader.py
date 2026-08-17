@@ -24,9 +24,9 @@ def load_medicines(
     csv_path: Path,
 ) -> list[dict[str, str]]:
     """
-    CSV dosyasındaki ilaç kayıtlarını okur ve temizler.
+    Read and clean medicine records from a CSV file.
 
-    Beklenen CSV sütunları:
+    Expected CSV columns:
         - medicine_id
         - medicine_name
         - brand_name
@@ -36,19 +36,18 @@ def load_medicines(
         - category
 
     Args:
-        csv_path: medicines.csv dosyasının yolu.
+        csv_path: Path to the medicines.csv file.
 
     Returns:
-        Her ilaç kaydını sözlük olarak içeren liste.
+        A list of dictionaries, one for each medicine record.
 
     Raises:
         FileNotFoundError:
-            CSV dosyası bulunamazsa.
+            If the CSV file cannot be found.
 
         ValueError:
-            CSV dosyasında başlık satırı yoksa,
-            gerekli sütunlardan biri eksikse
-            veya geçerli ilaç kaydı bulunamazsa.
+            If the CSV file has no header row, is missing a required column,
+            or contains no valid medicine records.
     """
     if not csv_path.exists():
         raise FileNotFoundError(
@@ -119,10 +118,10 @@ def load_medicine_barcodes(
     csv_path: Path,
 ) -> list[dict[str, str]]:
     """
-    Barkod → medicine_id eşlemelerini okur.
+    Read barcode-to-medicine_id mappings.
 
-    Beklenen sütunlar: barcode, medicine_id
-    Dosya yoksa boş liste döner (barkod isteğe bağlı yan yoldur).
+    Expected columns: barcode, medicine_id.
+    Return an empty list when the file is absent because barcode lookup is optional.
     """
     if not csv_path.exists():
         return []

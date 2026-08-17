@@ -1,4 +1,4 @@
-"""TİTCK SKRS barkod yedek araması (CSV eşleşmesi kaçınca)."""
+"""TITCK SKRS barcode fallback lookup when CSV matching misses."""
 
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def resolve_skrs_barcode(
     index_csv: Path | None = None,
     xlsx_path: Path | None = None,
 ) -> SkrsBarcodeHit | None:
-    """SKRS listesinde barkodu birebir arar. Dosya yoksa None."""
+    """Look up an exact barcode in the SKRS list; return None when the file is absent."""
     explicit = index_csv is not None or xlsx_path is not None
     if skrs_fallback_disabled() and not explicit:
         return None
@@ -60,7 +60,7 @@ def resolve_skrs_barcode(
 
 
 def medicine_from_skrs_hit(hit: SkrsBarcodeHit) -> dict[str, str]:
-    """Katalogda yoksa TİTCK satırından gösterim kaydı üretir."""
+    """Build a display record from the TITCK row when the item is not in the catalog."""
     from scripts.titck.medicine_mapper import (
         _display_name_from_titck,
         category_from_atc,
@@ -107,7 +107,7 @@ def match_skrs_hit_to_catalog(
 
 
 def warmup_skrs_index() -> int:
-    """API açılışında SKRS indeksini belleğe alır."""
+    """Load the SKRS index into memory during API startup."""
     if skrs_fallback_disabled():
         return 0
     index = _skrs_index("", "")

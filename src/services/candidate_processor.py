@@ -13,17 +13,17 @@ from src.services.config import (
 
 
 def normalize_filter_text(text: str) -> str:
-    """OCR adayını filtreleme için standart biçime dönüştürür."""
+    """Convert an OCR candidate into the standard form used for filtering."""
     return normalize_ocr_text(text)
 
 
 def contains_letter(text: str) -> bool:
-    """Metnin en az bir alfabetik karakter içerip içermediğini kontrol eder."""
+    """Return whether text contains at least one alphabetic character."""
     return any(character.isalpha() for character in text)
 
 
 def is_single_alphabetic_word(text: str) -> bool:
-    """Metnin yalnızca harflerden oluşan tek kelime olup olmadığını kontrol eder."""
+    """Return whether text consists of a single word made only of letters."""
     normalized_text = normalize_filter_text(text)
     return (
         " " not in normalized_text
@@ -32,7 +32,7 @@ def is_single_alphabetic_word(text: str) -> bool:
 
 
 def is_valid_base_name_candidate(text: str) -> bool:
-    """OCR metninin ilaç adının ana parçası olarak uygun olup olmadığını kontrol eder."""
+    """Return whether OCR text is suitable as the main part of a medicine name."""
     normalized_text = normalize_filter_text(text)
 
     if not normalized_text:
@@ -77,7 +77,7 @@ ACTIVE_INGREDIENT_SUFFIXES = frozenset(
 
 
 def is_likely_active_ingredient(text: str) -> bool:
-    """Uzun kimyasal/etken madde metinlerini marka adından ayırır."""
+    """Separate long chemical or active-ingredient text from brand names."""
     normalized_text = normalize_filter_text(text)
 
     if not is_single_alphabetic_word(normalized_text):
@@ -98,7 +98,7 @@ def is_likely_active_ingredient(text: str) -> bool:
 def select_brand_name_candidate(
     candidate_texts: list[str],
 ) -> str | None:
-    """Marka adına benzeyen en kısa geçerli OCR adayını seçer."""
+    """Select the shortest valid OCR candidate that looks like a brand name."""
     brand_like_candidates = [
         text
         for text in candidate_texts
@@ -148,9 +148,9 @@ def create_medicine_name_candidates(
     candidate_texts: list[str],
 ) -> list[str]:
     """
-    OCR aday parçalarından tam ilaç adı adayları üretir.
+    Generate full medicine-name candidates from OCR candidate fragments.
 
-    Örnek: aferin + forte → aferin forte
+    Example: aferin + forte -> aferin forte
     """
     normalized_candidates: list[str] = []
     seen_normalized_candidates: set[str] = set()
@@ -223,7 +223,7 @@ def create_medicine_name_candidates(
 
 
 def count_alphabetic_characters(text: str) -> int:
-    """Metindeki alfabetik karakter sayısını döndürür."""
+    """Return the number of alphabetic characters in the text."""
     return sum(character.isalpha() for character in text)
 
 
@@ -232,7 +232,7 @@ def is_valid_matching_candidate(
     *,
     minimum_text_length: int = 3,
 ) -> bool:
-    """OCR adayının ilaç adı eşleştirmesinde kullanılmaya uygun olup olmadığını kontrol eder."""
+    """Return whether an OCR candidate is suitable for medicine-name matching."""
     normalized_text = normalize_filter_text(text)
 
     if not normalized_text:
@@ -283,7 +283,7 @@ def filter_candidate_texts(
     *,
     minimum_text_length: int = 3,
 ) -> list[str]:
-    """RapidFuzz eşleştirmesi öncesinde OCR adaylarını temizler."""
+    """Clean OCR candidates before RapidFuzz matching."""
     filtered_texts: list[str] = []
     seen_texts: set[str] = set()
 
@@ -306,7 +306,7 @@ def filter_candidate_texts(
 
 
 def max_candidate_alpha_length(candidate_texts: list[str]) -> int:
-    """OCR adaylari arasindaki en uzun alfabetik uzunluk."""
+    """Longest alphabetic length among OCR candidates."""
     if not candidate_texts:
         return 0
 
@@ -321,7 +321,7 @@ def has_weak_ocr_candidates(
     *,
     minimum_alpha_length: int = 6,
 ) -> bool:
-    """Marka adi okunamamis kisa/gurultulu OCR (or. lie) icin True."""
+    """Return True for short or noisy OCR where the brand name was not read, such as lie."""
     return max_candidate_alpha_length(candidate_texts) < minimum_alpha_length
 
 
@@ -334,7 +334,7 @@ def rank_medicine_matches(
     top_count: int = 3,
 ) -> list[MatchRecord]:
     """
-    Her OCR adayını her ilaç adıyla karşılaştırır ve en iyi eşleşmeleri döndürür.
+    Compare each OCR candidate against each medicine name and return the best matches.
     """
     if top_count <= 0:
         raise ValueError("top_count sıfırdan büyük olmalıdır.")

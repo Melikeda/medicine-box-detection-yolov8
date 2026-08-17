@@ -15,7 +15,7 @@ from src.preprocessing.basic_operations import (
 
 def main() -> None:
     """
-    Okunan bir görüntünün diske kaydedilmesini örnekler.
+    Demonstrates saving a loaded image to disk.
     """
 
     image_path = Path(

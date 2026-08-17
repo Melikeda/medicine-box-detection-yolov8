@@ -23,8 +23,8 @@ from src.preprocessing.geometric_operations import (
 
 def main() -> None:
     """
-    Grayscale görüntüye Histogram Equalization uygular
-    ve işlem öncesi-sonrası görüntüleri karşılaştırır.
+    Applies Histogram Equalization to a grayscale image
+    and compares the before and after images.
     """
 
     image_path = Path(
@@ -36,16 +36,16 @@ def main() -> None:
         "medicine_sample_histogram_equalization.jpg"
     )
 
-    # Renkli görüntüyü oku.
+    # Read the color image.
     image = read_image(image_path)
 
-    # Histogram Equalization tek kanallı görüntü beklediği için
-    # görüntüyü önce grayscale biçimine dönüştür.
+    # Histogram Equalization expects a single-channel image, so
+    # convert the image to grayscale first.
     grayscale_image = convert_to_grayscale(
         image
     )
 
-    # Global kontrast artırma işlemini uygula.
+    # Apply global contrast enhancement.
     equalized_image = apply_histogram_equalization(
         grayscale_image
     )
@@ -78,7 +78,7 @@ def main() -> None:
         f"{equalized_image.max()}"
     )
 
-    # Kontrastı artırılmış görüntüyü kaydet.
+    # Save the contrast-enhanced image.
     save_image(
         equalized_image,
         output_path,
@@ -89,7 +89,7 @@ def main() -> None:
         f"{output_path}"
     )
 
-    # Büyük görüntüleri yalnızca gösterim amacıyla küçült.
+    # Shrink large images for display purposes only.
     grayscale_preview = resize_image(
         grayscale_image,
         width=800,

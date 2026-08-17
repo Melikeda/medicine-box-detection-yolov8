@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppLanguage { tr, en }
 
-/// Uygulama dili denetleyicisi (tercih kalıcı).
+/// Application language controller with persisted preference.
 class LocaleController extends ChangeNotifier {
   LocaleController({AppLanguage language = AppLanguage.tr})
       : _language = language;
@@ -50,7 +50,7 @@ class LocaleController extends ChangeNotifier {
   }
 }
 
-/// InheritedNotifier ile tum agaca dil erisimi.
+/// Provides language access to the widget tree through InheritedNotifier.
 class LocaleScope extends InheritedNotifier<LocaleController> {
   const LocaleScope({
     super.key,
@@ -75,7 +75,7 @@ extension AppLocaleX on BuildContext {
   AppStrings get s => LocaleScope.of(this).strings;
 }
 
-/// TR / EN metin katalogu.
+/// TR / EN text catalog.
 class AppStrings {
   const AppStrings._({
     required this.appName,

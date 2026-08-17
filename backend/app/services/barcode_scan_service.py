@@ -1,4 +1,4 @@
-"""Barkod görüntüsü yükleme ve katalog eşlemesi."""
+"""Barcode image upload and catalog matching."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ NO_BARCODE = "Görüntüde barkod okunamadı."
 
 
 class BarcodeScanService:
-    """POST /barcode/scan ve GET /barcode/lookup iş mantığı."""
+    """Business logic for POST /barcode/scan and GET /barcode/lookup."""
 
     def __init__(
         self,

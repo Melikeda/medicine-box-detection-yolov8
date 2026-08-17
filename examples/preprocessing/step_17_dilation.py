@@ -29,12 +29,12 @@ from src.preprocessing.threshold_operations import (
 
 def main() -> None:
     """
-    Farklı kernel boyutlarının Dilation sonucuna etkisini karşılaştırır.
+    Compares how different kernel sizes affect Dilation results.
 
-    Karşılaştırılan görüntüler:
-        1. Adaptive Threshold görüntüsü
-        2. 3x3 kernel ile Dilation
-        3. 7x7 kernel ile Dilation
+    Compared images:
+        1. Adaptive Threshold image
+        2. Dilation with a 3x3 kernel
+        3. Dilation with a 7x7 kernel
     """
 
     image_path = Path(
@@ -45,23 +45,23 @@ def main() -> None:
         "results/preprocessing/dilation_comparison"
     )
 
-    # Renkli görüntüyü oku.
+    # Read the color image.
     image = read_image(image_path)
 
-    # Görüntüyü grayscale biçimine dönüştür.
+    # Convert the image to grayscale.
     grayscale_image = convert_to_grayscale(
         image
     )
 
-    # Yerel kontrastı artır.
+    # Increase local contrast.
     clahe_image = apply_clahe(
         grayscale_image,
         clip_limit=2.0,
         tile_grid_size=(8, 8),
     )
 
-    # Morfolojik işlemi daha net görebilmek için
-    # binary görüntü oluştur.
+    # Create a binary image to make the morphological
+    # operation easier to inspect.
     threshold_image = apply_adaptive_threshold(
         grayscale_image=clahe_image,
         max_value=255,
@@ -69,14 +69,14 @@ def main() -> None:
         constant=2,
     )
 
-    # Küçük kernel ile hafif Dilation uygula.
+    # Apply light Dilation with a small kernel.
     dilation_3x3 = apply_dilation(
         threshold_image,
         kernel_size=(3, 3),
         iterations=1,
     )
 
-    # Büyük kernel ile daha güçlü Dilation uygula.
+    # Apply stronger Dilation with a large kernel.
     dilation_7x7 = apply_dilation(
         threshold_image,
         kernel_size=(7, 7),
@@ -92,7 +92,7 @@ def main() -> None:
     print("\n3x3 kernel → Daha hafif genişletme")
     print("7x7 kernel → Daha güçlü genişletme")
 
-    # Sonuçları kaydet.
+    # Save the results.
     save_image(
         threshold_image,
         output_directory / "01_threshold.jpg",
@@ -113,7 +113,7 @@ def main() -> None:
         f"{output_directory}"
     )
 
-    # Büyük görüntüleri yalnızca gösterim için küçült.
+    # Shrink large images for display only.
     threshold_preview = resize_image(
         threshold_image,
         width=800,

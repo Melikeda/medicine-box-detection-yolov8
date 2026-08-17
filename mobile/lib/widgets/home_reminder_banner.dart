@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 
-/// Ana sayfa alt alanı: gerçekçi Yolocilin görseli + uyarı.
+/// Home-page lower section with realistic Yolocilin artwork and warning.
 class HomeReminderBanner extends StatelessWidget {
   const HomeReminderBanner({super.key, this.compact = false});
 

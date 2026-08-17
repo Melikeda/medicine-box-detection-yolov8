@@ -15,7 +15,7 @@ def print_ocr_results(
     results: list,
 ) -> None:
     """
-    OCR sonuçlarını terminale düzenli şekilde yazdırır.
+    Prints OCR results to the terminal in a readable format.
     """
     print("\nOCR PIPELINE SONUÇLARI")
     print("-" * 60)

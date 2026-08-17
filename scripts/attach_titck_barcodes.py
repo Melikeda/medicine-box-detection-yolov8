@@ -1,6 +1,7 @@
-"""TİTCK SKRS barkodlarını medicine_barcodes.csv dosyasına yazar.
+"""
+Writes TITCK SKRS barcodes to medicine_barcodes.csv.
 
-Mevcut medicines.csv satırlarını değiştirmez; yalnızca barkod eşlemesi üretir.
+Does not modify existing medicines.csv rows; only generates barcode mappings.
 """
 
 from __future__ import annotations
@@ -37,7 +38,9 @@ def write_barcode_rows(path: Path, rows: list[dict[str, str]]) -> None:
 
 
 def write_skrs_index(path: Path, frame) -> int:
-    """Tüm SKRS barkodlarını hızlı yedek arama CSV'sine yazar."""
+    """
+    Writes all SKRS barcodes to a fast fallback lookup CSV.
+    """
     by_code: dict[str, dict[str, str]] = {}
     if "barkod" not in frame.columns:
         return 0

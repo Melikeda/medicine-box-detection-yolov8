@@ -2,7 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-/// Soft, parlak, iki renkli gercekci kapsul.
+/// Soft, bright, realistic two-color capsule.
 class RealisticCapsule extends StatelessWidget {
   const RealisticCapsule({
     super.key,
@@ -135,7 +135,7 @@ class CapsulePalette {
   final Color left;
   final Color right;
 
-  /// Soft ama ekranda net gorunen kapsul renkleri (biraz daha koyu).
+  /// Soft capsule colors that remain visible on screen, slightly darker.
   static const soft = <CapsulePalette>[
     CapsulePalette(Color(0xFF3A9FBF), Color(0xFFD9CFBE)),
     CapsulePalette(Color(0xFFD4A820), Color(0xFFF2D98A)),
@@ -147,7 +147,7 @@ class CapsulePalette {
   ];
 }
 
-/// Sayfa arkasi: soft renkli, gercekci hareketli kapsul arka plani.
+/// Page background with softly colored, realistic animated capsules.
 class CapsuleBackground extends StatefulWidget {
   const CapsuleBackground({
     super.key,

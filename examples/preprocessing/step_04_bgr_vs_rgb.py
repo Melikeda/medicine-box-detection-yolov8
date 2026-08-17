@@ -18,10 +18,10 @@ def display_comparison(
     rgb_image
 ) -> None:
     """
-    BGR ve RGB görüntülerini Matplotlib ile karşılaştırır.
+    Compare BGR and RGB images with Matplotlib.
 
-    Matplotlib RGB kanal sırası beklediği için BGR görüntü
-    doğrudan verildiğinde kırmızı ve mavi renkler yanlış görünür.
+    Matplotlib expects RGB channel order, so red and blue colors
+    look incorrect when a BGR image is passed directly.
     """
 
     plt.figure(figsize=(10, 6))
@@ -39,7 +39,7 @@ def display_comparison(
 
 def main() -> None:
     """
-    OpenCV'nin BGR ve Matplotlib'in RGB kanal sırasını karşılaştırır.
+    Compare OpenCV's BGR channel order with Matplotlib's RGB order.
     """
 
     image_path = Path(

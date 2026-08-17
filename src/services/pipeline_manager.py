@@ -26,10 +26,10 @@ BOX_ERROR_MESSAGE = "Bu ilaç kutusu analiz edilemedi."
 
 class PipelineManager:
     """
-    Pipeline kaynaklarını startup'ta bir kez yükleyen singleton yönetici.
+    Singleton manager that loads pipeline resources once at startup.
 
-    FastAPI lifespan veya CLI script başlangıcında load() çağrılır;
-    her analiz isteğinde modeller yeniden yüklenmez.
+    load() is called during FastAPI lifespan or CLI startup so models are not
+    reloaded for every analysis request.
     """
 
     _instance: PipelineManager | None = None
@@ -47,7 +47,7 @@ class PipelineManager:
         cls,
         config: PipelineConfig | None = None,
     ) -> PipelineManager:
-        """Singleton instance döndürür."""
+        """Return the singleton instance."""
         if cls._instance is None:
             cls._instance = cls(config)
         elif config is not None:
@@ -56,7 +56,7 @@ class PipelineManager:
 
     @classmethod
     def reset_instance(cls) -> None:
-        """Test veya yeniden yapılandırma için singleton'ı sıfırlar."""
+        """Reset the singleton for tests or reconfiguration."""
         cls._instance = None
 
     @property
@@ -76,7 +76,7 @@ class PipelineManager:
         return self._matching_service.source
 
     def load(self) -> None:
-        """YOLO, OCR okuyucu ve ilaç veritabanını belleğe yükler."""
+        """Load YOLO, the OCR reader, and the medicine database into memory."""
         if self.is_loaded:
             print("PipelineManager: kaynaklar zaten yüklü.")
             return
@@ -116,7 +116,7 @@ class PipelineManager:
         )
 
     def unload(self) -> None:
-        """Yüklenen kaynakları serbest bırakır."""
+        """Release loaded resources."""
         self._yolo_model = None
         self._ocr_reader = None
         self._detection_service = None
@@ -129,7 +129,7 @@ class PipelineManager:
         *,
         save_debug_outputs: bool = False,
     ) -> MultiMedicineAnalysisResult:
-        """Fotoğraftaki tüm kutuları sırayla analiz eder."""
+        """Analyze every box in the photo in order."""
         if not self.is_loaded:
             self.load()
 
@@ -322,7 +322,7 @@ class PipelineManager:
         *,
         save_debug_outputs: bool = False,
     ) -> MedicineAnalysisResult:
-        """Tek kutulu analiz (geriye dönük uyumluluk)."""
+        """Single-box analysis kept for backward compatibility."""
         multi_result = self.analyze_all(
             image_path=image_path,
             save_debug_outputs=save_debug_outputs,
@@ -372,7 +372,7 @@ class PipelineManager:
         box_index: int,
         save_debug_outputs: bool,
     ) -> tuple[list[str], TextMatchResult, object]:
-        """OCR + eslestirme; zayif sonucta ek acilarla tekrar dener."""
+        """Run OCR and matching; retry with extra angles for weak results."""
         assert self._ocr_service is not None
         assert self._matching_service is not None
 
@@ -492,7 +492,7 @@ class PipelineManager:
         }
 
     def _build_early_stop_checker(self):
-        """Yalnızca neredeyse tam okumada OCR varyant döngüsünü durdurur."""
+        """Stop the OCR variant loop only on a near-complete match."""
         assert self._matching_service is not None
         minimum_score = self.config.early_exit_minimum_score
 
@@ -517,7 +517,7 @@ class PipelineManager:
         image_height: int,
         timing: PipelineTiming,
     ) -> BoxAnalysisResult | None:
-        """YOLO kutu bulamazsa tüm karede barkod dener."""
+        """Try barcode matching on the full frame when YOLO finds no boxes."""
         assert self._matching_service is not None
         if original_image is None:
             return None

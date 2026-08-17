@@ -6,7 +6,7 @@ from backend.app.schemas.analyze import AnalyzeResponseSchema
 
 
 class ScanCreateRequestSchema(BaseModel):
-    """Başarılı analyze yanıtını sunucu geçmişine kaydet."""
+    """Persist a successful analyze response to server history."""
 
     response: AnalyzeResponseSchema
     preview_label: str | None = Field(default=None, max_length=255)

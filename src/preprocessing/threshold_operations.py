@@ -1,4 +1,4 @@
-#Tonlarla çeviri yapılıyor.
+# Thresholding helpers for OCR preprocessing.
 import cv2
 
 
@@ -8,25 +8,21 @@ def apply_binary_threshold(
     max_value: int = 255,
 ):
     """
-    Grayscale görüntüye binary threshold uygular.
+    Apply global binary thresholding to a grayscale image.
+
+    Pixels above the threshold become max_value, and the rest become 0.
 
     Args:
-        grayscale_image: Tek kanallı grayscale görüntü.
-        threshold_value: Siyah ve beyaz ayrımında kullanılacak eşik değeri.
-        max_value: Eşik üzerindeki piksellere atanacak maksimum değer.
+        grayscale_image: Single-channel grayscale image.
+        threshold_value: Threshold value.
+        max_value: Maximum value assigned to white pixels.
 
     Returns:
-        Kullanılan eşik değeri ve binary threshold görüntüsü.
+        Binary image produced by thresholding.
 
     Raises:
-        ValueError: Görüntü grayscale değilse.
+        ValueError: If the image is not grayscale or parameters are invalid.
     """
-
-    if grayscale_image.ndim != 2:
-        raise ValueError(
-            "Threshold uygulanacak görüntü grayscale ve tek kanallı olmalıdır."
-        )
-
     used_threshold, threshold_image = cv2.threshold(
         grayscale_image,
         threshold_value,
@@ -44,24 +40,23 @@ def apply_adaptive_threshold(
     constant: int = 2,
 ):
     """
-    Grayscale görüntüye adaptive threshold uygular.
+    Apply adaptive thresholding to a grayscale image.
 
-    Görüntünün farklı bölgeleri için yerel eşik değerleri hesaplanır.
-    Bu yöntem, ışığın görüntünün her yerinde eşit olmadığı durumlarda
-    normal binary threshold yönteminden daha başarılı olabilir.
+    Local threshold values are calculated for different image regions.
+    This method can work better than normal binary thresholding when lighting is uneven.
 
     Args:
-        grayscale_image: Tek kanallı grayscale görüntü.
-        max_value: Beyaz piksellere atanacak maksimum değer.
-        block_size: Yerel eşik hesabında kullanılacak komşuluk boyutu.
-            Tek sayı ve 1'den büyük olmalıdır.
-        constant: Hesaplanan yerel eşik değerinden çıkarılacak sabit.
+        grayscale_image: Single-channel grayscale image.
+        max_value: Maximum value assigned to white pixels.
+        block_size: Neighborhood size used for the local threshold calculation.
+            Must be odd and greater than 1.
+        c: Constant subtracted from the local threshold value.
 
     Returns:
-        Adaptive threshold uygulanmış siyah-beyaz görüntü.
+        Binary image produced by adaptive thresholding.
 
     Raises:
-        ValueError: Görüntü grayscale değilse veya block_size geçersizse.
+        ValueError: If the image or parameters are invalid.
     """
 
     if grayscale_image.ndim != 2:

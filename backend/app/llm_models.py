@@ -1,7 +1,7 @@
-"""Ucretsiz Gemini tier icin onaylanmis model onceligi."""
+"""Approved model priority for the free Gemini tier."""
 
-# Birincil: en iyi calisan ucretsiz Flash modeli
-# Yedek: kota/limit durumunda daha hafif model
+# Primary: best-performing free Flash model.
+# Fallback: lighter model for quota or limit situations.
 GEMINI_FREE_TIER_MODELS: tuple[str, ...] = (
     "gemini-flash-latest",
     "gemini-flash-lite-latest",

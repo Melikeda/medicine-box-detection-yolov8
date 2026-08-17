@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 
 
 class MedicineSchema(BaseModel):
-    """Tek ilaç kaydı."""
+    """Single medicine record."""
 
     medicine_id: str
     medicine_name: str
@@ -14,7 +14,7 @@ class MedicineSchema(BaseModel):
 
 
 class MedicineListResponseSchema(BaseModel):
-    """İlaç listesi yanıtı."""
+    """Medicine list response."""
 
     success: bool = True
     total: int
@@ -26,7 +26,7 @@ class MedicineListResponseSchema(BaseModel):
 
 
 class MedicineDetailResponseSchema(BaseModel):
-    """Tek ilaç detay yanıtı."""
+    """Single medicine detail response."""
 
     success: bool = True
     source: str = "sqlite"
@@ -34,7 +34,7 @@ class MedicineDetailResponseSchema(BaseModel):
 
 
 class MedicineCategoriesResponseSchema(BaseModel):
-    """Kategori listesi yanıtı."""
+    """Category list response."""
 
     success: bool = True
     count: int

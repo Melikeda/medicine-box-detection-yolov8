@@ -1,4 +1,4 @@
-"""TİTCK SKRS kayıtlarını proje CSV şemasına eşler."""
+"""Maps TITCK SKRS records to the project CSV schema."""
 
 from __future__ import annotations
 
@@ -215,7 +215,9 @@ def enrich_row_from_titck(
 
 
 def normalize_skrs_barcode(value: object) -> str:
-    """SKRS barkod hücresini rakam dizisine çevirir."""
+    """
+    Converts an SKRS barcode cell to a digit string.
+    """
     from scripts.titck.skrs_client import _barcode_cell_to_text
 
     digits = re.sub(r"\D+", "", _barcode_cell_to_text(value))
@@ -231,9 +233,10 @@ def assign_skrs_barcodes(
     min_score: float = 55.0,
 ) -> list[dict[str, str]]:
     """
-    SKRS satırlarını katalog ilaçlarına barkod olarak bağlar.
+    Attaches SKRS rows to catalog medicines as barcodes.
 
-    Her barkod en yüksek skorlu tek ilaca yazılır. Aynı barkod iki ilaca gitmez.
+    Each barcode is assigned to only the highest-scoring medicine.
+    The same barcode is never assigned to two medicines.
     """
     from collections import defaultdict
 
@@ -325,7 +328,7 @@ def build_row_from_titck(
 
 
 def _display_name_from_titck(ilac_adi: str) -> str:
-    """OCR için kısa görünen ad: doz/form öncesindeki bölüm."""
+    """Short display name for OCR: the section before dosage/form."""
     upper = ilac_adi.upper()
     cut_patterns = [
         r"\s+\d",
@@ -347,10 +350,10 @@ def _display_name_from_titck(ilac_adi: str) -> str:
     return short.title() if short.isupper() else short
 
 
-# Türkiye’de sık görülen / yüksek hacimli markalar (İEİS kutu lideri
-# kategorileri + eczane OTC rafları). Limit = SKRS’ten alınacak max varyant.
+# Common/high-volume brands in Turkey (IEIS box-volume leader
+# categories plus pharmacy OTC shelves). Limit = max SKRS variants to fetch.
 EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
-    # Ağrı kesici / ateş (Ipsos: hanelerin ~%80’i)
+    # Pain relief / fever (Ipsos: ~80% of households)
     ("Parol", "Ağrı Kesici", 12),
     ("Calpol", "Ağrı Kesici", 8),
     ("Panadol", "Ağrı Kesici", 10),
@@ -386,7 +389,7 @@ EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
     ("Peditus", "Ağrı Kesici", 3),
     ("Tempra", "Ağrı Kesici", 4),
     ("Calprofen", "Ağrı Kesici", 3),
-    # Antiromatizmal / kas-eklem (İEİS kutu lideri)
+    # Antirheumatic / muscle-joint (IEIS box-volume leader)
     ("Voltaren", "Kas ve Eklem", 8),
     ("Cataflam", "Kas ve Eklem", 5),
     ("Etol", "Kas ve Eklem", 5),
@@ -409,7 +412,7 @@ EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
     ("Mobic", "Kas ve Eklem", 3),
     ("Exen", "Kas ve Eklem", 3),
     ("Celebrex", "Kas ve Eklem", 3),
-    # Soğuk algınlığı / öksürük
+    # Cold and cough
     ("A-Ferin", "Soğuk Algınlığı", 8),
     ("Gripin", "Soğuk Algınlığı", 6),
     ("Theraflu", "Soğuk Algınlığı", 5),
@@ -512,7 +515,7 @@ EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
     ("Ferrosanol", "Vitamin ve Mineral", 3),
     ("Folbiol", "Vitamin ve Mineral", 3),
     ("Jectofer", "Vitamin ve Mineral", 2),
-    # Solunum / astım
+    # Respiratory / asthma
     ("Ventolin", "Solunum", 5),
     ("Singulair", "Solunum", 4),
     ("Pulmicort", "Solunum", 4),
@@ -565,7 +568,7 @@ EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
     ("Euthyrox", "Endokrin", 4),
     ("Levotiron", "Endokrin", 4),
     ("Thyro-4", "Endokrin", 2),
-    # Nöroloji / psikiyatri (sık reçete)
+    # Neurology / psychiatry (frequently prescribed)
     ("Desirel", "Nöroloji", 3),
     ("Cipralex", "Nöroloji", 4),
     ("Lustral", "Nöroloji", 3),
@@ -592,7 +595,7 @@ EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
     ("Thiogel", "Dermatoloji", 2),
     ("Madecassol", "Dermatoloji", 3),
     ("Sudocrem", "Dermatoloji", 2),
-    # Göz / diğer sık reçete
+    # Eye / other frequently prescribed medicines
     ("Refresh", "Göz", 3),
     ("Tears Naturale", "Göz", 2),
     ("Tobradex", "Göz", 3),
@@ -603,7 +606,7 @@ EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
     ("Prednol", "Genel", 3),
     ("Cortef", "Genel", 2),
     ("Ultralan", "Dermatoloji", 2),
-    # Ek bilinen Türk markaları
+    # Additional known Turkish brands
     ("Majezik Duo", "Ağrı Kesici", 2),
     ("Dolorex Plus", "Ağrı Kesici", 2),
     ("Parol Plus", "Ağrı Kesici", 3),
@@ -616,7 +619,7 @@ EXPANSION_BRAND_QUERIES: list[tuple[str, str, int]] = [
     ("Nexium IV", "Mide", 2),
 ]
 
-# Yüksek hacimli ATC gruplarından ek SKRS ürünleri (marka listesini tamamlar)
+# Additional SKRS products from high-volume ATC groups to complete the brand list
 POPULAR_ATC_EXPANSION: list[tuple[str, str, int]] = [
     ("N02", "Ağrı Kesici", 80),
     ("M01", "Kas ve Eklem", 70),
@@ -640,7 +643,7 @@ POPULAR_ATC_EXPANSION: list[tuple[str, str, int]] = [
     ("D07", "Dermatoloji", 25),
 ]
 
-# Tanı / radyoloji / aşı gibi OTC genişletme dışı ATC önekleri
+# ATC prefixes excluded from OTC expansion, such as diagnostics, radiology, and vaccines
 EXCLUDED_EXPANSION_ATC_PREFIXES = (
     "V08",
     "B05",
@@ -732,7 +735,7 @@ def discover_expansion_rows(
             if added >= limit:
                 break
 
-    # Marka listesinden sonra yüksek hacimli ATC gruplarından tamamla
+    # After the brand list, fill from high-volume ATC groups
     for atc_prefix, category_hint, limit in POPULAR_ATC_EXPANSION:
         group = active[
             active["atc_kodu"].astype(str).str.upper().str.startswith(atc_prefix)

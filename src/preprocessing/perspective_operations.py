@@ -1,28 +1,28 @@
-#Eğik açıları düzenliyor.
+# Corrects skewed box corners for a top-down view.
 import cv2
 import numpy as np
 
 
 def order_points(points):
     """
-    Dört köşe noktasını standart sıraya dizer.
+    Order four corner points into a standard sequence.
 
-    Sıralama:
-        1. Sol üst
-        2. Sağ üst
-        3. Sağ alt
-        4. Sol alt
+    Order:
+        1. Top-left
+        2. Top-right
+        3. Bottom-right
+        4. Bottom-left
 
     Args:
         points:
-            Dört adet (x, y) koordinatı.
+            Four (x, y) coordinates.
 
     Returns:
-        Standart sıraya dizilmiş float32 NumPy dizisi.
+        float32 NumPy array in the standard corner order.
 
     Raises:
         ValueError:
-            Tam olarak dört nokta verilmemişse.
+            If exactly four points are not provided.
     """
 
     points = np.asarray(
@@ -41,8 +41,7 @@ def order_points(points):
         dtype=np.float32,
     )
 
-    # x + y toplamı en küçük olan nokta sol üst,
-    # en büyük olan nokta sağ alt kabul edilir.
+    # Smallest x + y is top-left; largest x + y is bottom-right.
     coordinate_sum = points.sum(axis=1)
 
     ordered_points[0] = points[
@@ -53,8 +52,7 @@ def order_points(points):
         np.argmax(coordinate_sum)
     ]
 
-    # y - x farkı en küçük olan nokta sağ üst,
-    # en büyük olan nokta sol alt kabul edilir.
+    # Smallest y - x is top-right; largest y - x is bottom-left.
     coordinate_difference = np.diff(
         points,
         axis=1,
@@ -76,23 +74,22 @@ def apply_perspective_transform(
     source_points,
 ):
     """
-    Dört köşe noktasını kullanarak görüntüyü düzleştirir.
+    Flatten the image using four corner points.
 
     Args:
         image:
-            Perspective Transform uygulanacak görüntü.
+            Image to warp with a perspective transform.
 
         source_points:
-            Görüntüdeki dört köşe koordinatı.
-            Noktaların sırası fark etmez; fonksiyon
-            bunları standart sıraya dizer.
+            Four corner coordinates in the image.
+            Order does not matter; this function sorts them.
 
     Returns:
-        Perspective Transform uygulanmış görüntü.
+        Perspective-transformed image.
 
     Raises:
         ValueError:
-            Noktalar geçersizse veya çıktı boyutu hesaplanamazsa.
+            If the points are invalid or the output size cannot be computed.
     """
 
     ordered_points = order_points(
@@ -104,7 +101,7 @@ def apply_perspective_transform(
     bottom_right = ordered_points[2]
     bottom_left = ordered_points[3]
 
-    # Alt ve üst kenar uzunluklarını hesapla.
+    # Measure top and bottom edge lengths.
     bottom_width = np.linalg.norm(
         bottom_right - bottom_left
     )
@@ -117,7 +114,7 @@ def apply_perspective_transform(
         max(bottom_width, top_width)
     )
 
-    # Sol ve sağ kenar uzunluklarını hesapla.
+    # Measure left and right edge lengths.
     right_height = np.linalg.norm(
         top_right - bottom_right
     )
