@@ -62,4 +62,20 @@ void main() {
     expect(response.hasStructuredContent, isTrue);
     expect(response.category, 'Kas ve Eklem');
   });
+
+  test('ExplainResponse.catalogFallback builds catalog text without API', () {
+    final response = ExplainResponse.catalogFallback(
+      medicineId: 'MED001',
+      medicineName: 'Parol',
+      category: 'Ağrı Kesici',
+      activeIngredient: 'Paracetamol',
+      disclaimer: 'Tibbi tavsiye degildir.',
+    );
+
+    expect(response.success, isTrue);
+    expect(response.provider, 'catalog-fallback');
+    expect(response.summary, contains('Parol'));
+    expect(response.summary, contains('Paracetamol'));
+    expect(response.warnings, isNotEmpty);
+  });
 }

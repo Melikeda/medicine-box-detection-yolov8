@@ -496,6 +496,10 @@ def _is_retryable_gemini_error(exc: Exception) -> bool:
             "RESOURCE_EXHAUSTED",
             "UNAVAILABLE",
             "HIGH DEMAND",
+            "UNAUTHENTICATED",
+            "PERMISSION_DENIED",
+            "API_KEY_INVALID",
+            "INVALID_API_KEY",
         )
     )
 

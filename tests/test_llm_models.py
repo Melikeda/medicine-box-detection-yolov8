@@ -22,3 +22,8 @@ def test_gemini_high_demand_is_retryable() -> None:
         "503 UNAVAILABLE. This model is currently experiencing high demand."
     )
     assert _is_retryable_gemini_error(error) is True
+
+
+def test_gemini_invalid_api_key_is_retryable() -> None:
+    error = RuntimeError("401 UNAUTHENTICATED. API_KEY_INVALID")
+    assert _is_retryable_gemini_error(error) is True

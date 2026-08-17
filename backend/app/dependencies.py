@@ -1,11 +1,18 @@
+import logging
+
 from fastapi import Depends, Request
 
 from backend.app.config import ApiSettings, get_api_settings
-from backend.app.exceptions import LlmNotConfiguredError, PipelineNotReadyError
-from backend.app.services.llm_service import LlmExplanationService
+from backend.app.exceptions import PipelineNotReadyError
+from backend.app.services.llm_service import (
+    LlmExplanationService,
+    MockMedicineExplainer,
+)
 from backend.app.services.medicine_service import MedicineQueryService
 from backend.app.services.scan_service import ScanQueryService
 from src.services.pipeline_manager import PipelineManager
+
+logger = logging.getLogger(__name__)
 
 
 def get_pipeline_manager(request: Request) -> PipelineManager:
@@ -40,11 +47,21 @@ def get_scan_service(
 def get_llm_service(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> LlmExplanationService:
-    """Paylaşılan LLM servisini döndürür (tek cache singleton)."""
-    if not settings.llm_enabled:
-        raise LlmNotConfiguredError(
-            "LLM ozelligi devre disi. LLM_ENABLED=true yapin."
-        )
-    if not settings.llm_is_configured:
-        raise LlmNotConfiguredError(settings.llm_status_message)
-    return LlmExplanationService.get_instance(settings)
+    """Paylaşılan LLM servisini döndürür (tek cache singleton).
+
+    Gemini yapılandırılmamışsa 503 yerine katalog metni üretir; mobil
+    “İlaç hakkında” kartı kırmızı hata göstermez.
+    """
+    if settings.llm_is_configured:
+        return LlmExplanationService.get_instance(settings)
+
+    logger.warning(
+        "Explain using catalog fallback: %s",
+        settings.llm_status_message,
+    )
+    return LlmExplanationService(
+        settings=settings,
+        explainer=MockMedicineExplainer(),
+        provider="catalog-fallback",
+        model="catalog-fallback",
+    )

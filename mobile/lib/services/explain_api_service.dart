@@ -49,6 +49,11 @@ class ExplainApiService {
       );
     } on HttpException {
       throw AnalyzeApiException('Ag hatasi olustu. Baglantinizi kontrol edin.');
+    } on http.ClientException {
+      throw AnalyzeApiException(
+        'Sunucuya baglanilamadi. Backend calisiyor mu?\n'
+        'Beklenen adres: $_baseUrl',
+      );
     }
 
     final body = response.body;

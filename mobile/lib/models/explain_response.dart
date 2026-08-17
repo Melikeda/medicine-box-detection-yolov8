@@ -103,6 +103,55 @@ class ExplainResponse {
     );
   }
 
+  factory ExplainResponse.catalogFallback({
+    required String medicineId,
+    required String medicineName,
+    String? category,
+    String? activeIngredient,
+    String? dose,
+    String? form,
+    required String disclaimer,
+  }) {
+    final name = medicineName.trim().isEmpty ? 'Bu ilaç' : medicineName.trim();
+    final ingredient = (activeIngredient ?? '').trim();
+    final cat = (category ?? '').trim();
+
+    late final String summary;
+    if (ingredient.isNotEmpty && cat.isNotEmpty) {
+      summary =
+          '$name, $ingredient içeren ve $cat kategorisinde yer alan bir ilaçtır.';
+    } else if (ingredient.isNotEmpty) {
+      summary = '$name, $ingredient içeren bir ilaçtır.';
+    } else if (cat.isNotEmpty) {
+      summary = '$name, $cat kategorisinde yer alan bir ilaçtır.';
+    } else {
+      summary = '$name hakkında sınırlı katalog bilgisi bulunmaktadır.';
+    }
+
+    return ExplainResponse(
+      success: true,
+      medicineId: medicineId,
+      medicineName: medicineName,
+      explanation: summary,
+      summary: summary,
+      usage:
+          'Resmi kullanım için ürün prospektüsüne ve eczacınıza danışın.',
+      commonUses: const [],
+      activeIngredient: _nullableString(activeIngredient),
+      dose: _nullableString(dose),
+      form: _nullableString(form),
+      category: _nullableString(category),
+      warnings: const [
+        'Bu bilgiler kişisel tıbbi tavsiye yerine geçmez; doktorunuza veya eczacınıza danışın.',
+        'Kullanmadan önce ürün prospektüsünü okuyun.',
+      ],
+      disclaimer: disclaimer,
+      cached: false,
+      provider: 'catalog-fallback',
+      model: 'catalog-fallback',
+    );
+  }
+
   static String? _nullableString(Object? value) {
     if (value is! String) {
       return null;

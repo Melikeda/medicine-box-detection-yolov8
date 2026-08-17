@@ -126,7 +126,7 @@ def test_explain_etol_fort_usage_focused(explain_app: TestClient) -> None:
     assert "tavsiye edilir" not in text
 
 
-def test_explain_disabled_returns_503(
+def test_explain_disabled_returns_catalog_fallback(
     seeded_pipeline_config: PipelineConfig,
 ) -> None:
     app = FastAPI()
@@ -148,11 +148,14 @@ def test_explain_disabled_returns_503(
         "/api/v1/explain",
         json={"medicine_id": "MED001"},
     )
-    assert response.status_code == 503
-    assert "LLM_ENABLED" in response.json()["error"]
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["success"] is True
+    assert "Parol" in payload["summary"]
+    assert payload["provider"] == "catalog-fallback"
 
 
-def test_explain_enabled_without_key_returns_503(
+def test_explain_enabled_without_key_returns_catalog_fallback(
     seeded_pipeline_config: PipelineConfig,
 ) -> None:
     app = FastAPI()
@@ -185,8 +188,11 @@ def test_explain_enabled_without_key_returns_503(
         "/api/v1/explain",
         json={"medicine_id": "MED001"},
     )
-    assert response.status_code == 503
-    assert response.json()["success"] is False
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["success"] is True
+    assert payload["provider"] == "catalog-fallback"
+    assert "Parol" in payload["summary"]
 
 
 def test_explain_rate_limit_returns_429(
