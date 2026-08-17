@@ -6,10 +6,12 @@ import pandas as pd
 
 from scripts.titck.manual_overrides import apply_manual_overrides
 from scripts.titck.medicine_mapper import (
+    assign_skrs_barcodes,
     category_from_atc,
     enrich_row_from_titck,
     find_best_titck_match,
     normalize_match_text,
+    normalize_skrs_barcode,
     parse_dosage,
     parse_form,
     score_titck_row,
@@ -24,6 +26,7 @@ def _sample_frame() -> pd.DataFrame:
                 "atc_kodu": "N02BE01",
                 "atc_adi": "PARACETAMOL",
                 "durumu": "AKTIF",
+                "barkod": "8699522090473",
             },
             {
                 "ilac_adi": "APRANAX 275 MG FILM KAPLI TABLET",
@@ -123,3 +126,22 @@ def test_row_corrections_fix_known_bad_fields() -> None:
     )
     assert corrected["dosage"] == "50 mg"
     assert corrected["form"] == "Film Kaplı Tablet"
+
+
+def test_normalize_skrs_barcode_strips_excel_float() -> None:
+    assert normalize_skrs_barcode(8699522090473.0) == "8699522090473"
+    assert normalize_skrs_barcode("8699522090473.0") == "8699522090473"
+
+
+def test_assign_skrs_barcodes_maps_parol() -> None:
+    medicines = [
+        {
+            "medicine_id": "MED001",
+            "medicine_name": "Parol",
+            "brand_name": "Parol",
+        }
+    ]
+    rows = assign_skrs_barcodes(medicines, _sample_frame(), min_score=70.0)
+    assert rows
+    assert rows[0]["medicine_id"] == "MED001"
+    assert rows[0]["barcode"] == "8699522090473"

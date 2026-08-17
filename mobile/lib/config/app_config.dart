@@ -17,12 +17,18 @@ class AppConfig {
 
   static const String scansEndpoint = '/api/v1/scans';
 
+  static const String barcodeLookupEndpoint = '/api/v1/barcode/lookup';
+
+  static const String barcodeScanEndpoint = '/api/v1/barcode/scan';
+
   static const String healthEndpoint = '/health';
 
   /// CPU uzerinde OCR (fast mod, ~4 varyant + erken cikis) dakikalarca surebilir.
   static const Duration analyzeTimeout = Duration(seconds: 300);
 
   static const Duration explainTimeout = Duration(seconds: 30);
+
+  static const Duration barcodeTimeout = Duration(seconds: 30);
 
   static const Duration scansTimeout = Duration(seconds: 15);
 

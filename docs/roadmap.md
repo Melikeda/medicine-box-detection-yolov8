@@ -419,7 +419,7 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] Medicine database final refresh — 131 rows, TİTCK re-sync (Report 24, round 2); later expanded to **1163**
 - [x] User scan history (server sync) — `POST/GET/DELETE /api/v1/scans` + mobile best-effort sync (final-polish-4)
 
-> **Moved to [Future Development](#-future-development):** PostgreSQL migration, Barcode/QR reading, Cloud deployment, iOS support. SQLite + Android MVP remain the supported product stage; revisit those items later if needed.
+> **Moved to [Future Development](#-future-development):** PostgreSQL migration, Cloud deployment, iOS support. SQLite + Android MVP remain the supported product stage; barcode **API** is Phase 22 (`feature/barcode-reading`).
 
 ## Objectives (testing and docs, from former Phase 19)
 
@@ -431,6 +431,33 @@ See [Report 20](reports/20-production-hardening.md).
 
 ---
 
+# Phase 22 — Barcode Reading
+
+**Branch:** `feature/barcode-reading`  
+**Status:** Done (API + Flutter live/photo scanner)
+
+## Objectives
+
+- [x] Optional barcode decoder (`src/barcode/`, zxing-cpp)
+- [x] `medicine_barcodes.csv` + SQLite `medicine_barcodes` (TİTCK GTIN → `medicine_id`)
+- [x] `GET /api/v1/barcode/lookup` and `POST /api/v1/barcode/scan`
+- [x] Analyze tries barcode before OCR; existing OCR path unchanged on miss
+- [x] Explain unchanged (`medicine_id` → Gemini, catalog fallback if Gemini is busy)
+- [x] Flutter barcode viewfinder / scan frame (live + photo → existing result screen)
+
+## Objectives
+
+- [x] Optional barcode decoder (`src/barcode/`, zxing-cpp)
+- [x] `medicine_barcodes.csv` + SQLite `medicine_barcodes` (TİTCK GTIN → `medicine_id`)
+- [x] `GET /api/v1/barcode/lookup` and `POST /api/v1/barcode/scan`
+- [x] Analyze tries barcode before OCR; existing OCR path unchanged on miss
+- [x] Explain unchanged (`medicine_id` → Gemini)
+- [x] Flutter barcode viewfinder / scan frame (live + photo → existing result screen)
+
+Details: [Report 28](reports/28-barcode-reading.md)
+
+---
+
 # 🔭 Future Development
 
 Post-MVP / production-scale work. **Not required** to close the current internship deliverable or Phase 18–19 polish. Track here so the main roadmap stays honest about what ships now vs later.
@@ -438,14 +465,13 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | Item | Why later | When it becomes relevant |
 |------|-----------|---------------------------|
 | **PostgreSQL migration** | SQLite is enough for single-host demo, catalog matching (in-memory RapidFuzz), and low-traffic `scans`. Postgres adds concurrent writes, managed cloud DB, backups, and HA. | Multi-user cloud API, heavy scan-history write load, or ops requirements |
-| **Barcode / QR reading** | Core path is YOLO → OCR → fuzzy match on box text. Barcodes are a parallel identity signal (faster when present, fails when missing/damaged). | Need instant lookup for coded packs, or OCR-weak fallback |
 | **Cloud deployment** | Local API + Docker (+ optional HTTPS tunnel) already cover development and demos. Always-on public hosting adds cost, model/CPU sizing, and ops. | Public testers / production URL without a PC tunnel |
 | **iOS support** | Android Flutter MVP is complete; iOS needs Apple toolchain, signing, and device testing. | App Store / iPhone users |
 | Per-user auth for private scan lists | Scans are global / best-effort today | Multi-tenant production |
 | YOLO retrain (blurry / negative samples) | Current model covers primary demos | Systematic false “kutu değil” / partial-box cases |
 | Multilingual OCR | TR/EN pipeline is in place | Additional markets |
 
-**Principle:** keep CSV → SQLite and Android as the current delivery path; treat Postgres, barcode, cloud hosting, and iOS as optional next-stage work.
+**Principle:** keep CSV → SQLite and Android as the current delivery path; treat Postgres, cloud hosting, and iOS as optional next-stage work.
 
 ---
 
@@ -512,7 +538,8 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ CI/CD (GitHub Actions) | Done | #39 |
 | ✅ LLM explanations (Gemini) | Done | #8 |
 | ✅ Server scan history + E2E tooling | Done (final-polish-4) | #50 / Report 23–25 |
-| 🔭 Future Development | PostgreSQL, barcode/QR, cloud, iOS (post-MVP) | #32 / #50 |
+| 🔭 Future Development | PostgreSQL, cloud, iOS (post-MVP) | #32 / #50 |
+| ✅ Barcode reading | API + Flutter scanner | [Report 28](reports/28-barcode-reading.md) |
 | ⏳ End-of-project docs | Written internship report + GitHub docs polish | Phase 21 (#9 closed) |
 | ✅ Dataset Publishing (Kaggle) | Done | [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) |
 | ⏳ Project Release | Planned | — |

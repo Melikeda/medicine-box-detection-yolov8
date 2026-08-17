@@ -78,6 +78,11 @@ class MedicineResultCard extends StatelessWidget {
                 label: s.matchScoreLabel,
                 value: '${result.matchingScore.toStringAsFixed(1)}%',
               ),
+              if (result.barcode != null && result.barcode!.isNotEmpty)
+                _InfoRow(
+                  label: s.barcodeLabel,
+                  value: result.barcode!,
+                ),
               if (MedicineDisplay.shouldShowField(
                 result.activeIngredient,
                 strings: s,
@@ -131,7 +136,9 @@ class MedicineResultCard extends StatelessWidget {
                 value: result.bestCandidate!,
               ),
             ],
-            if (result.ocrText != null && result.ocrText!.isNotEmpty) ...[
+            if (result.ocrText != null &&
+                result.ocrText!.isNotEmpty &&
+                result.matchSource != 'barcode') ...[
               const SizedBox(height: 8),
               _InfoRow(label: s.ocrLabel, value: result.ocrText!),
             ],

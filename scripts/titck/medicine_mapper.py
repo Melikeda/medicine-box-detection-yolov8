@@ -214,6 +214,89 @@ def enrich_row_from_titck(
     return updated
 
 
+def normalize_skrs_barcode(value: object) -> str:
+    """SKRS barkod hücresini rakam dizisine çevirir."""
+    from scripts.titck.skrs_client import _barcode_cell_to_text
+
+    digits = re.sub(r"\D+", "", _barcode_cell_to_text(value))
+    if len(digits) == 14 and digits.startswith("0"):
+        return digits[1:]
+    return digits
+
+
+def assign_skrs_barcodes(
+    medicines: list[dict[str, str]],
+    frame: pd.DataFrame,
+    *,
+    min_score: float = 55.0,
+) -> list[dict[str, str]]:
+    """
+    SKRS satırlarını katalog ilaçlarına barkod olarak bağlar.
+
+    Her barkod en yüksek skorlu tek ilaca yazılır. Aynı barkod iki ilaca gitmez.
+    """
+    from collections import defaultdict
+
+    by_token: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for medicine in medicines:
+        medicine_id = medicine.get("medicine_id", "").strip()
+        if not medicine_id:
+            continue
+        tokens = tokenize(
+            medicine.get("brand_name") or medicine.get("medicine_name") or ""
+        )
+        for token in tokens[:3]:
+            by_token[token].append(medicine)
+
+    if "barkod" not in frame.columns:
+        return []
+
+    assigned: dict[str, tuple[float, str]] = {}
+    active = frame[frame["durumu"].str.upper().eq("AKTIF")]
+
+    for _, row in active.iterrows():
+        barcode = normalize_skrs_barcode(row.get("barkod"))
+        if len(barcode) < 8:
+            continue
+        ilac_adi = str(row.get("ilac_adi") or "")
+        tokens = tokenize(ilac_adi)
+        if not tokens:
+            continue
+
+        candidates: list[dict[str, str]] = []
+        seen_ids: set[str] = set()
+        for token in tokens[:2]:
+            for medicine in by_token.get(token, []):
+                medicine_id = medicine.get("medicine_id", "")
+                if medicine_id in seen_ids:
+                    continue
+                seen_ids.add(medicine_id)
+                candidates.append(medicine)
+        best_id = ""
+        best_score = 0.0
+        for medicine in candidates:
+            score = score_titck_row(
+                medicine.get("medicine_name", ""),
+                medicine.get("brand_name", ""),
+                ilac_adi,
+            )
+            if score > best_score:
+                best_score = score
+                best_id = medicine.get("medicine_id", "")
+
+        if best_score < min_score or not best_id:
+            continue
+
+        previous = assigned.get(barcode)
+        if previous is None or best_score > previous[0]:
+            assigned[barcode] = (best_score, best_id)
+
+    return [
+        {"barcode": barcode, "medicine_id": medicine_id}
+        for barcode, (_score, medicine_id) in sorted(assigned.items())
+    ]
+
+
 def _is_placeholder(value: str | None) -> bool:
     if value is None:
         return True

@@ -4,11 +4,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from sqlalchemy import func, or_, select
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.orm import Session
 
-from src.database.csv_reader import load_medicines
-from src.database.models import Medicine, Scan
+from src.database.csv_reader import load_medicine_barcodes, load_medicines
+from src.database.models import Medicine, MedicineBarcode, Scan
 from src.database.session import (
     create_tables,
     init_engine,
@@ -21,6 +21,7 @@ def seed_medicines_from_csv(
     csv_path: Path,
     database_path: Path,
     replace_existing: bool = True,
+    barcodes_csv_path: Path | None = None,
 ) -> int:
     """
     CSV kayıtlarını SQLite'a aktarır.
@@ -59,6 +60,19 @@ def seed_medicines_from_csv(
                 ]
             )
 
+        barcode_path = barcodes_csv_path or csv_path.with_name(
+            "medicine_barcodes.csv"
+        )
+        _seed_barcodes(
+            session,
+            barcodes_csv_path=barcode_path,
+            replace_existing=replace_existing,
+            known_medicine_ids={
+                row.get("medicine_id", "").strip()
+                for row in medicines
+            },
+        )
+
     return len(medicines)
 
 
@@ -81,6 +95,7 @@ def ensure_database_seeded(
     *,
     csv_path: Path,
     database_path: Path,
+    barcodes_csv_path: Path | None = None,
 ) -> int:
     """
     Veritabanını hazırlar ve CSV ile senkronize eder.
@@ -91,7 +106,39 @@ def ensure_database_seeded(
         csv_path=csv_path,
         database_path=database_path,
         replace_existing=True,
+        barcodes_csv_path=barcodes_csv_path,
     )
+
+
+def _seed_barcodes(
+    session: Session,
+    *,
+    barcodes_csv_path: Path,
+    replace_existing: bool,
+    known_medicine_ids: set[str],
+) -> int:
+    """medicine_barcodes tablosunu CSV ile doldurur."""
+    rows = load_medicine_barcodes(barcodes_csv_path)
+
+    if replace_existing:
+        session.execute(delete(MedicineBarcode))
+
+    from src.barcode.normalize import barcode_lookup_keys
+
+    inserted = 0
+    for row in rows:
+        medicine_id = row["medicine_id"]
+        if medicine_id not in known_medicine_ids:
+            continue
+        for code in barcode_lookup_keys(row["barcode"]):
+            session.merge(
+                MedicineBarcode(
+                    barcode=code,
+                    medicine_id=medicine_id,
+                )
+            )
+            inserted += 1
+    return inserted
 
 
 def list_medicines(
@@ -159,6 +206,47 @@ def get_medicine_by_id(
 ) -> Medicine | None:
     """medicine_id ile tek ilaç kaydı döndürür."""
     return session.get(Medicine, medicine_id.strip())
+
+
+def get_medicine_by_barcode(
+    session: Session,
+    barcode: str,
+) -> Medicine | None:
+    """Barkodun olası GTIN biçimleriyle ilaç kaydı döndürür."""
+    from src.barcode.normalize import barcode_lookup_keys
+
+    for code in barcode_lookup_keys(barcode):
+        mapping = session.get(MedicineBarcode, code)
+        if mapping is None:
+            continue
+        medicine = session.get(Medicine, mapping.medicine_id)
+        if medicine is not None:
+            return medicine
+    return None
+
+
+def list_barcodes_for_medicine(
+    session: Session,
+    medicine_id: str,
+) -> list[str]:
+    """Bir ilaca bağlı barkodları döndürür."""
+    rows = session.scalars(
+        select(MedicineBarcode.barcode)
+        .where(MedicineBarcode.medicine_id == medicine_id.strip())
+        .order_by(MedicineBarcode.barcode)
+    ).all()
+    return [str(code) for code in rows]
+
+
+def load_barcode_index(
+    database_path: Path,
+) -> dict[str, str]:
+    """Barkod → medicine_id sözlüğü (pipeline bellek içi arama)."""
+    init_engine(database_path)
+    create_tables()
+    with session_scope() as session:
+        rows = session.scalars(select(MedicineBarcode)).all()
+        return {row.barcode: row.medicine_id for row in rows}
 
 
 def list_categories(session: Session) -> list[str]:

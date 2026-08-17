@@ -26,6 +26,7 @@ from backend.app.dependencies import (
 )
 from backend.app.exceptions import register_exception_handlers
 from backend.app.routers import analyze as analyze_router
+from backend.app.routers import barcode as barcode_router
 from backend.app.routers import explain as explain_router
 from backend.app.routers import health, medicines, scans
 from backend.app.routers.analyze import get_analyze_service
@@ -112,6 +113,7 @@ def _build_e2e_client(config: PipelineConfig) -> TestClient:
     app.include_router(health.router)
     app.include_router(analyze_router.router, prefix="/api/v1")
     app.include_router(medicines.router, prefix="/api/v1")
+    app.include_router(barcode_router.router, prefix="/api/v1")
     app.include_router(explain_router.router, prefix="/api/v1")
     app.include_router(scans.router, prefix="/api/v1")
 
@@ -165,6 +167,14 @@ def test_mobile_backend_api_e2e_flow(
     )
     assert meds_response.status_code == 200
     assert meds_response.json()["total"] >= 1
+
+    barcode_info, timings["barcode_info_ms"] = _timed(
+        client,
+        "get",
+        "/api/v1/barcode/info",
+    )
+    assert barcode_info.status_code == 200
+    assert "scan_endpoint" in barcode_info.json()
 
     explain_info, timings["explain_info_ms"] = _timed(
         client,

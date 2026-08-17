@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/analyze_response.dart';
+import '../screens/barcode_scanner_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/image_preview_screen.dart';
 import '../screens/result_screen.dart';
@@ -23,6 +24,7 @@ class AppRoutes {
   static const home = '/home';
   static const history = '/history';
   static const imagePreview = '/preview';
+  static const barcodeScanner = '/barcode';
   static const result = '/result';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -53,6 +55,11 @@ class AppRoutes {
         return MaterialPageRoute<void>(
           settings: settings,
           builder: (_) => ImagePreviewScreen(imagePath: imagePath),
+        );
+      case barcodeScanner:
+        return MaterialPageRoute<void>(
+          settings: settings,
+          builder: (_) => const BarcodeScannerScreen(),
         );
       case result:
         final args = settings.arguments;

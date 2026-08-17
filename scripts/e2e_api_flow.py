@@ -171,6 +171,19 @@ def main() -> int:
                 raise RuntimeError(f"medicines status={meds.status_code}")
             report["medicines_total"] = meds.json().get("total")
 
+            barcode_info = _step(
+                "GET /api/v1/barcode/info",
+                lambda: client.get("/api/v1/barcode/info"),
+                results,
+            )
+            if barcode_info.status_code != 200:
+                raise RuntimeError(
+                    f"barcode info status={barcode_info.status_code}"
+                )
+            report["barcode_scan_endpoint"] = barcode_info.json().get(
+                "scan_endpoint"
+            )
+
             explain_info = _step(
                 "GET /api/v1/explain/info",
                 lambda: client.get("/api/v1/explain/info"),

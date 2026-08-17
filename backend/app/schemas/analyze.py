@@ -25,6 +25,8 @@ class MedicineBoxResultSchema(BaseModel):
     medicine: dict[str, str] | None = None
     failure_reason: str | None = None
     hint: str | None = None
+    match_source: str = "ocr"
+    barcode: str | None = None
 
 
 class AnalyzeSummarySchema(BaseModel):
@@ -42,6 +44,7 @@ class AnalyzeTimingSchema(BaseModel):
     yolo_ms: float = 0.0
     ocr_ms: float = 0.0
     matching_ms: float = 0.0
+    barcode_ms: float = 0.0
     total_ms: float = 0.0
 
 

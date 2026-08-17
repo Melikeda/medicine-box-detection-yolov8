@@ -26,10 +26,11 @@ Use this file when organizing issues on the GitHub Project board named **Yolocil
 | Popular TR catalog (~1160) | Merged (PR [#59](https://github.com/Melikeda/medicine-box-detection-yolov8/pull/59) → **1163**) |
 | Matching reliability | Merged (PR [#67](https://github.com/Melikeda/yolocilin/pull/67) — suffix OCR must not guess a drug) |
 | [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Test and document final system — closed |
+| Barcode reading | `feature/barcode-reading` — API + Flutter live/photo scanner ([Report 28](../docs/reports/28-barcode-reading.md)) |
 
 ## In Progress
 
-None — `main` is current. Next planned work: Phase 21 (`feature/project-release`).
+None.
 
 ## Post-MVP / Todo
 
@@ -37,7 +38,7 @@ None — `main` is current. Next planned work: Phase 21 (`feature/project-releas
 |------|--------|
 | Written internship report | Phase 21 deliverable (GitHub #9 is closed) |
 | GitHub docs polish | Finish in Phase 21 / Release v1.0.0 |
-| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Closed; leftovers are Future Development: PostgreSQL, cloud, barcode, iOS |
+| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Closed; leftovers: PostgreSQL, cloud, iOS |
 | Auth for private scan namespaces | Scans remain global; production DELETE gated by `SCANS_API_KEY` |
 | Cloud API host (HTTPS) | Needed for long-lived remote testers; tunnel OK for demos |
 
@@ -78,6 +79,7 @@ Full index: [docs/reports/README.md](../docs/reports/README.md)
 | [25](../docs/reports/25-e2e-performance.md) | E2E & benchmarks |
 | [26](../docs/reports/26-ocr-engine-comparison.md) | EasyOCR vs PaddleOCR (EasyOCR kept) |
 | [27](../docs/reports/27-matching-reliability.md) | Matching reliability gates |
+| [28](../docs/reports/28-barcode-reading.md) | Barcode reading path |
 
 ## CI status checks (recommended for branch protection)
 

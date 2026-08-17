@@ -51,6 +51,11 @@ class _MainShellScreenState extends State<MainShellScreen> {
     }
   }
 
+  Future<void> _openBarcodeScanner() async {
+    await Navigator.of(context).pushNamed(AppRoutes.barcodeScanner);
+    _historyKey.currentState?.reload();
+  }
+
   Future<void> _pickFromGallery() {
     return _pickImage(
       source: PickSource.gallery,
@@ -123,6 +128,7 @@ class _MainShellScreenState extends State<MainShellScreen> {
           ScanTab(
             onCameraTap: _captureFromCamera,
             onGalleryTap: _pickFromGallery,
+            onBarcodeTap: _openBarcodeScanner,
             isPicking: _isPicking,
             activePickSource: _activePickSource,
           ),

@@ -48,6 +48,7 @@ class ApiSettings(BaseSettings):
     cors_origins: Annotated[tuple[str, ...], NoDecode] = ("*",)
     rate_limit_enabled: bool = True
     rate_limit_analyze_per_minute: int = Field(default=20, ge=1, le=1000)
+    rate_limit_barcode_per_minute: int = Field(default=30, ge=1, le=1000)
 
     use_sqlite: bool = True
     sqlite_path: str = "data/database/medicines.db"

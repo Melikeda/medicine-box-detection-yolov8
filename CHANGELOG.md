@@ -3,7 +3,19 @@
 All notable changes to **Yolocilin** (Medicine Box Detection, Identification and Information System) are documented here.  
 Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased] — tighter matching gates
+## [Unreleased] — barcode reading path
+
+### Added
+
+- Optional barcode identity path beside OCR: `GET/POST /api/v1/barcode/*`, `medicine_barcodes.csv` (2043 GTINs → 1041 of 1163 catalog rows), zxing-cpp decoder ([Report 28](docs/reports/28-barcode-reading.md))
+- Flutter **Barkod tara** on the scan tab (live camera + photo backup) → existing result screen and explain card
+- Analyze tries barcode on the YOLO crop (and full frame if no box) before OCR; a barcode miss continues to EasyOCR
+- TİTCK SKRS fallback when a GTIN is not in the 1163-row map; AIM `]C1` prefixes from phone scanners are stripped
+
+### Changed
+
+- Roadmap Phase 22 (`feature/barcode-reading`) completed
+- Gemini explain: 503 / high-demand retries the lite model, then catalog text so “İlaç hakkında” still fills
 
 ### Added
 

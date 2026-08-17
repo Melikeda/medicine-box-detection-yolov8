@@ -93,6 +93,12 @@ class AppStrings {
     required this.pickGalleryHint,
     required this.tryCamera,
     required this.tryCameraHint,
+    required this.scanBarcode,
+    required this.scanBarcodeHint,
+    required this.barcodeAlign,
+    required this.barcodeFromPhoto,
+    required this.barcodeLookingUp,
+    required this.barcodeLabel,
     required this.historyTitle,
     required this.historyEmptyTitle,
     required this.historyEmptyBody,
@@ -182,6 +188,12 @@ class AppStrings {
   final String pickGalleryHint;
   final String tryCamera;
   final String tryCameraHint;
+  final String scanBarcode;
+  final String scanBarcodeHint;
+  final String barcodeAlign;
+  final String barcodeFromPhoto;
+  final String barcodeLookingUp;
+  final String barcodeLabel;
   final String historyTitle;
   final String historyEmptyTitle;
   final String historyEmptyBody;
@@ -296,7 +308,8 @@ class AppStrings {
     required double seconds,
     required String ocrMode,
   }) {
-    return '$durationLabel: ${seconds.toStringAsFixed(1)} · OCR: $ocrMode';
+    final modeLabel = ocrMode == 'barcode' ? barcodeLabel : ocrLabel;
+    return '$durationLabel: ${seconds.toStringAsFixed(1)} · $modeLabel: $ocrMode';
   }
 
   /// Overlay alt yazisi — secilen OCR moduna gore.
@@ -320,12 +333,18 @@ class AppStrings {
     navScan: 'Tara',
     navHistory: 'Geçmiş',
     scanTitle: 'Hızlı İlaç Tarama',
-    scanSubtitle: 'İlaç kutusu fotoğrafını çekin veya galeriden seçin.',
+    scanSubtitle: 'Kutu fotoğrafı çekin, galeriden seçin veya barkodu tarayın.',
     alignBox: 'Kutuyu çerçeveye hizalayın',
     pickGallery: 'Galeriden Seç',
     pickGalleryHint: 'Kayıtlı fotoğraflardan seç',
     tryCamera: 'Kamerayı Dene',
     tryCameraHint: 'Canlı önizleme ile kutuyu hizala',
+    scanBarcode: 'Barkod tara',
+    scanBarcodeHint: 'Kodu kadraja alın veya fotoğraftan okuyun',
+    barcodeAlign: 'Barkodu çerçeveye hizalayın',
+    barcodeFromPhoto: 'Fotoğraftan oku',
+    barcodeLookingUp: 'Barkod aranıyor...',
+    barcodeLabel: 'Barkod',
     historyTitle: 'Tarama Geçmişi',
     historyEmptyTitle: 'Henüz kayıt yok',
     historyEmptyBody: 'Yaptığınız taramalar burada listelenir.',
@@ -418,12 +437,18 @@ class AppStrings {
     navScan: 'Scan',
     navHistory: 'History',
     scanTitle: 'Quick Medicine Scan',
-    scanSubtitle: 'Take a photo of a medicine box or choose from gallery.',
+    scanSubtitle: 'Photograph a box, pick from gallery, or scan the barcode.',
     alignBox: 'Align the box in the frame',
     pickGallery: 'Choose from Gallery',
     pickGalleryHint: 'Pick from saved photos',
     tryCamera: 'Try Camera',
     tryCameraHint: 'Align the box with live preview',
+    scanBarcode: 'Scan barcode',
+    scanBarcodeHint: 'Align the code in the frame or read from a photo',
+    barcodeAlign: 'Align the barcode in the frame',
+    barcodeFromPhoto: 'Read from photo',
+    barcodeLookingUp: 'Looking up barcode...',
+    barcodeLabel: 'Barcode',
     historyTitle: 'Scan History',
     historyEmptyTitle: 'No records yet',
     historyEmptyBody: 'Your scans will appear here.',

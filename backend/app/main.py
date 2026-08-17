@@ -12,7 +12,7 @@ from backend.app.middleware.rate_limit import (
     AnalyzeRateLimiter,
 )
 from backend.app.middleware.security_headers import SecurityHeadersMiddleware
-from backend.app.routers import analyze, explain, health, medicines, scans
+from backend.app.routers import analyze, barcode, explain, health, medicines, scans
 from backend.app.services.explanation_cache import reset_shared_explanation_cache
 from backend.app.services.llm_service import LlmExplanationService
 from backend.app.services.medicine_service import MedicineQueryService
@@ -77,6 +77,9 @@ async def lifespan(app: FastAPI):
         "Scan history ready (max_entries=%s)",
         settings.scan_history_max_entries,
     )
+    from src.barcode.skrs_resolver import warmup_skrs_index
+
+    warmup_skrs_index()
     logger.info("API startup complete.")
 
     yield
@@ -133,6 +136,10 @@ def create_app(settings: ApiSettings | None = None) -> FastAPI:
     )
     app.include_router(
         medicines.router,
+        prefix=settings.api_prefix,
+    )
+    app.include_router(
+        barcode.router,
         prefix=settings.api_prefix,
     )
     app.include_router(

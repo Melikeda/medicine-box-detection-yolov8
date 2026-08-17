@@ -48,11 +48,19 @@ A PaddleOCR trial (same YOLO crops + matcher) did not improve identity accuracy 
 
 ---
 
+## zxing-cpp
+
+**Role:** Optional barcode / GTIN reader (EAN-13, DataMatrix) as a parallel identity path.
+
+**Why:** Exact lookup is faster than OCR when the code is in frame; official wheels on Windows and Linux (no libzbar). OCR remains the fallback. See [Report 28](reports/28-barcode-reading.md).
+
+---
+
 ## CSV / SQLite / PostgreSQL
 
 | Stage | Technology | Why |
 |-------|------------|-----|
-| Current | CSV + SQLite | Catalog (**1163**) + `scans` history table |
+| Current | CSV + SQLite | Catalog (**1163**) + barcode map + `scans` history table |
 | Production (later) | PostgreSQL | Concurrent users; optional when scaling cloud |
 
 ---
@@ -61,7 +69,7 @@ A PaddleOCR trial (same YOLO crops + matcher) did not improve identity accuracy 
 
 **Role:** REST API backend for the mobile app.
 
-**Status:** Implemented — health, analyze, medicines, explain, scans; upload validation; async pipeline.
+**Status:** Implemented — health, analyze, medicines, barcode, explain, scans; upload validation; async pipeline.
 
 **Why:** Native async support, automatic OpenAPI docs, Pydantic validation, straightforward file upload handling, excellent Python AI ecosystem fit.
 

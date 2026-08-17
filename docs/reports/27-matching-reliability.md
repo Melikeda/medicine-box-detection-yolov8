@@ -50,7 +50,7 @@ Tests: `tests/test_matching.py` (suffix rejection, Etol/Parol/Nurofen still matc
 
 - Flutter, FastAPI routes, YOLO weights, EasyOCR as the only engine
 - Gemini explain stays **optional** (`LLM_ENABLED` + local `.env` key; never commit `.env`)
-- Barcode / vision-LLM identity remain Future Development
+- Barcode identity is an optional parallel path ([Report 28](28-barcode-reading.md)); OCR matching gates above are unchanged
 
 ---
 

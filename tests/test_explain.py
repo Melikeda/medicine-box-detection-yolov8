@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.dependencies import get_llm_service, get_medicine_service
-from backend.app.exceptions import register_exception_handlers
+from backend.app.exceptions import LlmUnavailableError, register_exception_handlers
 from backend.app.routers import explain as explain_router
 from backend.app.services.llm_service import (
     LlmExplanationService,
@@ -266,3 +266,29 @@ def test_medicine_service_reuses_instance(
     first = MedicineQueryService.from_pipeline_config(seeded_pipeline_config)
     second = MedicineQueryService.from_pipeline_config(seeded_pipeline_config)
     assert first is second
+
+
+class _UnavailableExplainer:
+    def explain(self, medicine: dict[str, str], *, locale: str = "tr"):
+        raise LlmUnavailableError("LLM servisi şu anda kullanılamıyor.")
+
+
+def test_explain_falls_back_to_catalog_when_gemini_unavailable(
+    llm_settings: ApiSettings,
+) -> None:
+    service = LlmExplanationService(
+        settings=llm_settings,
+        explainer=_UnavailableExplainer(),
+        provider="gemini",
+        model="gemini-flash-latest",
+    )
+    medicine = {
+        "medicine_id": "MED001",
+        "medicine_name": "Parol",
+        "category": "Ağrı Kesici",
+        "active_ingredient": "Paracetamol",
+    }
+    explanation, cached = service.explain_medicine(medicine, locale="tr")
+    assert cached is False
+    assert "Parol" in explanation.summary
+    assert service.model == "catalog-fallback"

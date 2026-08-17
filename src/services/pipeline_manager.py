@@ -157,7 +157,31 @@ class PipelineManager:
         detection_count = len(detected_boxes)
         print(f"YOLO tespit sayısı: {detection_count}")
 
+        image_width = 0
+        image_height = 0
+        original_image = cv2.imread(str(image_path))
+        if original_image is not None:
+            image_height, image_width = original_image.shape[:2]
+
         if detection_count == 0:
+            barcode_box = self._match_full_image_barcode(
+                original_image=original_image,
+                image_width=image_width,
+                image_height=image_height,
+                timing=timing,
+            )
+            if barcode_box is not None:
+                timing.total_ms = (
+                    time.perf_counter() - pipeline_started
+                ) * 1000
+                return MultiMedicineAnalysisResult(
+                    success=True,
+                    image_path=str(image_path),
+                    detection_count=1,
+                    medicines=[barcode_box],
+                    medicines_compared=medicines_compared,
+                    timing=timing,
+                )
             return MultiMedicineAnalysisResult(
                 success=False,
                 image_path=str(image_path),
@@ -165,12 +189,6 @@ class PipelineManager:
                 medicines_compared=medicines_compared,
                 error=hint_for("no_detection"),
             )
-
-        image_width = 0
-        image_height = 0
-        original_image = cv2.imread(str(image_path))
-        if original_image is not None:
-            image_height, image_width = original_image.shape[:2]
 
         box_results: list[BoxAnalysisResult] = []
 
@@ -189,9 +207,13 @@ class PipelineManager:
                         save_debug_outputs=save_debug_outputs,
                     )
                 )
-                timing.ocr_ms += (
+                elapsed_ms = (
                     time.perf_counter() - ocr_started
                 ) * 1000
+                if match_result.match_source == "barcode":
+                    timing.barcode_ms += elapsed_ms
+                else:
+                    timing.ocr_ms += elapsed_ms
 
                 ocr_text = match_result.best_ocr_text
                 if ocr_text:
@@ -253,6 +275,8 @@ class PipelineManager:
                         medicine=match_result.medicine,
                         failure_reason=failure_reason,
                         hint=hint,
+                        match_source=match_result.match_source,
+                        barcode=match_result.barcode,
                     )
                 )
 
@@ -351,6 +375,18 @@ class PipelineManager:
         """OCR + eslestirme; zayif sonucta ek acilarla tekrar dener."""
         assert self._ocr_service is not None
         assert self._matching_service is not None
+
+        barcode_started = time.perf_counter()
+        barcode_match = self._matching_service.match_image_barcodes(
+            detected_box.cropped_image,
+        )
+        barcode_ms = (time.perf_counter() - barcode_started) * 1000
+        if barcode_match is not None and barcode_match.status == "matched":
+            print(
+                f"Barkod eşleşmesi: {barcode_match.barcode} → "
+                f"{barcode_match.medicine_name}"
+            )
+            return [], barcode_match, {"barcode_ms": barcode_ms}
 
         early_stop = (
             self._build_early_stop_checker()
@@ -472,6 +508,55 @@ class PipelineManager:
             )
 
         return should_stop
+
+    def _match_full_image_barcode(
+        self,
+        *,
+        original_image,
+        image_width: int,
+        image_height: int,
+        timing: PipelineTiming,
+    ) -> BoxAnalysisResult | None:
+        """YOLO kutu bulamazsa tüm karede barkod dener."""
+        assert self._matching_service is not None
+        if original_image is None:
+            return None
+
+        barcode_started = time.perf_counter()
+        barcode_match = self._matching_service.match_image_barcodes(
+            original_image,
+        )
+        timing.barcode_ms += (
+            time.perf_counter() - barcode_started
+        ) * 1000
+        if barcode_match is None or barcode_match.status != "matched":
+            return None
+
+        print(
+            f"Barkod eşleşmesi (tam kare): {barcode_match.barcode} → "
+            f"{barcode_match.medicine_name}"
+        )
+        from src.services.detection import BoundingBox
+
+        return BoxAnalysisResult(
+            box_index=1,
+            bounding_box=BoundingBox(
+                x1=0,
+                y1=0,
+                x2=max(image_width, 1),
+                y2=max(image_height, 1),
+            ),
+            yolo_confidence=0.0,
+            ocr_text=barcode_match.barcode,
+            medicine_name=barcode_match.medicine_name,
+            matching_score=barcode_match.matching_score,
+            status="matched",
+            display_message=barcode_match.display_message,
+            best_candidate=barcode_match.best_candidate,
+            medicine=barcode_match.medicine,
+            match_source="barcode",
+            barcode=barcode_match.barcode,
+        )
 
     def _validate_paths(self) -> None:
         from src.services.model_paths import missing_model_help

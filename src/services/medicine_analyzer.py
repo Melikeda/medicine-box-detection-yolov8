@@ -48,6 +48,7 @@ class PipelineTiming:
     yolo_ms: float = 0.0
     ocr_ms: float = 0.0
     matching_ms: float = 0.0
+    barcode_ms: float = 0.0
     total_ms: float = 0.0
 
     def to_dict(self) -> dict[str, float]:
@@ -71,6 +72,8 @@ class BoxAnalysisResult:
     medicine: dict[str, str] | None = None
     failure_reason: str | None = None
     hint: str | None = None
+    match_source: str = "ocr"
+    barcode: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)

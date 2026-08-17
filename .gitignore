@@ -155,6 +155,7 @@ scripts/*.log
 # ==========================
 
 data/database/titck/*.xlsx
+data/database/titck/skrs_barcode_index.csv
 data/database/_titck_page.html
 
 # ==========================

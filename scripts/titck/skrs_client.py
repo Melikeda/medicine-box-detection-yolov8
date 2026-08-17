@@ -78,6 +78,42 @@ def download_skrs_xlsx(
     return info
 
 
+def _barcode_cell_to_text(value: object) -> str:
+    """Excel float / .0 / bilimsel gösterimi rakam dizisine çevirir."""
+    if value is None:
+        return ""
+    try:
+        if pd.isna(value):
+            return ""
+    except (TypeError, ValueError):
+        pass
+    if isinstance(value, bool):
+        return ""
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, float):
+        if value.is_integer():
+            return str(int(value))
+        return ""
+    text = str(value).strip()
+    if not text or text.lower() in {"nan", "none"}:
+        return ""
+    if text.endswith(".0") and text[:-2].isdigit():
+        return text[:-2]
+    scientific = re.fullmatch(
+        r"\d+(?:\.\d+)?[eE][+-]?\d+",
+        text,
+    )
+    if scientific:
+        try:
+            as_int = int(float(text))
+            if as_int > 0:
+                return str(as_int)
+        except (TypeError, ValueError, OverflowError):
+            return text
+    return text
+
+
 def load_skrs_dataframe(xlsx_path: Path) -> pd.DataFrame:
     """AKTIF URUNLER listesini normalize edilmiş sütunlarla yükler."""
     raw = pd.read_excel(xlsx_path, sheet_name=0, skiprows=2)
@@ -87,6 +123,8 @@ def load_skrs_dataframe(xlsx_path: Path) -> pd.DataFrame:
     frame["atc_kodu"] = frame["atc_kodu"].astype(str).str.strip()
     frame["atc_adi"] = frame["atc_adi"].astype(str).str.strip()
     frame["durumu"] = frame["durumu"].astype(str).str.strip()
+    if "barkod" in frame.columns:
+        frame["barkod"] = frame["barkod"].map(_barcode_cell_to_text)
     frame = frame[frame["ilac_adi"].str.len() > 0]
     frame = frame[~frame["ilac_adi"].str.lower().eq("nan")]
     return frame.reset_index(drop=True)

@@ -21,6 +21,7 @@ Talks to the FastAPI backend: analyze → result UI → optional Gemini explain 
 | Local scan history (sqflite) | Done |
 | Best-effort `POST /api/v1/scans` sync | Done |
 | “İlaç hakkında” (`POST /api/v1/explain`) | Done (needs backend LLM) |
+| Barcode (live frame + photo) | Done (`GET/POST /api/v1/barcode`) |
 | iOS | Not yet |
 
 Reports: [15](../docs/reports/15-flutter-foundation.md) · [16](../docs/reports/16-mobile-integration.md) · [22](../docs/reports/22-camera-capture.md) · [23](../docs/reports/23-scan-history.md) · [21](../docs/reports/21-llm-integration.md)
@@ -66,7 +67,8 @@ cd mobile
 flutter run
 ```
 
-Flow: **Fotoğraf Çek** / gallery → preview → choose **OCR mode** (Hızlı / Hassas) → **Analiz Et** → result.
+Flow: **Fotoğraf Çek** / gallery → preview → choose **OCR mode** (Hızlı / Hassas) → **Analiz Et** → result.  
+Barcode: on the scan viewfinder tap **Barkod tara** → live frame (or **Fotoğraftan oku**) → same result screen + “İlaç hakkında”.
 
 | OCR mode | API | Notes |
 |----------|-----|--------|

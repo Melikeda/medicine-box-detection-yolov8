@@ -12,6 +12,8 @@ class MedicineBoxResult {
     this.medicine,
     this.failureReason,
     this.hint,
+    this.matchSource = 'ocr',
+    this.barcode,
   });
 
   final int boxIndex;
@@ -26,6 +28,8 @@ class MedicineBoxResult {
   final Map<String, String>? medicine;
   final String? failureReason;
   final String? hint;
+  final String matchSource;
+  final String? barcode;
 
   factory MedicineBoxResult.fromJson(Map<String, dynamic> json) {
     final rawMedicine = json['medicine'];
@@ -49,6 +53,8 @@ class MedicineBoxResult {
       medicine: medicineMap,
       failureReason: json['failure_reason'] as String?,
       hint: json['hint'] as String?,
+      matchSource: json['match_source'] as String? ?? 'ocr',
+      barcode: json['barcode'] as String?,
     );
   }
 
@@ -87,6 +93,8 @@ class MedicineBoxResult {
       if (medicine != null) 'medicine': medicine,
       if (failureReason != null) 'failure_reason': failureReason,
       if (hint != null) 'hint': hint,
+      'match_source': matchSource,
+      if (barcode != null) 'barcode': barcode,
     };
   }
 }
