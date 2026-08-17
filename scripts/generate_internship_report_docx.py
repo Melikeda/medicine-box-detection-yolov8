@@ -626,7 +626,8 @@ def build():
         "preprocessing, OCR, matching, the REST API, SQLite, Docker, GitHub Actions "
         "and the Flutter client. Later phases added production-oriented controls, "
         "catalog expansion from the TİTCK SKRS list, optional Gemini explanations, "
-        "camera capture and scan history. Methods learned during development were also "
+        "camera capture, scan history and an optional barcode identity path beside OCR. "
+        "Methods learned during development were also "
         "recorded in three Medium series that follow the layers of the product [30], "
         "[31], [32]."
     )
@@ -744,7 +745,8 @@ def build():
         "GitHub Actions; Flutter Android client (gallery, then camera); catalog "
         "expansion from TİTCK SKRS; then CPU performance work, production hardening, "
         "Gemini explanations, scan history, end-to-end tooling; a PaddleOCR trial "
-        "(not adopted); and tighter matching so suffix OCR cannot open a wrong drug card."
+        "(not adopted); tighter matching so suffix OCR cannot open a wrong drug card; "
+        "and an optional barcode (EAN/GTIN) identity path beside OCR."
     )
     rep.body(
         "An early idea of a Streamlit web interface was dropped. GitHub issue #7 was "
@@ -771,14 +773,16 @@ def build():
             ["Image processing", "OpenCV, Pillow", "Crop, resize, CLAHE, threshold, OCR variants"],
             ["OCR", "EasyOCR 1.7.2 (tr, en)", "Text from cropped boxes; PaddleOCR tried, not adopted"],
             ["Matching", "RapidFuzz 3.14.5 (fuzz.WRatio)", "Noisy OCR to catalog row"],
+            ["Barcode", "zxing-cpp 2.3.0", "Optional EAN-13 / DataMatrix; OCR remains fallback"],
             ["Catalog seed", "CSV (medicines.csv)", "Source of truth, 1163 rows"],
-            ["Runtime database", "SQLite via SQLAlchemy 2.0.46", "medicines and scans tables"],
+            ["Barcode map", "CSV (medicine_barcodes.csv)", "2043 GTINs to 1041 catalog rows"],
+            ["Runtime database", "SQLite via SQLAlchemy 2.0.46", "medicines, medicine_barcodes, scans"],
             ["Official enrichment", "TİTCK SKRS XLSX (pandas, openpyxl)", "Dosage, form, ingredient, brand expansion"],
             ["Backend", "FastAPI 0.140.0, Uvicorn, Pydantic Settings", "REST API"],
             ["LLM (optional)", "google-genai 1.16.1, Gemini Flash", "POST /api/v1/explain"],
             ["Mobile", "Flutter 3.19+, Dart SDK ≥ 3.3", "Android client Yolocilin"],
             ["Mobile storage", "sqflite, shared_preferences", "Local history and OCR-mode preference"],
-            ["Mobile HTTP / camera", "http, image_picker", "Multipart upload, gallery and camera"],
+            ["Mobile HTTP / camera", "http, image_picker, mobile_scanner", "Upload, gallery, camera, live barcode"],
             ["Tests", "pytest 8.4.2, httpx, Flutter test", "Backend and widget tests"],
             ["Containers", "Docker, docker-compose", "API image python:3.12-slim-bookworm"],
             ["CI", "GitHub Actions", "Backend tests, mobile tests, Docker build"],
@@ -791,10 +795,10 @@ def build():
     rep.body(
         "The following items are stated as not implemented in the code and roadmap: "
         "end-user login, JWT or private per-user scan lists (server scans are a global "
-        "list); an admin panel; an iOS client; PostgreSQL; a barcode or QR path; a "
+        "list); an admin panel; an iOS client; PostgreSQL; a "
         "public cloud HTTPS deployment; WAF or DDoS protection; a cloud secret manager "
         "for the Gemini key. There is no login screen. The mobile flow is splash, home "
-        "(welcome / scan / history), image preview, then result."
+        "(welcome / scan / history), image preview or barcode scan, then result."
     )
     rep.image(ASSETS / "yolocilin-banner.png", 14.0)
     rep.caption(
@@ -820,12 +824,13 @@ def build():
         "Projects board with Todo, In Progress and Done columns. Tasks included collecting and "
         "annotating medicine-box images; training YOLOv8n; writing OpenCV modules and "
         "EasyOCR pipelines; implementing RapidFuzz matching and later reliability "
-        "guards; building the FastAPI analyze, medicines, explain and scans endpoints; "
-        "seeding SQLite from CSV; expanding the catalog from TİTCK SKRS; writing "
-        "pytest and Flutter tests; packaging the API with Docker; configuring GitHub "
-        "Actions; implementing the Android client (gallery, camera, bilingual UI, "
-        "history); and hardening production settings (CORS, rate limits, magic-byte "
-        "upload checks). Related code is in the Appendixes, not in this section."
+        "guards; building the FastAPI analyze, medicines, barcode, explain and scans "
+        "endpoints; seeding SQLite from CSV; expanding the catalog and barcode map from "
+        "TİTCK SKRS; writing pytest and Flutter tests; packaging the API with Docker; "
+        "configuring GitHub Actions; implementing the Android client (gallery, camera, "
+        "barcode scan, bilingual UI, history); and hardening production settings (CORS, "
+        "rate limits, magic-byte upload checks). Related code is in the Appendixes, not "
+        "in this section."
     )
 
     rep.h2("4.2 Project Purpose and Analysis")
@@ -833,7 +838,7 @@ def build():
         "Yolocilin answers a practical question: given a phone photo of one or more "
         "medicine boxes, which catalog entries, if any, do those boxes correspond to? "
         "The system has three cooperating parts. The src package contains detection, "
-        "preprocessing, OCR, matching and SQLAlchemy models. The backend/app package "
+        "preprocessing, OCR, barcode decode, matching and SQLAlchemy models. The backend/app package "
         "contains FastAPI routers, validation, rate limits, the LLM service and scan "
         "services. The mobile package is the Flutter Android UI. A parallel examples "
         "tree holds learning scripts; production code does not import those scripts."
@@ -871,7 +876,9 @@ def build():
         "and English print. Match against medicine_name, brand_name and, when safe, "
         "active_ingredient. Return per-box status matched, not_found, not_medicine_box "
         "or error. Expose catalog search. Optionally explain a matched medicine_id. "
-        "Provide an Android client with gallery and camera, bilingual UI, result cards, "
+        "Expose GET /api/v1/barcode/lookup and POST /api/v1/barcode/scan; analyze may "
+        "try barcode before OCR. Provide an Android client with gallery, camera and "
+        "live barcode scan, bilingual UI, result cards, "
         "local history (cap 50) and best-effort server sync when reachable (cap 200). Expose a health "
         "endpoint that reports whether models are loaded."
     )
@@ -909,10 +916,12 @@ def build():
         "        v\n"
         "YOLOv8 detect -> crop -> OpenCV variants -> EasyOCR\n"
         "        -> normalize -> RapidFuzz -> SQLite catalog (1163)\n"
+        "        -> optional barcode (zxing-cpp) before OCR\n"
         "        |\n"
         "        v\n"
         "JSON (per-box status + summary + timing + disclaimer)\n"
         "        |-- local sqflite history + POST /api/v1/scans when reachable\n"
+        "        |-- optional GET/POST /api/v1/barcode\n"
         "        +-- optional POST /api/v1/explain -> Gemini"
     )
     rep.caption(
@@ -930,7 +939,7 @@ def build():
         "src/services  PipelineManager -> Detection / OCR / Matching\n"
         "        |\n"
         "        v\n"
-        "SQLite medicines.db (medicines + scans)\n"
+        "SQLite medicines.db (medicines + medicine_barcodes + scans)\n"
         "CSV     medicines.csv (seed; upserted at start)"
     )
     rep.caption(
@@ -1185,6 +1194,18 @@ def build():
         ],
     )
     rep.caption(
+        "Table 4.7b Runtime SQLite table medicine_barcodes (one medicine can have "
+        "several package GTINs).",
+        above=True,
+    )
+    rep.table(
+        ["Column", "Type", "Notes"],
+        [
+            ["barcode", "String(32), PK", "GTIN-13 / GTIN-14 lookup key"],
+            ["medicine_id", "String(32), FK", "medicines.medicine_id"],
+        ],
+    )
+    rep.caption(
         "Table 4.8 Runtime SQLite table scans (no user table, no foreign key to an account).",
         above=True,
     )
@@ -1232,6 +1253,9 @@ def build():
             ["GET", "/api/v1/medicines", "List/search (search, category, limit, offset)"],
             ["GET", "/api/v1/medicines/categories", "Distinct categories"],
             ["GET", "/api/v1/medicines/{id}", "Detail or 404"],
+            ["GET", "/api/v1/barcode/info", "Barcode limits and formats"],
+            ["GET", "/api/v1/barcode/lookup", "Exact GTIN / EAN lookup"],
+            ["POST", "/api/v1/barcode/scan", "Decode image barcode, then catalog lookup"],
             ["GET", "/api/v1/explain/info", "LLM ready flag"],
             ["POST", "/api/v1/explain", "Short Gemini text for a matched medicine_id"],
             ["GET", "/api/v1/scans/info", "Scan-history metadata"],
@@ -1256,7 +1280,7 @@ def build():
         "optional string, not a verified identity."
     )
     rep.body(
-        "What exists instead is as follows. Analyze, medicines, explain and scan POST "
+        "What exists instead is as follows. Analyze, medicines, barcode, explain and scan POST "
         "or GET have no end-user login; rate limits are the main abuse control. In "
         "production, DELETE /api/v1/scans/{id} requires header X-API-Key when "
         "SCANS_API_KEY is set; if the key is unset, DELETE returns 403. Development "
@@ -1271,7 +1295,8 @@ def build():
         "The Flutter module is medicine_box_app, version 0.1.0+1 [16], [17], [18]. "
         "There is no login, dashboard or admin panel. Screens that exist are splash, "
         "home with welcome / scan / history tabs, image preview with OCR mode selector "
-        "and Analiz Et, result with summary chips, per-box cards, disclaimer and an "
+        "and Analiz Et, a live barcode viewfinder (Barkod tara / Fotoğraftan oku), "
+        "result with summary chips, per-box cards, disclaimer and an "
         "expandable explanation section, and history with swipe delete. AnalyzeApiService "
         "sends a multipart POST with a 300 second timeout. Before analyze, the client "
         "calls GET /health and blocks with a SnackBar if models are not loaded. OCR mode "
@@ -1286,6 +1311,7 @@ def build():
         "Splash -> Home\n"
         "           |- Welcome tab\n"
         "           |- Scan tab -> gallery or camera -> Preview -> health check -> Result\n"
+        "           |- Scan tab -> Barkod tara -> live or photo -> Result\n"
         "           +- History tab -> saved Result\n"
         "Result -> expandable İlaç hakkında -> POST /explain"
     )
@@ -1315,10 +1341,10 @@ def build():
         "executed in CI; analyze is mocked in the end-to-end smoke test because a "
         "single CPU photograph is too slow for GitHub-hosted runners. Test modules "
         "cover matching, database, API upload including octet-stream, explain, LLM "
-        "configuration, scans, security (CORS, docs off, headers, HTTP 429), "
+        "configuration, barcode, scans, security (CORS, docs off, headers, HTTP 429), "
         "performance flags, model paths, CSV validation, TİTCK mapping and brand "
         "disambiguation. Flutter CI runs flutter analyze and flutter test (splash, "
-        "home, result, history, JSON models, OCR-mode preferences). Live scripts "
+        "home, result, history, JSON models, OCR-mode preferences, barcode API). Live scripts "
         "scripts/e2e_api_flow.py and scripts/benchmark_analyze.py are for a local machine."
     )
     rep.caption(
@@ -1337,6 +1363,7 @@ def build():
             ["Medicines / scans CRUD (observed)", "under 2 s"],
             ["Docker healthcheck start-period", "180 s (EasyOCR and YOLO load)"],
             ["Analyze rate limit (default)", "20 / minute / IP"],
+            ["Barcode rate limit (default)", "30 / minute / IP"],
             ["Explain rate limit (default)", "5 / minute / IP"],
             ["Scans rate limit (default)", "30 / minute / IP"],
         ],
@@ -1500,8 +1527,8 @@ def build():
             ["Upload cap", "10 MB"],
             ["Local history cap", "50"],
             ["Server history cap", "200"],
-            ["Backend pytest modules", "14 under tests/"],
-            ["Flutter test files", "10 under mobile/test/"],
+            ["Backend pytest modules", "16 under tests/"],
+            ["Flutter test files", "11 under mobile/test/"],
         ],
     )
 
@@ -1510,8 +1537,8 @@ def build():
         "The product name is Yolocilin. The GitHub repository, the GitHub Projects "
         "board, the Android application and the Kaggle dataset use the same name "
         "[5], [33]. Work was tracked with issues and pull requests. Living technical "
-        "records in the repository include the EasyOCR decision (Report 26) and "
-        "matching reliability (Report 27) [33]."
+        "records in the repository include the EasyOCR decision (Report 26), "
+        "matching reliability (Report 27) and the barcode path (Report 28) [33]."
     )
     rep.body(
         "Training images are not committed to Git. The privacy-cleaned YOLO set of 395 "
@@ -1531,7 +1558,8 @@ def build():
     rep.h1("5. CONCLUSION")
     rep.body(
         "The internship left a working product: a trained single-class detector, an OCR "
-        "and matching pipeline with explicit failure statuses, a FastAPI service, a "
+        "and matching pipeline with explicit failure statuses, an optional barcode "
+        "identity path, a FastAPI service, a "
         "1163-row TİTCK-enriched catalog, an Android client, Docker packaging and CI. "
         "Work ran in feature branches against GitHub issues. The dataset is on Kaggle; "
         "the technical notes are in the Medium series.",
@@ -1551,7 +1579,7 @@ def build():
         "Limits are part of the result. There is no user authentication; server scan "
         "history is global. Inference is CPU-bound and far from real-time; blurry or "
         "distant photos make OCR slow or return not_found. The catalog is not the full "
-        "TİTCK list. iOS, PostgreSQL, barcode reading and a public HTTPS deployment "
+        "TİTCK list. iOS, PostgreSQL and a public HTTPS deployment "
         "were left as later items. Gemini explanations are optional and must not be "
         "read as a prospectus."
     )

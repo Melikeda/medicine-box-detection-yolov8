@@ -15,6 +15,7 @@ Format inspired by [Keep a Changelog](https://keepachangelog.com/).
 ### Changed
 
 - Roadmap Phase 22 (`feature/barcode-reading`) completed
+- Internship reports no longer list barcode as out of scope (API, SQLite map, Flutter scanner, Report 28)
 - Gemini explain: 503 / high-demand retries the lite model, then catalog text so “İlaç hakkında” still fills
 
 ### Added
