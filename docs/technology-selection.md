@@ -91,7 +91,7 @@ A PaddleOCR trial (same YOLO crops + matcher) did not improve identity accuracy 
 
 **Why:** Eliminates "works on my machine" issues; simplifies sharing the backend across Windows/Linux.
 
-**Status:** Implemented in Phase 15 ([#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29)) — see [Report 14](reports/14-docker-containerization.md).
+**Status:** Implemented in Phase 15 ([#29](https://github.com/Melikeda/yolocilin/issues/29)) — see [Report 14](reports/14-docker-containerization.md).
 
 ---
 
@@ -101,13 +101,13 @@ A PaddleOCR trial (same YOLO crops + matcher) did not improve identity accuracy 
 
 **Why:** Adds user-friendly information beyond raw database fields; strengthens the AI-powered product story.
 
-**Status:** Implemented in Phase 18 ([#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8)) — Gemini free tier via `POST /api/v1/explain`. See [Report 21](reports/21-llm-integration.md).
+**Status:** Implemented in Phase 18 ([#8](https://github.com/Melikeda/yolocilin/issues/8)) — Gemini free tier via `POST /api/v1/explain`. See [Report 21](reports/21-llm-integration.md).
 
 ---
 
 ## Deprecated Direction: Streamlit
 
-Streamlit was considered for a web UI early in the project. The direction changed to **Flutter + FastAPI** for a real mobile product. Issue [#7](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/7) was closed accordingly.
+Streamlit was considered for a web UI early in the project. The direction changed to **Flutter + FastAPI** for a real mobile product. Issue [#7](https://github.com/Melikeda/yolocilin/issues/7) was closed accordingly.
 
 ---
 

@@ -8,7 +8,7 @@ Users photograph a medicine box, receive structured match results, optionally a 
 
 Architecture stays modular so each layer can be tested and improved independently.
 
-Living product docs: [root README](../README.md) · [roadmap](roadmap.md) · [reports index](reports/README.md) · [experiments](experiments/)
+Living product docs: [root README](../README.md) · [technical report](technical-report.md) · [roadmap](roadmap.md) · [reports index](reports/README.md) · [experiments](experiments/)
 
 ---
 
@@ -221,7 +221,7 @@ See [Report 24](reports/24-medicine-database-final-refresh.md) (131-row refresh;
 
 ## 8. Large Language Model (LLM) ✅
 
-Issue [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) — natural-language explanations after a successful match.
+Issue [#8](https://github.com/Melikeda/yolocilin/issues/8) — natural-language explanations after a successful match.
 
 | Component | Technology |
 |-----------|------------|

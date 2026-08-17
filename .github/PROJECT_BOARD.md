@@ -6,26 +6,26 @@ Use this file when organizing issues on the GitHub Project board named **Yolocil
 
 | Issue | Title |
 |-------|-------|
-| [#6](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/6) | Medicine name matching (RapidFuzz + CSV) |
-| [#23](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/23) | Unify AI pipeline under `src/services/` |
-| [#24](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/24) | Service-layer pipeline architecture |
-| [#25](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/25) | FastAPI backend foundation |
-| [#26](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/26) | Analyze API + real-world matching improvements |
-| [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) | SQLite database + medicine query endpoints |
-| [#28](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/28) | Automated testing (pytest) |
-| [#29](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/29) | Docker containerization |
-| [#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30) | Flutter mobile app foundation |
-| [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31) | Mobile & backend integration (MVP) |
-| [#39](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/39) | CI/CD pipeline (GitHub Actions) |
-| [#41](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/41) | Medicine database expansion (TİTCK SKRS) |
-| [#43](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/43) | Pipeline performance optimization |
-| [#45](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/45) | Production hardening & security |
-| [#8](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/8) | LLM medicine explanations (Gemini) |
-| [#50](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/50) | Final polish rounds |
+| [#6](https://github.com/Melikeda/yolocilin/issues/6) | Medicine name matching (RapidFuzz + CSV) |
+| [#23](https://github.com/Melikeda/yolocilin/issues/23) | Unify AI pipeline under `src/services/` |
+| [#24](https://github.com/Melikeda/yolocilin/issues/24) | Service-layer pipeline architecture |
+| [#25](https://github.com/Melikeda/yolocilin/issues/25) | FastAPI backend foundation |
+| [#26](https://github.com/Melikeda/yolocilin/issues/26) | Analyze API + real-world matching improvements |
+| [#27](https://github.com/Melikeda/yolocilin/issues/27) | SQLite database + medicine query endpoints |
+| [#28](https://github.com/Melikeda/yolocilin/issues/28) | Automated testing (pytest) |
+| [#29](https://github.com/Melikeda/yolocilin/issues/29) | Docker containerization |
+| [#30](https://github.com/Melikeda/yolocilin/issues/30) | Flutter mobile app foundation |
+| [#31](https://github.com/Melikeda/yolocilin/issues/31) | Mobile & backend integration (MVP) |
+| [#39](https://github.com/Melikeda/yolocilin/issues/39) | CI/CD pipeline (GitHub Actions) |
+| [#41](https://github.com/Melikeda/yolocilin/issues/41) | Medicine database expansion (TİTCK SKRS) |
+| [#43](https://github.com/Melikeda/yolocilin/issues/43) | Pipeline performance optimization |
+| [#45](https://github.com/Melikeda/yolocilin/issues/45) | Production hardening & security |
+| [#8](https://github.com/Melikeda/yolocilin/issues/8) | LLM medicine explanations (Gemini) |
+| [#50](https://github.com/Melikeda/yolocilin/issues/50) | Final polish rounds |
 | Catalog expand + matching tighten | Merged (`feature/catalog-expand-matching-tighten` → 153) |
-| Popular TR catalog (~1160) | Merged (PR [#59](https://github.com/Melikeda/medicine-box-detection-yolov8/pull/59) → **1163**) |
+| Popular TR catalog (~1160) | Merged (PR [#59](https://github.com/Melikeda/yolocilin/pull/59) → **1163**) |
 | Matching reliability | Merged (PR [#67](https://github.com/Melikeda/yolocilin/pull/67) — suffix OCR must not guess a drug) |
-| [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) | Test and document final system — closed |
+| [#9](https://github.com/Melikeda/yolocilin/issues/9) | Test and document final system — closed |
 | Barcode reading | `feature/barcode-reading` — API + Flutter live/photo scanner ([Report 28](../docs/reports/28-barcode-reading.md)) |
 
 ## In Progress
@@ -38,7 +38,7 @@ None.
 |------|--------|
 | Written internship report | Phase 21 deliverable (GitHub #9 is closed) |
 | GitHub docs polish | Finish in Phase 21 / Release v1.0.0 |
-| [#32](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/32) | Closed; leftovers: PostgreSQL, cloud, iOS |
+| [#32](https://github.com/Melikeda/yolocilin/issues/32) | Closed; leftovers: PostgreSQL, cloud, iOS |
 | Auth for private scan namespaces | Scans remain global; production DELETE gated by `SCANS_API_KEY` |
 | Cloud API host (HTTPS) | Needed for long-lived remote testers; tunnel OK for demos |
 
@@ -46,7 +46,7 @@ None.
 
 | Issue | Reason |
 |-------|--------|
-| [#7](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/7) | Streamlit replaced by Flutter ([#30](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/30), [#31](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/31)) |
+| [#7](https://github.com/Melikeda/yolocilin/issues/7) | Streamlit replaced by Flutter ([#30](https://github.com/Melikeda/yolocilin/issues/30), [#31](https://github.com/Melikeda/yolocilin/issues/31)) |
 
 ## Labels
 

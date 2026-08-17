@@ -54,7 +54,7 @@ See [docs/reports/03-dataset-preparation.md](../docs/reports/03-dataset-preparat
 
 Catalog size: **1163** seed records (TİTCK SKRS–enriched) — see [database/README.md](database/README.md), [Report 24](../docs/reports/24-medicine-database-final-refresh.md) (131-row refresh), and [Report 18](../docs/reports/18-medicine-database-expansion.md).
 
-SQLite migration: Issue [#27](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/27) / [Report 12](../docs/reports/12-sqlite-database.md).
+SQLite migration: Issue [#27](https://github.com/Melikeda/yolocilin/issues/27) / [Report 12](../docs/reports/12-sqlite-database.md).
 
 ### Query API
 

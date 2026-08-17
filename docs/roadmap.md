@@ -360,7 +360,7 @@ Later expansions on `main` (after Report 24). Historical sizes 131 and 153 stay 
 ## Objectives
 
 - [x] Controlled shelf-brand expand + matching tighten → 153 (`feature/catalog-expand-matching-tighten`)
-- [x] Popular TR / ATC expansion → **1163** (PR [#59](https://github.com/Melikeda/medicine-box-detection-yolov8/pull/59))
+- [x] Popular TR / ATC expansion → **1163** (PR [#59](https://github.com/Melikeda/yolocilin/pull/59))
 
 ---
 
@@ -399,7 +399,7 @@ See [Report 20](reports/20-production-hardening.md).
 
 # Phase 18–19 — Final Project Polish
 
-**GitHub Issue:** [#50](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/50) (supersedes #32, #9)
+**GitHub Issue:** [#50](https://github.com/Melikeda/yolocilin/issues/50) (supersedes #32, #9)
 
 **Branch workflow:** numbered improvement rounds — `feature/final-polish`, `feature/final-polish-2`, … Merge each round when done; open the next branch for the following slice.
 
@@ -425,7 +425,7 @@ See [Report 20](reports/20-production-hardening.md).
 
 - [x] Test complete mobile + backend system — pytest E2E + live `scripts/e2e_api_flow.py` + mobile checklist (Report 25)
 - [x] Evaluate end-to-end performance — timing in e2e script + `benchmark_analyze.py --json-out` (Report 25)
-- [x] GitHub [#9](https://github.com/Melikeda/medicine-box-detection-yolov8/issues/9) (test and document final system) — **closed**; repo testing/docs wrap-up done
+- [x] GitHub [#9](https://github.com/Melikeda/yolocilin/issues/9) (test and document final system) — **closed**; repo testing/docs wrap-up done
 
 > Written internship report and final GitHub docs polish are **Phase 21** deliverables (not open GitHub issues).
 
@@ -502,8 +502,8 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 
 - [ ] Final project review
 - [x] Align living docs with matching reliability gates ([Report 27](reports/27-matching-reliability.md))
+- [x] CV-facing GitHub summary ([docs/technical-report.md](technical-report.md))
 - [ ] Complete written internship report
-- [ ] Finalize GitHub documentation (README / roadmap / changelog sync)
 - [ ] Prepare Release v1.0.0
 - [ ] Update repository badges
 - [ ] Publish GitHub Release
