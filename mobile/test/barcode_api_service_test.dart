@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 
-import 'package:medicine_box_app/models/analyze_response.dart';
-import 'package:medicine_box_app/services/analyze_api_exception.dart';
-import 'package:medicine_box_app/services/barcode_api_service.dart';
+import 'package:yolocilin/models/analyze_response.dart';
+import 'package:yolocilin/services/analyze_api_exception.dart';
+import 'package:yolocilin/services/barcode_api_service.dart';
 
 void main() {
   test('lookupCode maps matched medicine to AnalyzeResponse', () async {

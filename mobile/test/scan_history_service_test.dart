@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'package:medicine_box_app/models/analyze_response.dart';
-import 'package:medicine_box_app/models/analyze_summary.dart';
-import 'package:medicine_box_app/models/medicine_box_result.dart';
-import 'package:medicine_box_app/services/scan_history_service.dart';
+import 'package:yolocilin/models/analyze_response.dart';
+import 'package:yolocilin/models/analyze_summary.dart';
+import 'package:yolocilin/models/medicine_box_result.dart';
+import 'package:yolocilin/services/scan_history_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

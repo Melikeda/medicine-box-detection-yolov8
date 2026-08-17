@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:medicine_box_app/l10n/app_localizations.dart';
-import 'package:medicine_box_app/models/explain_response.dart';
+import 'package:yolocilin/l10n/app_localizations.dart';
+import 'package:yolocilin/models/explain_response.dart';
 
 void main() {
   test('ExplainResponse.fromJson parses legacy API payload', () {

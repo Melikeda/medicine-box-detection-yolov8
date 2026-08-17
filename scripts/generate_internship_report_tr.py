@@ -788,7 +788,7 @@ def build() -> None:
 
     rep.h2("4.12 Mobil Uygulama")
     rep.body(
-        "Flutter modülü medicine_box_app, sürüm 0.1.0+1’dir [16], [17], [18]. Giriş, "
+        "Flutter modülü yolocilin, sürüm 0.1.0+1’dir [16], [17], [18]. Giriş, "
         "gösterge paneli veya yönetim paneli yoktur. Var olan ekranlar: açılış; karşılama / "
         "tara / geçmiş sekmeli ana sayfa; OCR kip seçicili ve Analiz Et düğmeli önizleme; "
         "canlı barkod kadrajı (Barkod tara / Fotoğraftan oku); "

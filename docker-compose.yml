@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: medicine-box-api
+    container_name: yolocilin-api
     ports:
       - "${PORT:-8000}:8000"
     environment:

@@ -1,4 +1,4 @@
-# Medicine Box Detection API — CPU image (FastAPI + YOLOv8 + EasyOCR)
+# Yolocilin API — CPU image (FastAPI + YOLOv8 + EasyOCR)
 FROM python:3.12-slim-bookworm
 
 ENV PYTHONDONTWRITEBYTECODE=1 \

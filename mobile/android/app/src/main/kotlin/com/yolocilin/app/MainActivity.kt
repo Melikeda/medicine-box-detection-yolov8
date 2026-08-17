@@ -1,4 +1,4 @@
-package com.medicinebox.medicine_box_app
+package com.yolocilin.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1292,7 +1292,7 @@ def build():
 
     rep.h2("4.12 Mobile Application")
     rep.body(
-        "The Flutter module is medicine_box_app, version 0.1.0+1 [16], [17], [18]. "
+        "The Flutter module is yolocilin, version 0.1.0+1 [16], [17], [18]. "
         "There is no login, dashboard or admin panel. Screens that exist are splash, "
         "home with welcome / scan / history tabs, image preview with OCR mode selector "
         "and Analiz Et, a live barcode viewfinder (Barkod tara / Fotoğraftan oku), "

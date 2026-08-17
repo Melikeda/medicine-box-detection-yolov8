@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:medicine_box_app/l10n/app_localizations.dart';
-import 'package:medicine_box_app/screens/home_screen.dart';
+import 'package:yolocilin/l10n/app_localizations.dart';
+import 'package:yolocilin/screens/home_screen.dart';
 
 Widget _wrap(Widget child, {LocaleController? controller}) {
   final locale = controller ?? LocaleController();
