@@ -54,7 +54,7 @@ Built as a modular internship system: learnable `examples/`, production `src/` +
 | Matching | RapidFuzz + reliability gates — wrong-name suffix fragments rejected ([Report 27](docs/reports/27-matching-reliability.md)) |
 | Barcode | Optional GTIN lookup (`/barcode/lookup` + `/barcode/scan`); analyze tries it before OCR ([Report 28](docs/reports/28-barcode-reading.md)) |
 | Catalog | TİTCK-enriched seed CSV → SQLite (**1163** rows) |
-| API | Analyze, medicines, explain, server scans |
+| API | Analyze, medicines, barcode, explain, server scans |
 | Mobile (Yolocilin) | Gallery + camera, results, local history, best-effort server sync |
 | Ops | Docker, GitHub Actions CI, production CORS/docs hardening |
 | Quality | pytest + Flutter tests + API E2E smoke ([Report 25](docs/reports/25-e2e-performance.md)) |

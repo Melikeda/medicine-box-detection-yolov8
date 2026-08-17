@@ -161,7 +161,8 @@ def build() -> None:
         "Çalışma veri seti ve model eğitiminden başlamış; ön işleme, OCR, eşleme, REST "
         "API, SQLite, Docker, GitHub Actions ve Flutter istemcisiyle sürdürülmüştür. "
         "Sonraki aşamalarda üretim tarafı kontrolleri, TİTCK SKRS katalog genişletmesi, "
-        "isteğe bağlı Gemini açıklamaları, kamera çekimi ve tarama geçmişi eklenmiştir. "
+        "isteğe bağlı Gemini açıklamaları, kamera çekimi, tarama geçmişi ve OCR’ye paralel "
+        "isteğe bağlı barkod kimlik yolu eklenmiştir. "
         "Geliştirme sırasında öğrenilen yöntemler, projenin katmanlarına paralel üç "
         "Medium dizisinde de kayda geçirilmiştir [30], [31], [32]."
     )
@@ -270,7 +271,8 @@ def build() -> None:
         "GitHub Actions; Flutter Android istemcisi (galeri, sonra kamera); TİTCK SKRS "
         "ile katalog genişletme; CPU performansı, üretim sertleştirmesi, Gemini "
         "açıklamaları, tarama geçmişi, uçtan uca araçlar; EasyOCR yerine PaddleOCR "
-        "denemesi (alınmadı); sonek OCR parçalarının yanlış ilaç kartı açmaması."
+        "denemesi (alınmadı); sonek OCR parçalarının yanlış ilaç kartı açmaması; OCR’ye "
+        "paralel isteğe bağlı barkod (EAN/GTIN) kimlik yolu."
     )
     rep.body(
         "Erken dönemde düşünülen Streamlit arayüzü bırakıldı. GitHub #7 kapatıldı; "
@@ -296,14 +298,16 @@ def build() -> None:
             ["Görüntü işleme", "OpenCV, Pillow", "Kırpma, ölçek, CLAHE, eşik, OCR varyantları"],
             ["OCR", "EasyOCR 1.7.2 (tr, en)", "Kırpılmış kutudan metin; PaddleOCR denendi, alınmadı"],
             ["Eşleme", "RapidFuzz 3.14.5 (fuzz.WRatio)", "Gürültülü OCR → katalog satırı"],
+            ["Barkod", "zxing-cpp 2.3.0", "İsteğe bağlı EAN-13 / DataMatrix; OCR yedek kalır"],
             ["Katalog tohumu", "CSV (medicines.csv)", "Kaynak gerçek, 1163 satır"],
-            ["Çalışma anı DB", "SQLite / SQLAlchemy 2.0.46", "medicines ve scans tabloları"],
+            ["Barkod eşlemesi", "CSV (medicine_barcodes.csv)", "2043 GTIN → 1041 katalog satırı"],
+            ["Çalışma anı DB", "SQLite / SQLAlchemy 2.0.46", "medicines, medicine_barcodes, scans"],
             ["Resmî zenginleştirme", "TİTCK SKRS XLSX (pandas, openpyxl)", "Doz, form, etken madde, marka"],
             ["Arkaplan", "FastAPI 0.140.0, Uvicorn, Pydantic Settings", "REST API"],
             ["LLM (isteğe bağlı)", "google-genai 1.16.1, Gemini Flash", "POST /api/v1/explain"],
             ["Mobil", "Flutter 3.19+, Dart SDK ≥ 3.3", "Android istemci Yolocilin"],
             ["Mobil depolama", "sqflite, shared_preferences", "Yerel geçmiş ve OCR kip tercihi"],
-            ["Mobil HTTP / kamera", "http, image_picker", "Çok parçalı yükleme, galeri ve kamera"],
+            ["Mobil HTTP / kamera", "http, image_picker, mobile_scanner", "Yükleme, galeri, kamera, canlı barkod"],
             ["Test", "pytest 8.4.2, httpx, Flutter test", "Arkaplan ve widget testleri"],
             ["Konteyner", "Docker, docker-compose", "API imajı python:3.12-slim-bookworm"],
             ["CI", "GitHub Actions", "Arkaplan test, mobil test, Docker derleme"],
@@ -316,9 +320,10 @@ def build() -> None:
     rep.body(
         "Kodda ve yol haritasında yapılmamış olanlar: kullanıcı girişi, JWT veya kişiye "
         "özel tarama listesi (sunucu taramaları genel listedir); yönetim paneli; iOS "
-        "istemci; PostgreSQL; barkod / karekod yolu; genel bulut HTTPS yayını; WAF veya "
+        "istemci; PostgreSQL; genel bulut HTTPS yayını; WAF veya "
         "DDoS koruması; Gemini anahtarı için bulut gizli yöneticisi. Giriş ekranı yoktur. "
-        "Mobil akış: açılış, ana sayfa (karşılama / tara / geçmiş), önizleme, sonuç."
+        "Mobil akış: açılış, ana sayfa (karşılama / tara / geçmiş), önizleme veya barkod "
+        "tarama, sonuç."
     )
     rep.image(ASSETS / "yolocilin-banner.png", 14.0)
     rep.caption(
@@ -341,11 +346,11 @@ def build() -> None:
         "Todo, In Progress ve Done sütunlarıyla izlendi. Yapılan işler arasında ilaç "
         "kutusu görüntüsü toplama ve etiketleme; YOLOv8n eğitimi; OpenCV ve EasyOCR "
         "modülleri; RapidFuzz eşleme ve güvenilirlik kontrolleri; FastAPI analyze, "
-        "medicines, explain ve scans uçları; CSV’den SQLite tohumlama; TİTCK SKRS ile "
-        "katalog genişletme; pytest ve Flutter testleri; Docker paketleme; GitHub "
-        "Actions; Android istemci (galeri, kamera, iki dilli arayüz, geçmiş); üretim "
-        "ayarlarının sertleştirilmesi (CORS, hız sınırı, sihirli bayt kontrolü) vardır. "
-        "İlgili kod bu bölümde değil Ekler’dedir."
+        "medicines, barcode, explain ve scans uçları; CSV’den SQLite tohumlama; TİTCK "
+        "SKRS ile katalog ve barkod eşlemesi; pytest ve Flutter testleri; Docker paketleme; "
+        "GitHub Actions; Android istemci (galeri, kamera, barkod tarama, iki dilli arayüz, "
+        "geçmiş); üretim ayarlarının sertleştirilmesi (CORS, hız sınırı, sihirli bayt "
+        "kontrolü) vardır. İlgili kod bu bölümde değil Ekler’dedir."
     )
 
     rep.h2("4.2 Proje Amacı ve Analiz")
@@ -353,7 +358,7 @@ def build() -> None:
         "Yolocilin pratik bir soruya cevap verir: bir veya daha fazla ilaç kutusunun "
         "telefon fotoğrafı verildiğinde, katalogda hangi kayıtlar (varsa) bu kutulara "
         "karşılık gelir? Sistem üç parçadan oluşur. src paketi tespit, ön işleme, OCR, "
-        "eşleme ve SQLAlchemy modellerini tutar. backend/app paketinde FastAPI yönlendiricileri, "
+        "barkod çözme, eşleme ve SQLAlchemy modellerini tutar. backend/app paketinde FastAPI yönlendiricileri, "
         "doğrulama, hız sınırları, LLM ve tarama servisleri vardır. mobile paketi Flutter "
         "Android arayüzüdür. examples ağacı öğrenme betikleridir; üretim kodu bunları içe aktarmaz."
     )
@@ -388,7 +393,9 @@ def build() -> None:
         "İngilizce baskıyı oku. medicine_name, brand_name ve güvenliyse active_ingredient "
         "ile eşle. Kutu durumu olarak matched, not_found, not_medicine_box veya error "
         "dön. Katalog araması sun. Eşleşen medicine_id için isteğe bağlı açıklama üret. "
-        "Galeri ve kameralı, iki dilli, sonuç kartlı Android istemci ver; yerel geçmiş "
+        "Barkod için GET /api/v1/barcode/lookup ve POST /api/v1/barcode/scan sun; analyze "
+        "OCR’den önce barkodu deneyebilir. Galeri, kamera ve canlı barkod taramalı, iki "
+        "dilli, sonuç kartlı Android istemci ver; yerel geçmiş "
         "(en fazla 50) ve olanaklar ölçüsünde sunucu eşlemesi (en fazla 200) olsun. "
         "Modellerin yüklenip yüklenmediğini bildiren sağlık ucu olsun."
     )
@@ -426,10 +433,11 @@ def build() -> None:
         "        v\n"
         "YOLOv8 tespit -> kırp -> OpenCV varyantları -> EasyOCR\n"
         "        -> normalize -> RapidFuzz -> SQLite katalog (1163)\n"
-        "        |\n"
+        "        -> isteğe bağlı barkod (zxing-cpp), OCR'den önce\n"
         "        v\n"
         "JSON (kutu durumu + özet + süre + uyarı)\n"
         "        |-- yerel sqflite geçmiş + POST /api/v1/scans (olanaklar ölçüsünde)\n"
+        "        |-- isteğe bağlı GET/POST /api/v1/barcode\n"
         "        +-- isteğe bağlı POST /api/v1/explain -> Gemini"
     )
     rep.caption(
@@ -447,7 +455,7 @@ def build() -> None:
         "src/services  PipelineManager -> Tespit / OCR / Eşleme\n"
         "        |\n"
         "        v\n"
-        "SQLite medicines.db (medicines + scans)\n"
+        "SQLite medicines.db (medicines + medicine_barcodes + scans)\n"
         "CSV     medicines.csv (tohum; açılışta işlenir)"
     )
     rep.caption(
@@ -688,6 +696,18 @@ def build() -> None:
         ],
     )
     rep.caption(
+        "Tablo 4.7b Çalışma anı SQLite tablosu medicine_barcodes (bir ilacın birden "
+        "fazla paket GTIN’i olabilir).",
+        above=True,
+    )
+    rep.table(
+        ["Sütun", "Tür", "Not"],
+        [
+            ["barcode", "String(32), PK", "GTIN-13 / GTIN-14 arama anahtarı"],
+            ["medicine_id", "String(32), FK", "medicines.medicine_id"],
+        ],
+    )
+    rep.caption(
         "Tablo 4.8 Çalışma anı SQLite tablosu scans (kullanıcı tablosu ve hesap yabancı anahtarı yok).",
         above=True,
     )
@@ -731,6 +751,9 @@ def build() -> None:
             ["GET", "/api/v1/medicines", "Liste / arama (search, category, limit, offset)"],
             ["GET", "/api/v1/medicines/categories", "Ayırtık kategoriler"],
             ["GET", "/api/v1/medicines/{id}", "Ayrıntı veya 404"],
+            ["GET", "/api/v1/barcode/info", "Barkod sınırları ve biçimler"],
+            ["GET", "/api/v1/barcode/lookup", "Birebir GTIN / EAN araması"],
+            ["POST", "/api/v1/barcode/scan", "Görüntüden barkod çöz, katalogda ara"],
             ["GET", "/api/v1/explain/info", "LLM hazır bayrağı"],
             ["POST", "/api/v1/explain", "Eşleşen medicine_id için kısa Gemini metni"],
             ["GET", "/api/v1/scans/info", "Tarama geçmişi üst verisi"],
@@ -754,7 +777,7 @@ def build() -> None:
         "kimlik değildir."
     )
     rep.body(
-        "Bunun yerine şunlar vardır. Analyze, medicines, explain ve tarama POST/GET’te "
+        "Bunun yerine şunlar vardır. Analyze, medicines, barcode, explain ve tarama POST/GET’te "
         "son kullanıcı girişi yoktur; asıl kötüye kullanım kontrolü hız sınırıdır. "
         "Üretimde DELETE /api/v1/scans/{id}, SCANS_API_KEY tanımlıysa X-API-Key ister; "
         "anahtar yoksa DELETE 403 döner. Geliştirmede DELETE açıktır. Gemini anahtarı "
@@ -768,6 +791,7 @@ def build() -> None:
         "Flutter modülü medicine_box_app, sürüm 0.1.0+1’dir [16], [17], [18]. Giriş, "
         "gösterge paneli veya yönetim paneli yoktur. Var olan ekranlar: açılış; karşılama / "
         "tara / geçmiş sekmeli ana sayfa; OCR kip seçicili ve Analiz Et düğmeli önizleme; "
+        "canlı barkod kadrajı (Barkod tara / Fotoğraftan oku); "
         "özet çipleri, kutu kartları, uyarı ve açılır açıklama bölümü olan sonuç; kaydırarak "
         "silmeli geçmiş. AnalyzeApiService 300 saniye zaman aşımıyla çok parçalı POST "
         "gönderir. Analyze öncesi istemci GET /health çağırır; modeller yüklenmemişse "
@@ -782,6 +806,7 @@ def build() -> None:
         "Açılış -> Ana sayfa\n"
         "           |- Karşılama sekmesi\n"
         "           |- Tara sekmesi -> galeri veya kamera -> Önizleme -> sağlık kontrolü -> Sonuç\n"
+        "           |- Tara sekmesi -> Barkod tara -> canlı veya fotoğraf -> Sonuç\n"
         "           +- Geçmiş sekmesi -> kayıtlı Sonuç\n"
         "Sonuç -> açılır İlaç hakkında -> POST /explain"
     )
@@ -808,7 +833,7 @@ def build() -> None:
         "Arkaplan testleri CI’da Python 3.11 ile çalışır [25]. Tam YOLO + EasyOCR CI’da "
         "çalıştırılmaz; tek CPU fotoğrafı GitHub koşucuları için çok yavaştır, bu yüzden "
         "uçtan uca duman testinde analyze sahtelenir. Test modülleri eşleme, veritabanı, "
-        "octet-stream yükleme, explain, LLM yapılandırması, taramalar, güvenlik (CORS, "
+        "octet-stream yükleme, explain, barkod, LLM yapılandırması, taramalar, güvenlik (CORS, "
         "üretimde docs kapalı, başlıklar, HTTP 429), performans bayrakları, model yolları, "
         "CSV doğrulama, TİTCK eşleme ve marka ayırımını kapsar. Flutter CI flutter analyze "
         "ve flutter test çalıştırır. Canlı betikler scripts/e2e_api_flow.py ve "
@@ -830,6 +855,7 @@ def build() -> None:
             ["Medicines / scans CRUD (gözlenen)", "2 s altı"],
             ["Docker sağlık kontrolü start-period", "180 s (EasyOCR ve YOLO yükü)"],
             ["Analyze hız sınırı (varsayılan)", "dakikada IP başına 20"],
+            ["Barkod hız sınırı (varsayılan)", "dakikada IP başına 30"],
             ["Explain hız sınırı (varsayılan)", "dakikada IP başına 5"],
             ["Scans hız sınırı (varsayılan)", "dakikada IP başına 30"],
         ],
@@ -983,8 +1009,8 @@ def build() -> None:
             ["Yükleme tavanı", "10 MB"],
             ["Yerel geçmiş tavanı", "50"],
             ["Sunucu geçmiş tavanı", "200"],
-            ["Arkaplan pytest modülü", "tests/ altında 14"],
-            ["Flutter test dosyası", "mobile/test/ altında 10"],
+            ["Arkaplan pytest modülü", "tests/ altında 16"],
+            ["Flutter test dosyası", "mobile/test/ altında 11"],
         ],
     )
 
@@ -993,7 +1019,8 @@ def build() -> None:
         "Ürün adı Yolocilin’dir. GitHub deposu, GitHub Projects tahtası, Android "
         "uygulama ve Kaggle veri seti aynı adı kullanır [5], [33]. İş takibi issue ve "
         "çekme istekleriyle yürütülmüştür. Depodaki yaşayan teknik kayıtlar arasında "
-        "EasyOCR kararı (Rapor 26) ve eşleme güvenilirliği (Rapor 27) vardır [33]."
+        "EasyOCR kararı (Rapor 26), eşleme güvenilirliği (Rapor 27) ve barkod yolu "
+        "(Rapor 28) vardır [33]."
     )
     rep.body(
         "Eğitim görüntüleri Git deposuna konmamıştır. Gizlilik temizliği yapılan 395 "
@@ -1012,7 +1039,8 @@ def build() -> None:
     rep.h1("5. SONUÇ")
     rep.body(
         "Staj, çalışan bir ürün bıraktı: eğitilmiş tek sınıflı detektör, hata durumlu "
-        "OCR ve eşleme hattı, FastAPI servisi, TİTCK ile zenginleştirilmiş 1163 satırlık "
+        "OCR ve eşleme hattı, isteğe bağlı barkod kimlik yolu, FastAPI servisi, TİTCK ile "
+        "zenginleştirilmiş 1163 satırlık "
         "katalog, Android istemci, Docker paketleme ve CI. İş GitHub issue’larına karşı "
         "özellik dallarında yürüdü. Veri seti Kaggle’da, teknik notlar ise Medium "
         "dizilerinde yayımlanmıştır.",
@@ -1032,7 +1060,7 @@ def build() -> None:
         "Sınırlar da sonucun parçasıdır. Kullanıcı kimliği yoktur; sunucu tarama geçmişi "
         "geneldir. Çıkarım CPU’ya bağlıdır, gerçek zamanlı değildir; bulanık veya uzak "
         "fotoğrafta OCR uzun sürer veya not_found döner. Katalog tam TİTCK listesi "
-        "değildir. iOS, PostgreSQL, barkod ve genel HTTPS yayını sonraya bırakıldı. "
+        "değildir. iOS, PostgreSQL ve genel HTTPS yayını sonraya bırakıldı. "
         "Gemini açıklamaları isteğe bağlıdır ve prospektüs yerine okunmamalıdır."
     )
     rep.body(
