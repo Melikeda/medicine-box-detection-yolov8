@@ -1,6 +1,5 @@
 from src.matching.medicine_matcher import (
     calculate_medicine_score,
-    calculate_text_similarity,
     is_dosage_or_form_only_text,
     is_generic_active_ingredient,
     is_generic_single_word,

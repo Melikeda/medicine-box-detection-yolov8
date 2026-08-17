@@ -17,7 +17,7 @@ from src.matching.medicine_matcher import (
     calculate_text_similarity,
     find_best_medicine_match,
 )
-from src.matching.text_normalizer import is_garbage_ocr_text, normalize_ocr_text
+from src.matching.text_normalizer import is_garbage_ocr_text
 from src.services.candidate_processor import (
     MatchRecord,
     count_alphabetic_characters,

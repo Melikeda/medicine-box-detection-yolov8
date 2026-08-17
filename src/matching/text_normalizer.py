@@ -7,7 +7,6 @@ OCR_CONFUSABLE_TRANSLATION = str.maketrans(
         "¢": "c",
         "®": " ",
         "™": " ",
-        "\u2122": " ",
     }
 )
 

@@ -27,6 +27,7 @@ Automated tests for **Yolocilin** / the medicine box detection backend (pytest).
 
 ```bash
 pip install -r requirements.txt
+ruff check backend src tests scripts
 pytest
 pytest tests/test_e2e_api_flow.py -q
 pytest -v tests/test_scans.py
