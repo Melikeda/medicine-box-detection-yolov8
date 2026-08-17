@@ -503,7 +503,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 - [ ] Final project review
 - [x] Align living docs with matching reliability gates ([Report 27](reports/27-matching-reliability.md))
 - [x] CV-facing GitHub summary ([docs/technical-report.md](technical-report.md))
-- [ ] Complete written internship report
+- [x] Complete written internship report
 - [ ] Prepare Release v1.0.0
 - [ ] Update repository badges
 - [ ] Publish GitHub Release
@@ -540,7 +540,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ Server scan history + E2E tooling | Done (final-polish-4) | #50 / Report 23–25 |
 | 🔭 Future Development | PostgreSQL, cloud, iOS (post-MVP) | #32 / #50 |
 | ✅ Barcode reading | API + Flutter scanner | [Report 28](reports/28-barcode-reading.md) |
-| ⏳ End-of-project docs | Written internship report + GitHub docs polish | Phase 21 (#9 closed) |
+| ✅ End-of-project docs | Internship Word report (local) + GitHub technical-report | Phase 21 (#9 closed) |
 | ✅ Dataset Publishing (Kaggle) | Done | [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) |
 | ⏳ Project Release | Planned | — |
 

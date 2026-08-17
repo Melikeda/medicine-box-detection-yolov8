@@ -5,8 +5,6 @@ src = ["backend", "src", "tests", "scripts"]
 extend-exclude = [
     "examples",
     "docs/experiments",
-    "scripts/generate_internship_report_tr.py",
-    "scripts/generate_internship_report_docx.py",
 ]
 
 [tool.ruff.lint]

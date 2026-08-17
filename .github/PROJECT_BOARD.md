@@ -36,7 +36,7 @@ None.
 
 | Item | Notes |
 |------|--------|
-| Written internship report | Phase 21 deliverable (GitHub #9 is closed) |
+| Written internship report | Done (local CE499 Word files; not in the GitHub repo) |
 | GitHub docs polish | Finish in Phase 21 / Release v1.0.0 |
 | [#32](https://github.com/Melikeda/yolocilin/issues/32) | Closed; leftovers: PostgreSQL, cloud, iOS |
 | Auth for private scan namespaces | Scans remain global; production DELETE gated by `SCANS_API_KEY` |

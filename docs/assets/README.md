@@ -6,16 +6,11 @@ Brand images used by the root and mobile READMEs.
 |------|--------|-----|
 | `yolocilin-logo.png` | `mobile/assets/branding/app_logo.png` | README hero mark |
 | `yolocilin-banner.png` | `mobile/assets/illustrations/yolocilin_vial_banner.png` | README banner |
-| `report-figures/*.png` | `scripts/generate_internship_report_docx.py` (`prepare_figures`) | Architecture and catalog charts in the internship report |
+| `report-figures/*.png` | Local charts | Architecture and catalog figures used in the university Word report |
 
 Sample medicine photos for demos stay under [`data/samples/`](../../data/samples/) (linked from the root README) so large binaries are not duplicated here.
 
-The Düzce University logo is **not** in Git. Place `docs/assets/duzce-university-logo.png` on your machine only if you generate the Word cover locally. Generated `.docx` files are gitignored; run:
-
-```powershell
-python scripts/generate_internship_report_tr.py
-python scripts/generate_internship_report_docx.py
-```
+The Düzce University logo is **not** in Git. Internship Word reports (Turkish CE499 + English) are generated locally and kept out of the repository.
 
 To refresh brand copies after a design change:
 

@@ -20,7 +20,6 @@ API / app version remains **0.1.0** until a GitHub Release. This file does not i
 - Firebase App Distribution pipeline (manual GitHub Action + `scripts/distribute-android.ps1`)
 - API E2E smoke (`tests/test_e2e_api_flow.py`) and live `scripts/e2e_api_flow.py`
 - Benchmark JSON export: `scripts/benchmark_analyze.py --json-out`
-- Word generators for the CE499 internship report (local `.docx`, gitignored)
 - CV-facing product summary: [`docs/technical-report.md`](docs/technical-report.md)
 - `ruff check` on `backend` / `src` / `tests` / `scripts` in backend CI
 - Gemini explain: locale-aware JSON (`tr` / `en`); catalog text when the model is unavailable
@@ -39,6 +38,10 @@ API / app version remains **0.1.0** until a GitHub Release. This file does not i
 - `/docs` disabled when `ENVIRONMENT=production`
 - Upload magic-byte checks no longer use deprecated `imghdr`
 - Rate limiter prunes idle client keys; class renamed `IpRateLimiter`
+
+### Removed
+
+- Internship Word generators from the public repo; CE499 Turkish/English `.docx` files are local deliverables
 
 ### Security
 

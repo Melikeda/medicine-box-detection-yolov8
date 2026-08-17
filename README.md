@@ -251,7 +251,7 @@ Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini 
 | Cloud deploy + HTTPS | Reverse proxy / hosting |
 | Per-user auth for scans | Scans are global until auth |
 | iOS client | Android-first today |
-| Internship Word report | University `.docx` generators (local) |
+| Internship Word report | Local CE499 deliverable (not in the GitHub repo) |
 | Project release v1.0 | Later phase — wait for explicit go-ahead |
 
 Roadmap: [docs/roadmap.md](docs/roadmap.md) · Dataset: [Kaggle](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection)
