@@ -63,7 +63,7 @@ Built as a modular internship system: learnable `examples/`, production `src/` +
 
 | Single box | Multi-box |
 |------------|-----------|
-| ![Sample Parol](data/samples/parol_plus.jpg) | ![Sample multi](data/samples/coklu_resim.jpg) |
+| ![Sample Omesek](data/samples/omesek.jpg) | ![Sample multi](data/samples/coklu_kutular.jpg) |
 
 ---
 

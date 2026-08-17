@@ -68,6 +68,8 @@ SQLite migration: Issue [#27](https://github.com/Melikeda/yolocilin/issues/27) /
 
 | File | Use case |
 |------|----------|
+| `omesek.jpg` | README single-box sample |
+| `coklu_kutular.jpg` | README multi-box sample |
 | `coklu_resim.jpg` | Multi-box detection test |
 | `samples3.jpg` | Standard pipeline test |
 | `nurofen_calpol.jpg` | Brand matching |
