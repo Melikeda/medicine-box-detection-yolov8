@@ -485,12 +485,18 @@ def _model_chain(primary: str) -> tuple[str, ...]:
 
 
 def _is_retryable_gemini_error(exc: Exception) -> bool:
-    message = str(exc)
-    return (
-        "404" in message
-        or "429" in message
-        or "NOT_FOUND" in message
-        or "RESOURCE_EXHAUSTED" in message
+    message = str(exc).upper()
+    return any(
+        token in message
+        for token in (
+            "404",
+            "429",
+            "503",
+            "NOT_FOUND",
+            "RESOURCE_EXHAUSTED",
+            "UNAVAILABLE",
+            "HIGH DEMAND",
+        )
     )
 
 
@@ -584,9 +590,15 @@ class GeminiMedicineExplainer:
                     model=model,
                 )
 
-        if any("429" in item or "RESOURCE_EXHAUSTED" in item for item in errors):
+        joined = " ".join(errors).upper()
+        if "429" in joined or "RESOURCE_EXHAUSTED" in joined:
             raise LlmUnavailableError(
                 "LLM kotası aşıldı. Lütfen biraz sonra tekrar deneyin."
+            )
+        if "503" in joined or "UNAVAILABLE" in joined or "HIGH DEMAND" in joined:
+            raise LlmUnavailableError(
+                "Google Gemini şu anda yoğun. "
+                "Birkaç saniye sonra tekrar deneyin."
             )
 
         logger.error("All Gemini models failed: %s", errors)
@@ -697,12 +709,21 @@ class LlmExplanationService:
                 if parsed is not None:
                     return parsed, True
 
-        if isinstance(self.explainer, GeminiMedicineExplainer):
-            result = self.explainer.explain_with_model(medicine, locale=locale)
-            explanation = result.explanation
-            self.model = result.model
-        else:
-            explanation = self.explainer.explain(medicine, locale=locale)
+        try:
+            if isinstance(self.explainer, GeminiMedicineExplainer):
+                result = self.explainer.explain_with_model(medicine, locale=locale)
+                explanation = result.explanation
+                self.model = result.model
+            else:
+                explanation = self.explainer.explain(medicine, locale=locale)
+        except LlmUnavailableError:
+            logger.warning(
+                "Gemini unavailable for %s; using catalog fallback.",
+                medicine_id,
+            )
+            explanation = build_mock_explanation(medicine)
+            self.model = "catalog-fallback"
+            return explanation, False
 
         if self.settings.llm_cache_enabled:
             self.cache.set(medicine_id, locale, explanation.to_cache_payload())

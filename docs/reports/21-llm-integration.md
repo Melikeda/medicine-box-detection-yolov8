@@ -169,4 +169,6 @@ Tested against Google AI Studio free tier (Aug 2026):
 - Billing / paid Gemini tier
 - Key vault (Secret Manager) — future production hardening
 
+> **Update (barcode path):** If Gemini returns 503 / high demand, explain retries `gemini-flash-lite-latest`, then fills “İlaç hakkında” from catalog fields (name, ingredient, category). See [Report 28](28-barcode-reading.md).
+
 > **Update (final-polish-4):** Server scan history is implemented separately — see [Report 23](23-scan-history.md) and `POST /api/v1/scans`. PostgreSQL remains optional.

@@ -147,6 +147,8 @@ Server starts at http://127.0.0.1:8000
 | `GET /health` | API and model readiness |
 | `GET /api/v1/analyze/info` | Upload limits, formats, OCR modes |
 | `POST /api/v1/analyze?mode=fast` | Upload image (`file` field) |
+| `GET /api/v1/barcode/lookup?code=` | Exact GTIN / EAN lookup |
+| `POST /api/v1/barcode/scan` | Decode barcode from an image |
 | `GET /api/v1/medicines` | List / search medicines (SQLite, 1163 drugs) |
 | `GET /api/v1/medicines/categories` | Distinct categories |
 | `GET /api/v1/medicines/{id}` | Medicine detail |
@@ -378,7 +380,7 @@ Workflow files: `.github/workflows/`
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
 2. Next planned work: Phase 21 (`feature/project-release`) — written internship report, docs polish, GitHub Release v1.0.0
-3. Post-MVP ideas (not required now): PostgreSQL, barcode/QR, cloud host, iOS — see [Future Development](roadmap.md#-future-development)
+3. Post-MVP ideas (not required now): PostgreSQL, cloud host, iOS — see [Future Development](roadmap.md#-future-development). Barcode **API** is Phase 22.
 
 
 ### Run the unified pipeline from Python

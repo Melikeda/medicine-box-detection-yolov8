@@ -68,4 +68,36 @@ class AnalyzeResponse {
       if (disclaimer != null) 'disclaimer': disclaimer,
     };
   }
+
+  factory AnalyzeResponse.fromBarcodeMatch({
+    required Map<String, String> medicine,
+    required String barcode,
+    required String displayMessage,
+    double processingTimeMs = 0,
+    String? disclaimer,
+  }) {
+    return AnalyzeResponse(
+      success: true,
+      detectionCount: 1,
+      medicines: [
+        MedicineBoxResult(
+          boxIndex: 1,
+          yoloConfidence: 0,
+          matchingScore: 100,
+          status: 'matched',
+          displayMessage: displayMessage,
+          ocrText: barcode,
+          medicineName: medicine['medicine_name'],
+          bestCandidate: medicine['medicine_name'],
+          medicine: medicine,
+          matchSource: 'barcode',
+          barcode: barcode,
+        ),
+      ],
+      summary: const AnalyzeSummary(matchedCount: 1),
+      ocrMode: 'barcode',
+      processingTimeMs: processingTimeMs,
+      disclaimer: disclaimer,
+    );
+  }
 }

@@ -17,12 +17,14 @@ class ScanTab extends StatelessWidget {
     super.key,
     required this.onCameraTap,
     required this.onGalleryTap,
+    required this.onBarcodeTap,
     this.isPicking = false,
     this.activePickSource,
   });
 
   final VoidCallback onCameraTap;
   final VoidCallback onGalleryTap;
+  final VoidCallback onBarcodeTap;
   final bool isPicking;
   final PickSource? activePickSource;
 
@@ -64,8 +66,11 @@ class ScanTab extends StatelessWidget {
                 label: s.alignBox,
                 tryLabel: s.tryCamera,
                 tryHint: s.tryCameraHint,
+                barcodeLabel: s.scanBarcode,
+                barcodeHint: s.scanBarcodeHint,
                 isLoading: _isLoading(PickSource.camera),
                 onTryCamera: onCameraTap,
+                onBarcodeTap: onBarcodeTap,
               ),
               const SizedBox(height: 16),
               _GalleryActionCard(
@@ -88,14 +93,20 @@ class _ScanViewfinder extends StatefulWidget {
     required this.label,
     required this.tryLabel,
     required this.tryHint,
+    required this.barcodeLabel,
+    required this.barcodeHint,
     required this.onTryCamera,
+    required this.onBarcodeTap,
     this.isLoading = false,
   });
 
   final String label;
   final String tryLabel;
   final String tryHint;
+  final String barcodeLabel;
+  final String barcodeHint;
   final VoidCallback onTryCamera;
+  final VoidCallback onBarcodeTap;
   final bool isLoading;
 
   @override
@@ -123,169 +134,191 @@ class _ScanViewfinderState extends State<_ScanViewfinder>
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: widget.isLoading ? null : widget.onTryCamera,
+    return Container(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF0F172A),
-                Color(0xFF1E293B),
-                Color(0xFF0B1220),
-              ],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.accent.withValues(alpha: 0.18),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF0F172A),
+            Color(0xFF1E293B),
+            Color(0xFF0B1220),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.accent.withValues(alpha: 0.18),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 18, 16, 14),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 150,
+                height: 150,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CustomPaint(
+                      size: const Size(112, 112),
+                      painter: _RealisticQrPainter(),
+                    ),
+                    CustomPaint(
+                      size: const Size(148, 148),
+                      painter: _CornerBracketPainter(
+                        color: AppColors.accentLight,
+                      ),
+                    ),
+                    AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, _) {
+                        return Align(
+                          alignment: Alignment(
+                            0,
+                            -0.82 + _controller.value * 1.64,
+                          ),
+                          child: Container(
+                            width: 116,
+                            height: 2,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.transparent,
+                                  AppColors.accentLight
+                                      .withValues(alpha: 0.95),
+                                  Colors.transparent,
+                                ],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.accentLight
+                                      .withValues(alpha: 0.55),
+                                  blurRadius: 8,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                widget.label,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 10),
+              _ViewfinderActionRow(
+                title: widget.tryLabel,
+                subtitle: widget.tryHint,
+                icon: Icons.center_focus_strong_rounded,
+                isLoading: widget.isLoading,
+                onTap: widget.onTryCamera,
+              ),
+              const SizedBox(height: 8),
+              _ViewfinderActionRow(
+                title: widget.barcodeLabel,
+                subtitle: widget.barcodeHint,
+                icon: Icons.qr_code_scanner_rounded,
+                onTap: widget.onBarcodeTap,
               ),
             ],
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 18, 16, 14),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        CustomPaint(
-                          size: const Size(112, 112),
-                          painter: _RealisticQrPainter(),
+        ),
+      ),
+    );
+  }
+}
+
+class _ViewfinderActionRow extends StatelessWidget {
+  const _ViewfinderActionRow({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+    this.isLoading = false,
+  });
+
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isLoading ? null : onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: AppColors.teal.withValues(alpha: 0.45),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: isLoading
+                    ? const Padding(
+                        padding: EdgeInsets.all(8),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
                         ),
-                        CustomPaint(
-                          size: const Size(148, 148),
-                          painter: _CornerBracketPainter(
-                            color: AppColors.accentLight,
-                          ),
-                        ),
-                        AnimatedBuilder(
-                          animation: _controller,
-                          builder: (context, _) {
-                            return Align(
-                              alignment: Alignment(
-                                0,
-                                -0.82 + _controller.value * 1.64,
-                              ),
-                              child: Container(
-                                width: 116,
-                                height: 2,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.transparent,
-                                      AppColors.accentLight
-                                          .withValues(alpha: 0.95),
-                                      Colors.transparent,
-                                    ],
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.accentLight
-                                          .withValues(alpha: 0.55),
-                                      blurRadius: 8,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  Text(
-                    widget.label,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.18),
+                      )
+                    : Icon(icon, size: 20, color: AppColors.accentLight),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 34,
-                          height: 34,
-                          decoration: BoxDecoration(
-                            color: AppColors.teal.withValues(alpha: 0.45),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: widget.isLoading
-                              ? const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Icon(
-                                  Icons.center_focus_strong_rounded,
-                                  size: 20,
-                                  color: AppColors.accentLight,
-                                ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.tryLabel,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                widget.tryHint,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 11,
-                                  color: Colors.white.withValues(alpha: 0.75),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(
-                          Icons.chevron_right_rounded,
-                          color: Colors.white70,
-                        ),
-                      ],
+                    Text(
+                      subtitle,
+                      style: GoogleFonts.poppins(
+                        fontSize: 11,
+                        color: Colors.white.withValues(alpha: 0.75),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+              const Icon(Icons.chevron_right_rounded, color: Colors.white70),
+            ],
           ),
         ),
       ),

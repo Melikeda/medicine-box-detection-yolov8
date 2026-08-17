@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from sqlalchemy import DateTime, Integer, JSON, String
+from sqlalchemy import DateTime, ForeignKey, Integer, JSON, String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -53,6 +53,22 @@ class Medicine(Base):
             "form": self.form,
             "category": self.category,
         }
+
+
+class MedicineBarcode(Base):
+    """TİTCK / paket barkodu → ilaç kaydı (bir ilacın birden fazla kodu olabilir)."""
+
+    __tablename__ = "medicine_barcodes"
+
+    barcode: Mapped[str] = mapped_column(
+        String(32),
+        primary_key=True,
+    )
+    medicine_id: Mapped[str] = mapped_column(
+        String(32),
+        ForeignKey("medicines.medicine_id", ondelete="CASCADE"),
+        index=True,
+    )
 
 
 class Scan(Base):

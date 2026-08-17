@@ -18,6 +18,10 @@ DEFAULT_SQLITE_PATH = (
     PROJECT_ROOT / "data/database/medicines.db"
 )
 
+DEFAULT_MEDICINE_BARCODES_CSV_PATH = (
+    PROJECT_ROOT / "data/database/medicine_barcodes.csv"
+)
+
 DEFAULT_OUTPUT_DIRECTORY = (
     PROJECT_ROOT / "results/integration/medicine_matching"
 )
@@ -84,6 +88,9 @@ class PipelineConfig:
     )
     medicines_csv_path: Path = field(
         default_factory=lambda: DEFAULT_MEDICINES_CSV_PATH
+    )
+    medicine_barcodes_csv_path: Path = field(
+        default_factory=lambda: DEFAULT_MEDICINE_BARCODES_CSV_PATH
     )
     sqlite_path: Path = field(
         default_factory=lambda: DEFAULT_SQLITE_PATH

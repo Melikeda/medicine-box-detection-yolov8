@@ -2,9 +2,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from src.database.csv_reader import load_medicines
+from src.barcode.decoder import decode_barcodes
+from src.barcode.normalize import barcode_lookup_keys
+from src.database.csv_reader import load_medicine_barcodes, load_medicines
 from src.database.repository import (
     ensure_database_seeded,
+    load_barcode_index,
     load_medicines_from_sqlite,
 )
 from src.matching.brand_disambiguation import (
@@ -30,7 +33,9 @@ from src.services.config import PipelineConfig
 from src.services.failure_reasons import hint_for
 
 MATCHED_MESSAGE = "İlaç eşleştirildi."
+BARCODE_MATCHED_MESSAGE = "İlaç barkod ile eşleştirildi."
 NOT_FOUND_MESSAGE = "İlaç CSV veritabanında bulunamadı."
+BARCODE_NOT_FOUND_MESSAGE = "Barkod katalogda bulunamadı."
 NOT_MEDICINE_BOX_MESSAGE = (
     "Tespit edilen kutu ilaç kutusu olarak doğrulanamadı."
 )
@@ -562,6 +567,8 @@ class TextMatchResult:
     ranked_matches: list[MatchRecord] = field(default_factory=list)
     failure_reason: str | None = None
     hint: str | None = None
+    match_source: str = "ocr"
+    barcode: str | None = None
 
 
 class MatchingService:
@@ -573,10 +580,15 @@ class MatchingService:
         medicines: list[dict[str, str]],
         *,
         source: str = "csv",
+        barcode_index: dict[str, str] | None = None,
     ) -> None:
         self.config = config
         self.medicines = medicines
         self.source = source
+        self._medicines_by_id = {
+            row["medicine_id"]: row for row in medicines if row.get("medicine_id")
+        }
+        self._barcode_index = barcode_index or {}
 
     @classmethod
     def from_csv(
@@ -587,10 +599,17 @@ class MatchingService:
         medicines = load_medicines(
             csv_path=config.medicines_csv_path,
         )
+        barcode_index = {
+            row["barcode"]: row["medicine_id"]
+            for row in load_medicine_barcodes(
+                config.medicine_barcodes_csv_path
+            )
+        }
         return cls(
             config=config,
             medicines=medicines,
             source="csv",
+            barcode_index=barcode_index,
         )
 
     @classmethod
@@ -609,6 +628,7 @@ class MatchingService:
             ensure_database_seeded(
                 csv_path=config.medicines_csv_path,
                 database_path=config.sqlite_path,
+                barcodes_csv_path=config.medicine_barcodes_csv_path,
             )
 
         medicines = load_medicines_from_sqlite(
@@ -621,10 +641,12 @@ class MatchingService:
                 f"{config.sqlite_path}"
             )
 
+        barcode_index = load_barcode_index(config.sqlite_path)
         return cls(
             config=config,
             medicines=medicines,
             source="sqlite",
+            barcode_index=barcode_index,
         )
 
     @classmethod
@@ -640,6 +662,106 @@ class MatchingService:
     @property
     def medicine_count(self) -> int:
         return len(self.medicines)
+
+    @property
+    def barcode_count(self) -> int:
+        return len(self._barcode_index)
+
+    def match_barcode(self, raw_code: str) -> TextMatchResult:
+        """Barkod ile birebir katalog eşlemesi (OCR kullanılmaz)."""
+        tried = barcode_lookup_keys(raw_code)
+        code = tried[0] if tried else ""
+        medicine_id = None
+        for candidate in tried:
+            medicine_id = self._barcode_index.get(candidate)
+            if medicine_id:
+                code = candidate
+                break
+
+        if not tried:
+            return TextMatchResult(
+                medicine_name=None,
+                medicine=None,
+                matching_score=0.0,
+                best_ocr_text=None,
+                best_candidate=None,
+                status="not_found",
+                display_message=BARCODE_NOT_FOUND_MESSAGE,
+                failure_reason="invalid_barcode",
+                hint="Barkodu kadraja yaklaştırıp yeniden deneyin.",
+                match_source="barcode",
+                barcode=None,
+            )
+
+        medicine = (
+            self._medicines_by_id.get(medicine_id)
+            if medicine_id
+            else None
+        )
+        if medicine is None:
+            from src.barcode.skrs_resolver import (
+                match_skrs_hit_to_catalog,
+                medicine_from_skrs_hit,
+                resolve_skrs_barcode,
+            )
+
+            hit = resolve_skrs_barcode(raw_code)
+            if hit is not None:
+                medicine = match_skrs_hit_to_catalog(
+                    hit,
+                    self.medicines,
+                ) or medicine_from_skrs_hit(hit)
+                code = hit.barcode
+
+        if medicine is None:
+            return TextMatchResult(
+                medicine_name=None,
+                medicine=None,
+                matching_score=0.0,
+                best_ocr_text=None,
+                best_candidate=None,
+                status="not_found",
+                display_message=BARCODE_NOT_FOUND_MESSAGE,
+                failure_reason="barcode_not_in_catalog",
+                hint="Bu barkod katalogda yok. Kutu fotoğrafı ile tarayın.",
+                match_source="barcode",
+                barcode=code,
+            )
+
+        name = medicine.get("medicine_name") or ""
+        return TextMatchResult(
+            medicine_name=name,
+            medicine=medicine,
+            matching_score=100.0,
+            best_ocr_text=code,
+            best_candidate=name,
+            status="matched",
+            display_message=BARCODE_MATCHED_MESSAGE,
+            match_source="barcode",
+            barcode=code,
+        )
+
+    def match_image_barcodes(
+        self,
+        image: object,
+    ) -> TextMatchResult | None:
+        """Görüntüdeki ilk katalog barkodunu döndürür; yoksa None."""
+        import numpy as np
+
+        if image is None or not isinstance(image, np.ndarray):
+            return None
+        try:
+            decoded = decode_barcodes(image)
+        except Exception:
+            return None
+        for item in decoded:
+            result = self.match_barcode(item.normalized)
+            result.barcode = item.normalized
+            if result.status == "matched":
+                return result
+        if decoded:
+            return self.match_barcode(decoded[0].normalized)
+        return None
 
     def process_candidates(
         self,

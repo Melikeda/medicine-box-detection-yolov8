@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from backend.app.routers import explain as explain_router
+from backend.app.routers import barcode as barcode_router
 from backend.app.routers import scans as scans_router
 from backend.app.services.explanation_cache import reset_shared_explanation_cache
 from backend.app.services.llm_service import LlmExplanationService
@@ -55,9 +56,17 @@ def seeded_pipeline_config(
     )
     return PipelineConfig(
         medicines_csv_path=sample_csv_path,
+        medicine_barcodes_csv_path=sample_csv_path.with_name(
+            "medicine_barcodes.csv"
+        ),
         sqlite_path=sqlite_path,
         use_sqlite=True,
     )
+
+
+@pytest.fixture(autouse=True)
+def _disable_skrs_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("YOLOCILIN_DISABLE_SKRS_FALLBACK", "1")
 
 
 @pytest.fixture(autouse=True)
@@ -69,6 +78,7 @@ def _reset_db_engine() -> None:
     reset_shared_explanation_cache()
     explain_router._get_explain_rate_limiter.cache_clear()
     scans_router._get_scans_rate_limiter.cache_clear()
+    barcode_router._get_barcode_rate_limiter.cache_clear()
     yield
     reset_engine()
     MedicineQueryService.reset_instance()
@@ -77,3 +87,4 @@ def _reset_db_engine() -> None:
     reset_shared_explanation_cache()
     explain_router._get_explain_rate_limiter.cache_clear()
     scans_router._get_scans_rate_limiter.cache_clear()
+    barcode_router._get_barcode_rate_limiter.cache_clear()

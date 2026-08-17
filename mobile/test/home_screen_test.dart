@@ -71,6 +71,7 @@ void main() {
 
     expect(find.text('Hızlı İlaç Tarama'), findsOneWidget);
     expect(find.text('Kamerayı Dene'), findsOneWidget);
+    expect(find.text('Barkod tara'), findsOneWidget);
     expect(find.text('Galeriden Seç'), findsOneWidget);
   });
 }

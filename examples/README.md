@@ -15,6 +15,7 @@ Product docs: [root README](../README.md) · current catalog size **1163** medic
 | `preprocessing/` | OpenCV image processing tutorials (22 steps) |
 | `ocr/` | EasyOCR learning and OCR pipeline usage |
 | `database/` | Medicine CSV database reading |
+| `barcode/` | zxing-cpp decode demo (optional identity path) |
 | `matching/` | RapidFuzz fuzzy string matching |
 | `integration/` | Step-by-step YOLO + OCR + matching integration (legacy demos) |
 | `pipeline/` | **Current** unified pipeline demo (`analyze_medicine_box`) |
@@ -29,8 +30,9 @@ Follow this sequence to mirror the project's development phases:
 2. **OCR** — `ocr/step_01` … `step_05`
 3. **Database** — `database/step_01_read_medicine_csv`
 4. **Matching** — `matching/step_01` … `step_03`
-5. **Integration (legacy)** — `integration/step_01` … `step_03`
-6. **Pipeline (current)** — `pipeline/analyze_medicine_box_demo`
+5. **Barcode (optional)** — `barcode/step_01_decode_barcode`
+6. **Integration (legacy)** — `integration/step_01` … `step_03`
+7. **Pipeline (current)** — `pipeline/analyze_medicine_box_demo`
 
 ---
 
@@ -51,6 +53,9 @@ python -m examples.database.step_01_read_medicine_csv
 
 # Matching
 python -m examples.matching.step_01_rapidfuzz_basics
+
+# Barcode (optional path)
+python -m examples.barcode.step_01_decode_barcode
 
 # Integration (legacy step-by-step demos)
 python -m examples.integration.step_01_yolo_crop_ocr

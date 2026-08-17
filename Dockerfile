@@ -24,6 +24,7 @@ COPY backend/ backend/
 COPY src/ src/
 COPY scripts/ scripts/
 COPY data/database/medicines.csv data/database/medicines.csv
+COPY data/database/medicine_barcodes.csv data/database/medicine_barcodes.csv
 COPY run_api.py .
 
 RUN chmod +x scripts/docker-entrypoint.sh

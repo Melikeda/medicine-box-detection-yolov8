@@ -4,6 +4,7 @@ from pathlib import Path
 
 from src.database.repository import (
     count_medicines,
+    get_medicine_by_barcode,
     get_medicine_by_id,
     list_categories,
     list_medicines,
@@ -99,9 +100,39 @@ class MedicineQueryService:
     ) -> dict[str, str] | None:
         with session_scope() as session:
             medicine = get_medicine_by_id(session, medicine_id)
-            if medicine is None:
-                return None
-            return medicine.to_dict()
+            if medicine is not None:
+                return medicine.to_dict()
+        if medicine_id.startswith("SKRS-"):
+            return self.get_medicine_by_barcode(medicine_id.removeprefix("SKRS-"))
+        return None
+
+    def get_medicine_by_barcode(
+        self,
+        barcode: str,
+    ) -> dict[str, str] | None:
+        with session_scope() as session:
+            medicine = get_medicine_by_barcode(session, barcode)
+            if medicine is not None:
+                return medicine.to_dict()
+        return self._medicine_from_skrs(barcode)
+
+    def _medicine_from_skrs(self, barcode: str) -> dict[str, str] | None:
+        from src.barcode.skrs_resolver import (
+            match_skrs_hit_to_catalog,
+            medicine_from_skrs_hit,
+            resolve_skrs_barcode,
+        )
+        from src.database.repository import load_medicines_from_sqlite
+
+        hit = resolve_skrs_barcode(barcode)
+        if hit is None:
+            return None
+
+        catalog = load_medicines_from_sqlite(self.sqlite_path)
+        matched = match_skrs_hit_to_catalog(hit, catalog)
+        if matched is not None:
+            return matched
+        return medicine_from_skrs_hit(hit)
 
     def list_categories(self) -> list[str]:
         with session_scope() as session:

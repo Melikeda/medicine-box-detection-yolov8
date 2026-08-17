@@ -261,7 +261,7 @@ PipelineManager.analyze_all()
    │
    ▼
 YOLOv8 → Crop → OpenCV → EasyOCR → Normalize → RapidFuzz → SQLite (1163)
-   │
+   │                    ↘ optional barcode (zxing-cpp) ↗
    ▼
 JSON Response → Flutter Result Screen
    │
@@ -288,7 +288,6 @@ POST /api/v1/explain → Gemini → "İlaç hakkında" card
 Aligned with [roadmap Future Development](roadmap.md#-future-development):
 
 - PostgreSQL migration (post-MVP; SQLite remains current runtime)
-- Barcode / QR code support (optional path alongside OCR matching)
 - Cloud deployment / HTTPS reverse proxy
 - Per-user auth for private scan lists
 - iOS client

@@ -42,9 +42,13 @@ def main() -> None:
         csv_path=csv_path,
         database_path=db_path,
         replace_existing=True,
+        barcodes_csv_path=config.medicine_barcodes_csv_path,
     )
 
-    print(f"Seed tamamlandi: {count} ilac -> {db_path}")
+    from src.database.repository import load_barcode_index
+
+    barcode_count = len(load_barcode_index(db_path))
+    print(f"Seed tamamlandi: {count} ilac, {barcode_count} barkod -> {db_path}")
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  CSV source of truth · SQLite runtime (`medicines` + `scans`) · TİTCK SKRS enrichment
+  CSV source of truth · SQLite runtime (`medicines` + `medicine_barcodes` + `scans`) · TİTCK SKRS enrichment
 </p>
 
 ---
@@ -17,6 +17,7 @@ This directory holds the **medicine catalog** used by the analyze pipeline and t
 | Metric | Value |
 |--------|-------|
 | **Catalog size** | **1163** medicines (popular TR brands + TİTCK ATC expansion) |
+| **Barcode map** | **2043** GTINs → 1041 medicines (`medicine_barcodes.csv`) |
 | **Source file** | `medicines.csv` (committed) |
 | **Runtime DB** | `medicines.db` (generated, gitignored) |
 | **Placeholder rate** | ~7% of dosage/form/ingredient fields |
@@ -47,6 +48,7 @@ This directory holds the **medicine catalog** used by the analyze pipeline and t
 ┌─────────────────────────────────────────────────────────────────┐
 │                     data/database/                              │
 │  medicines.csv  ──►  seed / upsert  ──►  medicines.db (SQLite)  │
+│  medicine_barcodes.csv ──► seed     │  medicines + barcodes     │
 │       ▲                                        │                │
 │       │                                        ▼                │
 │  TİTCK SKRS XLSX                    MatchingService + API       │
@@ -71,9 +73,11 @@ The backend loads SQLite on startup (`PipelineConfig.use_sqlite=True`) and upser
 data/database/
 ├── README.md                 # This file
 ├── medicines.csv             # Seed catalog (edit this)
+├── medicine_barcodes.csv     # Optional GTIN → medicine_id (TİTCK)
 ├── medicines.db              # Generated SQLite (do not commit)
 └── titck/
     ├── skrs_manifest.json    # Last SKRS download metadata
+    ├── skrs_barcode_index.csv # Full SKRS GTIN index (gitignored, local)
     └── skrs_latest.xlsx      # Cached TİTCK export (gitignored)
 ```
 
@@ -90,6 +94,17 @@ data/database/
 | `dosage` | string | Strength when known (e.g. `500 mg`, `200 mg / 30 mg`) |
 | `form` | string | Pharmaceutical form (Tablet, Şurup, Kapsül, …) |
 | `category` | string | Therapeutic group for UI (Ağrı Kesici, Antibiyotik, …) |
+
+### Barcode mapping (`medicine_barcodes.csv`)
+
+Optional 1:N table. One medicine can have many package GTINs. Columns: `barcode`, `medicine_id`.
+
+```bash
+python scripts/attach_titck_barcodes.py
+python scripts/seed_sqlite.py
+```
+
+See [Report 28](../../docs/reports/28-barcode-reading.md).
 
 ### Placeholder values
 
@@ -156,6 +171,7 @@ python scripts/enrich_medicines_from_titck.py --no-download
 |--------|---------|
 | `scripts/fetch_titck_skrs.py` | Download latest SKRS XLSX; write manifest |
 | `scripts/enrich_medicines_from_titck.py` | Enrich placeholders, expand brands, append popular OTC rows |
+| `scripts/attach_titck_barcodes.py` | Map SKRS GTINs into `medicine_barcodes.csv` (does not rewrite medicines.csv) |
 | `scripts/validate_medicines_csv.py` | Schema, duplicates, placeholder statistics |
 | `scripts/seed_sqlite.py` | CSV → SQLite upsert |
 

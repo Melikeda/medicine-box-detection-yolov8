@@ -22,3 +22,17 @@ def test_medicines_csv_placeholder_rate_acceptable() -> None:
     total_fields = stats["rows"] * 3
     placeholder_ratio = stats["placeholder_fields"] / total_fields
     assert placeholder_ratio < 0.15
+
+
+def test_medicine_barcodes_csv_maps_to_catalog() -> None:
+    from src.database.csv_reader import load_medicine_barcodes, load_medicines
+
+    barcodes_path = PROJECT_ROOT / "data/database/medicine_barcodes.csv"
+    medicines = load_medicines(MEDICINES_CSV)
+    known_ids = {row["medicine_id"] for row in medicines}
+    barcodes = load_medicine_barcodes(barcodes_path)
+    assert len(barcodes) >= 1000
+    mapped_ids = {row["medicine_id"] for row in barcodes}
+    assert mapped_ids <= known_ids
+    codes = [row["barcode"] for row in barcodes]
+    assert len(codes) == len(set(codes))

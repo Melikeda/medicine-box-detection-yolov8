@@ -52,6 +52,7 @@ Built as a modular internship system: learnable `examples/`, production `src/` +
 | Detection | Multi-box YOLO with confidence fallback |
 | OCR | Fast / accurate modes; EasyOCR on CPU (typical wait); early exit only on near-complete match |
 | Matching | RapidFuzz + reliability gates — wrong-name suffix fragments rejected ([Report 27](docs/reports/27-matching-reliability.md)) |
+| Barcode | Optional GTIN lookup (`/barcode/lookup` + `/barcode/scan`); analyze tries it before OCR ([Report 28](docs/reports/28-barcode-reading.md)) |
 | Catalog | TİTCK-enriched seed CSV → SQLite (**1163** rows) |
 | API | Analyze, medicines, explain, server scans |
 | Mobile (Yolocilin) | Gallery + camera, results, local history, best-effort server sync |
@@ -83,6 +84,9 @@ JSON → Result screen
         │
         ▼ (optional)
 POST /api/v1/explain → Gemini → “İlaç hakkında”
+
+Parallel path (does not replace OCR):
+Yolocilin or photo → GET/POST /api/v1/barcode → exact GTIN lookup → same explain
 ```
 
 More detail: [docs/architecture.md](docs/architecture.md)
@@ -96,7 +100,8 @@ More detail: [docs/architecture.md](docs/architecture.md)
 | Detection | YOLOv8n, Ultralytics, PyTorch |
 | Vision | OpenCV, EasyOCR |
 | Matching | RapidFuzz |
-| Data | CSV seed + SQLite (`medicines` + `scans`) |
+| Barcode | zxing-cpp (EAN-13 / DataMatrix; optional path) |
+| Data | CSV seed + SQLite (`medicines` + `medicine_barcodes` + `scans`) |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | LLM | Google Gemini (optional) |
 | Mobile | Flutter / Dart — **Yolocilin** |
@@ -156,6 +161,8 @@ python run_api.py
 | GET | `/health` | Readiness |
 | POST | `/api/v1/analyze` | Image → match results (`mode=fast\|accurate`) |
 | GET | `/api/v1/medicines` | Search / list catalog |
+| GET | `/api/v1/barcode/lookup` | Exact GTIN / EAN lookup |
+| POST | `/api/v1/barcode/scan` | Image → barcode decode → catalog |
 | POST | `/api/v1/explain` | Short Gemini text (needs key) |
 | POST/GET/DELETE | `/api/v1/scans` | Server scan history |
 
@@ -234,7 +241,7 @@ yolocilin/
 
 ### Done
 
-Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini explain, local + server scan history, production hardening, catalog refresh (1163), E2E/perf tooling.
+Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini explain, local + server scan history, production hardening, catalog refresh (1163), E2E/perf tooling, optional barcode path.
 
 ### Still open
 
