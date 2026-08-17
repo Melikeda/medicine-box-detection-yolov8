@@ -10,11 +10,19 @@ class MedicineExplanationSection extends StatefulWidget {
     super.key,
     required this.medicineId,
     required this.medicineName,
+    this.category,
+    this.activeIngredient,
+    this.dosage,
+    this.form,
     ExplainApiService? apiService,
   }) : _apiService = apiService;
 
   final String medicineId;
   final String medicineName;
+  final String? category;
+  final String? activeIngredient;
+  final String? dosage;
+  final String? form;
   final ExplainApiService? _apiService;
 
   @override
@@ -27,7 +35,6 @@ class _MedicineExplanationSectionState
   ExplainApiService? _ownedService;
   ExplainResponse? _response;
   bool _loading = false;
-  String? _error;
   bool _expanded = false;
 
   ExplainApiService get _service =>
@@ -46,7 +53,6 @@ class _MedicineExplanationSectionState
 
     setState(() {
       _loading = true;
-      _error = null;
     });
 
     try {
@@ -60,13 +66,13 @@ class _MedicineExplanationSectionState
         _response = response;
         _loading = false;
       });
-    } on AnalyzeApiException catch (exc) {
+    } on AnalyzeApiException {
       if (!mounted) {
         return;
       }
       setState(() {
         _loading = false;
-        _error = exc.message;
+        _response = _catalogFallback();
       });
     } catch (_) {
       if (!mounted) {
@@ -74,9 +80,21 @@ class _MedicineExplanationSectionState
       }
       setState(() {
         _loading = false;
-        _error = context.s.explanationFailed;
+        _response = _catalogFallback();
       });
     }
+  }
+
+  ExplainResponse _catalogFallback() {
+    return ExplainResponse.catalogFallback(
+      medicineId: widget.medicineId,
+      medicineName: widget.medicineName,
+      category: widget.category,
+      activeIngredient: widget.activeIngredient,
+      dose: widget.dosage,
+      form: widget.form,
+      disclaimer: context.s.medicineExplanationDisclaimer,
+    );
   }
 
   void _onExpansionChanged(bool expanded) {
@@ -123,27 +141,6 @@ class _MedicineExplanationSectionState
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
               ),
-            )
-          else if (_error != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _error!,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.error,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextButton.icon(
-                  onPressed: () {
-                    setState(() => _response = null);
-                    _loadExplanation();
-                  },
-                  icon: const Icon(Icons.refresh),
-                  label: Text(context.s.retry),
-                ),
-              ],
             )
           else if (_response != null)
             _ExplanationContent(response: _response!),

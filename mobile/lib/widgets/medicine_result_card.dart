@@ -126,6 +126,10 @@ class MedicineResultCard extends StatelessWidget {
                 MedicineExplanationSection(
                   medicineId: result.medicineId!,
                   medicineName: result.medicineName ?? s.medicineLabel,
+                  category: result.category,
+                  activeIngredient: result.activeIngredient,
+                  dosage: result.dosage,
+                  form: result.form,
                 ),
               ],
             ] else if (result.bestCandidate != null &&

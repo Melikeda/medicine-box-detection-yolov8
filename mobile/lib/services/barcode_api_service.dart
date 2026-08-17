@@ -119,7 +119,7 @@ class BarcodeApiService {
 
   AnalyzeResponse _fromLookupJson(Map<String, dynamic> json) {
     final status = json['status'] as String? ?? 'not_found';
-    if status != 'matched') {
+    if (status != 'matched') {
       final barcode = json['barcode'] as String?;
       final message =
           json['display_message'] as String? ?? 'Barkod katalogda bulunamadı.';
