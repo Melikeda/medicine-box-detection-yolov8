@@ -120,13 +120,9 @@ class DetectionService:
         if should_use_fallback and detected_boxes:
             self._last_detection_used_fallback = True
             logger.info(
-                "YOLO fallback modu: conf=%.2f ile %s kutu bulundu.",
+                "YOLO fallback: conf=%.2f found %s box(es).",
                 fallback_threshold,
                 len(detected_boxes),
-            )
-            print(
-                f"YOLO fallback modu: conf={fallback_threshold:.2f} "
-                f"({len(detected_boxes)} kutu)"
             )
 
         return detected_boxes

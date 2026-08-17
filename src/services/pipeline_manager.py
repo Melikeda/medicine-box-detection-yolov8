@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import time
 from pathlib import Path
 
@@ -20,6 +21,8 @@ from src.services.medicine_analyzer import (
     PipelineTiming,
 )
 from src.services.ocr_service import OCRService
+
+logger = logging.getLogger(__name__)
 
 BOX_ERROR_MESSAGE = "Bu ilaç kutusu analiz edilemedi."
 
@@ -78,22 +81,22 @@ class PipelineManager:
     def load(self) -> None:
         """Load YOLO, the OCR reader, and the medicine database into memory."""
         if self.is_loaded:
-            print("PipelineManager: kaynaklar zaten yüklü.")
+            logger.info("PipelineManager: resources already loaded.")
             return
 
         self._validate_paths()
 
-        print("PipelineManager: YOLO modeli yükleniyor...")
-        print(f"PipelineManager: model path → {self.config.model_path}")
+        logger.info("PipelineManager: loading YOLO model...")
+        logger.info("PipelineManager: model path → %s", self.config.model_path)
         self._yolo_model = YOLO(str(self.config.model_path))
 
-        print("PipelineManager: OCR reader hazırlanıyor (EasyOCR)...")
+        logger.info("PipelineManager: preparing OCR reader (EasyOCR)...")
         self._ocr_reader = create_ocr_reader(
             languages=list(self.config.ocr_languages),
             use_gpu=self.config.use_gpu,
         )
 
-        print("PipelineManager: ilaç veritabanı yükleniyor...")
+        logger.info("PipelineManager: loading medicine database...")
         self._matching_service = MatchingService.from_config(
             config=self.config,
         )
@@ -107,12 +110,11 @@ class PipelineManager:
             reader=self._ocr_reader,
         )
 
-        print(
-            f"PipelineManager: hazır "
-            f"({self._matching_service.medicine_count} ilaç, "
-            f"kaynak: {self._matching_service.source}, "
-            f"OCR modu: {self.config.ocr_mode}, "
-            f"OCR motoru: easyocr)"
+        logger.info(
+            "PipelineManager: ready (%s medicines, source=%s, OCR mode=%s, engine=easyocr)",
+            self._matching_service.medicine_count,
+            self._matching_service.source,
+            self.config.ocr_mode,
         )
 
     def unload(self) -> None:
@@ -155,7 +157,7 @@ class PipelineManager:
         timing.yolo_ms = (time.perf_counter() - yolo_started) * 1000
 
         detection_count = len(detected_boxes)
-        print(f"YOLO tespit sayısı: {detection_count}")
+        logger.info("YOLO detections: %s", detection_count)
 
         image_width = 0
         image_height = 0
@@ -193,8 +195,8 @@ class PipelineManager:
         box_results: list[BoxAnalysisResult] = []
 
         for index, detected_box in enumerate(detected_boxes, start=1):
-            print(f"\nKutu {index}/{detection_count}")
-            print(
+            logger.info("Box %s/%s", index, detection_count)
+            logger.info(
                 f"YOLO confidence: {detected_box.confidence:.2f}"
             )
 
@@ -217,7 +219,7 @@ class PipelineManager:
 
                 ocr_text = match_result.best_ocr_text
                 if ocr_text:
-                    print(f"OCR metni: {ocr_text}")
+                    logger.info("OCR text: %s", ocr_text)
 
                 failure_reason = match_result.failure_reason
                 hint = match_result.hint
@@ -244,22 +246,23 @@ class PipelineManager:
                         display_message = classified.hint
 
                 if match_result.status == "matched":
-                    print(f"Sonuç: {match_result.medicine_name}")
-                    print(
-                        f"Eşleşme skoru: {match_result.matching_score:.2f}"
+                    logger.info("Match: %s", match_result.medicine_name)
+                    logger.info(
+                        "Match score: %.2f",
+                        match_result.matching_score,
                     )
                 elif match_result.status == "not_medicine_box":
-                    print(f"Sonuç: {display_message}")
+                    logger.info("Result: %s", display_message)
                 else:
-                    print("Sonuç: CSV veritabanında bulunamadı")
+                    logger.info("Result: not found in the catalog")
                     if match_result.best_candidate:
-                        print(
-                            "En yakın aday: "
-                            f"{match_result.best_candidate} "
-                            f"({match_result.matching_score:.2f})"
+                        logger.info(
+                            "Closest candidate: %s (%.2f)",
+                            match_result.best_candidate,
+                            match_result.matching_score,
                         )
                     if hint:
-                        print(f"Ipucu: {hint}")
+                        logger.info("Hint: %s", hint)
 
                 box_results.append(
                     BoxAnalysisResult(
@@ -281,7 +284,7 @@ class PipelineManager:
                 )
 
             except Exception as exc:
-                print(f"Hata: {exc}")
+                logger.exception("Box analysis failed: %s", exc)
                 box_results.append(
                     BoxAnalysisResult(
                         box_index=index,
@@ -382,9 +385,10 @@ class PipelineManager:
         )
         barcode_ms = (time.perf_counter() - barcode_started) * 1000
         if barcode_match is not None and barcode_match.status == "matched":
-            print(
-                f"Barkod eşleşmesi: {barcode_match.barcode} → "
-                f"{barcode_match.medicine_name}"
+            logger.info(
+                "Barcode match: %s → %s",
+                barcode_match.barcode,
+                barcode_match.medicine_name,
             )
             return [], barcode_match, {"barcode_ms": barcode_ms}
 
@@ -409,9 +413,10 @@ class PipelineManager:
         if self._should_retry_ocr(match_result):
             retry_angles = self.config.ocr_retry_rotation_angles
             if retry_angles:
-                print(
-                    f"OCR tekrar deneniyor "
-                    f"(kutu {box_index}, acilar: {retry_angles})"
+                logger.info(
+                    "Retrying OCR (box %s, angles: %s)",
+                    box_index,
+                    retry_angles,
                 )
                 retry_texts, retry_pipeline_result = (
                     self._ocr_service.analyze_crop(
@@ -434,9 +439,9 @@ class PipelineManager:
                 pipeline_result = retry_pipeline_result
 
         if self._should_supplemental_ocr(match_result, candidate_texts):
-            print(
-                f"OCR derin tekrar (kutu {box_index}): "
-                "2x olcek, gelismis preprocessing"
+            logger.info(
+                "Supplemental OCR (box %s): 2x scale, extra preprocessing",
+                box_index,
             )
             supplemental_texts, supplemental_pipeline_result = (
                 self._ocr_service.analyze_crop(
@@ -532,9 +537,10 @@ class PipelineManager:
         if barcode_match is None or barcode_match.status != "matched":
             return None
 
-        print(
-            f"Barkod eşleşmesi (tam kare): {barcode_match.barcode} → "
-            f"{barcode_match.medicine_name}"
+        logger.info(
+            "Barcode match (full frame): %s → %s",
+            barcode_match.barcode,
+            barcode_match.medicine_name,
         )
         from src.services.detection import BoundingBox
 

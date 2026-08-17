@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request, s
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.dependencies import get_scan_service
 from backend.app.exceptions import RateLimitExceededError
-from backend.app.middleware.rate_limit import AnalyzeRateLimiter
+from backend.app.middleware.rate_limit import IpRateLimiter
 from backend.app.schemas.scans import (
     ScanCreateRequestSchema,
     ScanCreateResponseSchema,
@@ -22,8 +22,8 @@ router = APIRouter(prefix="/scans", tags=["scans"])
 
 
 @lru_cache
-def _get_scans_rate_limiter(max_requests: int) -> AnalyzeRateLimiter:
-    return AnalyzeRateLimiter(max_requests=max_requests)
+def _get_scans_rate_limiter(max_requests: int) -> IpRateLimiter:
+    return IpRateLimiter(max_requests=max_requests)
 
 
 def enforce_scans_rate_limit(

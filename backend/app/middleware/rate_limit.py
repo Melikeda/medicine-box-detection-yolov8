@@ -1,4 +1,4 @@
-"""Simple IP rate limiting for the analyze endpoint."""
+"""Simple in-memory IP rate limiting."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse
 
 
-class AnalyzeRateLimiter:
+class IpRateLimiter:
     def __init__(
         self,
         *,
@@ -57,7 +57,7 @@ class AnalyzeRateLimitMiddleware(BaseHTTPMiddleware):
         self,
         app,
         *,
-        limiter: AnalyzeRateLimiter,
+        limiter: IpRateLimiter,
         analyze_path_suffix: str = "/analyze",
     ) -> None:
         super().__init__(app)

@@ -6,7 +6,7 @@ from backend.app.config import ApiSettings, get_api_settings
 from backend.app.constants import LLM_EXPLANATION_DISCLAIMER
 from backend.app.dependencies import get_llm_service, get_medicine_service
 from backend.app.exceptions import RateLimitExceededError
-from backend.app.middleware.rate_limit import AnalyzeRateLimiter
+from backend.app.middleware.rate_limit import IpRateLimiter
 from backend.app.schemas.explain import (
     ExplainInfoSchema,
     ExplainRequestSchema,
@@ -19,8 +19,8 @@ router = APIRouter(prefix="/explain", tags=["explain"])
 
 
 @lru_cache
-def _get_explain_rate_limiter(max_requests: int) -> AnalyzeRateLimiter:
-    return AnalyzeRateLimiter(max_requests=max_requests)
+def _get_explain_rate_limiter(max_requests: int) -> IpRateLimiter:
+    return IpRateLimiter(max_requests=max_requests)
 
 
 def enforce_explain_rate_limit(

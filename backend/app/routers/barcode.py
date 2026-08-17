@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.dependencies import get_medicine_service
 from backend.app.exceptions import RateLimitExceededError
-from backend.app.middleware.rate_limit import AnalyzeRateLimiter
+from backend.app.middleware.rate_limit import IpRateLimiter
 from backend.app.schemas.barcode import (
     BarcodeInfoSchema,
     BarcodeLookupResponseSchema,
@@ -18,8 +18,8 @@ router = APIRouter(prefix="/barcode", tags=["barcode"])
 
 
 @lru_cache
-def _get_barcode_rate_limiter(max_requests: int) -> AnalyzeRateLimiter:
-    return AnalyzeRateLimiter(max_requests=max_requests)
+def _get_barcode_rate_limiter(max_requests: int) -> IpRateLimiter:
+    return IpRateLimiter(max_requests=max_requests)
 
 
 def enforce_barcode_rate_limit(
