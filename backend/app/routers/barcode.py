@@ -35,8 +35,8 @@ def enforce_barcode_rate_limit(
     client_host = request.client.host if request.client else "unknown"
     if not limiter.is_allowed(client_host):
         raise RateLimitExceededError(
-            "Cok fazla barkod istegi. "
-            "Lutfen bir dakika sonra tekrar deneyin."
+            "Too many barcode requests. "
+            "Please try again in a minute."
         )
 
 

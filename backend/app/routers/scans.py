@@ -37,8 +37,8 @@ def enforce_scans_rate_limit(
     client_host = request.client.host if request.client else "unknown"
     if not limiter.is_allowed(client_host):
         raise RateLimitExceededError(
-            "Cok fazla tarama gecmisi istegi. "
-            "Lutfen bir dakika sonra tekrar deneyin."
+            "Too many scan-history requests. "
+            "Please try again in a minute."
         )
 
 
@@ -63,8 +63,8 @@ def enforce_scans_delete_authorization(
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=(
-                "Production ortaminda scan silme kapali. "
-                "Acmak icin SCANS_API_KEY tanimlayin ve X-API-Key gonderin."
+                "Scan deletion is disabled in production. "
+                "Set SCANS_API_KEY and send X-API-Key to enable it."
             ),
         )
 
@@ -72,7 +72,7 @@ def enforce_scans_delete_authorization(
     if provided != expected:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Gecerli X-API-Key gerekli.",
+            detail="A valid X-API-Key is required.",
             headers={"WWW-Authenticate": "ApiKey"},
         )
 

@@ -65,7 +65,7 @@ def test_explain_info_endpoint(explain_app: TestClient) -> None:
     assert payload["llm_enabled"] is True
     assert payload["llm_configured"] is True
     assert payload["ready"] is True
-    assert "hazir" in payload["status_message"].lower()
+    assert "ready" in payload["status_message"].lower()
     assert payload["cache_enabled"] is True
     assert payload["rate_limit_enabled"] is True
     assert payload["rate_limit_explain_per_minute"] == 5
@@ -242,7 +242,7 @@ def test_explain_rate_limit_returns_429(
     assert blocked.status_code == 429
     payload = blocked.json()
     assert payload["success"] is False
-    assert "aciklama" in payload["error"].lower()
+    assert "too many" in payload["error"].lower()
 
 
 def test_llm_cache_is_shared_across_service_instances(

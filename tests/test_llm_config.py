@@ -12,7 +12,7 @@ def test_llm_placeholder_key_is_not_configured() -> None:
         gemini_api_key="your_key_from_aistudio.google.com",
     )
     assert settings.llm_is_configured is False
-    assert "gecersiz" in settings.llm_status_message.lower() or "ornek" in (
+    assert "invalid" in settings.llm_status_message.lower() or "placeholder" in (
         settings.llm_status_message.lower()
     )
 
@@ -31,7 +31,7 @@ def test_llm_valid_key_is_configured() -> None:
         gemini_api_key="AIzaSyAbcdefghijklmnopqrstuvwxyz123456",
     )
     assert settings.llm_is_configured is True
-    assert "hazir" in settings.llm_status_message.lower()
+    assert "ready" in settings.llm_status_message.lower()
 
 
 def test_llm_mock_mode_configured_without_key() -> None:

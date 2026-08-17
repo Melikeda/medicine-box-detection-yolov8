@@ -171,6 +171,7 @@ class AppStrings {
     required this.medicineWarningsTitle,
     required this.medicineExplanationFallback,
     required this.medicineExplanationDisclaimer,
+    required this.isEnglish,
   });
 
   final String appName;
@@ -266,10 +267,59 @@ class AppStrings {
   final String medicineWarningsTitle;
   final String medicineExplanationFallback;
   final String medicineExplanationDisclaimer;
+  final bool isEnglish;
 
   static AppStrings of(AppLanguage language) {
     return language == AppLanguage.en ? _en : _tr;
   }
+
+  String catalogFallbackSummary({
+    required String name,
+    String? ingredient,
+    String? category,
+  }) {
+    final trimmedName = name.trim().isEmpty
+        ? (isEnglish ? 'This medicine' : 'Bu ilaç')
+        : name.trim();
+    final hasIngredient = ingredient != null && ingredient.trim().isNotEmpty;
+    final hasCategory = category != null && category.trim().isNotEmpty;
+    if (isEnglish) {
+      if (hasIngredient && hasCategory) {
+        return '$trimmedName is a ${category!.trim()} medicine that contains ${ingredient!.trim()}.';
+      }
+      if (hasIngredient) {
+        return '$trimmedName contains ${ingredient!.trim()}.';
+      }
+      if (hasCategory) {
+        return '$trimmedName is listed in the ${category!.trim()} category.';
+      }
+      return 'Limited catalog information is available for $trimmedName.';
+    }
+    if (hasIngredient && hasCategory) {
+      return '$trimmedName, ${ingredient!.trim()} içeren ve ${category!.trim()} kategorisinde yer alan bir ilaçtır.';
+    }
+    if (hasIngredient) {
+      return '$trimmedName, ${ingredient!.trim()} içeren bir ilaçtır.';
+    }
+    if (hasCategory) {
+      return '$trimmedName, ${category!.trim()} kategorisinde yer alan bir ilaçtır.';
+    }
+    return '$trimmedName hakkında sınırlı katalog bilgisi bulunmaktadır.';
+  }
+
+  String get catalogFallbackUsage => isEnglish
+      ? 'For official use, read the product leaflet and ask a pharmacist.'
+      : 'Resmi kullanım için ürün prospektüsüne ve eczacınıza danışın.';
+
+  List<String> get catalogFallbackWarnings => isEnglish
+      ? const [
+          'This information does not replace personal medical advice; consult a doctor or pharmacist.',
+          'Read the product leaflet before use.',
+        ]
+      : const [
+          'Bu bilgiler kişisel tıbbi tavsiye yerine geçmez; doktorunuza veya eczacınıza danışın.',
+          'Kullanmadan önce ürün prospektüsünü okuyun.',
+        ];
 
   String categoryFor(String key) {
     switch (key) {
@@ -312,7 +362,7 @@ class AppStrings {
     return '$durationLabel: ${seconds.toStringAsFixed(1)} · $modeLabel: $ocrMode';
   }
 
-  /// Overlay alt yazisi — secilen OCR moduna gore.
+  /// Overlay subtitle based on the selected OCR mode.
   String analyzingHintForMode(String ocrModeApiValue) {
     if (ocrModeApiValue == 'accurate') {
       return analyzingOverlayHintAccurate;
@@ -424,6 +474,7 @@ class AppStrings {
         'Bu ilaç hakkında yeterli açıklayıcı bilgi bulunamadı.',
     medicineExplanationDisclaimer:
         'Bu bilgiler genel ilaç bilgisidir ve kişisel tıbbi öneri yerine geçmez. Kullanım için doktorunuzun veya eczacınızın önerisini takip edin.',
+    isEnglish: false,
   );
 
   static const _en = AppStrings._(
@@ -528,5 +579,6 @@ class AppStrings {
         'Not enough explanatory information was found for this medicine.',
     medicineExplanationDisclaimer:
         'This information is general medicine information and does not replace personal medical advice. Follow your doctor or pharmacist guidance for use.',
+    isEnglish: true,
   );
 }

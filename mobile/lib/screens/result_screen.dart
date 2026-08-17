@@ -119,7 +119,7 @@ class ResultScreen extends StatelessWidget {
                 ),
               ),
             ],
-            if (response.disclaimer != null && response.disclaimer!.isNotEmpty) ...[
+            if (s.homeWarning.isNotEmpty) ...[
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.all(16),
@@ -138,7 +138,7 @@ class ResultScreen extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        response.disclaimer!,
+                        s.homeWarning,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: AppColors.primary,
                         ),

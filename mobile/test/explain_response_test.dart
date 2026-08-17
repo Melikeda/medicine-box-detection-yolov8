@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:medicine_box_app/l10n/app_localizations.dart';
 import 'package:medicine_box_app/models/explain_response.dart';
 
 void main() {
@@ -69,7 +70,7 @@ void main() {
       medicineName: 'Parol',
       category: 'Ağrı Kesici',
       activeIngredient: 'Paracetamol',
-      disclaimer: 'Tibbi tavsiye degildir.',
+      strings: AppStrings.of(AppLanguage.tr),
     );
 
     expect(response.success, isTrue);

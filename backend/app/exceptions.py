@@ -47,7 +47,7 @@ class PipelineNotReadyError(ApiError):
 class LlmNotConfiguredError(ApiError):
     def __init__(
         self,
-        message: str = "LLM servisi yapılandırılmamış.",
+        message: str = "LLM service is not configured.",
     ) -> None:
         super().__init__(
             message,
@@ -58,7 +58,7 @@ class LlmNotConfiguredError(ApiError):
 class LlmUnavailableError(ApiError):
     def __init__(
         self,
-        message: str = "LLM servisi şu anda kullanılamıyor.",
+        message: str = "LLM service is currently unavailable.",
     ) -> None:
         super().__init__(
             message,
@@ -70,7 +70,7 @@ class RateLimitExceededError(ApiError):
     def __init__(
         self,
         message: str = (
-            "Cok fazla istek. Lutfen bir dakika sonra tekrar deneyin."
+            "Too many requests. Please try again in a minute."
         ),
     ) -> None:
         super().__init__(

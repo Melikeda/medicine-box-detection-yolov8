@@ -76,8 +76,8 @@ class AnalyzeRateLimitMiddleware(BaseHTTPMiddleware):
                     content={
                         "success": False,
                         "error": (
-                            "Cok fazla analiz istegi. "
-                            "Lutfen bir dakika sonra tekrar deneyin."
+                            "Too many analyze requests. "
+                            "Please try again in a minute."
                         ),
                         "details": {},
                     },
