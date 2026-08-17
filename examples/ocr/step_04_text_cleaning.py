@@ -20,7 +20,7 @@ def print_text_list(
     texts: list[str],
 ) -> None:
     """
-    Metin listesini terminale düzenli şekilde yazdırır.
+    Prints a text list to the terminal in a readable format.
     """
     print(f"\n{title}")
     print("-" * 60)

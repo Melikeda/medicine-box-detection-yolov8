@@ -48,7 +48,7 @@ def _reject_oversized_content_length(
 async def analyze_info(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> AnalyzeInfoSchema:
-    """Analyze endpoint limitleri ve mobil istemci bilgileri."""
+    """Analyze endpoint limits and mobile client information."""
     return AnalyzeInfoSchema(
         endpoint=f"{settings.api_prefix}/analyze",
         max_upload_size_mb=settings.max_upload_size_mb,
@@ -81,9 +81,9 @@ async def analyze_medicine_image(
     service: AnalyzeService = Depends(get_analyze_service),
 ) -> AnalyzeResponseSchema:
     """
-    Ilac kutusu fotografini yukler ve tum kutulari analiz eder.
+    Upload a medicine box photo and analyze all boxes.
 
-    Flutter/mobil istemci `multipart/form-data` ile `file` alanini gonderir.
+    The Flutter/mobile client sends the `file` field as `multipart/form-data`.
     """
     _reject_oversized_content_length(request, settings)
     file_bytes = await file.read()

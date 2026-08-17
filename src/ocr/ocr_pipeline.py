@@ -18,7 +18,7 @@ BLURRY_IMAGE_SCALE_FACTOR = 3.0
 @dataclass
 class OCRCandidate:
     """
-    OCR sonucundan üretilen tek bir metin adayını temsil eder.
+    Represents a single text candidate produced from an OCR result.
     """
 
     text: str
@@ -30,7 +30,7 @@ class OCRCandidate:
 @dataclass
 class OCRPipelineResult:
     """
-    Çoklu OCR pipeline sonucunu temsil eder.
+    Represents a multi-step OCR pipeline result.
     """
 
     candidates: list[OCRCandidate]
@@ -45,12 +45,12 @@ def load_ocr_image(
     image_input: ImageInput,
 ) -> np.ndarray:
     """
-    OCR için görüntüyü yükler.
+    Load the image for OCR.
 
-    Desteklenen girişler:
-    - str dosya yolu
-    - Path dosya yolu
-    - OpenCV numpy.ndarray görüntüsü
+    Supported inputs:
+    - str file path
+    - Path file path
+    - OpenCV numpy.ndarray image
     """
     if isinstance(
         image_input,
@@ -96,7 +96,7 @@ def upscale_image(
     scale_factor: float = 2.0,
 ) -> np.ndarray:
     """
-    Görüntüyü OCR öncesinde INTER_CUBIC ile büyütür.
+    Upscale the image with INTER_CUBIC before OCR.
     """
     if image.size == 0:
         raise ValueError(
@@ -121,7 +121,7 @@ def convert_to_grayscale(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Görüntüyü gri tonlamaya dönüştürür.
+    Convert the image to grayscale.
     """
     if image.ndim == 2:
         return image.copy()
@@ -142,13 +142,13 @@ def calculate_blur_score(
     image: np.ndarray,
 ) -> float:
     """
-    Laplacian varyansı ile görüntünün netlik skorunu hesaplar.
+    Calculate the image sharpness score using Laplacian variance.
 
-    Genel yorum:
-    - Yüksek skor: daha net görüntü
-    - Düşük skor: daha bulanık görüntü
+    General interpretation:
+    - Higher score: sharper image
+    - Lower score: blurrier image
 
-    Eşik görüntü boyutuna ve kameraya göre değişebilir.
+    The threshold can vary by image size and camera.
     """
     if image.size == 0:
         raise ValueError(
@@ -171,7 +171,7 @@ def apply_sharpening(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Görüntüdeki yazı kenarlarını belirginleştirir.
+    Emphasize text edges in the image.
     """
     sharpening_kernel = np.array(
         [
@@ -193,7 +193,7 @@ def apply_unsharp_mask(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Normal unsharp mask uygular.
+    Apply the standard unsharp mask.
     """
     blurred_image = cv2.GaussianBlur(
         image,
@@ -214,10 +214,9 @@ def apply_strong_unsharp_mask(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Bulanık yazılar için daha güçlü unsharp mask uygular.
+    Apply a stronger unsharp mask for blurry text.
 
-    Çok ağır hareket bulanıklığını geri getiremez;
-    yalnızca korunmuş kenar bilgisini güçlendirir.
+    It cannot recover severe motion blur; it only strengthens preserved edge information.
     """
     blurred_image = cv2.GaussianBlur(
         image,
@@ -243,8 +242,7 @@ def apply_clahe(
     ),
 ) -> np.ndarray:
     """
-    Düşük ışıklı ve düşük kontrastlı görüntülerde
-    yerel kontrastı artırır.
+    Increase local contrast in low-light and low-contrast images.
     """
     if clip_limit <= 0:
         raise ValueError(
@@ -268,9 +266,7 @@ def apply_clahe(
 def apply_bilateral_filter(
     image: np.ndarray,
 ) -> np.ndarray:
-    """
-    Gürültüyü azaltırken kenarları korumaya çalışır.
-    """
+    """Try to reduce noise while preserving edges."""
     return cv2.bilateralFilter(
         image,
         d=7,
@@ -282,9 +278,7 @@ def apply_bilateral_filter(
 def apply_bilateral_clahe(
     image: np.ndarray,
 ) -> np.ndarray:
-    """
-    Önce gürültüyü azaltır, sonra yerel kontrastı artırır.
-    """
+    """Reduce noise first, then increase local contrast."""
     grayscale_image = convert_to_grayscale(
         image
     )
@@ -302,8 +296,7 @@ def apply_adaptive_threshold(
     image: np.ndarray,
 ) -> np.ndarray:
     """
-    Görüntünün farklı bölgelerindeki değişken ışığa göre
-    adaptif eşikleme uygular.
+    Apply adaptive thresholding based on variable lighting across image regions.
     """
     grayscale_image = convert_to_grayscale(
         image
@@ -328,9 +321,7 @@ def apply_adaptive_threshold(
 def apply_otsu_threshold(
     image: np.ndarray,
 ) -> np.ndarray:
-    """
-    Otsu yöntemiyle binary görüntü oluşturur.
-    """
+    """Create a binary image with Otsu thresholding."""
     grayscale_image = convert_to_grayscale(
         image
     )
@@ -356,9 +347,7 @@ def rotate_image(
     image: np.ndarray,
     angle: int,
 ) -> np.ndarray:
-    """
-    Görüntüyü 0, 90, 180 veya 270 derece döndürür.
-    """
+    """Rotate the image by 0, 90, 180, or 270 degrees."""
     if image.size == 0:
         raise ValueError(
             "Döndürülecek görüntü boş."
@@ -402,9 +391,7 @@ def create_rotated_images(
         270,
     ),
 ) -> dict[str, np.ndarray]:
-    """
-    OCR için görüntünün farklı yönlerdeki kopyalarını üretir.
-    """
+    """Create image copies at different orientations for OCR."""
     if not rotation_angles:
         raise ValueError(
             "En az bir döndürme açısı verilmelidir."
@@ -438,7 +425,7 @@ def add_minimal_variants(
     prefix: str,
     image: np.ndarray,
 ) -> None:
-    """Fast OCR modu için hafif varyant seti (2 adet/açı)."""
+    """Lightweight variant set for fast OCR mode, with two variants per angle."""
     variants[f"{prefix}_original_color"] = image
     variants[f"{prefix}_sharpened_color"] = apply_sharpening(
         image
@@ -451,8 +438,7 @@ def add_standard_variants(
     image: np.ndarray,
 ) -> None:
     """
-    Normal ve orta kalite görüntüler için temel OCR
-    varyantlarını sözlüğe ekler.
+    Add the base OCR variants for normal and medium-quality images to the dictionary.
     """
     clahe_image = apply_clahe(
         image
@@ -497,8 +483,7 @@ def add_blurry_image_variants(
     image: np.ndarray,
 ) -> None:
     """
-    Bulanık ve düşük ışıklı görüntüler için ek OCR
-    varyantlarını sözlüğe ekler.
+    Add extra OCR variants for blurry and low-light images.
     """
     variants[
         f"{prefix}_strong_unsharp"
@@ -537,24 +522,14 @@ def create_ocr_variants(
     limited_variants: bool = False,
 ) -> dict[str, np.ndarray]:
     """
-    Döndürme, büyütme ve görüntü iyileştirme
-    varyantlarını oluşturur.
+    Build rotated, upscaled, and enhanced image variants.
 
-    Normal görüntüler:
-    - Her açı için 2x büyütme
-    - original
-    - sharpen
-    - unsharp
-    - CLAHE
-    - CLAHE + sharpen
-    - Otsu
+    Normal images:
+    - 2x upscaling for each angle
 
-    Bulanık görüntüler:
-    - Yukarıdaki varyantlara ek olarak
-    - strong unsharp
-    - bilateral + CLAHE
-    - adaptive threshold
-    - Seçili 3x büyütme varyantları
+    Blurry images:
+    - Additional variants on top of the above
+    - Selected 3x upscaling variants
     """
     if blur_threshold < 0:
         raise ValueError(
@@ -645,9 +620,8 @@ def create_ocr_variants(
             f"{blurry_scale_factor:g}x"
         )
 
-        # 3x ölçekte bütün varyantları üretmek CPU'da
-        # çok yavaş olacağından yalnızca en faydalı
-        # dört varyant çalıştırılır.
+        # Running every variant at 3x scale is very slow on CPU, so only
+        # the four most useful variants are processed.
         variants[
             f"{larger_prefix}_original_color"
         ] = larger_image
@@ -677,7 +651,7 @@ def normalize_candidate_text(
     text: str,
 ) -> str:
     """
-    OCR metnini aday karşılaştırması için temizler.
+    Clean OCR text for candidate comparison.
     """
     normalized_text = text.strip().casefold()
 
@@ -715,9 +689,9 @@ def run_ocr_on_variant(
     image: np.ndarray,
 ) -> list[Any]:
     """
-    Tek bir preprocessing varyantında OCR çalıştırır.
+    Run OCR on a single preprocessing variant.
 
-    EasyOCR ``readtext(image, detail=1, paragraph=False)`` kullanır.
+    Uses EasyOCR readtext(image, detail=1, paragraph=False).
     """
     return reader.readtext(
         image,
@@ -731,9 +705,7 @@ def extract_candidates_from_results(
     variant_name: str,
     minimum_confidence: float = 0.0,
 ) -> list[OCRCandidate]:
-    """
-    EasyOCR sonuçlarından OCRCandidate nesneleri üretir.
-    """
+    """Build OCRCandidate objects from EasyOCR results."""
     candidates: list[OCRCandidate] = []
 
     for result in ocr_results:
@@ -773,9 +745,9 @@ def should_combine_candidates(
     second_candidate: OCRCandidate,
 ) -> bool:
     """
-    Yalnızca bölünmüş kısa marka parçalarını birleştirir.
+    Combine only split short brand fragments.
 
-    Örnek:
+    Example:
         a + ferin -> aferin
     """
     first_text = first_candidate.text.replace(
@@ -817,9 +789,7 @@ def should_combine_candidates(
 def create_adjacent_candidates(
     candidates: list[OCRCandidate],
 ) -> list[OCRCandidate]:
-    """
-    Anlamlı komşu OCR parçalarını birleştirir.
-    """
+    """Combine meaningful neighboring OCR fragments."""
     combined_candidates: list[
         OCRCandidate
     ] = []
@@ -870,8 +840,7 @@ def deduplicate_candidates(
     candidates: list[OCRCandidate],
 ) -> list[OCRCandidate]:
     """
-    Aynı metne sahip adaylardan en yüksek güven
-    skoruna sahip olanı korur.
+    Keep the highest-confidence candidate for each repeated text value.
     """
     best_candidates: dict[
         str,
@@ -912,9 +881,7 @@ def save_ocr_variants(
     variants: dict[str, np.ndarray],
     output_directory: str | Path,
 ) -> dict[str, Path]:
-    """
-    OCR preprocessing varyantlarını kaydeder.
-    """
+    """Save OCR preprocessing variants."""
     output_directory = Path(
         output_directory
     )
@@ -977,12 +944,10 @@ def run_ocr_pipeline(
     ) = None,
 ) -> OCRPipelineResult:
     """
-    Çoklu preprocessing ve OCR pipeline'ını çalıştırır.
+    Run the multi-preprocessing OCR pipeline.
 
-    Mevcut çağrılarla geriye dönük uyumludur.
-    Bulanık görüntüler otomatik olarak belirlenir ve
-    özel preprocessing varyantları yalnızca gerektiğinde
-    devreye girer.
+    Compatible with existing callers. Blurry images are detected automatically,
+    and special preprocessing variants are used only when needed.
     """
     variants = create_ocr_variants(
         image_input=image_input,
@@ -1108,8 +1073,7 @@ def get_candidate_texts(
     pipeline_result: OCRPipelineResult,
 ) -> list[str]:
     """
-    OCRPipelineResult içindeki adayların yalnızca
-    metinlerini döndürür.
+    Return only the candidate texts from an OCRPipelineResult.
     """
     return [
         candidate.text

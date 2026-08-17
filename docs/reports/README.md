@@ -3,7 +3,7 @@
 Phase-by-phase engineering notes for the **Yolocilin** medicine box detection internship project.
 
 > Living docs (always prefer these for current truth):  
-> [Root README](../../README.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Setup](../setup-guide.md) · [SECURITY](../../SECURITY.md) · [Experiments](../experiments/)
+> [Root README](../../README.md) · [Technical report](../technical-report.md) · [Architecture](../architecture.md) · [Roadmap](../roadmap.md) · [Setup](../setup-guide.md) · [SECURITY](../../SECURITY.md) · [Experiments](../experiments/)
 
 **Current product snapshot:** Flutter app **Yolocilin** · catalog **1163** medicines · APIs: analyze · medicines · barcode · explain · scans.
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:medicine_box_app/l10n/app_localizations.dart';
-import 'package:medicine_box_app/models/analyze_response.dart';
-import 'package:medicine_box_app/models/analyze_summary.dart';
-import 'package:medicine_box_app/models/medicine_box_result.dart';
-import 'package:medicine_box_app/models/scan_history_entry.dart';
-import 'package:medicine_box_app/screens/history_screen.dart';
-import 'package:medicine_box_app/services/scan_history_service.dart';
+import 'package:yolocilin/l10n/app_localizations.dart';
+import 'package:yolocilin/models/analyze_response.dart';
+import 'package:yolocilin/models/analyze_summary.dart';
+import 'package:yolocilin/models/medicine_box_result.dart';
+import 'package:yolocilin/models/scan_history_entry.dart';
+import 'package:yolocilin/screens/history_screen.dart';
+import 'package:yolocilin/services/scan_history_service.dart';
 
 class _FakeHistoryService extends ScanHistoryService {
   _FakeHistoryService(this.entries);

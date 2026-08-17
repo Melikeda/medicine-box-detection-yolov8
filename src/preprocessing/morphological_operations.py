@@ -1,4 +1,4 @@
-#Bunlar harfleri düzeltmek için kullanılıyor.
+# These operations are used to improve letter shapes.
 import cv2
 import numpy as np
 
@@ -7,19 +7,19 @@ def create_kernel(
     kernel_size: tuple[int, int],
 ):
     """
-    Morfolojik işlemlerde kullanılacak dikdörtgen kernel oluşturur.
+    Create a rectangular kernel for morphological operations.
 
     Args:
         kernel_size:
-            Kernel yüksekliği ve genişliği.
-            Değerler pozitif ve tek sayı olmalıdır.
+            Kernel height and width.
+            Values must be positive and odd.
 
     Returns:
-        NumPy dizisi biçimindeki kernel.
+        Kernel as a NumPy array.
 
     Raises:
         ValueError:
-            Kernel boyutları geçersizse.
+            If the kernel dimensions are invalid.
     """
 
     if (
@@ -44,15 +44,13 @@ def validate_iterations(
     iterations: int,
 ) -> None:
     """
-    Morfolojik işlemlerde kullanılan tekrar sayısını doğrular.
+    Validate the iteration count used by morphological operations.
 
     Args:
-        iterations:
-            İşlemin kaç kez uygulanacağı.
+        iterations: Number of times the operation will be applied.
 
     Raises:
-        ValueError:
-            iterations pozitif değilse.
+        ValueError: If iterations is not positive.
     """
 
     if iterations <= 0:
@@ -67,22 +65,17 @@ def apply_erosion(
     iterations: int = 1,
 ):
     """
-    Görüntüye Erosion uygular.
+    Apply Erosion to the image.
 
-    Erosion, beyaz bölgeleri küçültür.
-    Küçük beyaz gürültüleri ve ince çıkıntıları
-    azaltmak için kullanılabilir.
+    Erosion shrinks white regions and can reduce small white noise and thin protrusions.
 
     Args:
-        image:
-            Erosion uygulanacak görüntü.
-        kernel_size:
-            Kullanılacak kernel boyutu.
-        iterations:
-            İşlemin kaç kez uygulanacağı.
+        image: Image to process with Erosion.
+        kernel_size: Kernel size to use.
+        iterations: Number of times to apply the operation.
 
     Returns:
-        Erosion uygulanmış görüntü.
+        Image with Erosion applied.
     """
 
     validate_iterations(iterations)
@@ -106,22 +99,17 @@ def apply_dilation(
     iterations: int = 1,
 ):
     """
-    Görüntüye Dilation uygular.
+    Apply Dilation to the image.
 
-    Dilation, beyaz bölgeleri büyütür.
-    Kopmuş veya ince beyaz karakter parçalarını
-    birbirine yaklaştırmak için kullanılabilir.
+    Dilation enlarges white regions and can bring broken or thin white character parts closer together.
 
     Args:
-        image:
-            Dilation uygulanacak görüntü.
-        kernel_size:
-            Kullanılacak kernel boyutu.
-        iterations:
-            İşlemin kaç kez uygulanacağı.
+        image: Image to process with Dilation.
+        kernel_size: Kernel size to use.
+        iterations: Number of times to apply the operation.
 
     Returns:
-        Dilation uygulanmış görüntü.
+        Image with Dilation applied.
     """
 
     validate_iterations(iterations)
@@ -145,30 +133,26 @@ def apply_opening(
     iterations: int = 1,
 ):
     """
-    Görüntüye Opening uygular.
+    Apply Opening to the image.
 
-    Opening işlemi:
+    Opening operation:
 
         Erosion
-            ↓
+            then
         Dilation
 
-    sırasıyla uygulanır.
-
-    Küçük beyaz gürültüleri temizlemek ve ana
-    beyaz bölgelerin şeklini mümkün olduğunca
-    korumak için kullanılabilir.
+    This can clean small white noise while preserving the shape of main white regions as much as possible.
 
     Args:
         image:
-            Opening uygulanacak görüntü.
+            Image to process with Opening.
         kernel_size:
-            Kullanılacak kernel boyutu.
+            Kernel size to use.
         iterations:
-            İşlemin kaç kez uygulanacağı.
+            Number of times to apply the operation.
 
     Returns:
-        Opening uygulanmış görüntü.
+        Image with Opening applied.
     """
 
     validate_iterations(iterations)
@@ -193,30 +177,26 @@ def apply_closing(
     iterations: int = 1,
 ):
     """
-    Görüntüye Closing uygular.
+    Apply Closing to the image.
 
-    Closing işlemi:
+    Closing operation:
 
         Dilation
-            ↓
+            then
         Erosion
 
-    sırasıyla uygulanır.
-
-    Küçük siyah boşlukları kapatmak ve birbirine
-    yakın beyaz bölgeleri birleştirmek için
-    kullanılabilir.
+    This can close small black gaps and merge nearby white regions.
 
     Args:
         image:
-            Closing uygulanacak görüntü.
+            Image to process with Closing.
         kernel_size:
-            Kullanılacak kernel boyutu.
+            Kernel size to use.
         iterations:
-            İşlemin kaç kez uygulanacağı.
+            Number of times to apply the operation.
 
     Returns:
-        Closing uygulanmış görüntü.
+        Image with Closing applied.
     """
 
     validate_iterations(iterations)

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:medicine_box_app/l10n/app_localizations.dart';
-import 'package:medicine_box_app/utils/medicine_display.dart';
+import 'package:yolocilin/l10n/app_localizations.dart';
+import 'package:yolocilin/utils/medicine_display.dart';
 
 void main() {
   final tr = AppStrings.of(AppLanguage.tr);

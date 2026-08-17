@@ -35,10 +35,10 @@ def add_white_noise(
     random_seed: int = 42,
 ):
     """
-    Binary görüntüye küçük beyaz gürültü noktaları ekler.
+    Adds small white noise points to a binary image.
 
-    Opening işleminin etkisini daha net göstermek için
-    rastgele seçilen bazı pikseller beyaz yapılır.
+    Randomly selected pixels are set to white to make
+    the effect of Opening easier to see.
     """
 
     if image.ndim != 2:
@@ -78,8 +78,7 @@ def add_white_noise(
 
 def main() -> None:
     """
-    Opening işleminin küçük beyaz gürültüler üzerindeki
-    etkisini örnekler.
+    Demonstrates the effect of Opening on small white noise.
     """
 
     image_path = Path(
@@ -109,8 +108,8 @@ def main() -> None:
         constant=2,
     )
 
-    # Opening etkisini daha net göstermek için
-    # binary görüntüye yapay beyaz noktalar ekle.
+    # Add synthetic white points to the binary image
+    # to make the Opening effect clearer.
     noisy_image = add_white_noise(
         threshold_image,
         noise_ratio=0.01,

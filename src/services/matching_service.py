@@ -17,7 +17,7 @@ from src.matching.medicine_matcher import (
     calculate_text_similarity,
     find_best_medicine_match,
 )
-from src.matching.text_normalizer import is_garbage_ocr_text, normalize_ocr_text
+from src.matching.text_normalizer import is_garbage_ocr_text
 from src.services.candidate_processor import (
     MatchRecord,
     count_alphabetic_characters,
@@ -45,7 +45,7 @@ def _select_display_ocr_text(
     filtered_candidates: list[str],
     ranked_matches: list[MatchRecord],
 ) -> str | None:
-    """Eşleşme olmasa bile kullanıcıya anlamlı OCR metnini gösterir."""
+    """Show meaningful OCR text to the user even when there is no match."""
     brand_candidate = select_brand_name_candidate(
         filtered_candidates
     )
@@ -123,8 +123,8 @@ def should_reject_as_non_medicine_box(
     minimum_plausible_match_score: float,
 ) -> bool:
     """
-    YOLO false positive'lerini (UNO kutusu vb.) ilaç sonucu olarak
-    göstermemek için düşük güvenilir OCR + düşük eşleşme skorunu reddeder.
+    Reject low-reliability OCR plus a low match score so YOLO false positives,
+    such as UNO boxes, are not shown as medicine results.
     """
     if display_match_score < minimum_plausible_match_score:
         return True
@@ -144,7 +144,7 @@ def should_reject_as_non_medicine_box(
 
 
 def _compact_alpha_text(text: str) -> str:
-    """Karşılaştırma için boşluksuz, normalize edilmiş metin."""
+    """Normalized text without spaces for comparison."""
     return normalize_filter_text(text).replace(" ", "")
 
 
@@ -153,7 +153,7 @@ def _is_exact_catalog_label(
     medicine_name: str,
     medicine: dict[str, str] | None,
 ) -> bool:
-    """OCR, katalogdaki marka veya ürün adıyla birebir örtüşüyorsa True."""
+    """Return True when OCR exactly overlaps the catalog brand or product name."""
     compact_query = _compact_alpha_text(query_text)
 
     if count_alphabetic_characters(compact_query) < 3:
@@ -183,10 +183,10 @@ def _is_suffix_only_label_fragment(
     medicine: dict[str, str] | None,
 ) -> bool:
     """
-    OCR parçası yalnızca ismin/markanın sonuna yapışıyorsa True.
+    Return True when an OCR fragment is attached only to the end of the name or brand.
 
-    Örnek: alm → Mydocalm, fen → Nurofen, pal → Gripal.
-    Baştan okunan parçalar (nurof → Nurofen) suffix sayılmaz.
+    Example: alm -> Mydocalm, fen -> Nurofen, pal -> Gripal.
+    Fragments read from the beginning, such as nurof -> Nurofen, are not suffixes.
     """
     compact_query = _compact_alpha_text(query_text)
 
@@ -232,9 +232,9 @@ def _is_partial_brand_match(
     minimum_brand_coverage_ratio: float,
 ) -> bool:
     """
-    Bulanık OCR'da markanın baştan okunan yeterince uzun parçasına izin verir.
+    Allow a sufficiently long leading fragment of the brand in fuzzy OCR.
 
-    Suffix parçaları (fen → Nurofen) kabul edilmez.
+    Suffix fragments such as fen -> Nurofen are not accepted.
     """
     normalized_query = normalize_filter_text(query_text)
     query_alpha_length = count_alphabetic_characters(
@@ -275,9 +275,9 @@ def _is_short_brand_embedded_false_positive(
     brand_similarity: float,
 ) -> bool:
     """
-    Uzun OCR gurultusunde kisa marka parçasinin yanlis eslesmesini reddeder.
+    Reject incorrect matches for short brand fragments in long OCR noise.
 
-    Ornek: ornldarol -> Parol (arol parçasi)
+    Example: ornldarol -> Parol because of the arol fragment.
     """
     medicine_name = medicine.get("medicine_name", "").strip()
     brand_name = medicine.get("brand_name", "").strip()
@@ -426,11 +426,11 @@ def is_reliable_medicine_match(
     minimum_partial_brand_match_score: float = 85.0,
 ) -> bool:
     """
-    Kısa veya parçalı OCR metinlerinin yanlış eşleşmesini engeller.
+    Prevent incorrect matches for short or fragmented OCR text.
 
-    Tam okunan kısa markalar (Etol) kabul edilir. Suffix parçaları
-    (fen → Nurofen, alm → Mydocalm) reddedilir; şüphede not_found
-    tercih edilir.
+    Fully read short brands such as Etol are accepted. Suffix fragments
+    such as fen -> Nurofen and alm -> Mydocalm are rejected; when unsure,
+    return not_found.
     """
     if is_garbage_ocr_text(query_text):
         return False
@@ -555,7 +555,7 @@ def is_reliable_medicine_match(
 
 @dataclass
 class TextMatchResult:
-    """Tek bir OCR metni için CSV eşleştirme sonucu."""
+    """CSV matching result for a single OCR text."""
 
     medicine_name: str | None
     medicine: dict[str, str] | None
@@ -572,7 +572,7 @@ class TextMatchResult:
 
 
 class MatchingService:
-    """İlaç veritabanı yükleme ve RapidFuzz eşleştirme servisi."""
+    """Medicine database loading and RapidFuzz matching service."""
 
     def __init__(
         self,
@@ -595,7 +595,7 @@ class MatchingService:
         cls,
         config: PipelineConfig,
     ) -> MatchingService:
-        """CSV dosyasından ilaç veritabanını yükler."""
+        """Load the medicine database from a CSV file."""
         medicines = load_medicines(
             csv_path=config.medicines_csv_path,
         )
@@ -620,9 +620,9 @@ class MatchingService:
         seed_from_csv: bool = True,
     ) -> MatchingService:
         """
-        SQLite veritabanından ilaç kayıtlarını yükler.
+        Load medicine records from the SQLite database.
 
-        seed_from_csv=True ise önce CSV ile upsert yapılır.
+        If seed_from_csv=True, upsert from CSV first.
         """
         if seed_from_csv:
             ensure_database_seeded(
@@ -654,7 +654,7 @@ class MatchingService:
         cls,
         config: PipelineConfig,
     ) -> MatchingService:
-        """Config.use_sqlite'a göre SQLite veya CSV yükler."""
+        """Load from SQLite or CSV according to config.use_sqlite."""
         if config.use_sqlite:
             return cls.from_sqlite(config=config)
         return cls.from_csv(config=config)
@@ -668,7 +668,7 @@ class MatchingService:
         return len(self._barcode_index)
 
     def match_barcode(self, raw_code: str) -> TextMatchResult:
-        """Barkod ile birebir katalog eşlemesi (OCR kullanılmaz)."""
+        """Exact catalog match by barcode; OCR is not used."""
         tried = barcode_lookup_keys(raw_code)
         code = tried[0] if tried else ""
         medicine_id = None
@@ -745,7 +745,7 @@ class MatchingService:
         self,
         image: object,
     ) -> TextMatchResult | None:
-        """Görüntüdeki ilk katalog barkodunu döndürür; yoksa None."""
+        """Return the first catalog barcode in the image, or None if absent."""
         import numpy as np
 
         if image is None or not isinstance(image, np.ndarray):
@@ -767,7 +767,7 @@ class MatchingService:
         self,
         candidate_texts: list[str],
     ) -> tuple[list[str], list[str]]:
-        """OCR adaylarını genişletir ve eşleştirme için filtreler."""
+        """Expand OCR candidates and filter them for matching."""
         expanded = create_medicine_name_candidates(
             candidate_texts=candidate_texts,
         )
@@ -783,7 +783,7 @@ class MatchingService:
         self,
         filtered_candidates: list[str],
     ) -> list[MatchRecord]:
-        """Filtrelenmiş adayları veritabanıyla karşılaştırır."""
+        """Compare filtered candidates with the database."""
         return rank_medicine_matches(
             candidate_texts=filtered_candidates,
             medicines=self.medicines,
@@ -795,9 +795,9 @@ class MatchingService:
         candidate_texts: list[str],
     ) -> TextMatchResult:
         """
-        OCR aday metinlerini CSV ile eşleştirir.
+        Match OCR candidate texts against the CSV data.
 
-        Skor minimum_match_score altındaysa status=not_found döner.
+        Return status=not_found when the score is below minimum_match_score.
         """
         expanded, filtered = self.process_candidates(
             candidate_texts=candidate_texts,

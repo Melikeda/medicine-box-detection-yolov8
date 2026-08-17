@@ -32,9 +32,7 @@ CONFIDENCE_THRESHOLD = PipelineConfig().confidence_threshold
 
 
 def validate_paths() -> None:
-    """
-    Model ve kaynak yollarını kontrol eder.
-    """
+    """Validate model and source paths."""
     if not MODEL_PATH.exists():
         raise FileNotFoundError(missing_model_help(MODEL_PATH))
 
@@ -49,18 +47,17 @@ def save_detection_crops(
     image_index: int,
 ) -> list[Path]:
     """
-    Bir YOLO tahmin sonucundaki bounding box'ları
-    kullanarak ilaç kutularını kırpar ve kaydeder.
+    Crop and save medicine boxes using bounding boxes from a YOLO prediction result.
 
     Args:
         result:
-            Tek bir görsele ait YOLO tahmin sonucu.
+            YOLO prediction result for a single image.
 
         image_index:
-            İşlenen görselin sıra numarası.
+            Sequence number of the processed image.
 
     Returns:
-        Kaydedilen crop görüntülerinin yolları.
+        Paths to the saved crop images.
     """
     original_image = result.orig_img
 
@@ -177,16 +174,15 @@ def save_detection_crops(
 
 def run_prediction() -> None:
     """
-    Eğitilmiş YOLOv8 modeliyle tahmin yapar
-    ve tespit edilen ilaç kutularını kırpar.
+    Run prediction with the trained YOLOv8 model and crop detected medicine boxes.
 
-    İşlem sırası:
-    1. Model ve kaynak yollarını kontrol eder.
-    2. YOLO modelini yükler.
-    3. Kaynak görseller üzerinde tahmin yapar.
-    4. Bounding box çizilmiş görselleri kaydeder.
-    5. Tespit edilen ilaç kutularını kırpar.
-    6. Crop görüntülerini ayrı klasöre kaydeder.
+    Processing steps:
+    1. Validate model and source paths.
+    2. Load the YOLO model.
+    3. Run prediction on source images.
+    4. Save images with bounding boxes drawn.
+    5. Crop the detected medicine boxes.
+    6. Save crop images to a separate folder.
     """
     validate_paths()
 

@@ -167,15 +167,15 @@ class ApiSettings(BaseSettings):
     def llm_status_message(self) -> str:
         """Human-readable explain readiness for /explain/info and logs."""
         if not self.llm_enabled:
-            return "LLM kapali. Acmak icin LLM_ENABLED=true yapin."
+            return "LLM is off. Set LLM_ENABLED=true to enable it."
         if self.llm_mock_mode or self.llm_provider == "mock":
-            return "LLM hazir (mock mode)."
+            return "LLM ready (mock mode)."
         if self.llm_is_configured:
-            return "LLM hazir (Gemini)."
+            return "LLM ready (Gemini)."
         key = (self.gemini_api_key or "").strip()
         if not key:
-            return "LLM acik ama GEMINI_API_KEY eksik."
-        return "LLM acik ama GEMINI_API_KEY gecersiz veya ornek deger."
+            return "LLM is on but GEMINI_API_KEY is missing."
+        return "LLM is on but GEMINI_API_KEY is invalid or a placeholder."
 
     def create_pipeline_config(self) -> PipelineConfig:
         from pathlib import Path

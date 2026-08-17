@@ -91,7 +91,7 @@ def validate_image_bytes(
     *,
     suffix: str,
 ) -> None:
-    """Dosya imzasini kontrol ederek sahte uzanti yuklemelerini reddeder."""
+    """Reject spoofed extension uploads by checking the file signature."""
     if not file_bytes:
         raise UnsupportedMediaTypeError("Bos dosya yuklenemez.")
 

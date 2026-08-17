@@ -51,6 +51,7 @@ git checkout -b feature/my-change
 ### Backend
 
 ```bash
+ruff check backend src tests scripts
 pytest
 ```
 
@@ -75,7 +76,7 @@ docker compose build
 
 | Workflow | Runs |
 |----------|------|
-| [Backend Tests](.github/workflows/backend-tests.yml) | `pytest` (Python 3.11) |
+| [Backend Tests](.github/workflows/backend-tests.yml) | `ruff check` + `pytest` (Python 3.11) |
 | [Mobile Tests](.github/workflows/mobile-tests.yml) | `flutter analyze` + `flutter test` |
 | [Docker Build](.github/workflows/docker-build.yml) | image build on Docker path changes |
 
@@ -97,6 +98,7 @@ Badges: [README.md](README.md)
 | Doc | Role |
 |-----|------|
 | [README.md](README.md) | Product overview |
+| [docs/technical-report.md](docs/technical-report.md) | CV-facing product summary |
 | [docs/architecture.md](docs/architecture.md) | Design |
 | [docs/roadmap.md](docs/roadmap.md) | Phases |
 | [docs/reports/](docs/reports/) | Historical + feature reports |

@@ -27,7 +27,7 @@ Secrets (`google-services.json`, service account JSON, Firebase tokens) are **ne
 
 1. Open [Firebase Console](https://console.firebase.google.com/) → **Add project** (Spark).
 2. Add an **Android** app:
-   - Package name: `com.medicinebox.medicine_box_app`
+   - Package name: `com.yolocilin.app`
    - App nickname: `Yolocilin`
 3. Download **`google-services.json`** → place at  
    `mobile/android/app/google-services.json` (gitignored).

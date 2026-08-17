@@ -1,4 +1,4 @@
-"""Gemini explain endpoint canli testi (API key .env icinde olmali)."""
+"""Live test for the Gemini explain endpoint; the API key must be in .env."""
 
 from __future__ import annotations
 

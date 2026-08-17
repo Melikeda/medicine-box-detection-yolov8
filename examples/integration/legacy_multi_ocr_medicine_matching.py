@@ -1,4 +1,4 @@
-﻿"""
+"""
 Legacy integration demo with detailed terminal output.
 
 This script preserves the step-by-step integration learning flow from
@@ -31,13 +31,13 @@ def print_separator(
     title: str,
     separator_length: int = 60,
 ) -> None:
-    """Terminalde başlık ve ayırıcı çizgi gösterir."""
+    """Displays a heading and separator line in the terminal."""
     print(f"\n{title}")
     print("-" * separator_length)
 
 
 def validate_paths() -> None:
-    """Model, görsel ve CSV yollarını kontrol eder."""
+    """Validates the model, image, and CSV paths."""
     required_paths = {
         "YOLO modeli": CONFIG.model_path,
         "Test görseli": IMAGE_PATH,
@@ -59,7 +59,7 @@ def validate_paths() -> None:
 def print_ocr_candidates(
     candidate_texts: list[str],
 ) -> None:
-    """OCR pipeline tarafından üretilen tüm metin adaylarını gösterir."""
+    """Displays all text candidates produced by the OCR pipeline."""
     print_separator("Tüm OCR Adayları")
 
     if not candidate_texts:
@@ -74,7 +74,7 @@ def print_expanded_candidates(
     expanded_candidate_texts: list[str],
     original_candidate_texts: list[str],
 ) -> None:
-    """OCR adaylarından sonradan üretilen tam ilaç adı adaylarını gösterir."""
+    """Displays full medicine-name candidates generated from OCR candidates."""
     original_normalized_texts = {
         normalize_filter_text(text)
         for text in original_candidate_texts
@@ -99,7 +99,7 @@ def print_expanded_candidates(
 def print_filtered_candidates(
     filtered_texts: list[str],
 ) -> None:
-    """RapidFuzz'a gönderilecek filtrelenmiş OCR adaylarını gösterir."""
+    """Displays filtered OCR candidates to send to RapidFuzz."""
     print_separator("RapidFuzz İçin Filtrelenmiş Adaylar")
 
     if not filtered_texts:
@@ -113,7 +113,7 @@ def print_filtered_candidates(
 def print_ranked_matches(
     result: MedicineAnalysisResult,
 ) -> None:
-    """En iyi ilaç eşleşmelerini terminalde gösterir."""
+    """Displays the best medicine matches in the terminal."""
     print_separator(
         f"En İyi {CONFIG.top_match_count} İlaç Eşleşmesi"
     )
@@ -142,7 +142,7 @@ def print_ranked_matches(
 def print_final_decision(
     result: MedicineAnalysisResult,
 ) -> None:
-    """Skor eşiğine göre nihai ilaç tahminini gösterir."""
+    """Displays the final medicine prediction based on the score threshold."""
     print_separator("Nihai İlaç Tahmini")
 
     if not result.ranked_matches:
@@ -173,7 +173,7 @@ def print_final_decision(
 def print_pipeline_summary(
     result: MedicineAnalysisResult,
 ) -> None:
-    """Pipeline özet istatistiklerini gösterir."""
+    """Displays pipeline summary statistics."""
     generated_candidate_count = len(result.expanded_candidates) - len(
         {
             normalize_filter_text(text)
@@ -200,10 +200,10 @@ def print_pipeline_summary(
 
 def main() -> None:
     """
-    analyze_medicine_box() servisini çalıştırır ve sonuçları gösterir.
+    Runs the analyze_medicine_box() service and displays the results.
 
-    İş mantığı src/services/medicine_analyzer.py içindedir.
-    Bu script yalnızca demo ve terminal çıktısı sağlar.
+    Business logic lives in src/services/medicine_analyzer.py.
+    This script only provides the demo and terminal output.
     """
     validate_paths()
 

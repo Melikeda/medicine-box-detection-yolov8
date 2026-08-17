@@ -16,7 +16,7 @@ import '../services/scan_history_service.dart';
 import '../theme/app_colors.dart';
 import '../widgets/loading_overlay.dart';
 
-/// Canlı barkod kadrajı + fotoğraftan okuma yedeği.
+/// Live barcode framing with photo-based scan fallback.
 class BarcodeScannerScreen extends StatefulWidget {
   const BarcodeScannerScreen({
     super.key,

@@ -30,7 +30,7 @@ class MedicineBoxResultSchema(BaseModel):
 
 
 class AnalyzeSummarySchema(BaseModel):
-    """Mobil uygulama icin ozet sayaclar."""
+    """Summary counters for the mobile app."""
 
     matched_count: int = 0
     not_found_count: int = 0
@@ -39,7 +39,7 @@ class AnalyzeSummarySchema(BaseModel):
 
 
 class AnalyzeTimingSchema(BaseModel):
-    """Pipeline aşama süreleri (ms)."""
+    """Pipeline stage durations in milliseconds."""
 
     yolo_ms: float = 0.0
     ocr_ms: float = 0.0
@@ -67,7 +67,7 @@ class AnalyzeResponseSchema(BaseModel):
 
 
 class AnalyzeInfoSchema(BaseModel):
-    """Analyze endpoint limitleri ve desteklenen formatlar."""
+    """Analyze endpoint limits and supported formats."""
 
     endpoint: str
     method: str = "POST"

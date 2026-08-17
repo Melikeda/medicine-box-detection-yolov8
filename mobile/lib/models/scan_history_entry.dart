@@ -1,7 +1,7 @@
 import '../l10n/app_localizations.dart';
 import 'analyze_response.dart';
 
-/// Yerel tarama gecmisi listesi icin hafif kayit modeli.
+/// Lightweight record model for the local scan history list.
 class ScanHistoryEntry {
   const ScanHistoryEntry({
     required this.id,

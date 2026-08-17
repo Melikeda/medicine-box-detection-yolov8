@@ -1,7 +1,7 @@
 from src.preprocessing.color_operations import (
     apply_clahe,
     convert_to_grayscale,
-)  #Sadece daha önce yazdığımız fonksiyonları içeri aktarıyor.
+)  # Imports only the helper functions defined earlier.
 from src.preprocessing.filter_operations import (
     apply_median_blur,
 )
@@ -18,7 +18,7 @@ from src.preprocessing.threshold_operations import (
 )
 
 
-def preprocess_for_ocr(                #Bu fonksiyonun amacı yalnızca bir tane OCR okuyabilsin diye resmi hazırla.
+def preprocess_for_ocr(
     image,
     resize_width: int | None = None,
     crop_region: tuple[int, int, int, int] | None = None,
@@ -30,11 +30,11 @@ def preprocess_for_ocr(                #Bu fonksiyonun amacı yalnızca bir tane
     morphology_kernel_size: tuple[int, int] = (3, 3),
 ):
     """
-    Görüntüyü OCR için ön işler.
+    Preprocess an image for OCR.
 
-    İşlem sırası:
-        1. İsteğe bağlı resize
-        2. İsteğe bağlı crop
+    Processing order:
+        1. Optional resize
+        2. Optional crop
         3. Grayscale
         4. Median Blur
         5. CLAHE
@@ -44,57 +44,60 @@ def preprocess_for_ocr(                #Bu fonksiyonun amacı yalnızca bir tane
 
     Args:
         image:
-            OpenCV tarafından okunmuş görüntü.
+            Image read by OpenCV.
 
         resize_width:
-            Görüntünün oranı korunarak getirileceği genişlik.
-            None verilirse resize uygulanmaz.
+            Width to resize the image to while preserving aspect ratio.
+            If None, resizing is not applied.
 
         crop_region:
-            Crop alanı: (x, y, width, height).
-            None verilirse crop uygulanmaz.
+            Crop area: (x, y, width, height).
+            If None, cropping is not applied.
 
         median_kernel_size:
-            Median Blur kernel boyutu.
+            Median Blur kernel size.
 
         clahe_clip_limit:
-            CLAHE kontrast sınırı.
+            CLAHE contrast limit.
 
         clahe_tile_grid_size:
-            CLAHE bölgesel ızgara boyutu.
+            CLAHE regional grid size.
 
         adaptive_block_size:
-            Adaptive Threshold komşuluk boyutu.
+            Neighborhood size for Adaptive Threshold.
 
-        adaptive_constant:
-            Yerel eşik değerinden çıkarılacak sabit.
+        adaptive_c:
+            Constant subtracted from the local threshold value.
 
-        morphology_kernel_size:
-            Opening ve Closing kernel boyutu.
+        opening_kernel_size:
+            Kernel size used by Opening.
+
+        closing_kernel_size:
+            Kernel size used by Closing.
 
     Returns:
-        OCR için hazırlanmış binary görüntü.
+        Binary image prepared for OCR.
 
     Raises:
         ValueError:
-            Görüntü boş veya geçersizse.
+            If the image is empty or invalid.
     """
 
-    if image is None:       #ilk kontrol: Programun çökmesini engelliyoruz.
+    if image is None:       # First check: prevent the program from crashing.
         raise ValueError(
             "Pipeline için geçerli bir görüntü gereklidir."
         )
 
     processed_image = image.copy()
 
-    # Görüntü çok büyükse oranı korunarak küçült.
+    # Downscale very large images while preserving aspect ratio.
     if resize_width is not None:
         processed_image = resize_image(
             processed_image,
             width=resize_width,
         )
 
-    # Belirli bir bölge verildiyse görüntüyü kırp.
+    # Crop the image if a specific region was provided.
     if crop_region is not None:
         x, y, width, height = crop_region
 
@@ -106,25 +109,25 @@ def preprocess_for_ocr(                #Bu fonksiyonun amacı yalnızca bir tane
             height=height,
         )
 
-    # Renk bilgisini kaldır ve tek kanallı görüntü oluştur.
+    # Remove color information and create a single-channel image.
     grayscale_image = convert_to_grayscale(
         processed_image
     )
 
-    # Küçük gürültüleri azalt.
+    # Reduce small noise.
     blurred_image = apply_median_blur(
         grayscale_image,
         kernel_size=median_kernel_size,
     )
 
-    # Yerel kontrastı artır.
+    # Increase local contrast.
     clahe_image = apply_clahe(
         blurred_image,
         clip_limit=clahe_clip_limit,
         tile_grid_size=clahe_tile_grid_size,
     )
 
-    # Görüntüyü binary hale getir.
+    # Convert the image to binary.
     threshold_image = apply_adaptive_threshold(
         grayscale_image=clahe_image,
         max_value=255,
@@ -132,14 +135,14 @@ def preprocess_for_ocr(                #Bu fonksiyonun amacı yalnızca bir tane
         constant=adaptive_constant,
     )
 
-    # Küçük beyaz gürültüleri azalt.
+    # Reduce small white noise.
     opened_image = apply_opening(
         threshold_image,
         kernel_size=morphology_kernel_size,
         iterations=1,
     )
 
-    # Küçük siyah boşlukları kapat.
+    # Close small black gaps.
     final_image = apply_closing(
         opened_image,
         kernel_size=morphology_kernel_size,

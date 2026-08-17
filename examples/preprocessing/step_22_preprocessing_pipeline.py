@@ -22,7 +22,7 @@ from src.preprocessing.pipeline import (
 
 def main() -> None:
     """
-    Tam OCR preprocessing pipeline kullanımını örnekler.
+    Demonstrates using the full OCR preprocessing pipeline.
     """
 
     image_path = Path(
@@ -34,7 +34,7 @@ def main() -> None:
         "medicine_sample_final_preprocessed.jpg"
     )
 
-    # Orijinal görüntüyü oku.
+    # Read the original image.
     image = read_image(
         image_path
     )
@@ -42,7 +42,7 @@ def main() -> None:
     print("\n===== OCR PREPROCESSING PIPELINE =====")
     print(f"Orijinal Shape: {image.shape}")
 
-    # Tüm preprocessing adımlarını tek fonksiyonla uygula.
+    # Apply all preprocessing steps with one function.
     processed_image = preprocess_for_ocr(
         image=image,
         resize_width=1600,
@@ -75,7 +75,7 @@ def main() -> None:
         f"{processed_image.max()}"
     )
 
-    # Son OCR görüntüsünü kaydet.
+    # Save the final OCR image.
     save_image(
         processed_image,
         output_path,
@@ -86,13 +86,13 @@ def main() -> None:
         f"{output_path}"
     )
 
-    # Orijinal görüntüyü sadece gösterim için küçült.
+    # Shrink the original image for display only.
     original_preview = resize_image(
         image,
         width=800,
     )
 
-    # İşlenmiş görüntüyü sadece gösterim için küçült.
+    # Shrink the processed image for display only.
     processed_preview = resize_image(
         processed_image,
         width=800,

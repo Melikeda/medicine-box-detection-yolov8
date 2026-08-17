@@ -1,4 +1,4 @@
-"""medicines.csv dosyasını TİTCK SKRS verisiyle zenginlestirir ve genisletir."""
+"""Enriches and expands medicines.csv with TITCK SKRS data."""
 
 from __future__ import annotations
 

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import logging
 
 from src.services import (
     PipelineConfig,
@@ -92,6 +93,7 @@ def print_box_results(result) -> None:
 
 
 def main() -> None:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     args = parse_args()
     config = PipelineConfig(ocr_mode=args.mode)
 

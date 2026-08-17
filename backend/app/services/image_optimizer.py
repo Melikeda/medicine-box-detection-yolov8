@@ -1,4 +1,4 @@
-"""Upload görsellerini analiz öncesi boyutlandırır."""
+"""Resize uploaded images before analysis."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ def resize_image_bytes_if_large(
     suffix: str,
 ) -> tuple[bytes, bool]:
     """
-    Uzun kenarı max_dimension üzerindeyse orantılı küçültür.
+    Scale down proportionally when the longest edge exceeds max_dimension.
 
     Returns:
         (bytes, resized_flag)

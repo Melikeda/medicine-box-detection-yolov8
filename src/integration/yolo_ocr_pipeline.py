@@ -15,7 +15,7 @@ from src.ocr.ocr_pipeline import (
 def load_yolo_model(
     model_path: str | Path,
 ) -> YOLO:
-    """Eğitilmiş YOLO modelini yükler."""
+    """Load a trained YOLO model."""
     model_path = Path(model_path)
 
     if not model_path.exists():
@@ -32,10 +32,9 @@ def detect_medicine_boxes(
     confidence_threshold: float = 0.25,
 ) -> tuple[np.ndarray, list[Any]]:
     """
-    Görüntüdeki ilaç kutularını YOLO ile tespit eder.
+    Detect medicine boxes in the image with YOLO.
 
-    Orijinal görüntüyü ve tespit edilen bounding box
-    bilgilerini döndürür.
+    Return the original image and the detected bounding box information.
     """
     image_path = Path(image_path)
 
@@ -72,7 +71,7 @@ def crop_detected_box(
     image: np.ndarray,
     box: Any,
 ) -> np.ndarray:
-    """YOLO bounding box koordinatlarına göre ilaç kutusunu kırpar."""
+    """Crop the medicine box using YOLO bounding box coordinates."""
     coordinates = box.xyxy[0].cpu().numpy()
 
     x1, y1, x2, y2 = map(int, coordinates)
@@ -103,10 +102,9 @@ def run_yolo_ocr_pipeline(
     ocr_scale_factor: float = 2.0,
 ) -> list[dict[str, Any]]:
     """
-    YOLO + OCR entegrasyonunu çalıştırır.
+    Run the YOLO and OCR integration.
 
-    Not: Tam ilaç eşleştirmesi için
-    src.services.analyze_medicine_box kullanın.
+    Note: use src.services.analyze_medicine_box for full medicine matching.
     """
     output_directory = Path(output_directory)
 

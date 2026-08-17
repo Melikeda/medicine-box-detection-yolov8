@@ -1,4 +1,4 @@
-"""Basarisiz kutu analizi icin failure_reason + kullanici ipucu."""
+"""failure_reason values and user hints for failed box analysis."""
 
 from __future__ import annotations
 
@@ -69,7 +69,7 @@ def is_bbox_partial(
     image_height: int,
     edge_margin_ratio: float = 0.02,
 ) -> bool:
-    """Kutu cercevesi goruntu kenarina yapisiysa True."""
+    """Return True when the box frame is attached to an image edge."""
     if image_width <= 0 or image_height <= 0:
         return False
 
@@ -98,9 +98,9 @@ def classify_box_failure(
     minimum_plausible_match_score: float = 65.0,
 ) -> FailureInfo | None:
     """
-    matched disindaki sonuclar icin failure_reason uretir.
+    Produce failure_reason for results other than matched.
 
-    Oncelik: error → blurry → partial → ocr_weak →
+    Priority: error -> blurry -> partial -> ocr_weak ->
     not_in_catalog / low_confidence / unknown
     """
     if status == "matched":
@@ -122,7 +122,7 @@ def classify_box_failure(
         except ValueError:
             pass
 
-    # Yarim kutu (kenara yapisan bbox)
+    # Partial box attached to the image edge.
     if (
         bounding_box is not None
         and image_width is not None

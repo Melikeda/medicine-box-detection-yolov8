@@ -77,10 +77,9 @@ DOSAGE_FORM_MARKERS = frozenset(
 @dataclass
 class PipelineConfig:
     """
-    Merkezi pipeline yapılandırması.
+    Central pipeline configuration.
 
-    Model yolları, eşik değerleri ve OCR ayarları
-    tek noktadan yönetilir.
+    Model paths, thresholds, and OCR settings are managed in one place.
     """
 
     model_path: Path = field(
@@ -127,7 +126,7 @@ class PipelineConfig:
 
     @property
     def match_score_cutoff(self) -> float:
-        """Geriye dönük uyumluluk alias'ı."""
+        """Backward-compatibility alias."""
         return self.minimum_match_score
 
     @property
@@ -136,38 +135,38 @@ class PipelineConfig:
 
     @property
     def ocr_scale_factor(self) -> float:
-        """fast: daha düşük upscale | accurate: tam çözünürlük."""
+        """fast: lower upscale | accurate: full resolution."""
         if self.ocr_mode == "fast":
             return self.ocr_scale_factor_fast
         return self.ocr_scale_factor_accurate
 
     @property
     def ocr_rotation_angles(self) -> tuple[int, ...]:
-        """fast: dort aci (ters/yan kutular) | accurate: ayni."""
+        """fast: four angles for upside-down or sideways boxes | accurate: same."""
         return (0, 90, 180, 270)
 
     @property
     def ocr_retry_rotation_angles(self) -> tuple[int, ...]:
-        """Ilk gecis yeterli olmadiginda ek aci yok; derin OCR kullanilir."""
+        """No extra angles when the first pass is insufficient; deep OCR is used."""
         return ()
 
     @property
     def ocr_early_exit(self) -> bool:
-        """fast modda güvenilir eşleşme bulununca OCR durdurulur."""
+        """Stop OCR in fast mode once a reliable match is found."""
         return self.ocr_mode == "fast"
 
     @property
     def ocr_limited_variants(self) -> bool:
-        """fast: açı başına 2 varyant | accurate: tam varyant seti."""
+        """fast: 2 variants per angle | accurate: full variant set."""
         return self.ocr_mode == "fast"
 
     @property
     def ocr_blur_threshold(self) -> float:
         """
-        fast modda bulanık ek varyantları devre dışı bırakır.
+        Disable fuzzy extra variants in fast mode.
 
-        blur_score >= threshold olduğunda yalnızca standart
-        preprocessing varyantları kullanılır.
+        When blur_score is greater than or equal to the threshold, only standard
+        preprocessing variants are used.
         """
         if self.ocr_mode == "fast":
             return 0.0

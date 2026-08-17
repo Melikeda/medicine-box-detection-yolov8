@@ -11,7 +11,7 @@ from backend.app.exceptions import register_exception_handlers
 from backend.app.main import create_app
 from backend.app.middleware.rate_limit import (
     AnalyzeRateLimitMiddleware,
-    AnalyzeRateLimiter,
+    IpRateLimiter,
 )
 from backend.app.middleware.security_headers import SecurityHeadersMiddleware
 
@@ -111,7 +111,7 @@ def test_security_headers_middleware() -> None:
 
 
 def test_analyze_rate_limit_returns_429() -> None:
-    limiter = AnalyzeRateLimiter(max_requests=2, window_seconds=60)
+    limiter = IpRateLimiter(max_requests=2, window_seconds=60)
     app = FastAPI()
     app.add_middleware(AnalyzeRateLimitMiddleware, limiter=limiter)
 
@@ -128,7 +128,7 @@ def test_analyze_rate_limit_returns_429() -> None:
 
 
 def test_analyze_rate_limiter_allows_other_paths() -> None:
-    limiter = AnalyzeRateLimiter(max_requests=1, window_seconds=60)
+    limiter = IpRateLimiter(max_requests=1, window_seconds=60)
     app = FastAPI()
     app.add_middleware(AnalyzeRateLimitMiddleware, limiter=limiter)
 

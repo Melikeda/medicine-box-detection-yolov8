@@ -58,6 +58,7 @@ class _MedicineExplanationSectionState
     try {
       final response = await _service.fetchExplanation(
         medicineId: widget.medicineId,
+        locale: context.locale.isTurkish ? 'tr' : 'en',
       );
       if (!mounted) {
         return;
@@ -93,7 +94,7 @@ class _MedicineExplanationSectionState
       activeIngredient: widget.activeIngredient,
       dose: widget.dosage,
       form: widget.form,
-      disclaimer: context.s.medicineExplanationDisclaimer,
+      strings: context.s,
     );
   }
 

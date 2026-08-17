@@ -25,7 +25,7 @@ GENERIC_SINGLE_WORDS = {
     "suspension",
 }
 
-# Tek basina OCR okundugunda marka secilemeyen yaygin etken maddeler.
+# Common active ingredients that cannot select a brand when read alone by OCR.
 GENERIC_ACTIVE_INGREDIENTS = frozenset(
     {
         "ibuprofen",
@@ -49,10 +49,9 @@ def normalize_text(
     text: str,
 ) -> str:
     """
-    Karşılaştırma için metni temizler.
+    Clean text for comparison.
 
-    Büyük-küçük harf farkını ortadan kaldırır
-    ve baştaki/sondaki boşlukları temizler.
+    Removes case differences and trims leading and trailing whitespace.
     """
     return normalize_ocr_text(text)
 
@@ -61,11 +60,10 @@ def is_generic_single_word(
     text: str,
 ) -> bool:
     """
-    OCR metninin tek başına ilaç seçtirmemesi
-    gereken genel bir kelime olup olmadığını
-    kontrol eder.
+    Check whether the OCR text is a generic word that should not select
+    a medicine on its own.
 
-    Örnek:
+    Example:
         forte
         plus
         cold
@@ -86,9 +84,9 @@ def is_generic_single_word(
 
 def is_generic_active_ingredient(text: str) -> bool:
     """
-    OCR yalnizca yaygin bir etken madde adi ise True.
+    Return True when OCR contains only a common active ingredient name.
 
-    Ornek: ibuprofen → Nurofen ve Brufen ayirt edilemez.
+    Example: ibuprofen cannot distinguish Nurofen from Brufen.
     """
     normalized_text = normalize_text(text)
     words = normalized_text.split()
@@ -107,9 +105,9 @@ def is_active_ingredient_only_match(
     name_score_limit: float = ACTIVE_INGREDIENT_ONLY_NAME_SCORE_LIMIT,
 ) -> bool:
     """
-    Eslesmenin yalnizca active_ingredient alanindan geldigini tespit eder.
+    Detect whether the match comes only from the active_ingredient field.
 
-    Marka veya urun adi sinyali yoksa yanlis urun secimini engeller.
+    Prevents selecting the wrong product when there is no brand or product-name signal.
     """
     if match_score < DEFAULT_SCORE_CUTOFF:
         return False
@@ -148,7 +146,7 @@ def is_active_ingredient_only_match(
 
 
 def _looks_like_brand_word(word: str) -> bool:
-    """OCR parçasının marka adı parçası olup olmadığını kontrol eder."""
+    """Check whether an OCR fragment looks like part of a brand name."""
     normalized_word = normalize_text(word)
 
     if not normalized_word or " " in normalized_word:
@@ -168,9 +166,9 @@ def _looks_like_brand_word(word: str) -> bool:
 
 def is_dosage_or_form_only_text(text: str) -> bool:
     """
-    OCR çıktısı yalnızca doz/form bilgisi içeriyorsa True döner.
+    Return True when OCR output contains only dosage or form information.
 
-    Örnek: "250 mo / j0o mo tablot" → marka adı yok, eşleştirmeden çıkar.
+    Example: "250 mo / j0o mo tablot" has no brand name and is excluded from matching.
     """
     from src.services.config import DOSAGE_FORM_MARKERS
 
@@ -214,10 +212,9 @@ def get_medicine_name(
     medicine: dict[str, str],
 ) -> str | None:
     """
-    İlaç kaydındaki medicine_name değerini
-    temizleyerek döndürür.
+    Return the cleaned medicine_name value from a medicine record.
 
-    medicine_name boşsa None döndürür.
+    Return None when medicine_name is empty.
     """
     medicine_name = medicine.get(
         "medicine_name",
@@ -235,10 +232,9 @@ def calculate_text_similarity(
     medicine_name: str,
 ) -> float:
     """
-    OCR metni ile ilacın tam adı arasındaki
-    benzerlik skorunu hesaplar.
+    Calculate the similarity score between OCR text and the medicine full name.
 
-    Skor 0 ile 100 arasındadır.
+    The score ranges from 0 to 100.
     """
     cleaned_query = normalize_text(
         query_text
@@ -267,11 +263,9 @@ def calculate_medicine_score(
     medicine: dict[str, str],
 ) -> tuple[float, str | None]:
     """
-    OCR metnini ilacın medicine_name, brand_name ve
-    active_ingredient alanlarıyla karşılaştırır.
+    Compare OCR text with medicine_name, brand_name, and active_ingredient fields.
 
-    En yüksek skoru döndürür; eşleşen kayıt medicine_name
-    ile temsil edilir.
+    Return the highest score; the matched record is represented by medicine_name.
     """
     medicine_name = get_medicine_name(medicine)
 
@@ -318,19 +312,17 @@ def find_best_medicine_match(
     str | None,
 ]:
     """
-    Tek bir OCR metni için veritabanındaki
-    en iyi ilaç eşleşmesini bulur.
+    Find the best medicine match in the database for a single OCR text.
 
-    Eşleştirmede yalnızca medicine_name
-    alanı kullanılır.
+    Matching uses only the medicine_name field.
 
-    Genel kelimeler tek başına ilaç seçtiremez.
+    Generic words cannot select a medicine on their own.
 
     Returns:
         (
-            eşleşen ilaç kaydı,
-            eşleşme skoru,
-            eşleşen medicine_name
+            matched medicine record,
+            match score,
+            matched medicine_name
         )
     """
     cleaned_query = query_text.strip()
@@ -374,8 +366,8 @@ def find_best_medicine_match(
         is_higher_score = score > best_score
         is_same_score = score == best_score
 
-        # Ayni skor: uzun isim (Plus/Gargara/Jel) varsayilan kazanmasin.
-        # OCR kaniti varyanti desteklemiyorsa temel SKU tercih edilir.
+        # Same score: avoid letting longer names such as Plus/Gargara/Jel win by default.
+        # Prefer the base SKU when OCR evidence does not support the variant.
         should_replace = is_higher_score
         if is_same_score and best_medicine is not None:
             current_boost = evidence_alignment_boost(
@@ -429,19 +421,17 @@ def find_best_match_from_texts(
     str | None,
 ]:
     """
-    Birden fazla OCR metni arasından en iyi
-    ilaç eşleşmesini bulur.
+    Find the best medicine match across multiple OCR texts.
 
-    Genel kelimeler tek başına değerlendirilmez.
+    Generic words are not evaluated on their own.
 
-    Skorlar eşitse daha uzun OCR metni ve daha
-    spesifik ilaç adı tercih edilir.
+    When scores are tied, prefer the longer OCR text and the more specific medicine name.
 
     Returns:
         (
-            eşleşen ilaç kaydı,
-            eşleşme skoru,
-            en iyi OCR metni
+            matched medicine record,
+            match score,
+            best OCR text
         )
     """
     best_medicine: dict[str, str] | None = None

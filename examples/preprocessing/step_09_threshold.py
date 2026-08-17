@@ -27,7 +27,7 @@ from src.preprocessing.threshold_operations import (
 
 def main() -> None:
     """
-    Grayscale görüntüye binary threshold uygulamayı örnekler.
+    Demonstrates applying binary thresholding to a grayscale image.
     """
 
     image_path = Path(
@@ -42,14 +42,14 @@ def main() -> None:
         "results/preprocessing/medicine_sample_threshold.jpg"
     )
 
-    # Renkli görüntüyü oku.
+    # Read the color image.
     image = read_image(image_path)
 
-    # Threshold işlemi tek kanallı görüntü beklediği için
-    # görüntüyü önce grayscale biçimine dönüştür.
+    # Thresholding expects a single-channel image, so
+    # convert the image to grayscale first.
     grayscale_image = convert_to_grayscale(image)
 
-    # Grayscale görüntüye binary threshold uygula.
+    # Apply binary thresholding to the grayscale image.
     used_threshold, threshold_image = apply_binary_threshold(
         grayscale_image=grayscale_image,
         threshold_value=127,
@@ -64,12 +64,12 @@ def main() -> None:
     print(f"Grayscale ilk piksel        : {grayscale_image[0, 0]}")
     print(f"Threshold ilk piksel        : {threshold_image[0, 0]}")
 
-    # Threshold görüntüsündeki benzersiz piksel değerlerini göster.
+    # Display the unique pixel values in the threshold image.
     unique_values = np.unique(threshold_image)
 
     print(f"Threshold piksel değerleri  : {unique_values}")
 
-    # Grayscale ve threshold sonuçlarını kaydet.
+    # Save the grayscale and threshold results.
     save_image(
         grayscale_image,
         grayscale_output_path,
@@ -90,7 +90,7 @@ def main() -> None:
         f"{threshold_output_path}"
     )
 
-    # Büyük görüntüleri yalnızca ekranda göstermek için küçült.
+    # Shrink large images only for screen display.
     grayscale_preview = resize_image(
         grayscale_image,
         width=800,

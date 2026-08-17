@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum AppLanguage { tr, en }
 
-/// Uygulama dili denetleyicisi (tercih kalıcı).
+/// Application language controller with persisted preference.
 class LocaleController extends ChangeNotifier {
   LocaleController({AppLanguage language = AppLanguage.tr})
       : _language = language;
@@ -50,7 +50,7 @@ class LocaleController extends ChangeNotifier {
   }
 }
 
-/// InheritedNotifier ile tum agaca dil erisimi.
+/// Provides language access to the widget tree through InheritedNotifier.
 class LocaleScope extends InheritedNotifier<LocaleController> {
   const LocaleScope({
     super.key,
@@ -75,7 +75,7 @@ extension AppLocaleX on BuildContext {
   AppStrings get s => LocaleScope.of(this).strings;
 }
 
-/// TR / EN metin katalogu.
+/// TR / EN text catalog.
 class AppStrings {
   const AppStrings._({
     required this.appName,
@@ -171,6 +171,7 @@ class AppStrings {
     required this.medicineWarningsTitle,
     required this.medicineExplanationFallback,
     required this.medicineExplanationDisclaimer,
+    required this.isEnglish,
   });
 
   final String appName;
@@ -266,10 +267,61 @@ class AppStrings {
   final String medicineWarningsTitle;
   final String medicineExplanationFallback;
   final String medicineExplanationDisclaimer;
+  final bool isEnglish;
 
   static AppStrings of(AppLanguage language) {
     return language == AppLanguage.en ? _en : _tr;
   }
+
+  String catalogFallbackSummary({
+    required String name,
+    String? ingredient,
+    String? category,
+  }) {
+    final trimmedName = name.trim().isEmpty
+        ? (isEnglish ? 'This medicine' : 'Bu ilaç')
+        : name.trim();
+    final ingredientText = ingredient?.trim() ?? '';
+    final categoryText = category?.trim() ?? '';
+    final hasIngredient = ingredientText.isNotEmpty;
+    final hasCategory = categoryText.isNotEmpty;
+    if (isEnglish) {
+      if (hasIngredient && hasCategory) {
+        return '$trimmedName is a $categoryText medicine that contains $ingredientText.';
+      }
+      if (hasIngredient) {
+        return '$trimmedName contains $ingredientText.';
+      }
+      if (hasCategory) {
+        return '$trimmedName is listed in the $categoryText category.';
+      }
+      return 'Limited catalog information is available for $trimmedName.';
+    }
+    if (hasIngredient && hasCategory) {
+      return '$trimmedName, $ingredientText içeren ve $categoryText kategorisinde yer alan bir ilaçtır.';
+    }
+    if (hasIngredient) {
+      return '$trimmedName, $ingredientText içeren bir ilaçtır.';
+    }
+    if (hasCategory) {
+      return '$trimmedName, $categoryText kategorisinde yer alan bir ilaçtır.';
+    }
+    return '$trimmedName hakkında sınırlı katalog bilgisi bulunmaktadır.';
+  }
+
+  String get catalogFallbackUsage => isEnglish
+      ? 'For official use, read the product leaflet and ask a pharmacist.'
+      : 'Resmi kullanım için ürün prospektüsüne ve eczacınıza danışın.';
+
+  List<String> get catalogFallbackWarnings => isEnglish
+      ? const [
+          'This information does not replace personal medical advice; consult a doctor or pharmacist.',
+          'Read the product leaflet before use.',
+        ]
+      : const [
+          'Bu bilgiler kişisel tıbbi tavsiye yerine geçmez; doktorunuza veya eczacınıza danışın.',
+          'Kullanmadan önce ürün prospektüsünü okuyun.',
+        ];
 
   String categoryFor(String key) {
     switch (key) {
@@ -312,7 +364,7 @@ class AppStrings {
     return '$durationLabel: ${seconds.toStringAsFixed(1)} · $modeLabel: $ocrMode';
   }
 
-  /// Overlay alt yazisi — secilen OCR moduna gore.
+  /// Overlay subtitle based on the selected OCR mode.
   String analyzingHintForMode(String ocrModeApiValue) {
     if (ocrModeApiValue == 'accurate') {
       return analyzingOverlayHintAccurate;
@@ -424,6 +476,7 @@ class AppStrings {
         'Bu ilaç hakkında yeterli açıklayıcı bilgi bulunamadı.',
     medicineExplanationDisclaimer:
         'Bu bilgiler genel ilaç bilgisidir ve kişisel tıbbi öneri yerine geçmez. Kullanım için doktorunuzun veya eczacınızın önerisini takip edin.',
+    isEnglish: false,
   );
 
   static const _en = AppStrings._(
@@ -528,5 +581,6 @@ class AppStrings {
         'Not enough explanatory information was found for this medicine.',
     medicineExplanationDisclaimer:
         'This information is general medicine information and does not replace personal medical advice. Follow your doctor or pharmacist guidance for use.',
+    isEnglish: true,
   );
 }

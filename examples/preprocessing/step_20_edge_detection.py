@@ -28,9 +28,9 @@ from src.preprocessing.geometric_operations import (
 
 def main() -> None:
     """
-    Canny Edge Detection kullanımını örnekler.
+    Demonstrates Canny Edge Detection usage.
 
-    İşlem sırası:
+    Processing order:
 
         Original Image
                 ↓
@@ -50,7 +50,7 @@ def main() -> None:
     )
 
     # --------------------------------------------------
-    # Görüntüyü oku
+    # Read the image
     # --------------------------------------------------
 
     image = read_image(
@@ -58,7 +58,7 @@ def main() -> None:
     )
 
     # --------------------------------------------------
-    # Grayscale'e dönüştür
+    # Convert to grayscale
     # --------------------------------------------------
 
     grayscale_image = convert_to_grayscale(
@@ -66,10 +66,10 @@ def main() -> None:
     )
 
     # --------------------------------------------------
-    # Gaussian Blur uygula
-    # Amaç:
-    # Küçük gürültüleri azaltarak
-    # Canny'nin gereksiz kenar bulmasını önlemek.
+    # Apply Gaussian Blur
+    # Purpose:
+    # Reduce small noise so Canny does not
+    # detect unnecessary edges.
     # --------------------------------------------------
 
     blurred_image = apply_gaussian_blur(
@@ -79,7 +79,7 @@ def main() -> None:
     )
 
     # --------------------------------------------------
-    # Canny Edge Detection uygula
+    # Apply Canny Edge Detection
     # --------------------------------------------------
 
     edge_image = apply_canny_edge_detection(
@@ -100,7 +100,7 @@ def main() -> None:
     print(f"Maximum Pixel : {edge_image.max()}")
 
     # --------------------------------------------------
-    # Sonucu kaydet
+    # Save the result
     # --------------------------------------------------
 
     save_image(
@@ -113,7 +113,7 @@ def main() -> None:
     )
 
     # --------------------------------------------------
-    # Büyük görüntüyü yalnızca gösterim için küçült
+    # Shrink the large image for display only
     # --------------------------------------------------
 
     blur_preview = resize_image(

@@ -12,7 +12,7 @@ from src.preprocessing.basic_operations import read_image
 
 def main() -> None:
     """
-    OpenCV ile görüntü okuma işlemini örnekler.
+    Demonstrates reading an image with OpenCV.
     """
 
     image_path = Path(

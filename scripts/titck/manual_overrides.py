@@ -1,22 +1,22 @@
-"""Bilinen ilaçlar için TİTCK eşleşmesi sonrası manuel düzeltmeler."""
+"""Manual corrections after TITCK matching for known medicines."""
 
 from __future__ import annotations
 
 MANUAL_OVERRIDES: dict[str, dict[str, str]] = {
-    # TİTCK'de temel NUROFEN tablet kaydı yok; ibuprofen OTC referansı.
+    # TITCK has no base NUROFEN tablet record; use an ibuprofen OTC reference.
     "MED011": {
         "active_ingredient": "Ibuprofen",
         "dosage": "200 mg",
         "form": "Tablet",
     },
-    # Gıda takviyesi — TİTCK ilaç listesinde birebir kayıt olmayabilir.
+    # Food supplement; an exact record may not exist in the TITCK medicine list.
     "MED031": {
         "active_ingredient": "Vitamin C / Zinc / Vitamin D3",
         "dosage": "Food supplement",
         "form": "Saşe",
         "category": "Vitamin ve Mineral",
     },
-    # Multivitamin — SKRS kapsamı dışı varyant.
+    # Multivitamin variant outside SKRS coverage.
     "MED030": {
         "active_ingredient": "Multivitamin / Mineral",
         "dosage": "Combined tablet",
@@ -24,7 +24,7 @@ MANUAL_OVERRIDES: dict[str, dict[str, str]] = {
     },
 }
 
-# Bilinen hatali alanlar — TITCK enrichment sonrasi da korunur.
+# Known incorrect fields; preserved after TITCK enrichment as well.
 ROW_CORRECTIONS: dict[str, dict[str, str]] = {
     "MED022": {
         "dosage": "50 mg",

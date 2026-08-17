@@ -22,7 +22,7 @@ from src.preprocessing.geometric_operations import (
 
 def main() -> None:
     """
-    Renkli bir görüntüyü grayscale görüntüye dönüştürmeyi örnekler.
+    Demonstrates converting a color image to grayscale.
     """
 
     image_path = Path(
@@ -33,10 +33,10 @@ def main() -> None:
         "results/preprocessing/medicine_sample_grayscale.jpg"
     )
 
-    # Renkli görüntüyü oku.
+    # Read the color image.
     image = read_image(image_path)
 
-    # Görüntüyü grayscale biçimine dönüştür.
+    # Convert the image to grayscale.
     grayscale_image = convert_to_grayscale(image)
 
     print("\n===== GRAYSCALE INFORMATION =====")
@@ -50,7 +50,7 @@ def main() -> None:
     print(f"Renkli ilk piksel       : {image[0, 0]}")
     print(f"Grayscale ilk piksel    : {grayscale_image[0, 0]}")
 
-    # Grayscale görüntüyü diske kaydet.
+    # Save the grayscale image to disk.
     save_image(
         grayscale_image,
         output_path,
@@ -58,13 +58,13 @@ def main() -> None:
 
     print(f"\nGrayscale görüntü kaydedildi: {output_path}")
 
-    # Büyük renkli görüntüyü yalnızca gösterim için küçült.
+    # Shrink the large color image for display only.
     color_preview = resize_image(
         image,
         width=800,
     )
 
-    # Grayscale görüntüyü yalnızca gösterim için küçült.
+    # Shrink the grayscale image for display only.
     grayscale_preview = resize_image(
         grayscale_image,
         width=800,

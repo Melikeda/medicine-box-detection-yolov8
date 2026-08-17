@@ -20,7 +20,7 @@ from src.services.config import PipelineConfig
 
 
 class ScanQueryService:
-    """SQLite üzerinden sunucu tarama geçmişi CRUD."""
+    """Server-side scan history CRUD through SQLite."""
 
     _instance: ScanQueryService | None = None
 

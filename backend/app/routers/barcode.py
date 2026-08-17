@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, File, Query, Request, UploadFile
 from backend.app.config import ApiSettings, get_api_settings
 from backend.app.dependencies import get_medicine_service
 from backend.app.exceptions import RateLimitExceededError
-from backend.app.middleware.rate_limit import AnalyzeRateLimiter
+from backend.app.middleware.rate_limit import IpRateLimiter
 from backend.app.schemas.barcode import (
     BarcodeInfoSchema,
     BarcodeLookupResponseSchema,
@@ -18,8 +18,8 @@ router = APIRouter(prefix="/barcode", tags=["barcode"])
 
 
 @lru_cache
-def _get_barcode_rate_limiter(max_requests: int) -> AnalyzeRateLimiter:
-    return AnalyzeRateLimiter(max_requests=max_requests)
+def _get_barcode_rate_limiter(max_requests: int) -> IpRateLimiter:
+    return IpRateLimiter(max_requests=max_requests)
 
 
 def enforce_barcode_rate_limit(
@@ -35,8 +35,8 @@ def enforce_barcode_rate_limit(
     client_host = request.client.host if request.client else "unknown"
     if not limiter.is_allowed(client_host):
         raise RateLimitExceededError(
-            "Cok fazla barkod istegi. "
-            "Lutfen bir dakika sonra tekrar deneyin."
+            "Too many barcode requests. "
+            "Please try again in a minute."
         )
 
 
@@ -54,7 +54,7 @@ def get_barcode_scan_service(
 async def barcode_info(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> BarcodeInfoSchema:
-    """Barkod endpoint bilgisi."""
+    """Barcode endpoint information."""
     prefix = settings.api_prefix
     return BarcodeInfoSchema(
         endpoint=f"{prefix}/barcode",
@@ -74,7 +74,7 @@ async def lookup_barcode(
     _rate_limit: None = Depends(enforce_barcode_rate_limit),
     service: BarcodeScanService = Depends(get_barcode_scan_service),
 ) -> BarcodeLookupResponseSchema:
-    """Okunmuş barkod metni ile ilaç bulur. Açıklama için /explain kullanın."""
+    """Find a medicine by decoded barcode text. Use /explain for explanations."""
     return service.lookup_code(code)
 
 
@@ -84,7 +84,7 @@ async def scan_barcode_image(
     _rate_limit: None = Depends(enforce_barcode_rate_limit),
     service: BarcodeScanService = Depends(get_barcode_scan_service),
 ) -> BarcodeScanResponseSchema:
-    """Görüntüden barkod okur ve katalogda ilaç arar."""
+    """Read a barcode from an image and search the medicine catalog."""
     file_bytes = await file.read()
     return service.scan_image(
         file_bytes=file_bytes,

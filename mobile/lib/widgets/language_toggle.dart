@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 
-/// Üstte küçük TR / EN dil anahtarı.
+/// Small TR / EN language toggle shown at the top.
 class LanguageToggle extends StatelessWidget {
   const LanguageToggle({super.key});
 

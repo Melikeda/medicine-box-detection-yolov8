@@ -1,3 +1,5 @@
+import '../l10n/app_localizations.dart';
+
 class ExplainResponse {
   const ExplainResponse({
     required this.success,
@@ -110,23 +112,13 @@ class ExplainResponse {
     String? activeIngredient,
     String? dose,
     String? form,
-    required String disclaimer,
+    required AppStrings strings,
   }) {
-    final name = medicineName.trim().isEmpty ? 'Bu ilaç' : medicineName.trim();
-    final ingredient = (activeIngredient ?? '').trim();
-    final cat = (category ?? '').trim();
-
-    late final String summary;
-    if (ingredient.isNotEmpty && cat.isNotEmpty) {
-      summary =
-          '$name, $ingredient içeren ve $cat kategorisinde yer alan bir ilaçtır.';
-    } else if (ingredient.isNotEmpty) {
-      summary = '$name, $ingredient içeren bir ilaçtır.';
-    } else if (cat.isNotEmpty) {
-      summary = '$name, $cat kategorisinde yer alan bir ilaçtır.';
-    } else {
-      summary = '$name hakkında sınırlı katalog bilgisi bulunmaktadır.';
-    }
+    final summary = strings.catalogFallbackSummary(
+      name: medicineName,
+      ingredient: activeIngredient,
+      category: category,
+    );
 
     return ExplainResponse(
       success: true,
@@ -134,18 +126,14 @@ class ExplainResponse {
       medicineName: medicineName,
       explanation: summary,
       summary: summary,
-      usage:
-          'Resmi kullanım için ürün prospektüsüne ve eczacınıza danışın.',
+      usage: strings.catalogFallbackUsage,
       commonUses: const [],
       activeIngredient: _nullableString(activeIngredient),
       dose: _nullableString(dose),
       form: _nullableString(form),
       category: _nullableString(category),
-      warnings: const [
-        'Bu bilgiler kişisel tıbbi tavsiye yerine geçmez; doktorunuza veya eczacınıza danışın.',
-        'Kullanmadan önce ürün prospektüsünü okuyun.',
-      ],
-      disclaimer: disclaimer,
+      warnings: strings.catalogFallbackWarnings,
+      disclaimer: strings.medicineExplanationDisclaimer,
       cached: false,
       provider: 'catalog-fallback',
       model: 'catalog-fallback',

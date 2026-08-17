@@ -1,4 +1,6 @@
-"""TİTCK SKRS listesini indirir (data/database/titck/skrs_latest.xlsx)."""
+"""
+Downloads the TITCK SKRS list to data/database/titck/skrs_latest.xlsx.
+"""
 
 from __future__ import annotations
 

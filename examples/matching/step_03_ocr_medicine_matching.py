@@ -28,7 +28,7 @@ def print_separator(
     separator_length: int = 60,
 ) -> None:
     """
-    Terminalde başlık ve ayırıcı çizgi gösterir.
+    Shows a title and separator line in the terminal.
     """
     print(f"\n{title}")
     print("-" * separator_length)
@@ -39,8 +39,7 @@ def print_text_list(
     texts: list[str],
 ) -> None:
     """
-    Metin listesini terminalde numaralandırarak
-    gösterir.
+    Shows a numbered text list in the terminal.
     """
     print_separator(title)
 
@@ -59,8 +58,7 @@ def remove_duplicate_texts(
     texts: list[str],
 ) -> list[str]:
     """
-    Büyük-küçük harf farkını dikkate almadan
-    tekrarlanan metinleri kaldırır.
+    Removes duplicate texts regardless of letter case.
     """
     unique_texts: list[str] = []
     seen_texts: set[str] = set()
@@ -86,23 +84,22 @@ def create_matching_texts(
     ocr_texts: list[str],
 ) -> list[str]:
     """
-    RapidFuzz ile karşılaştırılacak OCR
-    metinlerini oluşturur.
+    Creates OCR texts to compare with RapidFuzz.
 
-    Oluşturulan metinler:
-    - Her OCR sonucu
-    - İlk iki OCR sonucunun birleşimi
-    - İlk üç OCR sonucunun birleşimi
+    Generated texts:
+    - Each OCR result
+    - Combined first two OCR results
+    - Combined first three OCR results
 
-    Ürün adı kutu üzerinde birkaç farklı satıra
-    ayrılmış olabileceği için birleşik metinler
-    de eşleştirmeye gönderilir.
+    Because the product name may be split across
+    several lines on the box, combined texts are
+    also sent to the matcher.
 
-    Örnek:
+    Example:
         NUROFCN
         COLD & FLU
 
-    Birleşik metin:
+    Combined text:
         NUROFCN COLD & FLU
     """
     cleaned_ocr_texts = [
@@ -142,8 +139,8 @@ def format_medicine_value(
     value: str | None,
 ) -> str:
     """
-    CSV'deki boş veya henüz doğrulanmamış
-    değerleri kullanıcı dostu metne dönüştürür.
+    Converts empty or unverified CSV values
+    to user-friendly text.
     """
     if value is None:
         return "Bilgi henüz doğrulanmadı."
@@ -165,8 +162,8 @@ def print_medicine_information(
     matched_text: str | None,
 ) -> None:
     """
-    Eşleşen ilacın bilgilerini terminalde
-    düzenli şekilde gösterir.
+    Displays matched medicine information
+    in a structured terminal layout.
     """
     print_separator(
         "En İyi Eşleşmeyi Sağlayan OCR Metni"
@@ -228,17 +225,15 @@ def print_medicine_information(
 
 def main() -> None:
     """
-    OCR, RapidFuzz ve CSV veritabanı
-    entegrasyonunu çalıştırır.
+    Runs OCR, RapidFuzz, and CSV database integration.
 
-    İşlem sırası:
-    1. CSV ilaç kayıtlarını yükler.
-    2. Görsel üzerinde OCR çalıştırır.
-    3. OCR metinlerini çıkarır.
-    4. Ürün adı için birleşik metinler oluşturur.
-    5. Metinleri medicine_name alanlarıyla
-       karşılaştırır.
-    6. En iyi ilaç eşleşmesini gösterir.
+    Processing order:
+    1. Load CSV medicine records.
+    2. Run OCR on the image.
+    3. Extract OCR texts.
+    4. Create combined texts for the product name.
+    5. Compare texts with medicine_name fields.
+    6. Display the best medicine match.
     """
     image_path = Path(
         "data/samples/aferin_forte.jpg"

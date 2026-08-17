@@ -1,4 +1,4 @@
-"""Barkod metnini katalog araması için normalize eder."""
+"""Normalize barcode text for catalog lookup."""
 
 from __future__ import annotations
 
@@ -6,16 +6,16 @@ import re
 
 _NON_DIGIT = re.compile(r"\D+")
 _GS1_GTIN = re.compile(r"(?:^|[^\d])01(\d{14})")
-# mobile_scanner / zxing AIM kimliği: ]C1 (GS1-128), ]d2 (DataMatrix), ]E0 (EAN-13)
+# mobile_scanner / zxing AIM identifiers: ]C1 (GS1-128), ]d2 (DataMatrix), ]E0 (EAN-13)
 _AIM_IDENTIFIER = re.compile(r"^\][A-Za-z]\d")
 
 
 def normalize_barcode(raw: str | None) -> str:
     """
-    EAN-13 / UPC / GTIN / GS1 DataMatrix metnini rakam dizisine çevirir.
+    Convert EAN-13 / UPC / GTIN / GS1 DataMatrix text into a digit sequence.
 
-    Türkiye ilaç kutularındaki 1D EAN-13 ve İTS DataMatrix (AI 01 + GTIN)
-    aynı katalog anahtarına indirgenir.
+    1D EAN-13 codes and ITS DataMatrix codes on Turkish medicine boxes
+    are reduced to the same catalog key.
     """
     if raw is None:
         return ""
@@ -42,14 +42,14 @@ def normalize_barcode(raw: str | None) -> str:
 
 
 def is_plausible_barcode(digits: str | None) -> bool:
-    """Katalog aramasına uygun uzunlukta rakam dizisi mi?"""
+    """Return whether the digit sequence has a catalog-lookup length."""
     if not digits or not digits.isdigit():
         return False
     return 8 <= len(digits) <= 14
 
 
 def barcode_lookup_keys(raw: str | None) -> list[str]:
-    """Aynı paket için denenmesi gereken katalog anahtarları."""
+    """Catalog keys that should be tried for the same package."""
     keys: list[str] = []
     seen: set[str] = set()
 
@@ -81,7 +81,7 @@ def barcode_lookup_keys(raw: str | None) -> list[str]:
 
 
 def _strip_aim_identifier(text: str) -> str:
-    """Barkod okuyucunun eklediği ]C1 / ]E0 gibi AIM önekini kaldırır."""
+    """Remove AIM prefixes such as ]C1 / ]E0 added by barcode readers."""
     if _AIM_IDENTIFIER.match(text):
         return text[3:]
     return text

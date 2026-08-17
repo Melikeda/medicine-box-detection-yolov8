@@ -9,7 +9,7 @@ from backend.app.exceptions import register_exception_handlers
 from backend.app.logging_config import configure_logging
 from backend.app.middleware.rate_limit import (
     AnalyzeRateLimitMiddleware,
-    AnalyzeRateLimiter,
+    IpRateLimiter,
 )
 from backend.app.middleware.security_headers import SecurityHeadersMiddleware
 from backend.app.routers import analyze, barcode, explain, health, medicines, scans
@@ -113,7 +113,7 @@ def create_app(settings: ApiSettings | None = None) -> FastAPI:
     app.add_middleware(SecurityHeadersMiddleware)
 
     if settings.rate_limit_enabled:
-        limiter = AnalyzeRateLimiter(
+        limiter = IpRateLimiter(
             max_requests=settings.rate_limit_analyze_per_minute,
         )
         app.add_middleware(

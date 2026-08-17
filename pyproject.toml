@@ -1,0 +1,18 @@
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["backend", "src", "tests", "scripts"]
+extend-exclude = [
+    "examples",
+    "docs/experiments",
+    "scripts/generate_internship_report_tr.py",
+    "scripts/generate_internship_report_docx.py",
+]
+
+[tool.ruff.lint]
+select = ["E9", "F", "W6"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E402"]
+"scripts/**" = ["T201"]

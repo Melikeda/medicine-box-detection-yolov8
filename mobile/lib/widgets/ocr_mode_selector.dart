@@ -5,7 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../models/ocr_mode.dart';
 import '../theme/app_colors.dart';
 
-/// Onizleme ekraninda Hizli / Hassas OCR secimi.
+/// Fast / accurate OCR choice on the preview screen.
 class OcrModeSelector extends StatelessWidget {
   const OcrModeSelector({
     super.key,

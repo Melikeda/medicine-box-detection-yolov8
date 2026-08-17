@@ -1,4 +1,4 @@
-#Burada görüntünün geometrisiyle oynuyoruz.
+# Image geometry helpers.
 import cv2
 
 
@@ -7,9 +7,7 @@ def resize_image(
     width: int | None = None,
     height: int | None = None,
 ):
-    """
-    Görüntüyü en-boy oranını koruyarak yeniden boyutlandırır.
-    """
+    """Resize the image while preserving aspect ratio."""
 
     if width is None and height is None:
         raise ValueError(
@@ -44,17 +42,17 @@ def crop_image(
     height: int,
 ):
     """
-    Görüntünün belirli bir bölgesini kırpar.
+    Crop a specific region of the image.
 
     Args:
-        image: Kırpılacak görüntü.
-        x: Başlangıç x koordinatı.
-        y: Başlangıç y koordinatı.
-        width: Kırpılacak bölgenin genişliği.
-        height: Kırpılacak bölgenin yüksekliği.
+        image: Image to crop.
+        x: Starting x coordinate.
+        y: Starting y coordinate.
+        width: Width of the cropped region.
+        height: Height of the cropped region.
 
     Returns:
-        Kırpılmış görüntü.
+        Cropped image.
     """
 
     cropped_image = image[

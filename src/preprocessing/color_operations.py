@@ -1,11 +1,9 @@
-#Bu yüzden resmi griye çeviriyoruz.
+# Convert images to grayscale because color information is not needed here.
 import cv2
 
 
 def convert_to_grayscale(image):
-    """
-    BGR formatındaki renkli görüntüyü grayscale görüntüye dönüştürür.
-    """
+    """Convert a BGR color image to a grayscale image."""
 
     grayscale_image = cv2.cvtColor(
         image,
@@ -16,9 +14,7 @@ def convert_to_grayscale(image):
 
 
 def apply_histogram_equalization(grayscale_image):
-    """
-    Grayscale görüntünün global kontrastını artırır.
-    """
+    """Increase the global contrast of a grayscale image."""
 
     if grayscale_image.ndim != 2:
         raise ValueError(
@@ -39,28 +35,27 @@ def apply_clahe(
     tile_grid_size: tuple[int, int] = (8, 8),
 ):
     """
-    Grayscale görüntüye CLAHE uygular.
+    Apply CLAHE to a grayscale image.
 
-    CLAHE, görüntüyü küçük bölgelere ayırarak
-    yerel kontrastı artırır ve kontrast artışını sınırlar.
+    CLAHE divides the image into small regions, increases local contrast,
+    and limits the contrast increase.
 
     Args:
         grayscale_image:
-            CLAHE uygulanacak tek kanallı grayscale görüntü.
+            Single-channel grayscale image to process with CLAHE.
         clip_limit:
-            Kontrast artışını sınırlayan değer.
-            Değer büyüdükçe kontrast daha güçlü artabilir.
+            Value that limits contrast amplification.
+            Larger values can increase contrast more strongly.
         tile_grid_size:
-            Görüntünün bölüneceği yerel alanların düzeni.
-            Örneğin (8, 8), görüntünün küçük bölgelere
-            ayrılarak işleneceği anlamına gelir.
+            Layout of the local regions into which the image is divided.
+            For example, (8, 8) means the image is processed in small regions.
 
     Returns:
-        CLAHE uygulanmış grayscale görüntü.
+        Grayscale image processed with CLAHE.
 
     Raises:
         ValueError:
-            Görüntü grayscale değilse veya parametreler geçersizse.
+            If the image is not grayscale or parameters are invalid.
     """
 
     if grayscale_image.ndim != 2:

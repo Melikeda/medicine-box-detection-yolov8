@@ -128,7 +128,7 @@ class AnalyzeApiService {
     );
   }
 
-  /// Android galeri yollari bazen uzantisiz gelir; backend icin .jpg eklenir.
+  /// Android gallery paths sometimes lack an extension; add .jpg for the backend.
   String _uploadFilename(String path) {
     final base = _basename(path);
     if (base.contains('.')) {

@@ -1,4 +1,4 @@
-"""medicines.csv kalite kontrol testleri."""
+"""medicines.csv quality-control tests."""
 
 from __future__ import annotations
 

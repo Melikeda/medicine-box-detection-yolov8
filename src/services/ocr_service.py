@@ -1,4 +1,5 @@
 from collections.abc import Callable
+import logging
 
 import numpy as np
 
@@ -10,9 +11,11 @@ from src.ocr.ocr_pipeline import (
 )
 from src.services.config import PipelineConfig
 
+logger = logging.getLogger(__name__)
+
 
 class OCRService:
-    """Crop görüntüsünden metin çıkarır (EasyOCR)."""
+    """Extract text from a crop image with EasyOCR."""
 
     def __init__(
         self,
@@ -38,15 +41,19 @@ class OCRService:
         blur_threshold: float | None = None,
     ) -> tuple[list[str], OCRPipelineResult]:
         """
-        Tek bir crop görüntüsünden OCR aday metinlerini üretir.
+        Generate OCR candidate texts from a single crop image.
 
-        Her crop kendi blur skoruna göre ayrı değerlendirilir.
+        Each crop is evaluated separately according to its own blur score.
         """
         if box_index is not None:
-            print(f"OCR modu: {self.config.ocr_mode} (kutu {box_index})")
+            logger.info(
+                "OCR mode: %s (box %s)",
+                self.config.ocr_mode,
+                box_index,
+            )
         else:
-            print(f"OCR modu: {self.config.ocr_mode}")
-        print("OCR motoru: easyocr")
+            logger.info("OCR mode: %s", self.config.ocr_mode)
+        logger.info("OCR engine: easyocr")
 
         output_directory = None
         if save_debug_outputs and debug_subdirectory:
@@ -89,7 +96,7 @@ class OCRService:
         *,
         save_debug_outputs: bool = False,
     ) -> tuple[list[str], OCRPipelineResult]:
-        """Geriye dönük uyumluluk alias'ı."""
+        """Backward-compatibility alias."""
         return self.analyze_crop(
             cropped_image=cropped_image,
             save_debug_outputs=save_debug_outputs,

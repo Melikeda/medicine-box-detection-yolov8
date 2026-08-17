@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Yolocilin marka logosu — açık yeşil kapsül + yolocilin yazısı.
+/// Yolocilin brand logo: light green capsule plus Yolocilin wordmark.
 class AppLogo extends StatelessWidget {
   const AppLogo({
     super.key,

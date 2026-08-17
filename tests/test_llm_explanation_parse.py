@@ -1,4 +1,6 @@
-"""LLM açıklama parse / fallback birim testleri."""
+"""
+LLM explanation parsing and fallback unit tests.
+"""
 
 from backend.app.services.llm_service import (
     MedicineExplanation,
@@ -34,7 +36,7 @@ def test_build_medicine_context_includes_allowed_uses() -> None:
     assert context["activeIngredient"] == "Etodolac"
     assert context["allowed_common_uses"]
     assert context["indications"] == []
-    assert "mevcut değil" in context["data_notes"]
+    assert "not in the database" in context["data_notes"].lower()
 
 
 def test_parse_valid_json_explanation() -> None:
@@ -64,7 +66,7 @@ def test_parse_fenced_json_explanation() -> None:
     ```"""
     result = parse_llm_explanation(raw, medicine=_etol())
     assert result.summary == "Kısa özet"
-    # commonUses boşsa kategori fallback
+    # Fall back to the category when commonUses is empty.
     assert result.common_uses
 
 
@@ -72,7 +74,7 @@ def test_parse_invalid_json_falls_back_to_plain_text() -> None:
     raw = "Bu ilaç hakkında genel bir düz metin açıklama."
     result = parse_llm_explanation(raw, medicine=_etol())
     assert result.summary.startswith("Bu ilaç hakkında")
-    assert result.common_uses  # kategori fallback
+    assert result.common_uses  # category fallback
     assert result.warnings
 
 
@@ -89,6 +91,14 @@ def test_mock_explanation_is_usage_focused() -> None:
     assert "kullanmalısınız" not in result.usage.casefold()
     text = result.explanation_text.casefold()
     assert "etodolac" in text or "kas" in text
+
+
+def test_mock_explanation_english_locale() -> None:
+    result = build_mock_explanation(_etol(), locale="en")
+    assert "Etol Fort" in result.summary
+    assert "contains" in result.summary.lower() or "medicine" in result.summary.lower()
+    assert any("joint" in item.lower() or "muscle" in item.lower() for item in result.common_uses)
+    assert "medical advice" in result.disclaimer.lower()
 
 
 def test_antibiotic_mock_has_extra_warning() -> None:

@@ -1,6 +1,6 @@
 import 'package:image_picker/image_picker.dart';
 
-/// Galeri ve kamera erisimi icin ince servis katmani.
+/// Thin service layer for gallery and camera access.
 class ImagePickerService {
   ImagePickerService({ImagePicker? picker}) : _picker = picker ?? ImagePicker();
 

@@ -1,4 +1,4 @@
-#Bunlar resmi okumayı, kaydetmeyi ve göstermeyi sağlar.
+# Provides helpers to read, save, and display images.
 from pathlib import Path
 
 import cv2
@@ -6,16 +6,16 @@ import cv2
 
 def read_image(image_path: Path):
     """
-    Verilen dosya yolundaki görüntüyü OpenCV ile okur.
+    Read an image from the given file path with OpenCV.
 
     Args:
-        image_path: Okunacak görüntünün dosya yolu.
+        image_path: Path to the image to read.
 
     Returns:
-        OpenCV tarafından NumPy dizisi olarak okunan görüntü.
+        Image read by OpenCV as a NumPy array.
 
     Raises:
-        FileNotFoundError: Görüntü okunamazsa.
+        FileNotFoundError: If the image cannot be read.
     """
 
     image = cv2.imread(str(image_path))
@@ -30,14 +30,14 @@ def read_image(image_path: Path):
 
 def save_image(image, output_path: Path) -> None:
     """
-    Görüntüyü belirtilen dosya yoluna kaydeder.
+    Save the image to the specified file path.
 
     Args:
-        image: Kaydedilecek OpenCV görüntüsü.
-        output_path: Çıktı dosyasının yolu.
+        image: OpenCV image to save.
+        output_path: Output file path.
 
     Raises:
-        RuntimeError: Görüntü kaydedilemezse.
+        RuntimeError: If the image cannot be saved.
     """
 
     output_path.parent.mkdir(
@@ -61,11 +61,11 @@ def display_image(
     window_name: str = "Image"
 ) -> None:
     """
-    Görüntüyü OpenCV penceresinde gösterir.
+    Display the image in an OpenCV window.
 
     Args:
-        image: Gösterilecek OpenCV görüntüsü.
-        window_name: Açılacak pencerenin başlığı.
+        image: OpenCV image to display.
+        window_name: Title of the window to open.
     """
 
     cv2.imshow(window_name, image)

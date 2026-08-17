@@ -1,11 +1,11 @@
 """
-Canli backend E2E + performans olcumu.
+Live backend E2E and performance measurement.
 
-Akis:
-  health → medicines → explain/info → (optional explain)
-  → (optional analyze) → scans create/list/delete
+Flow:
+  health -> medicines -> explain/info -> (optional explain)
+  -> (optional analyze) -> scans create/list/delete
 
-Ornek:
+Example:
   python scripts/e2e_api_flow.py
   python scripts/e2e_api_flow.py --image data/samples/parol_plus.jpg
   python scripts/e2e_api_flow.py --skip-analyze --json-out artifacts/e2e.json

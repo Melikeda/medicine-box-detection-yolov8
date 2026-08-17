@@ -7,7 +7,7 @@ import '../widgets/home_reminder_banner.dart';
 import '../widgets/language_toggle.dart';
 import '../widgets/professional_background.dart';
 
-/// Ana giriş sayfası — kaydırmasız tam ekran düzeni.
+/// Main entry page with a non-scrolling full-screen layout.
 class WelcomeTab extends StatelessWidget {
   const WelcomeTab({super.key, required this.onStartScan});
 

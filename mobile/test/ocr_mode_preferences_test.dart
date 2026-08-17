@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:medicine_box_app/models/ocr_mode.dart';
-import 'package:medicine_box_app/services/ocr_mode_preferences.dart';
+import 'package:yolocilin/models/ocr_mode.dart';
+import 'package:yolocilin/services/ocr_mode_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

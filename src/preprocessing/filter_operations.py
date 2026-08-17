@@ -1,4 +1,4 @@
-#Resimdeki gürültüyü temizlemek.
+# Clean noise from the image.
 import cv2
 
 
@@ -8,23 +8,22 @@ def apply_gaussian_blur(
     sigma: float = 0,
 ):
     """
-    Görüntüye Gaussian Blur uygular.
+    Apply Gaussian Blur to the image.
 
-    Gaussian Blur, görüntüdeki küçük gürültüleri azaltır
-    ve görüntüyü yumuşatır.
+    Gaussian Blur reduces small noise in the image and smooths the image.
 
     Args:
-        image: Blur uygulanacak görüntü.
-        kernel_size: Gaussian filtre boyutu.
-            Her iki değer de pozitif ve tek sayı olmalıdır.
-        sigma: Gaussian dağılımının standart sapması.
-            0 verilirse OpenCV otomatik hesaplar.
+        image: Image to blur.
+        kernel_size: Gaussian filter size.
+            Both values must be positive and odd.
+        sigma: Standard deviation of the Gaussian distribution.
+            If 0 is given, OpenCV calculates it automatically.
 
     Returns:
-        Gaussian Blur uygulanmış görüntü.
+        Image with Gaussian Blur applied.
 
     Raises:
-        ValueError: Kernel boyutları geçersizse.
+        ValueError: If the kernel dimensions are invalid.
     """
 
     if (
@@ -51,21 +50,20 @@ def apply_median_blur(
     kernel_size: int = 5,
 ):
     """
-    Görüntüye Median Blur uygular.
+    Apply Median Blur to the image.
 
-    Median Blur özellikle salt-and-pepper gürültüsünü
-    azaltmada etkilidir.
+    Median Blur is especially effective at reducing salt-and-pepper noise.
 
     Args:
-        image: Blur uygulanacak görüntü.
-        kernel_size: Median filtre boyutu.
-            1'den büyük ve tek sayı olmalıdır.
+        image: Image to blur.
+        kernel_size: Median filter size.
+            Must be odd and greater than 1.
 
     Returns:
-        Median Blur uygulanmış görüntü.
+        Image with Median Blur applied.
 
     Raises:
-        ValueError: Kernel boyutu geçersizse.
+        ValueError: If the kernel size is invalid.
     """
 
     if kernel_size <= 1 or kernel_size % 2 == 0:
@@ -88,29 +86,27 @@ def apply_bilateral_filter(
     sigma_space: float = 75,
 ):
     """
-    Görüntüye Bilateral Filter uygular.
+    Apply a bilateral filter to the image.
 
-    Bilateral Filter, görüntüdeki gürültüyü azaltırken
-    yazı ve nesne kenarlarını mümkün olduğunca korur.
+    The filter reduces noise while preserving text and object edges.
 
     Args:
-        image: Filtre uygulanacak görüntü.
+        image: Image to filter.
         diameter:
-            Her piksel için incelenecek komşuluk alanının çapı.
-            Değer büyüdükçe daha geniş bir çevre incelenir.
+            Neighborhood diameter around each pixel.
+            Larger values inspect a wider area.
         sigma_color:
-            Parlaklık veya renk farklarının filtre üzerindeki etkisi.
-            Değer büyüdükçe farklı renkteki pikseller de
-            yumuşatma işlemine daha fazla katılır.
+            How strongly brightness/color differences affect the filter.
+            Larger values let more dissimilar colors participate in smoothing.
         sigma_space:
-            Pikseller arasındaki uzaklığın filtre üzerindeki etkisi.
-            Değer büyüdükçe daha uzaktaki pikseller de dikkate alınır.
+            How strongly pixel distance affects the filter.
+            Larger values include farther pixels.
 
     Returns:
-        Bilateral Filter uygulanmış görüntü.
+        Bilaterally filtered image.
 
     Raises:
-        ValueError: Parametrelerden biri geçersizse.
+        ValueError: If a parameter is invalid.
     """
 
     if diameter <= 0:

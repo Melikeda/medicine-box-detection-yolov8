@@ -24,18 +24,16 @@ def create_ocr_reader(
     use_gpu: bool = False,
 ) -> easyocr.Reader:
     """
-    EasyOCR okuyucusunu oluşturur (Türkçe + İngilizce varsayılan).
+    Create an EasyOCR reader, defaulting to Turkish and English.
 
     Args:
         languages:
-            OCR tarafından kullanılacak dil kodları.
-            Varsayılan olarak Türkçe ve İngilizce kullanılır.
-        use_gpu:
-            True verilirse GPU kullanmayı dener.
-            False verilirse CPU kullanır.
+            Language codes used by OCR.
+            Turkish and English are used by default.
 
-    Returns:
-        EasyOCR ``Reader`` nesnesi.
+        use_gpu:
+            If True, try to use the GPU.
+            If False, use the CPU.
     """
     if languages is None:
         languages = ["tr", "en"]
@@ -51,20 +49,21 @@ def read_text_from_image(
     image_path: str | Path,
 ) -> list[Any]:
     """
-    Verilen görüntüdeki yazıları OCR ile okur.
+    Read text from the given image with OCR.
 
     Args:
         reader:
-            Daha önce oluşturulmuş EasyOCR Reader nesnesi.
+            A previously created EasyOCR Reader instance.
+
         image_path:
-            Okunacak görüntünün dosya yolu.
+            Path to the image to read.
 
     Returns:
-        EasyOCR tarafından bulunan metin sonuçlarının listesi.
+        A list of text results found by EasyOCR.
 
     Raises:
         FileNotFoundError:
-            Görüntü dosyası bulunamazsa oluşur.
+            Raised when the image file cannot be found.
     """
     image_path = Path(image_path)
 
@@ -84,26 +83,26 @@ def draw_ocr_results(
     output_path: str | Path,
 ) -> None:
     """
-    OCR sonuçlarını görüntü üzerine çizer ve kaydeder.
+    Draw OCR results on the image and save them.
 
-    Her metin için:
-    - Metnin çevresine bir kutu çizer.
-    - Okunan metni görüntüye yazar.
-    - Güven skorunu metnin yanında gösterir.
+    For each text item:
+    - Draw a box around the text.
+    - Write the recognized text on the image.
+    - Show the confidence score next to the text.
 
     Args:
         image_path:
-            Orijinal görüntünün dosya yolu.
+            Path to the original image.
         results:
-            EasyOCR tarafından döndürülen OCR sonuçları.
+            OCR results returned by EasyOCR.
         output_path:
-            Sonuç görüntüsünün kaydedileceği dosya yolu.
+            Path where the result image will be saved.
 
     Raises:
         FileNotFoundError:
-            Görüntü dosyası bulunamazsa veya okunamazsa oluşur.
+            Raised when the image file cannot be found or read.
         IOError:
-            Sonuç görüntüsü kaydedilemezse oluşur.
+            Raised when the result image cannot be saved.
     """
     image_path = Path(image_path)
     output_path = Path(output_path)

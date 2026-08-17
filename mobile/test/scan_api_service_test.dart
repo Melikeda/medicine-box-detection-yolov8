@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:medicine_box_app/models/analyze_response.dart';
-import 'package:medicine_box_app/models/analyze_summary.dart';
-import 'package:medicine_box_app/models/medicine_box_result.dart';
-import 'package:medicine_box_app/services/scan_api_service.dart';
+import 'package:yolocilin/models/analyze_response.dart';
+import 'package:yolocilin/models/analyze_summary.dart';
+import 'package:yolocilin/models/medicine_box_result.dart';
+import 'package:yolocilin/services/scan_api_service.dart';
 
 void main() {
   AnalyzeResponse sampleResponse() {

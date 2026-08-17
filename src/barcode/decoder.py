@@ -1,4 +1,4 @@
-"""Görüntüden 1D/2D barkod okur (zxing-cpp)."""
+"""Read 1D/2D barcodes from images with zxing-cpp."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ _zxing_checked = False
 
 @dataclass(frozen=True)
 class DecodedBarcode:
-    """Tek bir çözülmüş barkod."""
+    """A single decoded barcode."""
 
     text: str
     normalized: str
@@ -27,10 +27,10 @@ class DecodedBarcode:
 
 def decode_barcodes(image: np.ndarray) -> list[DecodedBarcode]:
     """
-    OpenCV BGR/gray görüntüden barkodları okur.
+    Read barcodes from an OpenCV BGR/gray image.
 
-    İlk deneme başarısızsa büyütülmüş kopya denenir (küçük/uzak kodlar).
-    zxing-cpp yoksa boş liste döner; OCR yolu kesilmez.
+    If the first attempt fails, an upscaled copy is tried for small or distant codes.
+    If zxing-cpp is unavailable, return an empty list so OCR can continue.
     """
     if image is None or image.size == 0:
         return []
@@ -64,7 +64,7 @@ def decode_barcodes(image: np.ndarray) -> list[DecodedBarcode]:
 
 
 def decode_barcode_texts(image: np.ndarray) -> list[str]:
-    """Yalnızca normalize edilmiş, geçerli barkod metinlerini döndürür."""
+    """Return only normalized, valid barcode text values."""
     return [item.normalized for item in decode_barcodes(image)]
 
 

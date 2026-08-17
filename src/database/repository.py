@@ -24,10 +24,10 @@ def seed_medicines_from_csv(
     barcodes_csv_path: Path | None = None,
 ) -> int:
     """
-    CSV kayıtlarını SQLite'a aktarır.
+    Import CSV records into SQLite.
 
-    replace_existing=True ise medicine_id üzerinden upsert yapar.
-    Dönüş değeri: işlenen (eklenen/güncellenen) kayıt sayısı.
+    When replace_existing=True, records are upserted by medicine_id.
+    Return the number of processed records that were inserted or updated.
     """
     medicines = load_medicines(csv_path=csv_path)
 
@@ -98,9 +98,9 @@ def ensure_database_seeded(
     barcodes_csv_path: Path | None = None,
 ) -> int:
     """
-    Veritabanını hazırlar ve CSV ile senkronize eder.
+    Prepare the database and synchronize it with the CSV data.
 
-    Pipeline/API startup'ta çağrılır.
+    Called during pipeline/API startup.
     """
     return seed_medicines_from_csv(
         csv_path=csv_path,
@@ -117,7 +117,7 @@ def _seed_barcodes(
     replace_existing: bool,
     known_medicine_ids: set[str],
 ) -> int:
-    """medicine_barcodes tablosunu CSV ile doldurur."""
+    """Populate the medicine_barcodes table from CSV."""
     rows = load_medicine_barcodes(barcodes_csv_path)
 
     if replace_existing:
@@ -149,7 +149,7 @@ def list_medicines(
     limit: int = 100,
     offset: int = 0,
 ) -> list[Medicine]:
-    """İlaç listesini filtreleyerek döndürür."""
+    """Return the filtered medicine list."""
     statement = select(Medicine).order_by(Medicine.medicine_name)
 
     if search:
@@ -179,7 +179,7 @@ def count_medicines(
     search: str | None = None,
     category: str | None = None,
 ) -> int:
-    """Filtrelenmiş ilaç sayısını döndürür."""
+    """Return the filtered medicine count."""
     statement = select(func.count()).select_from(Medicine)
 
     if search:
@@ -204,7 +204,7 @@ def get_medicine_by_id(
     session: Session,
     medicine_id: str,
 ) -> Medicine | None:
-    """medicine_id ile tek ilaç kaydı döndürür."""
+    """Return a single medicine record by medicine_id."""
     return session.get(Medicine, medicine_id.strip())
 
 
@@ -212,7 +212,7 @@ def get_medicine_by_barcode(
     session: Session,
     barcode: str,
 ) -> Medicine | None:
-    """Barkodun olası GTIN biçimleriyle ilaç kaydı döndürür."""
+    """Return a medicine record using the barcode possible GTIN forms."""
     from src.barcode.normalize import barcode_lookup_keys
 
     for code in barcode_lookup_keys(barcode):
@@ -229,7 +229,7 @@ def list_barcodes_for_medicine(
     session: Session,
     medicine_id: str,
 ) -> list[str]:
-    """Bir ilaca bağlı barkodları döndürür."""
+    """Return barcodes linked to a medicine."""
     rows = session.scalars(
         select(MedicineBarcode.barcode)
         .where(MedicineBarcode.medicine_id == medicine_id.strip())
@@ -241,7 +241,7 @@ def list_barcodes_for_medicine(
 def load_barcode_index(
     database_path: Path,
 ) -> dict[str, str]:
-    """Barkod → medicine_id sözlüğü (pipeline bellek içi arama)."""
+    """Barcode-to-medicine_id dictionary for in-memory pipeline lookup."""
     init_engine(database_path)
     create_tables()
     with session_scope() as session:
@@ -250,7 +250,7 @@ def load_barcode_index(
 
 
 def list_categories(session: Session) -> list[str]:
-    """Benzersiz kategori listesini alfabetik döndürür."""
+    """Return the unique category list alphabetically."""
     rows = session.scalars(
         select(Medicine.category)
         .where(Medicine.category != "")
@@ -264,7 +264,7 @@ def load_medicines_from_sqlite(
     database_path: Path,
 ) -> list[dict[str, str]]:
     """
-    MatchingService için tüm ilaçları dict listesi olarak yükler.
+    Load all medicines as a list of dictionaries for MatchingService.
     """
     init_engine(database_path)
     create_tables()
@@ -279,7 +279,7 @@ def load_medicines_from_sqlite(
 
 
 def build_scan_preview_label(response: dict[str, Any]) -> str:
-    """Analyze yanıtından kısa liste etiketi üretir (mobil ile uyumlu)."""
+    """Build a short list label from an analyze response for mobile compatibility."""
     medicines = response.get("medicines") or []
     matched_names: list[str] = []
     for item in medicines:
@@ -318,7 +318,7 @@ def create_scan(
     preview_label: str | None = None,
     client_device_id: str | None = None,
 ) -> Scan:
-    """Başarılı analyze yanıtını scans tablosuna yazar."""
+    """Write a successful analyze response to the scans table."""
     summary = response.get("summary") or {}
     scan = Scan(
         created_at=datetime.now(timezone.utc),
@@ -377,7 +377,7 @@ def trim_scans(
     *,
     max_entries: int,
 ) -> int:
-    """Eski kayıtları silerek üst sınırı korur. Silinen adedi döner."""
+    """Delete old records to preserve the upper limit and return the deleted count."""
     if max_entries < 1:
         return 0
 

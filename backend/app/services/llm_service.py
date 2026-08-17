@@ -7,7 +7,10 @@ from dataclasses import asdict, dataclass, field
 from typing import Any, Protocol
 
 from backend.app.config import ApiSettings
-from backend.app.constants import LLM_EXPLANATION_DISCLAIMER
+from backend.app.constants import (
+    LLM_EXPLANATION_DISCLAIMER,
+    disclaimer_for_locale,
+)
 from backend.app.exceptions import LlmNotConfiguredError, LlmUnavailableError
 from backend.app.llm_models import GEMINI_FREE_TIER_MODELS
 from backend.app.services.explanation_cache import (
@@ -20,10 +23,13 @@ logger = logging.getLogger(__name__)
 VERIFY_PLACEHOLDER = "VERIFY_FROM_OFFICIAL_LEAFLET"
 
 FALLBACK_SUMMARY = "Bu ilaç hakkında yeterli açıklayıcı bilgi bulunamadı."
+FALLBACK_SUMMARY_EN = (
+    "Not enough explanatory information was found for this medicine."
+)
 
-# Katalog kategorilerine dayalı genel kullanım alanları.
-# İlaç bazlı resmi endikasyon alanı DB'de yok; bu yüzden yalnızca kategori
-# taksonomisinden türetilmiş güvenli ifadeler LLM context'ine verilir.
+# General usage areas based on catalog categories.
+# The DB does not store official per-medicine indications, so only safe
+# statements derived from the category taxonomy are sent to the LLM context.
 CATEGORY_USAGE_HINTS: dict[str, list[str]] = {
     "ağrı kesici": [
         "Hafif veya orta şiddette bazı ağrı durumları",
@@ -107,25 +113,108 @@ CATEGORY_EXTRA_WARNINGS: dict[str, list[str]] = {
     ],
 }
 
+CATEGORY_USAGE_HINTS_EN: dict[str, list[str]] = {
+    "ağrı kesici": [
+        "Some mild to moderate pain situations",
+        "Some illnesses that include fever",
+        "Other pain situations a doctor considers appropriate",
+    ],
+    "kas ve eklem": [
+        "Some musculoskeletal pain situations",
+        "Some joint pain and inflammation situations",
+        "Other appropriate situations listed in official use information",
+    ],
+    "kas-iskelet": [
+        "Some musculoskeletal pain situations",
+        "Some joint and soft-tissue complaints",
+        "Other appropriate situations listed in official use information",
+    ],
+    "kas gevşetici": [
+        "Some situations related to muscle tightness",
+        "Some musculoskeletal complaints",
+        "Other situations a doctor considers appropriate",
+    ],
+    "antibiyotik": [
+        "Bacterial infections prescribed by a doctor",
+        "Infection types described in official use information",
+    ],
+    "soğuk algınlığı": [
+        "Temporary relief of some cold-related complaints",
+        "Managing symptoms such as nasal congestion, fever, or pain",
+    ],
+    "öksürük ilacı": [
+        "Some respiratory complaints related to cough",
+        "Cough situations a doctor or pharmacist considers appropriate",
+    ],
+    "mide": [
+        "Some complaints related to heartburn, indigestion, or acid",
+        "Other gastrointestinal situations listed in official use information",
+    ],
+    "mide ilacı": [
+        "Some complaints related to heartburn, indigestion, or acid",
+        "Other gastrointestinal situations listed in official use information",
+    ],
+    "vitamin ve mineral": [
+        "Situations that need vitamin or mineral supplementation",
+        "Supportive use with doctor or pharmacist advice",
+    ],
+    "food supplement": [
+        "Supportive use as a food supplement",
+        "Supplement situations a doctor or pharmacist considers appropriate",
+    ],
+    "solunum": [
+        "Some respiratory complaints",
+        "Other appropriate situations listed in official use information",
+    ],
+    "nöroloji": [
+        "Some neurology situations prescribed by a doctor",
+        "Other appropriate situations listed in official use information",
+    ],
+    "kardiyoloji": [
+        "Some cardiology situations prescribed by a doctor",
+        "Other appropriate situations listed in official use information",
+    ],
+    "endokrin": [
+        "Some endocrine situations prescribed by a doctor",
+        "Other appropriate situations listed in official use information",
+    ],
+    "genel": [
+        "Situations described in official use information",
+    ],
+}
+
+BASE_WARNINGS_EN = [
+    "This information does not replace personal medical advice; consult a doctor or pharmacist.",
+    "Read the product leaflet before use.",
+    "Follow a healthcare professional for dose and duration.",
+]
+
+CATEGORY_EXTRA_WARNINGS_EN: dict[str, list[str]] = {
+    "antibiyotik": [
+        "Antibiotics must not be used without a doctor's advice.",
+        "Complete the dose and duration as instructed by a physician.",
+    ],
+}
+
 
 SYSTEM_PROMPT = """
 # Role
-Sen bir ilaç bilgilendirme asistanısın. Kullanıcıya eşleşen ilaç hakkında
-kısa, anlaşılır ve güvenli genel bilgi sunarsın.
+You are a medicine-information assistant. Give short, clear, and safe general
+information about a matched medicine.
 
 # Objective
-Asıl amacın "Bu ilaç nedir?" sorusuna teknik tanım yapmak değil;
-"Bu ilaç hangi durumlarda kullanılabilir ve kullanıcı temel olarak ne bilmeli?"
-sorusuna cevap vermektir.
+Do not write a technical definition of "what is this drug?".
+Answer: "In which situations can this medicine be used, and what should the
+user know at a basic level?"
 
 # Input context
-Sana yapılandırılmış ilaç kaydı verilir. Bu kayıtta ilaç adı, etken madde,
-doz, form, kategori ve (varsa) kategoriye dayalı izinli kullanım alanları bulunur.
-Resmi endikasyon / kontrendikasyon listesi veritabanında olmayabilir.
+You receive a structured medicine record: name, active ingredient, dose, form,
+category, and (when present) category-based allowed use items.
+Official indication / contraindication lists may be missing from the database.
 
 # Output schema
-Yalnızca geçerli JSON döndür. Markdown, kod bloğu veya ek metin yazma.
-Şema:
+Return valid JSON only. Do not write markdown, code fences, or extra text.
+Schema:
 {
   "summary": "string",
   "usage": "string",
@@ -139,43 +228,43 @@ Yalnızca geçerli JSON döndür. Markdown, kod bloğu veya ek metin yazma.
 }
 
 # Medical safety rules
-- Kişiye özel teşhis koyma.
-- Kişinin semptomuna göre ilaç seçme.
-- "Bu ilacı kullanmalısınız", "sizin için uygundur", "tavsiye edilir" deme.
-- "Şu ağrınız varsa bunu kullanın" gibi ifadeler kullanma.
-- Doz değiştirme veya reçete yerine geçecek öneri verme.
-- Tercih edilen dil:
-  - "Bu ilaç, resmi/kategori kullanım alanları arasında bulunan bazı durumlarda kullanılabilir."
-  - "Bu tür durumlarda doktor tarafından reçete edilebilir."
-  - "Kullanım için doktorunuzun veya eczacınızın önerisini takip edin."
+- Do not diagnose a specific person.
+- Do not choose a medicine based on the user's symptoms.
+- Do not say "you should use this", "this is suitable for you", or "it is recommended".
+- Do not say "if you have this pain, use this".
+- Do not change the dose or replace a prescription.
+- Prefer wording such as:
+  - "This medicine may be used in some situations listed among official/category uses."
+  - "A doctor may prescribe it in these kinds of situations."
+  - "Follow your doctor or pharmacist for use."
 
 # Hallucination prevention
-- Verilmeyen ilaç bilgisini uydurma.
-- İzinli kullanım listesi (allowed_common_uses) dışına çıkma.
-- Kendi genel tıbbi bilginle ek hastalık/endikasyon ekleme.
-- Spesifik hastalık adı (ör. migren, menisküs yırtığı) uydurma.
-- allowed_common_uses boşsa commonUses = [] bırak ve usage içinde
-  "Bu bilgi mevcut değil" de.
-- warnings için yalnızca verilen allowed_warnings maddelerini kullan veya
-  bunları anlamı bozmadan sadeleştir.
+- Do not invent medicine facts that were not provided.
+- Stay inside the allowed_common_uses list.
+- Do not add extra diseases/indications from general medical knowledge.
+- Do not invent specific disease names (for example migraine, meniscus tear).
+- If allowed_common_uses is empty, leave commonUses = [] and say
+  "This information is not available" in usage.
+- For warnings, use only allowed_warnings items, or simplify them without
+  changing the meaning.
 
 # Language / style rules
-- Dil: Türkçe (aksi belirtilmedikçe), sade ve bilgilendirici.
-- Teknik alanları (ad, doz, form, etken madde) summary içinde tekrar tekrar yazma.
-- summary: 2-3 cümle; kullanım odaklı olsun.
-- usage: 1-2 cümle; "hangi durumlarda kullanılabilir" odaklı olsun.
-- commonUses: 3-5 madde (izinli listeden).
-- warnings: 2-5 madde.
+- Write all JSON string values in the language given at the end of the user prompt.
+- Do not repeat technical fields (name, dose, form, active ingredient) over and over in summary.
+- summary: 2-3 sentences, usage-focused.
+- usage: 1-2 sentences, focused on "in which situations it may be used".
+- commonUses: 3-5 items from the allowed list.
+- warnings: 2-5 items.
 
 # Length limits
-- Çok uzun tıbbi makale yazma.
-- Mobil ekranda rahat okunacak kadar kısa tut.
+- Do not write a long medical article.
+- Keep it short enough to read comfortably on a mobile screen.
 """.strip()
 
 
 @dataclass
 class MedicineExplanation:
-    """Yapılandırılmış ilaç açıklaması."""
+    """Structured medicine explanation."""
 
     summary: str
     usage: str = ""
@@ -189,7 +278,7 @@ class MedicineExplanation:
 
     @property
     def explanation_text(self) -> str:
-        """Geriye uyumlu düz metin (summary + usage)."""
+        """Backward-compatible plain text (summary + usage)."""
         parts = [part.strip() for part in (self.summary, self.usage) if part.strip()]
         return " ".join(parts) if parts else FALLBACK_SUMMARY
 
@@ -214,7 +303,7 @@ class MedicineExplanation:
         try:
             data = json.loads(payload)
         except json.JSONDecodeError:
-            # Eski cache: düz metin açıklama
+            # Legacy cache: plain-text explanation.
             text = payload.strip()
             if not text:
                 return None
@@ -255,29 +344,68 @@ def _normalize_category_key(category: str | None) -> str:
     return " ".join(category.strip().casefold().split())
 
 
-def get_category_usage_hints(category: str | None) -> list[str]:
+def _locale_is_english(locale: str) -> bool:
+    return (locale or "tr").strip().lower().startswith("en")
+
+
+def _fallback_summary(locale: str = "tr") -> str:
+    return FALLBACK_SUMMARY_EN if _locale_is_english(locale) else FALLBACK_SUMMARY
+
+
+def _lookup_category_hints(
+    table: dict[str, list[str]],
+    category: str | None,
+) -> list[str]:
     key = _normalize_category_key(category)
     if not key:
         return []
-    if key in CATEGORY_USAGE_HINTS:
-        return list(CATEGORY_USAGE_HINTS[key])
-    for hint_key, hints in CATEGORY_USAGE_HINTS.items():
+    if key in table:
+        return list(table[key])
+    for hint_key, hints in table.items():
         if hint_key in key or key in hint_key:
             return list(hints)
     return []
 
 
-def get_allowed_warnings(category: str | None) -> list[str]:
-    warnings = list(BASE_WARNINGS)
+def get_category_usage_hints(
+    category: str | None,
+    *,
+    locale: str = "tr",
+) -> list[str]:
+    table = (
+        CATEGORY_USAGE_HINTS_EN
+        if _locale_is_english(locale)
+        else CATEGORY_USAGE_HINTS
+    )
+    return _lookup_category_hints(table, category)
+
+
+def get_allowed_warnings(
+    category: str | None,
+    *,
+    locale: str = "tr",
+) -> list[str]:
+    extra_table = (
+        CATEGORY_EXTRA_WARNINGS_EN
+        if _locale_is_english(locale)
+        else CATEGORY_EXTRA_WARNINGS
+    )
+    warnings = list(
+        BASE_WARNINGS_EN if _locale_is_english(locale) else BASE_WARNINGS
+    )
     key = _normalize_category_key(category)
-    for cat_key, extra in CATEGORY_EXTRA_WARNINGS.items():
+    for cat_key, extra in extra_table.items():
         if cat_key == key or cat_key in key:
             warnings.extend(extra)
     return warnings
 
 
-def build_medicine_context(medicine: dict[str, str]) -> dict[str, Any]:
-    """LLM'e gönderilecek yapılandırılmış ilaç context'i."""
+def build_medicine_context(
+    medicine: dict[str, str],
+    *,
+    locale: str = "tr",
+) -> dict[str, Any]:
+    """Structured medicine context sent to the LLM."""
     category = _format_field(medicine.get("category"))
     return {
         "name": _format_field(medicine.get("medicine_name")),
@@ -289,22 +417,24 @@ def build_medicine_context(medicine: dict[str, str]) -> dict[str, Any]:
         "indications": [],
         "officialWarnings": [],
         "contraindications": [],
-        "allowed_common_uses": get_category_usage_hints(category),
-        "allowed_warnings": get_allowed_warnings(category),
+        "allowed_common_uses": get_category_usage_hints(category, locale="en"),
+        "allowed_warnings": get_allowed_warnings(category, locale="en"),
         "data_notes": (
-            "Resmi endikasyon, kontrendikasyon ve ilaç bazlı uyarı alanları "
-            "veritabanında mevcut değil. Yalnızca kategoriye dayalı izinli "
-            "kullanım maddeleri ile verilen alanları kullan."
+            "Official indication, contraindication, and per-medicine warning "
+            "fields are not in the database. Use only the allowed category-based "
+            "use items and the fields provided."
         ),
     }
 
 
-def _build_user_prompt(medicine: dict[str, str]) -> str:
-    context = build_medicine_context(medicine)
+def _build_user_prompt(medicine: dict[str, str], *, locale: str = "tr") -> str:
+    context = build_medicine_context(medicine, locale=locale)
+    language = "English" if _locale_is_english(locale) else "Turkish"
     return (
-        "Aşağıdaki ilaç kaydı için kullanıcı odaklı JSON açıklama üret.\n"
-        "Yalnızca bu context'teki bilgilere dayan.\n\n"
-        f"{json.dumps(context, ensure_ascii=False, indent=2)}"
+        "Produce a user-focused JSON explanation for the medicine record below.\n"
+        "Rely only on this context.\n\n"
+        f"{json.dumps(context, ensure_ascii=False, indent=2)}\n\n"
+        f"Write all JSON string values in {language}."
     )
 
 
@@ -358,15 +488,19 @@ def normalize_explanation_payload(
     data: dict[str, Any],
     *,
     medicine: dict[str, str] | None = None,
+    locale: str = "tr",
 ) -> MedicineExplanation:
-    """LLM/cache JSON'unu doğrular ve eksik alanlar için fallback uygular."""
+    """Validate LLM/cache JSON and apply fallbacks for missing fields."""
     summary = str(data.get("summary") or "").strip()
     usage = str(data.get("usage") or "").strip()
     common_uses = _as_string_list(
         data.get("commonUses", data.get("common_uses"))
     )
     warnings = _as_string_list(data.get("warnings"))
-    disclaimer = str(data.get("disclaimer") or "").strip() or LLM_EXPLANATION_DISCLAIMER
+    disclaimer = (
+        str(data.get("disclaimer") or "").strip()
+        or disclaimer_for_locale(locale)
+    )
 
     active = _format_field(
         str(data.get("activeIngredient") or data.get("active_ingredient") or "")
@@ -383,15 +517,21 @@ def normalize_explanation_payload(
         category = category or _format_field(medicine.get("category"))
 
     if not summary:
-        summary = FALLBACK_SUMMARY
+        summary = _fallback_summary(locale)
 
     if not common_uses and medicine:
-        common_uses = get_category_usage_hints(medicine.get("category"))
+        common_uses = get_category_usage_hints(
+            medicine.get("category"),
+            locale=locale,
+        )
 
     if not warnings:
-        warnings = get_allowed_warnings(category or (medicine or {}).get("category"))
+        warnings = get_allowed_warnings(
+            category or (medicine or {}).get("category"),
+            locale=locale,
+        )
 
-    # Uzunluk sınırları
+    # Length limits.
     common_uses = common_uses[:5]
     warnings = warnings[:5]
 
@@ -412,56 +552,93 @@ def parse_llm_explanation(
     raw_text: str,
     *,
     medicine: dict[str, str],
+    locale: str = "tr",
 ) -> MedicineExplanation:
-    """LLM metnini güvenli şekilde MedicineExplanation'a çevirir."""
+    """Safely convert LLM text into a MedicineExplanation."""
     data = _extract_json_object(raw_text)
     if data is not None:
-        return normalize_explanation_payload(data, medicine=medicine)
+        return normalize_explanation_payload(
+            data,
+            medicine=medicine,
+            locale=locale,
+        )
 
-    # Düz metin fallback — uygulama çökmez
+    # Plain-text fallback keeps the app from crashing.
     plain = re.sub(r"\s+", " ", raw_text).strip()
     return MedicineExplanation(
-        summary=plain or FALLBACK_SUMMARY,
+        summary=plain or _fallback_summary(locale),
         usage="",
-        common_uses=get_category_usage_hints(medicine.get("category")),
+        common_uses=get_category_usage_hints(
+            medicine.get("category"),
+            locale=locale,
+        ),
         active_ingredient=_format_field(medicine.get("active_ingredient")),
         dose=_format_field(medicine.get("dosage")),
         form=_format_field(medicine.get("form")),
         category=_format_field(medicine.get("category")),
-        warnings=get_allowed_warnings(medicine.get("category")),
-        disclaimer=LLM_EXPLANATION_DISCLAIMER,
+        warnings=get_allowed_warnings(medicine.get("category"), locale=locale),
+        disclaimer=disclaimer_for_locale(locale),
     )
 
 
-def build_mock_explanation(medicine: dict[str, str]) -> MedicineExplanation:
-    name = _format_field(medicine.get("medicine_name")) or "Bu ilaç"
+def build_mock_explanation(
+    medicine: dict[str, str],
+    *,
+    locale: str = "tr",
+) -> MedicineExplanation:
+    english = _locale_is_english(locale)
+    name = _format_field(medicine.get("medicine_name")) or (
+        "This medicine" if english else "Bu ilaç"
+    )
     ingredient = _format_field(medicine.get("active_ingredient"))
     category = _format_field(medicine.get("category"))
-    common_uses = get_category_usage_hints(category)
+    common_uses = get_category_usage_hints(category, locale=locale)
 
-    if ingredient and category:
-        summary = (
-            f"{name}, {ingredient} içeren ve {category} kategorisinde yer alan "
-            f"bir ilaçtır."
-        )
-    elif ingredient:
-        summary = f"{name}, {ingredient} içeren bir ilaçtır."
-    elif category:
-        summary = f"{name}, {category} kategorisinde yer alan bir ilaçtır."
+    if english:
+        if ingredient and category:
+            summary = (
+                f"{name} is a {category} medicine that contains {ingredient}."
+            )
+        elif ingredient:
+            summary = f"{name} contains {ingredient}."
+        elif category:
+            summary = f"{name} is listed in the {category} category."
+        else:
+            summary = f"Limited catalog information is available for {name}."
+        if common_uses:
+            usage = (
+                "A doctor may prescribe this medicine in the general use areas "
+                "defined for its category. Follow your doctor or pharmacist "
+                "for use."
+            )
+        else:
+            usage = (
+                "Official use information is not available in this data source. "
+                "Ask a pharmacist and read the leaflet for details."
+            )
     else:
-        summary = f"{name} hakkında sınırlı katalog bilgisi bulunmaktadır."
-
-    if common_uses:
-        usage = (
-            "Bu ilaç, kategoriye göre tanımlanan genel kullanım alanlarında "
-            "doktor tarafından reçete edilebilir. Kullanım için doktorunuzun "
-            "veya eczacınızın önerisini takip edin."
-        )
-    else:
-        usage = (
-            "Resmi kullanım alanı bu veri kaynağında mevcut değil. "
-            "Detaylı bilgi için prospektüse ve eczacınıza danışın."
-        )
+        if ingredient and category:
+            summary = (
+                f"{name}, {ingredient} içeren ve {category} kategorisinde yer alan "
+                f"bir ilaçtır."
+            )
+        elif ingredient:
+            summary = f"{name}, {ingredient} içeren bir ilaçtır."
+        elif category:
+            summary = f"{name}, {category} kategorisinde yer alan bir ilaçtır."
+        else:
+            summary = f"{name} hakkında sınırlı katalog bilgisi bulunmaktadır."
+        if common_uses:
+            usage = (
+                "Bu ilaç, kategoriye göre tanımlanan genel kullanım alanlarında "
+                "doktor tarafından reçete edilebilir. Kullanım için doktorunuzun "
+                "veya eczacınızın önerisini takip edin."
+            )
+        else:
+            usage = (
+                "Resmi kullanım alanı bu veri kaynağında mevcut değil. "
+                "Detaylı bilgi için prospektüse ve eczacınıza danışın."
+            )
 
     return MedicineExplanation(
         summary=summary,
@@ -471,8 +648,8 @@ def build_mock_explanation(medicine: dict[str, str]) -> MedicineExplanation:
         dose=_format_field(medicine.get("dosage")),
         form=_format_field(medicine.get("form")),
         category=category,
-        warnings=get_allowed_warnings(category),
-        disclaimer=LLM_EXPLANATION_DISCLAIMER,
+        warnings=get_allowed_warnings(category, locale=locale),
+        disclaimer=disclaimer_for_locale(locale),
     )
 
 
@@ -505,7 +682,7 @@ def _is_retryable_gemini_error(exc: Exception) -> bool:
 
 
 class MockMedicineExplainer:
-    """API anahtarı olmadan geliştirme ve test için deterministik açıklama."""
+    """Deterministic explanation for development and tests without an API key."""
 
     def explain(
         self,
@@ -513,12 +690,11 @@ class MockMedicineExplainer:
         *,
         locale: str = "tr",
     ) -> MedicineExplanation:
-        _ = locale
-        return build_mock_explanation(medicine)
+        return build_mock_explanation(medicine, locale=locale)
 
 
 class GeminiMedicineExplainer:
-    """Google Gemini API ile ilaç açıklaması üretir; model fallback destekler."""
+    """Generate medicine explanations with Google Gemini and model fallback."""
 
     def __init__(
         self,
@@ -538,7 +714,7 @@ class GeminiMedicineExplainer:
                 from google import genai
             except ImportError as exc:
                 raise LlmUnavailableError(
-                    "google-genai paketi yüklü değil."
+                    "google-genai is not installed."
                 ) from exc
 
             self._client = genai.Client(api_key=self.api_key)
@@ -559,9 +735,7 @@ class GeminiMedicineExplainer:
         *,
         locale: str = "tr",
     ) -> GeminiExplainResult:
-        prompt = _build_user_prompt(medicine)
-        if locale != "tr":
-            prompt += f"\n\nYanıt dili: {locale}"
+        prompt = _build_user_prompt(medicine, locale=locale)
 
         client = self._get_client()
         contents = f"{SYSTEM_PROMPT}\n\n{prompt}"
@@ -580,7 +754,7 @@ class GeminiMedicineExplainer:
                 if _is_retryable_gemini_error(exc):
                     continue
                 raise LlmUnavailableError(
-                    "LLM servisi şu anda kullanılamıyor."
+                    "LLM service is currently unavailable."
                 ) from exc
             else:
                 text = getattr(response, "text", None)
@@ -590,28 +764,32 @@ class GeminiMedicineExplainer:
 
                 self.last_model_used = model
                 return GeminiExplainResult(
-                    explanation=parse_llm_explanation(text, medicine=medicine),
+                    explanation=parse_llm_explanation(
+                        text,
+                        medicine=medicine,
+                        locale=locale,
+                    ),
                     model=model,
                 )
 
         joined = " ".join(errors).upper()
         if "429" in joined or "RESOURCE_EXHAUSTED" in joined:
             raise LlmUnavailableError(
-                "LLM kotası aşıldı. Lütfen biraz sonra tekrar deneyin."
+                "LLM quota exceeded. Please try again in a moment."
             )
         if "503" in joined or "UNAVAILABLE" in joined or "HIGH DEMAND" in joined:
             raise LlmUnavailableError(
-                "Google Gemini şu anda yoğun. "
-                "Birkaç saniye sonra tekrar deneyin."
+                "Google Gemini is currently busy. "
+                "Please try again in a few seconds."
             )
 
         logger.error("All Gemini models failed: %s", errors)
         raise LlmUnavailableError(
-            "LLM servisi şu anda kullanılamıyor."
+            "LLM service is currently unavailable."
         )
 
     def _generate(self, client: Any, *, model: str, contents: str) -> Any:
-        """JSON çıktı tercih eder; desteklenmezse düz çağrıya düşer."""
+        """Prefer JSON output and fall back to a plain request if unsupported."""
         try:
             from google.genai import types
         except ImportError:
@@ -626,7 +804,7 @@ class GeminiMedicineExplainer:
                 ),
             )
         except Exception as exc:
-            # Bazı modeller JSON mime type desteklemeyebilir
+            # Some models may not support the JSON MIME type.
             if "response_mime_type" in str(exc) or "INVALID_ARGUMENT" in str(exc):
                 logger.info(
                     "JSON mime type unsupported for %s; retrying plain text",
@@ -640,7 +818,7 @@ class GeminiMedicineExplainer:
 
 
 class LlmExplanationService:
-    """İlaç açıklaması servisi; cache ve sağlayıcı seçimi."""
+    """Medicine explanation service with cache and provider selection."""
 
     _instance: LlmExplanationService | None = None
 
@@ -686,14 +864,14 @@ class LlmExplanationService:
 
     @classmethod
     def get_instance(cls, settings: ApiSettings) -> LlmExplanationService:
-        """Aynı process içinde tek LLM servis örneği döndürür."""
+        """Return a single LLM service instance within the same process."""
         if cls._instance is None:
             cls._instance = cls.from_settings(settings)
         return cls._instance
 
     @classmethod
     def reset_instance(cls) -> None:
-        """Test veya yeniden yapılandırma için servis singleton'ını sıfırlar."""
+        """Reset the service singleton for tests or reconfiguration."""
         cls._instance = None
 
     def explain_medicine(
@@ -704,7 +882,7 @@ class LlmExplanationService:
     ) -> tuple[MedicineExplanation, bool]:
         medicine_id = medicine.get("medicine_id", "").strip()
         if not medicine_id:
-            raise LlmUnavailableError("İlaç kimliği eksik.")
+            raise LlmUnavailableError("Medicine id is missing.")
 
         if self.settings.llm_cache_enabled:
             cached = self.cache.get(medicine_id, locale)
@@ -725,7 +903,7 @@ class LlmExplanationService:
                 "Gemini unavailable for %s; using catalog fallback.",
                 medicine_id,
             )
-            explanation = build_mock_explanation(medicine)
+            explanation = build_mock_explanation(medicine, locale=locale)
             self.model = "catalog-fallback"
             return explanation, False
 

@@ -25,7 +25,8 @@ Push-Location $MobileDir
 try {
     if ($RegeneratePlatforms) {
         Write-Host "Android platform dosyalari yeniden olusturuluyor..."
-        flutter create . --project-name medicine_box_app --org com.medicinebox --platforms=android
+        flutter create . --project-name yolocilin --org com.yolocilin --platforms=android
+        Write-Host "Not: applicationId android/app/build.gradle.kts icinde com.yolocilin.app olarak kalmali."
     }
 
     Write-Host "Bagimliliklar indiriliyor..."

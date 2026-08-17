@@ -24,7 +24,7 @@ from src.preprocessing.geometric_operations import (
 
 def main() -> None:
     """
-    Histogram Equalization ve CLAHE sonuçlarını karşılaştırır.
+    Compares Histogram Equalization and CLAHE results.
     """
 
     image_path = Path(
@@ -41,21 +41,21 @@ def main() -> None:
         "medicine_sample_clahe.jpg"
     )
 
-    # Renkli görüntüyü oku.
+    # Read the color image.
     image = read_image(image_path)
 
-    # Kontrast işlemleri tek kanallı görüntü beklediği için
-    # görüntüyü grayscale biçimine dönüştür.
+    # Contrast operations expect a single-channel image, so
+    # convert the image to grayscale.
     grayscale_image = convert_to_grayscale(
         image
     )
 
-    # Tüm görüntüye global Histogram Equalization uygula.
+    # Apply global Histogram Equalization to the whole image.
     histogram_image = apply_histogram_equalization(
         grayscale_image
     )
 
-    # Görüntünün küçük bölgelerine yerel CLAHE uygula.
+    # Apply local CLAHE to small regions of the image.
     clahe_image = apply_clahe(
         grayscale_image,
         clip_limit=2.0,
@@ -87,7 +87,7 @@ def main() -> None:
         f"{clahe_image.min()} - {clahe_image.max()}"
     )
 
-    # Sonuçları kaydet.
+    # Save the results.
     save_image(
         histogram_image,
         histogram_output_path,
@@ -108,7 +108,7 @@ def main() -> None:
         f"{clahe_output_path}"
     )
 
-    # Büyük görüntüleri yalnızca gösterim için küçült.
+    # Shrink large images for display only.
     grayscale_preview = resize_image(
         grayscale_image,
         width=800,

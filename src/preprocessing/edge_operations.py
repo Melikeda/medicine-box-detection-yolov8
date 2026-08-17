@@ -1,4 +1,4 @@
-#Yani modüler olsun diye ekledik. Yani OCR pipeline da kullanmıyoruz.
+# Added for modularity; it is not currently used by the OCR pipeline.
 import cv2
 
 
@@ -8,24 +8,17 @@ def apply_canny_edge_detection(
     threshold2: int = 200,
 ):
     """
-    Görüntüye Canny Edge Detection uygular.
+    Apply Canny Edge Detection to the image.
 
-    Canny algoritması görüntüdeki
-    keskin parlaklık değişimlerini
-    tespit ederek kenarları çıkarır.
+    The Canny algorithm extracts edges by detecting sharp brightness changes in the image.
 
     Args:
-        image:
-            Grayscale görüntü.
-
-        threshold1:
-            Alt eşik değeri.
-
-        threshold2:
-            Üst eşik değeri.
+        grayscale_image: Grayscale image.
+        threshold1: Lower threshold value.
+        threshold2: Upper threshold value.
 
     Returns:
-        Kenar görüntüsü.
+        Edge image.
     """
 
     if image.ndim != 2:

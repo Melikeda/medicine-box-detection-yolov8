@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class DetectionService:
-    """YOLO tabanlı ilaç kutusu tespiti ve crop işlemleri."""
+    """YOLO-based medicine box detection and crop operations."""
 
     def __init__(
         self,
@@ -35,7 +35,7 @@ class DetectionService:
         *,
         confidence_threshold: float | None = None,
     ) -> Results | None:
-        """Görüntü üzerinde YOLO tahmini çalıştırır."""
+        """Run YOLO inference on the image."""
         image_path = Path(image_path)
         threshold = (
             confidence_threshold
@@ -75,10 +75,10 @@ class DetectionService:
         image_path: str | Path,
     ) -> list[DetectedBox]:
         """
-        Fotoğraftaki tüm ilaç kutularını tespit eder ve crop eder.
+        Detect and crop all medicine boxes in the photo.
 
-        Standart eşikte sonuç yoksa veya zayıf/bulanık tespitlerde
-        düşük güven fallback'i devreye girer.
+        If the standard threshold has no results or detections are weak/blurry,
+        the low-confidence fallback is used.
         """
         self._last_detection_used_fallback = False
 
@@ -99,8 +99,8 @@ class DetectionService:
             max_confidence = max(
                 box.confidence for box in detected_boxes
             )
-            # Bulanık fotoğraflarda düşük skorlu tek tespit olabilir;
-            # fallback daha fazla kutu bulursa onu kullan.
+        # Blurry photos may have one low-scoring detection;
+        # Use fallback results when they find more boxes.
             if max_confidence < 0.55:
                 fallback_boxes = self._detect_at_threshold(
                     image_path=image_path,
@@ -120,13 +120,9 @@ class DetectionService:
         if should_use_fallback and detected_boxes:
             self._last_detection_used_fallback = True
             logger.info(
-                "YOLO fallback modu: conf=%.2f ile %s kutu bulundu.",
+                "YOLO fallback: conf=%.2f found %s box(es).",
                 fallback_threshold,
                 len(detected_boxes),
-            )
-            print(
-                f"YOLO fallback modu: conf={fallback_threshold:.2f} "
-                f"({len(detected_boxes)} kutu)"
             )
 
         return detected_boxes
@@ -136,7 +132,7 @@ class DetectionService:
         image_path: str | Path,
     ) -> tuple[np.ndarray, float] | None:
         """
-        En yüksek güven skorlu tek kutuyu döndürür (geriye dönük uyumluluk).
+        Return the single box with the highest confidence score for backward compatibility.
         """
         detected_boxes = self.detect_all(image_path=image_path)
 

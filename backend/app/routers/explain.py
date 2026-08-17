@@ -6,7 +6,7 @@ from backend.app.config import ApiSettings, get_api_settings
 from backend.app.constants import LLM_EXPLANATION_DISCLAIMER
 from backend.app.dependencies import get_llm_service, get_medicine_service
 from backend.app.exceptions import RateLimitExceededError
-from backend.app.middleware.rate_limit import AnalyzeRateLimiter
+from backend.app.middleware.rate_limit import IpRateLimiter
 from backend.app.schemas.explain import (
     ExplainInfoSchema,
     ExplainRequestSchema,
@@ -19,8 +19,8 @@ router = APIRouter(prefix="/explain", tags=["explain"])
 
 
 @lru_cache
-def _get_explain_rate_limiter(max_requests: int) -> AnalyzeRateLimiter:
-    return AnalyzeRateLimiter(max_requests=max_requests)
+def _get_explain_rate_limiter(max_requests: int) -> IpRateLimiter:
+    return IpRateLimiter(max_requests=max_requests)
 
 
 def enforce_explain_rate_limit(
@@ -34,8 +34,8 @@ def enforce_explain_rate_limit(
     client_host = request.client.host if request.client else "unknown"
     if not limiter.is_allowed(client_host):
         raise RateLimitExceededError(
-            "Cok fazla aciklama istegi. "
-            "Lutfen bir dakika sonra tekrar deneyin."
+            "Too many explanation requests. "
+            "Please try again in a minute."
         )
 
 
@@ -43,7 +43,7 @@ def enforce_explain_rate_limit(
 async def explain_info(
     settings: ApiSettings = Depends(get_api_settings),
 ) -> ExplainInfoSchema:
-    """Explain endpoint yapılandırma bilgisi."""
+    """Explain endpoint configuration information."""
     return ExplainInfoSchema(
         endpoint=f"{settings.api_prefix}/explain",
         llm_enabled=settings.llm_enabled,
@@ -69,7 +69,7 @@ async def explain_medicine(
     medicine_service: MedicineQueryService = Depends(get_medicine_service),
     llm_service: LlmExplanationService = Depends(get_llm_service),
 ) -> ExplainResponseSchema:
-    """Eşleşen ilaç için kısa Türkçe LLM açıklaması üretir."""
+    """Generate a brief Turkish LLM explanation for a matched medicine."""
     medicine = medicine_service.get_medicine(payload.medicine_id)
     if medicine is None:
         raise HTTPException(

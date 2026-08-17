@@ -33,22 +33,22 @@ def add_salt_and_pepper_noise(
     random_seed: int = 42,
 ):
     """
-    Görüntüye yapay salt-and-pepper gürültüsü ekler.
+    Adds synthetic salt-and-pepper noise to an image.
 
     Salt:
-        Bazı pikselleri beyaz, yani 255 yapar.
+        Sets some pixels to white, meaning 255.
 
     Pepper:
-        Bazı pikselleri siyah, yani 0 yapar.
+        Sets some pixels to black, meaning 0.
 
     Args:
-        image: Gürültü eklenecek grayscale görüntü.
-        noise_ratio: Gürültülü hale getirilecek piksel oranı.
-            Örneğin 0.03, piksellerin yaklaşık yüzde 3'üdür.
-        random_seed: Aynı sonucun tekrar üretilebilmesi için seed.
+        image: Grayscale image to receive noise.
+        noise_ratio: Ratio of pixels to make noisy.
+            For example, 0.03 is roughly 3 percent of the pixels.
+        random_seed: Seed for reproducible output.
 
     Returns:
-        Salt-and-pepper gürültüsü eklenmiş görüntü.
+        Image with salt-and-pepper noise applied.
     """
 
     if image.ndim != 2:
@@ -68,11 +68,11 @@ def add_salt_and_pepper_noise(
     total_pixels = image.size
     noisy_pixel_count = int(total_pixels * noise_ratio)
 
-    # Gürültünün yarısını beyaz, yarısını siyah yap.
+    # Make half of the noise white and half black.
     salt_count = noisy_pixel_count // 2
     pepper_count = noisy_pixel_count - salt_count
 
-    # Beyaz yapılacak rastgele koordinatlar.
+    # Random coordinates to set to white.
     salt_y = rng.integers(
         0,
         image.shape[0],
@@ -87,7 +87,7 @@ def add_salt_and_pepper_noise(
 
     noisy_image[salt_y, salt_x] = 255
 
-    # Siyah yapılacak rastgele koordinatlar.
+    # Random coordinates to set to black.
     pepper_y = rng.integers(
         0,
         image.shape[0],
@@ -110,7 +110,7 @@ def show_image(
     title: str,
 ) -> None:
     """
-    Tek bir grayscale görüntüyü Matplotlib ile gösterir.
+    Displays a single grayscale image with Matplotlib.
     """
 
     plt.figure(figsize=(10, 6))
@@ -127,8 +127,8 @@ def show_image(
 
 def main() -> None:
     """
-    Gaussian, Median ve Bilateral filtreleri
-    salt-and-pepper gürültüsü üzerinde karşılaştırır.
+    Compares Gaussian, Median, and Bilateral filters
+    on salt-and-pepper noise.
     """
 
     image_path = Path(
@@ -139,28 +139,28 @@ def main() -> None:
         "results/preprocessing/filter_comparison"
     )
 
-    # Görüntüyü oku ve grayscale'e dönüştür.
+    # Read the image and convert it to grayscale.
     image = read_image(image_path)
 
     grayscale_image = convert_to_grayscale(
         image
     )
 
-    # İşlemleri hızlandırmak ve görsel karşılaştırmayı
-    # kolaylaştırmak için görüntüyü küçült.
+    # Shrink the image to speed up processing and
+    # make visual comparison easier.
     grayscale_image = resize_image(
         grayscale_image,
         width=800,
     )
 
-    # Görüntüye yapay salt-and-pepper noise ekle.
+    # Add synthetic salt-and-pepper noise to the image.
     noisy_image = add_salt_and_pepper_noise(
         grayscale_image,
         noise_ratio=0.03,
         random_seed=42,
     )
 
-    # Aynı gürültülü görüntüye üç farklı filtre uygula.
+    # Apply three different filters to the same noisy image.
     gaussian_image = apply_gaussian_blur(
         noisy_image,
         kernel_size=(5, 5),
@@ -190,7 +190,7 @@ def main() -> None:
     print("\nSalt-and-pepper gürültü oranı: %3")
     print("Tüm filtreler aynı gürültülü görüntüye uygulanmıştır.")
 
-    # Sonuçları ayrı dosyalar halinde kaydet.
+    # Save the results as separate files.
     save_image(
         grayscale_image,
         output_directory / "01_grayscale.jpg",
@@ -221,7 +221,7 @@ def main() -> None:
         f"{output_directory}"
     )
 
-    # Görüntüleri sırayla göster.
+    # Display the images in sequence.
     show_image(
         grayscale_image,
         "1 - Original Grayscale Image",

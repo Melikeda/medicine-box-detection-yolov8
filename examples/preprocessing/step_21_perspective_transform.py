@@ -29,18 +29,18 @@ def draw_selected_points(
     points,
 ):
     """
-    Perspective Transform için seçilen dört köşeyi
-    görüntü üzerinde işaretler.
+    Marks the four corners selected for Perspective Transform
+    on the image.
 
     Args:
         image:
-            İşaretleme yapılacak görüntü.
+            Image to mark.
 
         points:
-            Dört adet (x, y) koordinatı.
+            Four (x, y) coordinates.
 
     Returns:
-        Noktaları ve sınır çizgileri işaretlenmiş görüntü.
+        Image with marked points and boundary lines.
     """
 
     preview_image = image.copy()
@@ -56,7 +56,7 @@ def draw_selected_points(
         "Bottom Left",
     ]
 
-    # Dört köşeyi ve etiketleri çiz.
+    # Draw the four corners and labels.
     for index, point in enumerate(
         ordered_points
     ):
@@ -80,7 +80,7 @@ def draw_selected_points(
             thickness=3,
         )
 
-    # Seçilen dört noktayı çizgilerle birleştir.
+    # Connect the selected four points with lines.
     cv2.polylines(
         preview_image,
         [
@@ -98,8 +98,8 @@ def draw_selected_points(
 
 def main() -> None:
     """
-    Bir ilaç kutusunun dört köşesini kullanarak
-    Perspective Transform uygular.
+    Applies Perspective Transform using the four corners
+    of a medicine box.
     """
 
     image_path = Path(
@@ -111,7 +111,7 @@ def main() -> None:
         "medicine_sample_perspective_transform.jpg"
     )
 
-    # Orijinal görüntüyü oku.
+    # Read the original image.
     image = read_image(
         image_path
     )
@@ -119,24 +119,24 @@ def main() -> None:
     print("\n===== PERSPECTIVE TRANSFORM INFORMATION =====")
     print(f"Orijinal Shape: {image.shape}")
 
-    # İlaç kutusunun yaklaşık dört köşe koordinatı.
+    # Approximate four corner coordinates of the medicine box.
     #
-    # Sıralama zorunlu değildir çünkü order_points()
-    # bunları otomatik olarak düzenler.
+    # Ordering is not required because order_points()
+    # arranges them automatically.
     #
-    # Bu değerler senin kullandığın örnek fotoğrafa göre
-    # yaklaşık başlangıç değerleridir.
+    # These values are approximate starting points
+    # for the sample photo you use.
     source_points = np.array(
         [
-            [700, 405],    # Sol üst
-            [3050, 405],   # Sağ üst
-            [3050, 1425],  # Sağ alt
-            [700, 1425],   # Sol alt
+            # Top left
+            # Top right
+            # Bottom right
+            # Bottom left
         ],
         dtype=np.float32,
     )
 
-    # Perspective Transform uygula.
+    # Apply Perspective Transform.
     transformed_image = apply_perspective_transform(
         image=image,
         source_points=source_points,
@@ -147,7 +147,7 @@ def main() -> None:
         f"{transformed_image.shape}"
     )
 
-    # Sonucu kaydet.
+    # Save the result.
     save_image(
         transformed_image,
         output_path,
@@ -158,13 +158,13 @@ def main() -> None:
         f"{output_path}"
     )
 
-    # Seçilen noktaları orijinal görüntü üzerinde göster.
+    # Show the selected points on the original image.
     selected_points_image = draw_selected_points(
         image,
         source_points,
     )
 
-    # Görüntüleri sadece ekran gösterimi için küçült.
+    # Shrink the images for screen display only.
     points_preview = resize_image(
         selected_points_image,
         width=800,

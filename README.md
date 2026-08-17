@@ -251,8 +251,8 @@ Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini 
 | Cloud deploy + HTTPS | Reverse proxy / hosting |
 | Per-user auth for scans | Scans are global until auth |
 | iOS client | Android-first today |
-| Internship final report | Docs polish in progress |
-| Project release v1.0 | Later phase |
+| Internship Word report | University `.docx` generators (local) |
+| Project release v1.0 | Later phase — wait for explicit go-ahead |
 
 Roadmap: [docs/roadmap.md](docs/roadmap.md) · Dataset: [Kaggle](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection)
 
@@ -261,6 +261,7 @@ Roadmap: [docs/roadmap.md](docs/roadmap.md) · Dataset: [Kaggle](https://www.kag
 ## Tests & performance
 
 ```bash
+ruff check backend src tests scripts   # lint
 pytest                                 # backend
 pytest tests/test_e2e_api_flow.py -q   # API E2E smoke
 python scripts/e2e_api_flow.py --skip-analyze
@@ -279,6 +280,7 @@ flutter test
 
 | Doc | Description |
 |-----|-------------|
+| [technical-report.md](docs/technical-report.md) | CV-facing product summary |
 | [architecture.md](docs/architecture.md) | System design |
 | [setup-guide.md](docs/setup-guide.md) | Full environment setup |
 | [roadmap.md](docs/roadmap.md) | Phases & remaining work |
@@ -290,7 +292,7 @@ flutter test
 | [Medium — FastAPI](https://medium.com/@m.edakulahci/list/learning-rest-apis-with-fastapi-ad9c2442f9d6) | Internship notes: REST API |
 | [Medium — Database](https://medium.com/@m.edakulahci/list/database-25184640519a) | Internship notes: CSV / SQLite catalog |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool |
-| [reports/](docs/reports/) | Phase technical reports (01–26) |
+| [reports/](docs/reports/) | Phase technical reports (01–28) |
 | [SECURITY.md](SECURITY.md) | Security & disclosure |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branch / PR workflow |
 | [CHANGELOG.md](CHANGELOG.md) | Notable changes |
@@ -315,8 +317,14 @@ MIT — see [LICENSE](LICENSE).
 
 ## Author
 
-**Melike** — Computer Engineering student  
-GitHub: [Melikeda](https://github.com/Melikeda)
+**Melike Eda Külahcı** — Computer Engineering student
+
+| | |
+|---|---|
+| GitHub | [Melikeda](https://github.com/Melikeda) |
+| LinkedIn | [melike-kulahci](https://linkedin.com/in/melike-kulahci) |
+| Medium | [m.edakulahci](https://medium.com/@m.edakulahci) |
+| Kaggle | [yolocilin-medicine-box-detection](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) |
 
 <p align="center">
   If Yolocilin helped you learn or build something, a star is appreciated.

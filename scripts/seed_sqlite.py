@@ -1,4 +1,4 @@
-"""CSV'deki ilaçları SQLite veritabanına aktarır."""
+"""Imports medicines from the CSV into the SQLite database."""
 
 from __future__ import annotations
 

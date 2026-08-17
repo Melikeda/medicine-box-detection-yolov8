@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'capsule_background.dart';
 
-/// Eski pastel blob arka planinin yerine soft gercekci kapsul arka plani.
+/// Soft realistic capsule background that replaced the old pastel blobs.
 class AnimatedPastelBackground extends StatelessWidget {
   const AnimatedPastelBackground({super.key, required this.child});
 

@@ -2,14 +2,14 @@ from pydantic import BaseModel, Field
 
 
 class ExplainRequestSchema(BaseModel):
-    """LLM ilaç açıklaması isteği."""
+    """LLM medicine explanation request."""
 
     medicine_id: str = Field(min_length=1, max_length=64)
     locale: str = Field(default="tr", min_length=2, max_length=8)
 
 
 class MedicineExplanationSchema(BaseModel):
-    """Yapılandırılmış ilaç açıklaması (kullanıcı odaklı)."""
+    """Structured user-focused medicine explanation."""
 
     summary: str
     usage: str = ""
@@ -23,7 +23,7 @@ class MedicineExplanationSchema(BaseModel):
 
 
 class ExplainResponseSchema(BaseModel):
-    """LLM ilaç açıklaması yanıtı."""
+    """LLM medicine explanation response."""
 
     success: bool = True
     medicine_id: str
@@ -45,7 +45,7 @@ class ExplainResponseSchema(BaseModel):
 
 
 class ExplainInfoSchema(BaseModel):
-    """Explain endpoint bilgisi."""
+    """Explain endpoint information."""
 
     endpoint: str
     method: str = "POST"
