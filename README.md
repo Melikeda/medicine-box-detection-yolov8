@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/yolocilin-logo.png" alt="Yolocilin logo" width="160" />
+  <img src="docs/assets/yolocilin-banner.png" alt="Yolocilin banner" width="720" />
 </p>
 
 # Yolocilin
@@ -22,10 +22,6 @@
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python" />
   <img src="https://img.shields.io/badge/flutter-3.19%2B-02569B" alt="Flutter" />
   <img src="https://img.shields.io/badge/license-MIT-green" alt="License" />
-</p>
-
-<p align="center">
-  <img src="docs/assets/yolocilin-banner.png" alt="Yolocilin banner" width="720" />
 </p>
 
 <p align="center">
