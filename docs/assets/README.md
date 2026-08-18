@@ -6,6 +6,7 @@ Brand images used by the root and mobile READMEs.
 |------|--------|-----|
 | `yolocilin-logo.png` | `mobile/assets/branding/app_logo.png` | README hero mark |
 | `yolocilin-banner.png` | `mobile/assets/illustrations/yolocilin_vial_banner.png` | README banner |
+| `yolocilin-app.gif` | App home-screen capture | README mobile preview |
 | `report-figures/*.png` | Local charts | Architecture and catalog figures used in the university Word report |
 
 Sample medicine photos for demos stay under [`data/samples/`](../../data/samples/) (linked from the root README) so large binaries are not duplicated here.
