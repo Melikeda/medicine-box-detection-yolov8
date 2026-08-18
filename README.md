@@ -28,6 +28,10 @@
   <img src="docs/assets/yolocilin-banner.png" alt="Yolocilin banner" width="720" />
 </p>
 
+<p align="center">
+  <img src="docs/assets/yolocilin-app.gif" alt="Yolocilin home screen" width="280" />
+</p>
+
 > **Not medical advice.** Yolocilin helps identify packaging text against a seed catalog. Always confirm with the official leaflet or a pharmacist.
 
 ---
