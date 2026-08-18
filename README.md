@@ -16,6 +16,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Melikeda/yolocilin/releases/latest"><img src="https://img.shields.io/github/v/release/Melikeda/yolocilin?label=release" alt="Latest release"></a>
   <a href="https://github.com/Melikeda/yolocilin/actions/workflows/backend-tests.yml"><img src="https://github.com/Melikeda/yolocilin/actions/workflows/backend-tests.yml/badge.svg" alt="Backend Tests"></a>
   <a href="https://github.com/Melikeda/yolocilin/actions/workflows/mobile-tests.yml"><img src="https://github.com/Melikeda/yolocilin/actions/workflows/mobile-tests.yml/badge.svg" alt="Mobile Tests"></a>
   <a href="https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection"><img src="https://img.shields.io/badge/Kaggle-Dataset-20BEFF?logo=kaggle&logoColor=white" alt="Kaggle Dataset"></a>
@@ -237,13 +238,13 @@ yolocilin/
 
 ---
 
-## Status: done vs next
+## Status: v1.0.0
 
-### Done
+Internship MVP is **released**: [Yolocilin v1.0.0](https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0).
 
-Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini explain, local + server scan history, production hardening, catalog refresh (1163), E2E/perf tooling, optional barcode path.
+Pipeline, FastAPI, Docker, CI, Flutter Android app, camera, bilingual UI, Gemini explain, local + server scan history, production hardening, catalog (**1163**), E2E/perf tooling, optional barcode path.
 
-### Still open
+### Post-MVP (not required for 1.0)
 
 | Item | Notes |
 |------|--------|
@@ -251,10 +252,8 @@ Pipeline, FastAPI, Docker, CI, Flutter MVP, camera, bilingual UI polish, Gemini 
 | Cloud deploy + HTTPS | Reverse proxy / hosting |
 | Per-user auth for scans | Scans are global until auth |
 | iOS client | Android-first today |
-| Internship Word report | Local CE499 deliverable (not in the GitHub repo) |
-| Project release v1.0 | Later phase — wait for explicit go-ahead |
 
-Roadmap: [docs/roadmap.md](docs/roadmap.md) · Dataset: [Kaggle](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection)
+Roadmap: [docs/roadmap.md](docs/roadmap.md) · Dataset: [Kaggle](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) · Changelog: [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
@@ -292,7 +291,7 @@ flutter test
 | [Medium — FastAPI](https://medium.com/@m.edakulahci/list/learning-rest-apis-with-fastapi-ad9c2442f9d6) | Internship notes: REST API |
 | [Medium — Database](https://medium.com/@m.edakulahci/list/database-25184640519a) | Internship notes: CSV / SQLite catalog |
 | [technology-selection.md](docs/technology-selection.md) | Why each tool |
-| [reports/](docs/reports/) | Phase technical reports (01–28) |
+| [reports/](docs/reports/) | Phase technical reports (01–29) |
 | [SECURITY.md](SECURITY.md) | Security & disclosure |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Branch / PR workflow |
 | [CHANGELOG.md](CHANGELOG.md) | Notable changes |

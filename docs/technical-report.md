@@ -1,11 +1,11 @@
 # Yolocilin — Technical Report
 
 CV-facing product summary for the Computer Engineering internship.  
-Phase diaries (01–28) stay in [`docs/reports/`](reports/README.md). This file is the current snapshot.
+Phase diaries (01–29) stay in [`docs/reports/`](reports/README.md). This file is the current snapshot.
 
 **Author:** Melike Eda Külahcı  
 **Repo:** [github.com/Melikeda/yolocilin](https://github.com/Melikeda/yolocilin)  
-**API version:** `0.1.0` (no GitHub Release yet)  
+**API / app version:** `1.0.0` · [GitHub Release](https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0)  
 **License:** MIT
 
 ---
@@ -119,7 +119,7 @@ Android: gallery + camera, bilingual UI, local SQLite history, best-effort scan 
 
 ## 9. Out of scope this round
 
-PostgreSQL, cloud HTTPS deploy, per-user auth, iOS, GitHub Release **v1.0.0**.
+PostgreSQL, cloud HTTPS deploy, per-user auth, iOS.
 
 ---
 

@@ -1,11 +1,16 @@
 # Changelog
 
 All notable changes to **Yolocilin** (Medicine Box Detection, Identification and Information System) are documented here.  
-Format inspired by [Keep a Changelog](https://keepachangelog.com/).
+Format inspired by [Keep a Changelog](https://keepachangelog.com/).  
+Versioning follows [Semantic Versioning](https://semver.org/).
 
-API / app version remains **0.1.0** until a GitHub Release. This file does not invent semver tags.
+API version: `backend/app/config.py` (`app_version`). Flutter version: `mobile/pubspec.yaml`.
 
 ## [Unreleased]
+
+## [1.0.0] — 2026-08-18
+
+First public GitHub Release. Internship MVP is complete: detect a medicine box, identify it against a seed catalog, and show a short explanation on Android.
 
 ### Added
 
@@ -65,3 +70,7 @@ Summaries live in phase reports under [`docs/reports/`](docs/reports/):
 | Catalog & performance | 18–19, 24–25 |
 | Hardening, LLM, camera, history | 20–23 |
 | OCR trial & barcode | 26, 28 |
+| GitHub Release | 29 |
+
+[Unreleased]: https://github.com/Melikeda/yolocilin/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0
