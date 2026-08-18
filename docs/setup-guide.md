@@ -379,8 +379,8 @@ Workflow files: `.github/workflows/`
 ## Next Steps
 
 1. Review [architecture.md](architecture.md) and [roadmap.md](roadmap.md)
-2. Next planned work: Phase 21 (`feature/project-release`) — written internship report, docs polish, GitHub Release v1.0.0
-3. Post-MVP ideas (not required now): PostgreSQL, cloud host, iOS — see [Future Development](roadmap.md#-future-development). Barcode **API** is Phase 22.
+2. Current snapshot: GitHub Release **[v1.0.0](https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0)** (Phase 21). Changelog: [CHANGELOG.md](../CHANGELOG.md).
+3. Post-MVP ideas (not required for 1.0): PostgreSQL, cloud host, iOS — see [Future Development](roadmap.md#-future-development).
 
 
 ### Run the unified pipeline from Python

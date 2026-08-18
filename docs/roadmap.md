@@ -403,7 +403,7 @@ See [Report 20](reports/20-production-hardening.md).
 
 **Branch workflow:** numbered improvement rounds — `feature/final-polish`, `feature/final-polish-2`, … Merge each round when done; open the next branch for the following slice.
 
-**Status:** Feature polish merged to `main`. Next: Phase 21 (`feature/project-release`).
+**Status:** Feature polish merged to `main`. Phase 21 release: **[v1.0.0](https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0)**.
 
 **Round 1 (merged PR #51):** matching fixes, multi-box OCR, garbage filter.
 
@@ -427,7 +427,7 @@ See [Report 20](reports/20-production-hardening.md).
 - [x] Evaluate end-to-end performance — timing in e2e script + `benchmark_analyze.py --json-out` (Report 25)
 - [x] GitHub [#9](https://github.com/Melikeda/yolocilin/issues/9) (test and document final system) — **closed**; repo testing/docs wrap-up done
 
-> Written internship report and final GitHub docs polish are **Phase 21** deliverables (not open GitHub issues).
+> Written internship report is a local CE499 deliverable (not in the GitHub repo). GitHub docs polish and Release **v1.0.0** are Phase 21.
 
 ---
 
@@ -496,18 +496,21 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 
 # Phase 21 — Project Release
 
-**Branch:** `feature/project-release`
+**Branch:** `feature/project-release`  
+**Status:** Done — [v1.0.0](https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0) (18 Aug 2026)
 
 ## Objectives
 
-- [ ] Final project review
+- [x] Final project review
 - [x] Align living docs with matching reliability gates ([Report 27](reports/27-matching-reliability.md))
 - [x] CV-facing GitHub summary ([docs/technical-report.md](technical-report.md))
 - [x] Complete written internship report
-- [ ] Prepare Release v1.0.0
-- [ ] Update repository badges
-- [ ] Publish GitHub Release
-- [ ] Archive final deliverables
+- [x] Prepare Release v1.0.0
+- [x] Update repository badges
+- [x] Publish GitHub Release
+- [x] Archive final deliverables (local CE499 Word files; GitHub snapshot is the tag)
+
+See [Report 29](reports/29-project-release.md) and [CHANGELOG.md](../CHANGELOG.md).
 
 ---
 
@@ -542,7 +545,7 @@ Post-MVP / production-scale work. **Not required** to close the current internsh
 | ✅ Barcode reading | API + Flutter scanner | [Report 28](reports/28-barcode-reading.md) |
 | ✅ End-of-project docs | Internship Word report (local) + GitHub technical-report | Phase 21 (#9 closed) |
 | ✅ Dataset Publishing (Kaggle) | Done | [Kaggle dataset](https://www.kaggle.com/datasets/melikeklahc/yolocilin-medicine-box-detection) |
-| ⏳ Project Release | Planned | — |
+| ✅ Project Release | v1.0.0 published | [Release](https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0) / [Report 29](reports/29-project-release.md) |
 
 ---
 

@@ -102,7 +102,30 @@ Badges: [README.md](README.md)
 | [docs/architecture.md](docs/architecture.md) | Design |
 | [docs/roadmap.md](docs/roadmap.md) | Phases |
 | [docs/reports/](docs/reports/) | Historical + feature reports |
+| [CHANGELOG.md](CHANGELOG.md) | Release notes |
 | [tests/README.md](tests/README.md) | Test inventory |
+
+---
+
+## Releases
+
+Version strings stay in lockstep:
+
+| Surface | File |
+|---------|------|
+| API (`/health`, OpenAPI) | `backend/app/config.py` → `app_version` |
+| Flutter / Android | `mobile/pubspec.yaml` → `version` (`X.Y.Z+build`) |
+
+1. Move `[Unreleased]` notes in [CHANGELOG.md](CHANGELOG.md) into a dated `## [X.Y.Z]` section.
+2. Merge to `main`, then create an **annotated** tag and a GitHub Release:
+
+```bash
+git tag -a vX.Y.Z -m "Yolocilin vX.Y.Z"
+git push origin vX.Y.Z
+gh release create vX.Y.Z --title "Yolocilin vX.Y.Z" --generate-notes
+```
+
+Do not tag from a feature branch. Weights (`.pt`) and secrets never go in a release asset.
 
 ---
 

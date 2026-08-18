@@ -37,7 +37,7 @@ None.
 | Item | Notes |
 |------|--------|
 | Written internship report | Done (local CE499 Word files; not in the GitHub repo) |
-| GitHub docs polish | Finish in Phase 21 / Release v1.0.0 |
+| GitHub Release v1.0.0 | Shipped — [v1.0.0](https://github.com/Melikeda/yolocilin/releases/tag/v1.0.0) |
 | [#32](https://github.com/Melikeda/yolocilin/issues/32) | Closed; leftovers: PostgreSQL, cloud, iOS |
 | Auth for private scan namespaces | Scans remain global; production DELETE gated by `SCANS_API_KEY` |
 | Cloud API host (HTTPS) | Needed for long-lived remote testers; tunnel OK for demos |
@@ -80,6 +80,7 @@ Full index: [docs/reports/README.md](../docs/reports/README.md)
 | [26](../docs/reports/26-ocr-engine-comparison.md) | EasyOCR vs PaddleOCR (EasyOCR kept) |
 | [27](../docs/reports/27-matching-reliability.md) | Matching reliability gates |
 | [28](../docs/reports/28-barcode-reading.md) | Barcode reading path |
+| [29](../docs/reports/29-project-release.md) | GitHub Release v1.0.0 |
 
 ## CI status checks (recommended for branch protection)
 
